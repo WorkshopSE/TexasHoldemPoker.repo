@@ -8,6 +8,22 @@ namespace Poker.BE.Domain.Core
 {
     public class User : AbstractUser
     {
-        // TODO: complete - set team member to do this
-    }
+        #region Methods
+        public  User (string userName, string password, double sumToDeposit){
+            UserName = userName;
+            Password = password;
+            UserBank = new Bank (sumToDeposit);
+            IsConnected = true;
+        }
+
+        public void Connect(){
+            IsConnected = true;
+        }
+
+        public void Disconnect(){
+            IsConnected = false;
+        }
+
+        #endregion   
+    } 
 }

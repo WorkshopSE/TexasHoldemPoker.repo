@@ -8,6 +8,39 @@ namespace Poker.BE.Domain.Core
 {
     public class Bank
     {
-        // TODO: complete - set team member to do this
+        #region Properties
+        protected double Money { get; set;}
+
+        #endregion
+
+        #region Methods
+        public Bank (double sumToDeposit){
+            Deposit (sumToDeposit);
+        }
+
+        protected bool CanWithdraw (double sum){
+            return (sum <  Money) ; 
+        }
+
+        protected bool Withdraw (double sum){
+            if (CanWithdraw (sum)){
+                Money = Money - sum;
+                return true;
+            }
+            return false;
+        }
+
+        protected void Deposit (double sum){
+            Money = Money + sum;
+        }
+
+
+
+        #endregion
+
     }
+
+    
+    
+
 }
