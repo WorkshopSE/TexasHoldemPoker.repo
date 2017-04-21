@@ -48,6 +48,26 @@ namespace Poker.BE.Domain.Security
             return false;
         }
 
+        public User LogIn (string userName, string password){
+            if (CheckExistingUser(userName)){ // We check that the user is existing in our DB
+               User UserToCheck;
+               if (UsersDictionary.TryGetValue(userName, out UserToCheck) ){ // We take the User Object from our DB
+                   string GoodPassword = UserToCheck.Password;
+                   bool arePasswordMatching = GoodPassword.Equals(password, StringComparison.Ordinal); // We check that the password is correct
+                   if (arePasswordMatching) {
+                       UserToCheck.Connect();
+                       return UserToCheck;
+                    }
+               }
+            }
+            return null;
+        }
+
+        public bool LogOut (User userToLogout){
+            userToLogout.Disconnect();
+            return true;
+        }
+
 
         #endregion
 
