@@ -10,29 +10,15 @@ namespace Poker.BE.Controllers
     public class ValuesController : ApiController
     {
         // GET api/values
-        //public IEnumerable<string> Get()
-        //{
-        //    return new string[] { "value1", "value2" };
-        //}
+        public IEnumerable<string> Get()
+        {
+            return new string[] { "value1", "value2" };
+        }
 
         // GET api/values/5
-        //public string Get(int id)
-        //{
-        //    return "value";
-        //}
-
-        //[HttpGet]
-        //public HttpResponseMessage idan(HttpRequestMessage request)
-        //{
-        //    request.
-        //    HttpResponseMessage response = request.CreateErrorResponse(HttpStatusCode.OK, "idan is great!");
-        //    return response;
-        //}
-
-        [HttpGet]
-        public string IdanTwoGet()
+        public string Get(int id)
         {
-            return "idan was here";
+            return "value";
         }
 
         // POST api/values
