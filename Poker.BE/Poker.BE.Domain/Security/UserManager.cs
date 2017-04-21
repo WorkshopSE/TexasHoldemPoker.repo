@@ -35,7 +35,9 @@ namespace Poker.BE.Domain.Security
         }
 
         protected bool CheckExistingUser (string userName){
-            return (UsersDictionary.ContainsKey(userName));
+            if (userName != null)
+                return (UsersDictionary.ContainsKey(userName));
+            return false;
         }
 
         
