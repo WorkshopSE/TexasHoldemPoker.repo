@@ -13,6 +13,16 @@ namespace Poker.BE.Domain.Core
         #region Properties
         protected string UserName { get; set;}
         protected string Password { get; set; }
+        protected Bank UserBank {get; set;}
+        #endregion
+
+        #region Methods
+        protected  AbstractUser (string userName, string password, double sumToDeposit){
+            UserName = userName;
+            Password = password;
+            UserBank = new Bank (sumToDeposit);
+        }
+
         #endregion
 
     }
