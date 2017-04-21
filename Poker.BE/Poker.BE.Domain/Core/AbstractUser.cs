@@ -14,7 +14,7 @@ namespace Poker.BE.Domain.Core
         protected string UserName { get; set;}
         public string Password { get; set; }
         protected Bank UserBank {get; set;}
-        protected bool isConnected {get; set;}
+        protected bool IsConnected {get; set;}
         #endregion
 
 

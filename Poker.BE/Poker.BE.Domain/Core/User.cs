@@ -13,15 +13,15 @@ namespace Poker.BE.Domain.Core
             UserName = userName;
             Password = password;
             UserBank = new Bank (sumToDeposit);
-            isConnected = true;
+            IsConnected = true;
         }
 
         public void Connect(){
-            isConnected = true;
+            IsConnected = true;
         }
 
         public void Disconnect(){
-            isConnected = false;
+            IsConnected = false;
         }
 
         #endregion   
