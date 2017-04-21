@@ -4,10 +4,13 @@
 
 ### Authers
 + Idan Izicovich
- + ID: `201512175`
- + private: <idanizi@gmail.com>
- + post: <idanizi@post.bgu.ac.il>
+  + ID: `201512175`
+  + private: <idanizi@gmail.com>
+  + post: <idanizi@post.bgu.ac.il>
 + Gal Wainer
+  + ID: 
+  + private:
+  + post:
 + Ariel Tobiana
 + Tomer Amdur
 + Asaf Ben Aharon
