@@ -52,18 +52,27 @@
     <Compile Include="Game\GamePreferences.cs" />
     <Compile Include="Game\GamePreferencesDecorator.cs" />
     <Compile Include="Game\Hand.cs" />
+    <Compile Include="Game\League.cs" />
     <Compile Include="Game\LimitHoldem.cs" />
     <Compile Include="Game\NoLimitHoldem.cs" />
+    <Compile Include="Game\PlayerManager.cs" />
+    <Compile Include="Game\Player.cs" />
+    <Compile Include="Game\Pot.cs" />
     <Compile Include="Game\PotLimitHoldem.cs" />
     <Compile Include="Game\PrivateCard.cs" />
     <Compile Include="Game\Room.cs" />
     <Compile Include="Game\Round.cs" />
     <Compile Include="Game\Turn.cs" />
+    <Compile Include="Game\Wallet.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Security\UserManager.cs" />
+    <Compile Include="Utility\Logger.cs" />
+    <Compile Include="Utility\Notification.cs" />
+    <Compile Include="Utility\Record.cs" />
+    <Compile Include="Utility\RecordManager.cs" />
+    <Compile Include="Utility\Statistics.cs" />
+    <Compile Include="Utility\StatisticsManager.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Security\" />
-    <Folder Include="Utility\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
