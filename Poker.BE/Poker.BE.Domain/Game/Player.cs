@@ -8,7 +8,17 @@ namespace Poker.BE.Domain.Game
 {
     public class Player
     {
-        // TODO: complete - set team member to do this
+        #region Enums
+        public enum State
+        {
+            ActiveUnfolded,
+            ActiveFolded,
+            Passive
+        }
+        #endregion
+        #region Properties
+        public State CurrentState { get; private set; }
+        #endregion
 
     }
 }

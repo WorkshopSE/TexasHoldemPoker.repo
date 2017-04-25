@@ -4,15 +4,16 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{FE034180-E60E-416E-8D0F-0D9155AC52CC}</ProjectGuid>
+    <ProjectGuid>{72EBEFD3-5DEE-4CFF-AA68-773081D82E82}</ProjectGuid>
     <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Poker.BE.Domain</RootNamespace>
-    <AssemblyName>Poker.BE.Domain</AssemblyName>
+    <RootNamespace>AT.Domain</RootNamespace>
+    <AssemblyName>AT.Domain</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -22,12 +23,16 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -40,40 +45,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Core\AbstractUser.cs" />
-    <Compile Include="Core\Administrator.cs" />
-    <Compile Include="Core\Bank.cs" />
-    <Compile Include="Core\GameCenter.cs" />
-    <Compile Include="Core\User.cs" />
-    <Compile Include="Game\Card.cs" />
-    <Compile Include="Game\Chair.cs" />
-    <Compile Include="Game\CommunityCard.cs" />
-    <Compile Include="Game\Deck.cs" />
-    <Compile Include="Game\GamePreferences.cs" />
-    <Compile Include="Game\GamePreferencesDecorator.cs" />
-    <Compile Include="Game\Hand.cs" />
-    <Compile Include="Game\League.cs" />
-    <Compile Include="Game\LimitHoldem.cs" />
-    <Compile Include="Game\NoLimitHoldem.cs" />
-    <Compile Include="Utility\Exceptions\NotEnoughPlayersException.cs" />
-    <Compile Include="Game\PlayerManager.cs" />
-    <Compile Include="Game\Player.cs" />
-    <Compile Include="Game\Pot.cs" />
-    <Compile Include="Game\PotLimitHoldem.cs" />
-    <Compile Include="Game\PrivateCard.cs" />
-    <Compile Include="Game\Room.cs" />
-    <Compile Include="Game\Round.cs" />
-    <Compile Include="Game\Turn.cs" />
-    <Compile Include="Game\Wallet.cs" />
+    <Compile Include="Card.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Security\UserManager.cs" />
-    <Compile Include="Utility\Logger.cs" />
-    <Compile Include="Utility\Notification.cs" />
-    <Compile Include="Utility\Record.cs" />
-    <Compile Include="Utility\RecordManager.cs" />
-    <Compile Include="Utility\Statistics.cs" />
-    <Compile Include="Utility\StatisticsManager.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

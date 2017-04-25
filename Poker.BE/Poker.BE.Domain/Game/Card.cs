@@ -6,57 +6,61 @@ using System.Threading.Tasks;
 
 namespace Poker.BE.Domain.Game
 {
-	public enum Suit
-	{
-		Hearts,
-		Clubs,
-		Spades,
-		Diamonds
-	}
-	public enum Value
-	{
-		Two,
-		Three,
-		Four,
-		Five,
-		Six,
-		Seven,
-		Eight,
-		Nine,
-		Ten,
-		Jack,
-		Queen,
-		King,
-		Ace,
-	}
-	public class Card
+    
+    public class Card
     {
-		// TODO: complete - set team member to do this
-		#region Properties
-		protected Suit CardSuit { get; }
-		protected Value CardNumber { get; }
-		protected int ShuffledIndex { get; }//used for shuffling cards
-		#endregion
+        #region Enums
+        public enum Suit
+        {
+            Hearts,
+            Clubs,
+            Spades,
+            Diamonds
+        }
+        public enum Value
+        {
+            Two,
+            Three,
+            Four,
+            Five,
+            Six,
+            Seven,
+            Eight,
+            Nine,
+            Ten,
+            Jack,
+            Queen,
+            King,
+            Ace,
+        }
 
-		#region Methods
-		public Card(Suit suit, Value num)
-		{
-			CardSuit = suit;
-			CardNumber = num;
-		}
-		public void EnumerateCard()
-		{
-			Random rnd = new Random(DateTime.Now.Millisecond);
-			ShuffledIndex = rnd.Next();
-		}
-		public int CompareTo(Card CardToCompare)
-		{
-			if (ShuffledIndex > CardToCompare.ShuffledIndex)
-				return 1;
-			else if (ShuffledIndex < CardToCompare.ShuffledIndex)
-				return -1;
-			return 0;
-		}
-		#endregion
-	}
+        #endregion
+
+        #region Properties
+        protected Suit CardSuit { get; }
+        protected Value CardNumber { get; }
+        protected int ShuffledIndex { get; private set; }//used for shuffling cards
+        #endregion
+
+        #region Methods
+        public Card(Suit suit, Value num)
+        {
+            CardSuit = suit;
+            CardNumber = num;
+        }
+        public void EnumerateCard()
+        {
+            Random rnd = new Random(DateTime.Now.Millisecond);
+            ShuffledIndex = rnd.Next();
+        }
+        public int CompareTo(Card CardToCompare)
+        {
+            if (ShuffledIndex > CardToCompare.ShuffledIndex)
+                return 1;
+            else if (ShuffledIndex < CardToCompare.ShuffledIndex)
+                return -1;
+            return 0;
+        }
+        #endregion
+    }
 }
