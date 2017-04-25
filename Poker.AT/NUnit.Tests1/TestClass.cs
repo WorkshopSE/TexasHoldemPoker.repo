@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Poker.AT
+namespace NUnit.Tests1
 {
     [TestFixture]
     public class TestClass
