@@ -8,7 +8,6 @@ using AT.Bridge;
 
 namespace AT.Tests
 {
-    [TestFixture]
     public class ProjectTests
     {
         protected TestsBridge bridge;

@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 namespace AT.Tests
 {
     [TestFixture]
+    [Category("Use Case 1")]
     public class TestUC1 : ProjectTests
     {
         [SetUp]
