@@ -9,7 +9,7 @@ namespace Poker.BE.Domain.Game
     public class Deck
     {
 		#region Properties
-		Dictionary<int, Card> DeckOfCards;
+		List <Card> DeckOfCards;
 		#endregion
 		// TODO: complete - set team member to do this
 		#region Methods
@@ -17,12 +17,15 @@ namespace Poker.BE.Domain.Game
 		{
 			foreach (Value value in Enum.GetValues(typeof(Value)))
 				foreach (Suit suit in Enum.GetValues(typeof(Suit)))
-					DeckOfCards.Add(1, new Card(suit, value));
+					DeckOfCards.Add(new Card(suit, value));
+			this.ShuffleCards();
 
 		}
 		protected void ShuffleCards()
 		{
-
+			foreach (Card UnshuffledCard in DeckOfCards)
+				UnshuffledCard.EnumerateCard();
+			DeckOfCards.Sort();
 		}
 		#endregion
 	}
