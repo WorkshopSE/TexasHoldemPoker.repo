@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using AT.Bridge;
+using NUnitLite;
 
 namespace AT.Tests
 {
