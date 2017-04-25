@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Poker.BE.Domain.Utility.Exceptions;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,15 +15,45 @@ namespace Poker.BE.Domain.Game
     /// </remarks>
     public class Room
     {
+        
+
         #region Fields
         private ICollection<Player> activeAndPassivePalyers;
         private Deck deck;
         #endregion
 
         #region Properties
+        // TODO: do we need ID for the Room? if so, what type should it be? 'long?' means nullable long.
+        //public long? ID { get; }
         public ICollection<Chair> Chairs { get; }
         public Hand CurrentHand { get; private set; }
         public GamePreferences Preferences { get; set; }
+        private ICollection<Player> ActivePlayers
+        {
+            get
+            {
+                return activeAndPassivePalyers.Where(
+                    player => (player.CurrentState == Player.State.ActiveUnfolded | player.CurrentState == Player.State.ActiveFolded))
+                    .ToList();
+
+                /* idan:
+                 * this is another cool way to filter on a collection (ICollection). just leaving it here...
+                 * */
+                //(from player in activeAndPassivePalyers
+                //where
+                // (player.CurrentState == Player.State.ActiveFolded || player.CurrentState == Player.State.ActiveUnfolded)
+                //select player).ToList();
+            }
+        }
+        private ICollection<Player> PassivePlayers
+        {
+            get
+            {
+                return activeAndPassivePalyers.Where(
+                    player => (player.CurrentState == Player.State.ActiveUnfolded | player.CurrentState == Player.State.ActiveFolded))
+                    .ToList();
+            }
+        }
         #endregion
 
         #region Constructors
@@ -32,7 +63,7 @@ namespace Poker.BE.Domain.Game
             deck = new Deck();
             Chairs = new Chair[Chair.NCHAIRS_IN_ROOM];
 
-            for(int i = 0; i < Chair.NCHAIRS_IN_ROOM; i++)
+            for (int i = 0; i < Chair.NCHAIRS_IN_ROOM; i++)
             {
                 Chairs.ToArray()[i] = new Chair(i);
             }
@@ -44,12 +75,12 @@ namespace Poker.BE.Domain.Game
 
         }
 
-        public Room(Player creator): this()
+        public Room(Player creator) : this()
         {
             activeAndPassivePalyers.Add(creator);
         }
 
-        public Room(Player creator, GamePreferences preferences): this(creator)
+        public Room(Player creator, GamePreferences preferences) : this(creator)
         {
             Preferences = preferences;
         }
@@ -59,13 +90,17 @@ namespace Poker.BE.Domain.Game
         #region Methods
         public void StartNewHand()
         {
-            CurrentHand = new Hand(deck);
+            if (ActivePlayers.Count < Hand.MINIMAL_NUMBER_OF_ACTIVE_PLAYERS)
+            {
+                throw new NotEnoughPlayersException();
+            }
+            CurrentHand = new Hand(deck, ActivePlayers);
         }
 
 
         public void SendMessage()
         {
-            //TODO
+            //TODO: 'UC006: Send Message to Room’s Chat' - for the ones that doing that
         }
         #endregion
 

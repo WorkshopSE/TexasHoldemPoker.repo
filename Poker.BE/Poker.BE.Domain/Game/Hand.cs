@@ -8,7 +8,10 @@ namespace Poker.BE.Domain.Game
 {
     public class Hand
     {
-        // TODO: complete - set team member to do this
+
+        #region Constants
+        public static readonly int MINIMAL_NUMBER_OF_ACTIVE_PLAYERS;
+        #endregion
         private Deck deck;
 
         public Hand(Deck deck)
