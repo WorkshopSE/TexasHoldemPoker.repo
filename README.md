@@ -18,13 +18,6 @@
 + Tomer Amdur
 + Asaf Ben Aharon
 
-## Last Updates & Features
-+ 2017-04-18:
- + Foundation, New BE instance
- + Working on:
-   + Service Layer
-   + Domain Layer
-
 ## Documentation
 
 ### How to see the Diagrams:
@@ -36,7 +29,7 @@ Name | Is a Diagram? | Available
 ---- | ------------- | ---------
 Glossary | No | Yes
 Class Diagram | Yes | Yes
-Component Diagram | Yes | No
+Component Diagram | Yes | Yes
 Use Case Specification | No | Yes
 
 ##### Sub Docs
@@ -68,3 +61,10 @@ Use Case Specification | No | Yes
   - [ ] UC025
   - [ ] UC026
   - [ ] UC027
+
+  ## Last Updates & Features
+  + 2017-04-18:
+    + Foundation, New BE instance
+    + Working on:
+      + Service Layer
+      + Domain Layer
