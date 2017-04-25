@@ -39,7 +39,7 @@ namespace Poker.BE.Domain.Game
         #region Properties
         protected Suit CardSuit { get; }
         protected Value CardNumber { get; }
-        protected int ShuffledIndex { get; }//used for shuffling cards
+        protected int ShuffledIndex { get; private set; }//used for shuffling cards
         #endregion
 
         #region Methods

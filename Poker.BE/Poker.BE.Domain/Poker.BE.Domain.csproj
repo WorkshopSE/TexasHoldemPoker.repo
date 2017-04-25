@@ -55,6 +55,7 @@
     <Compile Include="Game\League.cs" />
     <Compile Include="Game\LimitHoldem.cs" />
     <Compile Include="Game\NoLimitHoldem.cs" />
+    <Compile Include="Utility\Exceptions\NotEnoughPlayersException.cs" />
     <Compile Include="Game\PlayerManager.cs" />
     <Compile Include="Game\Player.cs" />
     <Compile Include="Game\Pot.cs" />
