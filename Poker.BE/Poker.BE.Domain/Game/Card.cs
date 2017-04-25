@@ -35,6 +35,7 @@ namespace Poker.BE.Domain.Game
 		#region Properties
 		protected Suit CardSuit;
 		protected Value CardNumber;
+		protected int ShuffledIndex; //used for shuffling cards
 		#endregion
 
 		#region Methods
@@ -42,6 +43,19 @@ namespace Poker.BE.Domain.Game
 		{
 			CardSuit = suit;
 			CardNumber = num;
+		}
+		public void EnumerateCard()
+		{
+			Random rnd = new Random(DateTime.Now.Millisecond);
+			ShuffledIndex = rnd.Next();
+		}
+		public int CompareTo(Card CardToCompare)
+		{
+			if (ShuffledIndex > CardToCompare.ShuffledIndex)
+				return 1;
+			else if (ShuffledIndex < CardToCompare.ShuffledIndex)
+				return -1;
+			return 0;
 		}
 		#endregion
 	}
