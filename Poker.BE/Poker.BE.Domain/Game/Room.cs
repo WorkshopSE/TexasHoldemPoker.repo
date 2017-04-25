@@ -15,24 +15,56 @@ namespace Poker.BE.Domain.Game
     public class Room
     {
         #region Fields
-        private ICollection<Player> ActiveAndPassivePalyers;
+        private ICollection<Player> activeAndPassivePalyers;
+        private Deck deck;
         #endregion
 
         #region Properties
         public ICollection<Chair> Chairs { get; }
-        public Hand CurrentHand { get; }
-        public GamePreferences GamePrefrences { get; set; }
+        public Hand CurrentHand { get; private set; }
+        public GamePreferences Preferences { get; set; }
+        #endregion
+
+        #region Constructors
+        private Room()
+        {
+            activeAndPassivePalyers = new List<Player>();
+            deck = new Deck();
+            Chairs = new Chair[Chair.NCHAIRS_IN_ROOM];
+
+            for(int i = 0; i < Chair.NCHAIRS_IN_ROOM; i++)
+            {
+                Chairs.ToArray()[i] = new Chair(i);
+            }
+
+            CurrentHand = null;
+
+            // Note: making default preferences to the room (poker game)
+            Preferences = new GamePreferences();
+
+        }
+
+        public Room(Player creator): this()
+        {
+            activeAndPassivePalyers.Add(creator);
+        }
+
+        public Room(Player creator, GamePreferences preferences): this(creator)
+        {
+            Preferences = preferences;
+        }
+
         #endregion
 
         #region Methods
         public void StartNewHand()
         {
-            //TODO
+            CurrentHand = new Hand(deck);
         }
 
 
         public void SendMessage()
-        { 
+        {
             //TODO
         }
         #endregion
