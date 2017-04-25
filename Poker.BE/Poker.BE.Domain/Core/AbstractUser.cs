@@ -8,7 +8,6 @@ namespace Poker.BE.Domain.Core
 {
     public abstract class AbstractUser
     {
-        // TODO: for Idan
 
         #region Properties
         protected string UserName { get; set;}

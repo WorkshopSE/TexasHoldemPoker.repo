@@ -19,7 +19,7 @@ namespace Poker.BE.Domain.Security
             UsersDictionary = new Dictionary <string, User>();
         }
 
-        protected bool AddUser (string userName, string password, double sumToDeposit){
+        protected bool SignIn (string userName, string password, double sumToDeposit){
             if ( !CheckExistingUser (userName) && CheckPasswordValidity(password) && sumToDeposit > 0 ){
                 User UserToAdd = new User (userName, password, sumToDeposit);
                 UsersDictionary.Add(userName, UserToAdd);
