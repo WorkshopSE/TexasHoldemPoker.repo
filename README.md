@@ -1,14 +1,14 @@
 # Texas Hold'em Poker
----
-## Workshop at Software Engineering
 
-### Authers
+#### Workshop at Software Engineering
+
+## Authers
 + Idan Izicovich
   + ID: `201512175`
   + private: <idanizi@gmail.com>
   + post: <idanizi@post.bgu.ac.il>
 + Gal Wainer
-  + ID: 
+  + ID:
   + private:
   + post:
 + Ariel Tobiana
@@ -18,14 +18,18 @@
 + Tomer Amdur
 + Asaf Ben Aharon
 
-### Last Updates & Features
+## Last Updates & Features
 + 2017-04-18:
  + Foundation, New BE instance
  + Working on:
    + Service Layer
    + Domain Layer
 
-### Documentation
+## Documentation
+
+### How to see the Diagrams:
+Please go to [draw.io](http://draw.io) and choose "open from > Device" option. Brows your machine to pick the .xml files you wish to see (the **xml** files **are** the Diagrams). Enjoy!
+![alt instructions at draw.io](https://raw.githubusercontent.com/WorkshopSE/TexasHoldemPoker.repo/idan_domain_0/Documentation/2017-04-25_1342.png)
 
 ##### Main Docs
 Name | Is a Diagram? | Available
