@@ -24,7 +24,7 @@
 Please go to [draw.io](http://draw.io) and choose "open from > Device" option. Brows your machine to pick the .xml files you wish to see (the **xml** files **are** the Diagrams). Enjoy!
 ![alt instructions at draw.io](https://raw.githubusercontent.com/WorkshopSE/TexasHoldemPoker.repo/idan_domain_0/Documentation/2017-04-25_1342.png)
 
-##### Main Docs
+### Main Docs
 Name | Document Type | Available Versions
 ---- | ------------- | ------------------
 Glossary | Sheet | 1.0
