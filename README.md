@@ -25,13 +25,16 @@ Please go to [draw.io](http://draw.io) and choose "open from > Device" option. B
 ![alt instructions at draw.io](https://raw.githubusercontent.com/WorkshopSE/TexasHoldemPoker.repo/idan_domain_0/Documentation/2017-04-25_1342.png)
 
 ##### Main Docs
-Name | Is a Diagram? | Available
----- | ------------- | ---------
-Glossary | No | Yes
-Class Diagram | Yes | Yes
-Component Diagram | Yes | Yes
-Use Case Specification | No | Yes
+Name | Document Type | Available Versions
+---- | ------------- | ------------------
+Glossary | Sheet | 1.0
+Class Diagram | Diagram | 1.0
+Component Diagram | Diagram | 1.0
+Use Case Specification | Doc | 1.0
+Version Summery | Slides | 1.0
+Requirements & Risk Analysis | Sheet | 1.0
 
+<!--
 ##### Sub Docs
 - Diagrams:
   - [ ] UC001
@@ -61,9 +64,27 @@ Use Case Specification | No | Yes
   - [ ] UC025
   - [ ] UC026
   - [ ] UC027
+  - [ ] UC028
+  - [ ] UC029
+  - [ ] UC030
+  - [ ] UC031
+  - [ ] UC032
+  - [ ] UC033
+  - [ ] UC034
+  - [ ] UC035
+  - [ ] UC036
+  - [ ] UC037
+  - [ ] UC038
+  - [ ] UC039
+  - [ ] UC040
+  - [ ] UC041
+  -->
 
   ## Last Updates & Features
-  + 2017-04-18:
+  + `2017-04-25`:
+    + New documents now available
+    + Acceptance Tests System
+  + `2017-04-18`:
     + Foundation, New BE instance
     + Working on:
       + Service Layer
