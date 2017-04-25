@@ -33,8 +33,8 @@ namespace Poker.BE.Domain.Game
     {
 		// TODO: complete - set team member to do this
 		#region Properties
-		protected Suit CardSuit;
-		protected Value CardNumber;
+		protected Suit CardSuit { get; }
+		protected Value CardNumber { get; }
 		#endregion
 
 		#region Methods
