@@ -18,7 +18,7 @@ namespace Poker.BE.Domain.Game
         
 
         #region Fields
-        private ICollection<Player> activeAndPassivePalyers;
+        private ICollection<Player> activeAndPassivePlayers;
         private Deck deck;
         #endregion
 
@@ -32,14 +32,14 @@ namespace Poker.BE.Domain.Game
         {
             get
             {
-                return activeAndPassivePalyers.Where(
+                return activeAndPassivePlayers.Where(
                     player => (player.CurrentState == Player.State.ActiveUnfolded | player.CurrentState == Player.State.ActiveFolded))
                     .ToList();
 
                 /* idan:
                  * this is another cool way to filter on a collection (ICollection). just leaving it here...
                  * */
-                //(from player in activeAndPassivePalyers
+                //(from player in activeAndPassivePlayers
                 //where
                 // (player.CurrentState == Player.State.ActiveFolded || player.CurrentState == Player.State.ActiveUnfolded)
                 //select player).ToList();
@@ -49,7 +49,7 @@ namespace Poker.BE.Domain.Game
         {
             get
             {
-                return activeAndPassivePalyers.Where(
+                return activeAndPassivePlayers.Where(
                     player => (player.CurrentState == Player.State.ActiveUnfolded | player.CurrentState == Player.State.ActiveFolded))
                     .ToList();
             }
@@ -59,7 +59,7 @@ namespace Poker.BE.Domain.Game
         #region Constructors
         private Room()
         {
-            activeAndPassivePalyers = new List<Player>();
+            activeAndPassivePlayers = new List<Player>();
             deck = new Deck();
             Chairs = new Chair[Chair.NCHAIRS_IN_ROOM];
 
@@ -77,7 +77,7 @@ namespace Poker.BE.Domain.Game
 
         public Room(Player creator) : this()
         {
-            activeAndPassivePalyers.Add(creator);
+            activeAndPassivePlayers.Add(creator);
         }
 
         public Room(Player creator, GamePreferences preferences) : this(creator)
@@ -90,7 +90,7 @@ namespace Poker.BE.Domain.Game
         #region Methods
         public void StartNewHand()
         {
-            if (ActivePlayers.Count < Hand.MINIMAL_NUMBER_OF_ACTIVE_PLAYERS)
+            if (ActivePlayers.Count < Hand.MINIMAL_NUMBER_OF_ACTIVE_PLAYERS_TO_START)
             {
                 throw new NotEnoughPlayersException();
             }
