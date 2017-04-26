@@ -6,12 +6,17 @@ using System.Threading.Tasks;
 
 namespace Poker.BE.Domain.Game
 {
+	/// <summary>Defiend Card and enum properties (suit and value) 
+	/// <remarks>
+	/// <author>Gal Wainer</author>
+	/// <lastModified>2017-04-26</lastModified>
+	/// </remarks>
 	public enum Suit
 	{
 		Hearts,
 		Clubs,
 		Spades,
-		Diamonds
+		Diamonds,
 	}
 	public enum Value
 	{
@@ -35,7 +40,7 @@ namespace Poker.BE.Domain.Game
 		#region Properties
 		protected Suit CardSuit { get; }
 		protected Value CardNumber { get; }
-		protected int ShuffledIndex { get; }//used for shuffling cards
+		protected int ShuffledIndex { get; set; }//used for shuffling cards
 		#endregion
 
 		#region Methods
