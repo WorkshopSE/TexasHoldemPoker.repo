@@ -90,7 +90,7 @@ namespace Poker.BE.Domain.Game
         #region Methods
         public void StartNewHand()
         {
-            if (ActivePlayers.Count < Hand.MINIMAL_NUMBER_OF_ACTIVE_PLAYERS)
+            if (ActivePlayers.Count < Hand.MINIMAL_NUMBER_OF_ACTIVE_PLAYERS_TO_START)
             {
                 throw new NotEnoughPlayersException();
             }

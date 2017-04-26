@@ -15,7 +15,7 @@ namespace Poker.BE.Domain.Game
     {
 
         #region Constants
-        public static readonly int MINIMAL_NUMBER_OF_ACTIVE_PLAYERS;
+        public static readonly int MINIMAL_NUMBER_OF_ACTIVE_PLAYERS_TO_START;
         #endregion
 
         #region Fields
