@@ -14,7 +14,7 @@ namespace Poker.BE.Domain.Game.Tests
         [TestMethod()]
         public void RoomTest()
         {
-            throw new NotImplementedException();
+            Assert.Fail(); //testing the ci tool
         }
 
         [TestMethod()]
