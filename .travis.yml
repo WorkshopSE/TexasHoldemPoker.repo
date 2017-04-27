@@ -1,2 +1,2 @@
 language: csharp
-solution: Poker.BE.sln
+solution: Poker.BE/Poker.BE.sln
