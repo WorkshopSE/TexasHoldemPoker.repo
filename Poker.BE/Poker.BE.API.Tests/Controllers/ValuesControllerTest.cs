@@ -32,14 +32,6 @@ namespace Poker.BE.API.Tests.Controllers
         [TestMethod]
         public void GetById()
         {
-            // Arrange
-            ValuesController controller = new ValuesController();
-
-            // Act
-            string result = controller.Get(5);
-
-            // Assert
-            Assert.AreEqual("value", result);
         }
 
         [TestMethod]
@@ -57,25 +49,12 @@ namespace Poker.BE.API.Tests.Controllers
         [TestMethod]
         public void Put()
         {
-            // Arrange
-            ValuesController controller = new ValuesController();
-
-            // Act
-            controller.Put(5, "value");
-
-            // Assert
         }
 
         [TestMethod]
         public void Delete()
         {
-            // Arrange
-            ValuesController controller = new ValuesController();
-
-            // Act
-            controller.Delete(5);
-
-            // Assert
+       
         }
     }
 }
