@@ -34,7 +34,7 @@ namespace Poker.BE.Domain.Game
 		King,
 		Ace,
 	}
-	public class Card
+	public class Card 
     {
 		// TODO: complete - set team member to do this
 		#region Properties
@@ -48,11 +48,12 @@ namespace Poker.BE.Domain.Game
 		{
 			CardSuit = suit;
 			CardNumber = num;
+			ShuffledIndex = 0;
 		}
 		public void EnumerateCard()
 		{
 			Random rnd = new Random(DateTime.Now.Millisecond);
-			ShuffledIndex = rnd.Next();
+			ShuffledIndex = rnd.Next(1, int.MaxValue);
 		}
 		public int CompareTo(Card CardToCompare)
 		{
