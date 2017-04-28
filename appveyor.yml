@@ -8,10 +8,11 @@ build:
   project: Poker.BE/
   verbosity: minimal
 
-test:
-  assemblies:
-  - '**\*API.Tests.dll'
+environment:
+  matrix:
+    - test_assembly: '**\*Domain.Tests.dll'
+    - test_assembly: '**\*API.Tests.dll'
 
 test:
   assemblies:
-  - '**\*Domain.Tests.dll'
+    - $(test_assembly)
