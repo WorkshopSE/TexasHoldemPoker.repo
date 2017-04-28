@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Threading;
 
 namespace Poker.BE.Domain.Game
 {
@@ -15,8 +16,6 @@ namespace Poker.BE.Domain.Game
     /// </remarks>
     public class Room
     {
-        
-
         #region Fields
         private ICollection<Player> activeAndPassivePlayers;
         private Deck deck;
@@ -25,7 +24,8 @@ namespace Poker.BE.Domain.Game
         #region Properties
         // TODO: do we need ID for the Room? if so, what type should it be? 'long?' means nullable long.
         //public long? ID { get; }
-        public ICollection<Chair> Chairs { get; }
+
+        public ICollection<Chair> Chairs { get; private set; }
         public Hand CurrentHand { get; private set; }
         public GamePreferences Preferences { get; set; }
         private ICollection<Player> ActivePlayers
@@ -35,14 +35,6 @@ namespace Poker.BE.Domain.Game
                 return activeAndPassivePlayers.Where(
                     player => (player.CurrentState == Player.State.ActiveUnfolded | player.CurrentState == Player.State.ActiveFolded))
                     .ToList();
-
-                /* idan:
-                 * this is another cool way to filter on a collection (ICollection). just leaving it here...
-                 * */
-                //(from player in activeAndPassivePlayers
-                //where
-                // (player.CurrentState == Player.State.ActiveFolded || player.CurrentState == Player.State.ActiveUnfolded)
-                //select player).ToList();
             }
         }
         private ICollection<Player> PassivePlayers
@@ -77,7 +69,18 @@ namespace Poker.BE.Domain.Game
 
         public Room(Player creator) : this()
         {
+            TakeAChair(0);
             activeAndPassivePlayers.Add(creator);
+        }
+
+        private void TakeAChair(int index)
+        {
+            Chairs.ElementAt(index).Take();
+        }
+
+        private void ReleaseAChair(int index)
+        {
+            Chairs.ElementAt(index).Release();
         }
 
         public Room(Player creator, GamePreferences preferences) : this(creator)
@@ -90,13 +93,10 @@ namespace Poker.BE.Domain.Game
         #region Methods
         public void StartNewHand()
         {
-            if (ActivePlayers.Count < Hand.MINIMAL_NUMBER_OF_ACTIVE_PLAYERS_TO_START)
-            {
-                throw new NotEnoughPlayersException();
-            }
             CurrentHand = new Hand(deck, ActivePlayers);
         }
 
+        // TODO: Take a chair, leave a chair - will chairsSemaphore.WaitOne() or Release()
 
         public void SendMessage()
         {

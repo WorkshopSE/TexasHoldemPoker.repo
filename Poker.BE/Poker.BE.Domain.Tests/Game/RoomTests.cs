@@ -11,22 +11,36 @@ namespace Poker.BE.Domain.Game.Tests
     [TestClass()]
     public class RoomTests
     {
-        [TestMethod()]
+
+        private TestContext testContext;
+
+        public TestContext TestContext { get { return testContext; } set { testContext = value; } }
+
+        [TestMethod]
         public void RoomTest()
         {
-            throw new NotImplementedException();
+            //Arrange
+            Player player = new Player();
+            GamePreferences preferences = new GamePreferences();
+
+            //Act
+            var result = new Room(player, preferences);
+
+            //Assert
+            TestContext.WriteLine("end of roomTest");
         }
 
-        [TestMethod()]
+        [TestMethod]
         public void StartNewHandTest()
         {
             throw new NotImplementedException();
         }
 
-        [TestMethod()]
+        [TestMethod]
         public void SendMessageTest()
         {
             throw new NotImplementedException();
         }
+
     }
 }
