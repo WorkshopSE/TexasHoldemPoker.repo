@@ -14,7 +14,7 @@ namespace Poker.BE.Domain.Game.Tests
 
         private TestContext testContext;
 
-        public TestContext TestContext { get => testContext; set => testContext = value; }
+        public TestContext TestContext { get { return testContext; } set { testContext = value; } }
 
         [TestMethod()]
         public void RoomTest()
