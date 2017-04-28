@@ -8,7 +8,42 @@ namespace Poker.BE.Domain.Utility
 {
     public class StatisticsManager
     {
-        // TODO: complete - set team member to do this
+        #region Properties
+        protected Dictionary<int, Statistics> StatisticsDictionary;
+        #endregion
 
+        #region
+        public StatisticsManager()
+        {
+            StatisticsDictionary = new Dictionary<int, Statistics>();
+        }
+
+        public bool AddUser(int userId)
+        {
+            if(!IsUserExist(userId)) {
+                Statistics StatisticsToAdd = new Statistics();
+                StatisticsDictionary.Add(userId, StatisticsToAdd);
+                return true;
+            }
+            return false;
+        }
+
+        public bool RemoveUser(int userId)
+        {
+            return StatisticsDictionary.Remove(userId);
+        }
+
+        public bool IsUserExist(int userId)
+        {
+            if(userId != null)
+                return StatisticsDictionary.ContainsKey(userId);
+            return false;
+        }
+
+        public Statistics GetUserStatistics(int userId)
+        {
+            return Statistics[userId];
+        }
+        #endregion
     }
 }
