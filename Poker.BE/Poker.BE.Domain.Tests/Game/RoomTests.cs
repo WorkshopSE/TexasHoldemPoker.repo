@@ -16,7 +16,7 @@ namespace Poker.BE.Domain.Game.Tests
 
         public TestContext TestContext { get { return testContext; } set { testContext = value; } }
 
-        [TestMethod()]
+        [TestMethod]
         public void RoomTest()
         {
             //Arrange
@@ -30,13 +30,13 @@ namespace Poker.BE.Domain.Game.Tests
             TestContext.WriteLine("end of roomTest");
         }
 
-        [TestMethod()]
+        [TestMethod]
         public void StartNewHandTest()
         {
             throw new NotImplementedException();
         }
 
-        [TestMethod()]
+        [TestMethod]
         public void SendMessageTest()
         {
             throw new NotImplementedException();

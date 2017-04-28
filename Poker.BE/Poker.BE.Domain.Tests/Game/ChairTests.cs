@@ -11,19 +11,19 @@ namespace Poker.BE.Domain.Game.Tests
     [TestClass()]
     public class ChairTests
     {
-        [TestMethod()]
+        [TestMethod]
         public void ChairTest()
         {
             throw new NotImplementedException();
         }
 
-        [TestMethod()]
+        [TestMethod]
         public void TakeTest()
         {
             throw new NotImplementedException();
         }
 
-        [TestMethod()]
+        [TestMethod]
         public void ReleaseTest()
         {
             throw new NotImplementedException();

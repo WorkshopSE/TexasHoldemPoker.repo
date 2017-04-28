@@ -8,10 +8,10 @@ using System.Threading.Tasks;
 
 namespace Poker.BE.Domain.Game.Tests
 {
-    [TestClass()]
+    [TestClass]
     public class HandTests
     {
-        [TestMethod()]
+        [TestMethod]
         public void DealCardsTest()
         {
             throw new NotImplementedException();
