@@ -10,4 +10,5 @@ build:
 
 test:
   assemblies:
-  - '**\*.Tests.dll'
+  - '**\*API.Tests.dll'
+  - '**\*Domain.Tests.dll'  
