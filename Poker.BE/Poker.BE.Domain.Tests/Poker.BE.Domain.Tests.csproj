@@ -51,6 +51,8 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Game\ChairTests.cs" />
+    <Compile Include="Game\HandTests.cs" />
     <Compile Include="Game\RoomTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

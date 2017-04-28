@@ -11,10 +11,23 @@ namespace Poker.BE.Domain.Game.Tests
     [TestClass()]
     public class RoomTests
     {
+
+        private TestContext testContext;
+
+        public TestContext TestContext { get => testContext; set => testContext = value; }
+
         [TestMethod()]
         public void RoomTest()
         {
-            Assert.Fail(); //testing the ci tool
+            //Arrange
+            Player player = new Player();
+            GamePreferences preferences = new GamePreferences();
+
+            //Act
+            var result = new Room(player, preferences);
+
+            //Assert
+            TestContext.WriteLine("end of roomTest");
         }
 
         [TestMethod()]
@@ -28,5 +41,6 @@ namespace Poker.BE.Domain.Game.Tests
         {
             throw new NotImplementedException();
         }
+
     }
 }
