@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Poker.BE.Domain.Game
 {
-	/// <summary>Defiend Card and enum properties (suit and value) 
+	/// <summary>Defiend Card and enum properties (suit and value) </summary>
 	/// <remarks>
 	/// <author>Gal Wainer</author>
 	/// <lastModified>2017-04-26</lastModified>
@@ -34,7 +34,7 @@ namespace Poker.BE.Domain.Game
 		King,
 		Ace,
 	}
-	public class Card 
+	public class Card : IComparable<Card>
     {
 		// TODO: complete - set team member to do this
 		#region Properties
@@ -55,6 +55,7 @@ namespace Poker.BE.Domain.Game
 			Random rnd = new Random(DateTime.Now.Millisecond);
 			ShuffledIndex = rnd.Next(1, int.MaxValue);
 		}
+
 		public int CompareTo(Card CardToCompare)
 		{
 			if (ShuffledIndex > CardToCompare.ShuffledIndex)
@@ -63,6 +64,8 @@ namespace Poker.BE.Domain.Game
 				return -1;
 			return 0;
 		}
+
+
 		#endregion
 	}
 }

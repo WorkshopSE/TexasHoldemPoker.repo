@@ -8,6 +8,11 @@ using System.Threading.Tasks;
 
 namespace Poker.BE.Domain.Game.Tests
 {
+	/// <summary>Card Test</summary >
+	/// <remarks>
+	/// <author>Gal Wainer</author>
+	/// <lastModified>2017-04-27</lastModified>
+	/// </remarks>
 	[TestClass()]
 	public class CardTests
 	{

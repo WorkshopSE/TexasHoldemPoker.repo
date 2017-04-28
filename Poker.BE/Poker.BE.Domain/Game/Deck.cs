@@ -14,7 +14,7 @@ namespace Poker.BE.Domain.Game
 	public class Deck
     {
 		#region Properties
-		List <Card> DeckOfCards;
+		protected List<Card> DeckOfCards { get; }
 		#endregion
 		// TODO: complete - set team member to do this
 		#region Methods
@@ -27,7 +27,7 @@ namespace Poker.BE.Domain.Game
 			this.ShuffleCards();
 
 		}
-		protected void ShuffleCards()
+		public void ShuffleCards()
 		{
 			foreach (Card UnshuffledCard in DeckOfCards)
 				UnshuffledCard.EnumerateCard();
