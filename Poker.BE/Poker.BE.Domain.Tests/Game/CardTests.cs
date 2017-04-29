@@ -1,5 +1,4 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Poker.BE.Domain.Tests.Game;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,38 +12,36 @@ namespace Poker.BE.Domain.Game.Tests
 	/// <author>Gal Wainer</author>
 	/// <lastModified>2017-04-27</lastModified>
 	/// </remarks>
-	[TestClass()]
+	[TestClass]
 	public class CardTests
 	{
-		[TestMethod()]
+		[TestMethod]
 		public void CardTest()
 		{
-			TestableCard TestCard = new TestableCard(Suit.Clubs, Value.Ace);
-			Assert.AreEqual(Suit.Clubs, TestCard.ExposeCardSuit());
-			Assert.AreEqual(Value.Ace, TestCard.ExposeCardValue());
+			Card TestCard = new Card(Suit.Clubs, Value.Ace);
+			Assert.IsNotNull(TestCard);
 		}
 
-		[TestMethod()]
+		[TestMethod]
 		public void EnumerateCardTest()
 		{
-			TestableCard TestCard = new TestableCard(Suit.Diamonds, Value.Eight);
-			Assert.AreEqual(0, TestCard.ExposeShuffledIndex());
+			Card TestCard = new Card(Suit.Diamonds, Value.Eight);
+			Assert.AreEqual(0, TestCard.ShuffledIndex);
 			TestCard.EnumerateCard();
-			Assert.AreNotEqual(0, TestCard.ExposeShuffledIndex());
+			Assert.AreNotEqual(0, TestCard.ShuffledIndex);
 		}
 
-		[TestMethod()]
+		[TestMethod]
 		public void CompareToTest()
 		{
-			TestableCard TestCard1 = new TestableCard(Suit.Diamonds, Value.Eight);
-			TestableCard TestCard2 = new TestableCard(Suit.Clubs, Value.Ace);
-			TestableCard TestCard3 = new TestableCard(Suit.Hearts, Value.Jack);
+/*			Card TestCard2 = new Card(Suit.Clubs, Value.Ace);
+			Card TestCard3 = new Card(Suit.Hearts, Value.Jack);
 			TestCard1.SetEnumerable(1);
 			TestCard2.SetEnumerable(1);
 			TestCard3.SetEnumerable(2);
 			Assert.AreEqual(0,TestCard1.CompareTo(TestCard2));
 			Assert.AreEqual(-1, TestCard1.CompareTo(TestCard3));
-			Assert.AreEqual(1, TestCard3.CompareTo(TestCard1));
+			Assert.AreEqual(1, TestCard3.CompareTo(TestCard1));*/
 		}
 	}
 }

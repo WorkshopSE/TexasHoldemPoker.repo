@@ -14,7 +14,7 @@ namespace Poker.BE.Domain.Game
 	public class Deck
     {
 		#region Properties
-		protected List<Card> DeckOfCards { get; }
+		public List<Card> DeckOfCards { get; }
 		#endregion
 		// TODO: complete - set team member to do this
 		#region Methods
@@ -24,7 +24,6 @@ namespace Poker.BE.Domain.Game
 			foreach (Value value in Enum.GetValues(typeof(Value)))
 				foreach (Suit suit in Enum.GetValues(typeof(Suit)))
 					DeckOfCards.Add(new Card(suit, value));
-			this.ShuffleCards();
 
 		}
 		public void ShuffleCards()

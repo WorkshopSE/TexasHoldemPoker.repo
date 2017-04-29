@@ -16,7 +16,7 @@ namespace Poker.BE.Domain.Game
 		Hearts,
 		Clubs,
 		Spades,
-		Diamonds,
+		Diamonds
 	}
 	public enum Value
 	{
@@ -40,7 +40,7 @@ namespace Poker.BE.Domain.Game
 		#region Properties
 		protected Suit CardSuit { get; }
 		protected Value CardNumber { get; }
-		protected int ShuffledIndex { get; set; }//used for shuffling cards
+		public int ShuffledIndex { get; private set; }//used for shuffling cards
 		#endregion
 
 		#region Methods

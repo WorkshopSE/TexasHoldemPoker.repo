@@ -1,6 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Poker.BE.Domain.Game;
-using Poker.BE.Domain.Tests.Game;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,23 +8,23 @@ using System.Threading.Tasks;
 
 namespace Poker.BE.Domain.Game.Tests
 {
-	[TestClass()]
+	[TestClass]
 	public class DeckTests
 	{
-		[TestMethod()]
+		[TestMethod]
 		public void DeckTest()
 		{
-			TestableDeck TestDeck = new TestableDeck();
-			Assert.AreEqual(52, TestDeck.ExposeCardDeck().Count);
+			Deck TestDeck = new Deck();
+			Assert.IsNotNull(TestDeck);
 		}
 
-		[TestMethod()]
+		[TestMethod]
 		public void ShuffleCardsTest()
 		{
-			TestableDeck TestDeck = new TestableDeck();
+			Deck TestDeck = new Deck();
 			for (int i = 1; i < 52; i++)
 			{
-				Assert.AreNotEqual(1, TestDeck.ExposeCardDeck()[i - 1].CompareTo(TestDeck.ExposeCardDeck()[i]));
+				Assert.AreNotEqual(1, TestDeck.DeckOfCards[i - 1].CompareTo(TestDeck.DeckOfCards[i]));
 			}
 		}
 	}
