@@ -26,7 +26,7 @@ namespace Poker.BE.Domain.Game
         // TODO: Question: do we need ID for the Room? if so, what type should it be? 'long?' means nullable long.
         //public long? ID { get; }
 
-        public ICollection<Chair> Chairs { get => chairs; }
+        public ICollection<Chair> Chairs { get { return chairs; } }
         public Hand CurrentHand { get; private set; }
         public GamePreferences Preferences { get; set; }
         private ICollection<Player> ActivePlayers
