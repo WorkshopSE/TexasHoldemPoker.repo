@@ -10,14 +10,39 @@ namespace Poker.BE.Domain.Game
     {
         #region Constants
         public static readonly int NCHAIRS_IN_ROOM = 10;
-        private int index;
+        #endregion
 
+        #region Fields
+        private int index;
+        private bool isBusy;
+        #endregion
+
+        #region Constructors
         public Chair(int index)
         {
             this.index = index;
+            lock (this) { isBusy = false; }
+        }
+
+        #endregion
+
+        #region Methods
+        public bool Take()
+        {
+            if (isBusy) return false;
+            lock (this)
+            {
+                if (isBusy) return false;
+                isBusy = true;
+            }
+            return true;
+        }
+
+        public void Release()
+        {
+            lock (this) { isBusy = false; }
         }
         #endregion
-        // TODO: complete - set team member to do this
 
     }
 }

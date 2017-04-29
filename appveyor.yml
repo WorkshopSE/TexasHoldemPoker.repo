@@ -1,0 +1,18 @@
+version: 1.0.{build}
+before_build:
+- cmd: >-
+    cd Poker.BE/
+
+    nuget restore
+build:
+  project: Poker.BE/
+  verbosity: minimal
+
+environment:
+  matrix:
+    - test_assembly: '**\*Domain.Tests.dll'
+    - test_assembly: '**\*API.Tests.dll'
+
+test:
+  assemblies:
+    - $(test_assembly)

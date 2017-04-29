@@ -16,8 +16,21 @@ namespace Poker.BE.Domain.Game
             Passive
         }
         #endregion
+
+        #region Constants
+        public static readonly int NPRIVATE_CARDS = 2;
+        #endregion
+
         #region Properties
         public State CurrentState { get; private set; }
+        public Card[] PrivateCards { get; set; }
+        #endregion
+
+        #region Constructors
+        public Player()
+        {
+            PrivateCards = new Card[NPRIVATE_CARDS];
+        }
         #endregion
 
     }
