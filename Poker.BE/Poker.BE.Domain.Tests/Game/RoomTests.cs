@@ -30,17 +30,5 @@ namespace Poker.BE.Domain.Game.Tests
             TestContext.WriteLine("end of roomTest");
         }
 
-        [TestMethod]
-        public void StartNewHandTest()
-        {
-            throw new NotImplementedException();
-        }
-
-        [TestMethod]
-        public void SendMessageTest()
-        {
-            throw new NotImplementedException();
-        }
-
     }
 }
