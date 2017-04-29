@@ -25,8 +25,8 @@ namespace Poker.BE.Domain.Game
 		public Deck()
 		{
 			DeckOfCards = new List<Card>();
-			foreach (Value value in Enum.GetValues(typeof(Value)))
-				foreach (Suit suit in Enum.GetValues(typeof(Suit)))
+			foreach (Card.Value value in Enum.GetValues(typeof(Card.Value)))
+				foreach (Card.Suit suit in Enum.GetValues(typeof(Card.Suit)))
 					DeckOfCards.Add(new Card(suit, value));
 
 		}
