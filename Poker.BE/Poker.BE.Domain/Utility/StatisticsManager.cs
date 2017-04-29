@@ -42,7 +42,7 @@ namespace Poker.BE.Domain.Utility
 
         public Statistics GetUserStatistics(int userId)
         {
-            return Statistics[userId];
+            return StatisticsDictionary[userId];
         }
         #endregion
     }

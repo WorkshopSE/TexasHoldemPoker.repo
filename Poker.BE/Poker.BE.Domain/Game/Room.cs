@@ -12,7 +12,8 @@ namespace Poker.BE.Domain.Game
     /// <summary> Defined the room that the players are playing at the game </summary>
     /// <remarks>
     /// <author>Idan Izicovich</author>
-    /// <lastModified>2017-04-25</lastModified>
+    /// <author>Tomer Amdur</author>
+    /// <lastModified>2017-04-29</lastModified>
     /// </remarks>
     public class Room
     {
@@ -102,6 +103,11 @@ namespace Poker.BE.Domain.Game
         public void SendMessage()
         {
             //TODO: 'UC006: Send Message to Room’s Chat' - for the ones that doing that
+        }
+        
+        public void StartRecording()
+        {
+            
         }
         #endregion
 
