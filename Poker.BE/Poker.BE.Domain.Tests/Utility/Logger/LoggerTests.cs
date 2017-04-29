@@ -164,7 +164,8 @@ namespace Poker.BE.Domain.Utility.Logger.Tests
             //Arrange
             try
             {
-                throw new Exception("test") {
+                throw new Exception("test")
+                {
                     HelpLink = "http://www.google.com"
                 };
             }
@@ -187,5 +188,39 @@ namespace Poker.BE.Domain.Utility.Logger.Tests
                 Assert.AreEqual<string>(expected.Substring(expected.IndexOf(',', 0)), actual.Substring(actual.IndexOf(',', 0)));
             }
         }
-    }
+
+        [TestMethod()]
+        public void ErrorTest2()
+        {
+            //Arrange
+            string myMessage = "my message";
+            try
+            {
+                throw new Exception("test")
+                {
+                    HelpLink = "http://www.google.com"
+                };
+            }
+            catch (Exception e)
+            {
+                string expected =
+                    LogTestPrefix("Exception Error", "Critical")
+                    + "Our Message: " + myMessage + Logger.ENDL
+                    + "Message: " + e.Message + Logger.ENDL
+                    + "Source: " + e.Source + Logger.ENDL
+                    + "Help Link: " + e.HelpLink
+                    + LogTestSuffix();
+
+                //Act
+                logger.Error(e, myMessage, this, "Critical");
+                string[] memo = GetLogMemory(logger);
+                string actual =
+                    memo[memo.Length - 1];
+
+                //Assert
+                Assert.AreEqual<string>(expected.Substring(expected.IndexOf(',', 0)), actual.Substring(actual.IndexOf(',', 0)));
+            }
+        }// test
+
+    }// class
 }
