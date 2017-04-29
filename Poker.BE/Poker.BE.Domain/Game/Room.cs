@@ -19,13 +19,14 @@ namespace Poker.BE.Domain.Game
         #region Fields
         private ICollection<Player> activeAndPassivePlayers;
         private Deck deck;
+        private Chair[] chairs;
         #endregion
 
         #region Properties
         // TODO: do we need ID for the Room? if so, what type should it be? 'long?' means nullable long.
         //public long? ID { get; }
 
-        public ICollection<Chair> Chairs { get; private set; }
+        public ICollection<Chair> Chairs { get { return chairs; } }
         public Hand CurrentHand { get; private set; }
         public GamePreferences Preferences { get; set; }
         private ICollection<Player> ActivePlayers
@@ -53,7 +54,7 @@ namespace Poker.BE.Domain.Game
         {
             activeAndPassivePlayers = new List<Player>();
             deck = new Deck();
-            Chairs = new Chair[Chair.NCHAIRS_IN_ROOM];
+            chairs = new Chair[Chair.NCHAIRS_IN_ROOM];
 
             for (int i = 0; i < Chair.NCHAIRS_IN_ROOM; i++)
             {
@@ -67,22 +68,22 @@ namespace Poker.BE.Domain.Game
 
         }
 
+        /// <summary>
+        /// UC003 Create a new room 
+        /// </summary>
+        /// <param name="creator">enter the room as a passive player.</param>
+        /// <see cref="https://docs.google.com/document/d/1ob4bSynssE3UOfehUAFNv_VDpPbybhS4dW_O-v-QDiw/edit#heading=h.tzy1eb1jifgr"/>
         public Room(Player creator) : this()
         {
-            TakeAChair(0);
             activeAndPassivePlayers.Add(creator);
         }
 
-        private void TakeAChair(int index)
-        {
-            Chairs.ElementAt(index).Take();
-        }
-
-        private void ReleaseAChair(int index)
-        {
-            Chairs.ElementAt(index).Release();
-        }
-
+        /// <summary>
+        /// UC003 Create a new room 
+        /// </summary>
+        /// <param name="creator">enter the room as a passive player.</param>
+        /// <param name="preferences">limit / no limit / pot limit </param>
+        /// <see cref="https://docs.google.com/document/d/1ob4bSynssE3UOfehUAFNv_VDpPbybhS4dW_O-v-QDiw/edit#heading=h.tzy1eb1jifgr"/>
         public Room(Player creator, GamePreferences preferences) : this(creator)
         {
             Preferences = preferences;
@@ -101,6 +102,18 @@ namespace Poker.BE.Domain.Game
         public void SendMessage()
         {
             //TODO: 'UC006: Send Message to Room’s Chat' - for the ones that doing that
+        }
+        #endregion
+
+        #region Private Functions
+        private void TakeAChair(int index)
+        {
+            chairs[index].Take();
+        }
+
+        private void ReleaseAChair(int index)
+        {
+            chairs[index].Release();
         }
         #endregion
 
