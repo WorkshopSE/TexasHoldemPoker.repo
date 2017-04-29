@@ -17,14 +17,14 @@ namespace Poker.BE.Domain.Utility.Logger
          * Stack Trace (if needed!, only squashed & little of it)
          * current class / function / relevant fields / properties
          * */
-        void Log(object obj);
-        void Log(string message);
-        void warn(string message);
-        void error(string message);
-        void error(Exception e);
-        void error(Exception e, string message);
-        void debug(string message);
-        void info(string message);
+        void Log(object obj, object sender, string priority = "Low");
+        void Log(string message, object sender, string priority = "Low");
+        void Warn(string message, object sender, string priority = "Medium");
+        void Error(string message, object sender, string priority = "High");
+        void Error(Exception e, object sender, string priority = "High");
+        void Error(Exception e, string message, object sender, string priority = "High");
+        void Debug(string message, object sender, string priority = "Low");
+        void Info(string message, object sender, string priority = "Low");
 
     }
 }
