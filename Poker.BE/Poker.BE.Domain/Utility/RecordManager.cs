@@ -9,15 +9,17 @@ namespace Poker.BE.Domain.Utility
     public class RecordManager
     {
         #region Properties
-        protected Dictionary<int, Record> RecordsDictionary;
+        protected Dictionary<int, List<Record>> RecordsDictionary;
         #endregion
 
-        #region Methods
+        #region Constructors
         public RecordManager()
         {
             RecordsDictionary = new Dictionary<int, List<Record>>();
         }
+        #endregion
 
+        #region Methods
         public bool AddUser(int userId)
         {
             if(!IsUserExist(userId)) {
@@ -35,9 +37,7 @@ namespace Poker.BE.Domain.Utility
 
         public bool IsUserExist(int userId)
         {
-            if(userId != null)
-                return RecordsDictionary.ContainsKey(userId);
-            return false;
+            return RecordsDictionary.ContainsKey(userId);
         }
 
         public List<Record> GetUserRecords(int userId)

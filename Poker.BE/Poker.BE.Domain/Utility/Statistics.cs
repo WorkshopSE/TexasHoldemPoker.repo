@@ -14,14 +14,16 @@ namespace Poker.BE.Domain.Utility
         protected int TotalBalance {get; private set;}      //The amount of money gained\lost in total
         #endregion
 
-        #region Methods
+        #region Constructors
         public Statistics()
         {
             NumOfHandsPlayed = 0;
             NumOfHandsWon = 0;
             TotalBalance = 0;
         }
+        #endregion
 
+        #region Methods
         public void AddHandPlayed()
         {
             NumOfHandsPlayed++;

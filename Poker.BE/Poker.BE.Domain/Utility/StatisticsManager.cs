@@ -12,12 +12,14 @@ namespace Poker.BE.Domain.Utility
         protected Dictionary<int, Statistics> StatisticsDictionary;
         #endregion
 
-        #region Methods
+        #region Constructors
         public StatisticsManager()
         {
             StatisticsDictionary = new Dictionary<int, Statistics>();
         }
+        #endregion
 
+        #region Methods
         public bool AddUser(int userId)
         {
             if(!IsUserExist(userId)) {
@@ -35,9 +37,7 @@ namespace Poker.BE.Domain.Utility
 
         public bool IsUserExist(int userId)
         {
-            if(userId != null)
-                return StatisticsDictionary.ContainsKey(userId);
-            return false;
+            return StatisticsDictionary.ContainsKey(userId);
         }
 
         public Statistics GetUserStatistics(int userId)

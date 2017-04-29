@@ -8,6 +8,6 @@ namespace Poker.BE.Domain.Utility
 {
     public class Logger
     {
-        // TODO: complete - set team member to do this
+        
     }
 }

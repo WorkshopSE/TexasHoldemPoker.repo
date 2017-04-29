@@ -14,11 +14,13 @@ namespace Poker.BE.Domain.Security
 
         #endregion
 
-        #region Methods
+        #region Constructors
         public UserManager (){
             UsersDictionary = new Dictionary <string, User>();
         }
+        #endregion
 
+        #region Methods
         protected bool AddUser (string userName, string password, double sumToDeposit){
             if ( !CheckExistingUser (userName) && CheckPasswordValidity(password) && sumToDeposit > 0 ){
                 User UserToAdd = new User (userName, password, sumToDeposit);
@@ -63,7 +65,6 @@ namespace Poker.BE.Domain.Security
             userToLogout.Disconnect();
             return true;
         }
-
 
         #endregion
 

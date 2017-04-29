@@ -6,16 +6,16 @@ using System.Threading.Tasks;
 
 namespace Poker.BE.Domain.Utility
 {
-    public class Record
+    public class HandRecord : Record
     {
-        #region Properties
-        private bool isFavourite { get; set; }
+        #region Properties;
+        List<RoundRecord>
         #endregion
 
         #region Constructors
-        public Record()
+        public HandRecord()
         {
-            isFavourite = false;
+            //TODO
         }
         #endregion
     }
