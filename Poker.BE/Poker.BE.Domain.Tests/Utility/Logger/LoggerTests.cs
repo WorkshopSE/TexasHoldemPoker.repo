@@ -69,14 +69,19 @@ namespace Poker.BE.Domain.Utility.Logger.Tests
         {
             //Arrange
             string message = "test";
-            string[] expected = new string[] { LogTestPrefix("Debug") + message + LogTestSuffix() };
+            string[] expected = new string[] {
+                LogTestPrefix("Debug") + message + LogTestSuffix()
+            };
 
             //Act
             logger.Debug(message, this);
             string[] actual = GetLogMemory(logger);
 
             //assert
-            Assert.AreEqual<string>(expected[0], actual[actual.Length - 1]);
+            Assert.AreEqual<string>(
+                expected[0].Substring(expected[0].IndexOf(',', 0)),
+                actual[actual.Length - 1].Substring(actual[actual.Length - 1].IndexOf(',', 0))
+                );
         }
 
 
@@ -93,7 +98,10 @@ namespace Poker.BE.Domain.Utility.Logger.Tests
             string[] actual = GetLogMemory(logger);
 
             //assert
-            Assert.AreEqual<string>(expected[0], actual[actual.Length - 1]);
+            Assert.AreEqual<string>(
+               expected[0].Substring(expected[0].IndexOf(',', 0)),
+               actual[actual.Length - 1].Substring(actual[actual.Length - 1].IndexOf(',', 0))
+               );
         }
 
         [TestMethod]
@@ -108,7 +116,10 @@ namespace Poker.BE.Domain.Utility.Logger.Tests
             string[] actual = GetLogMemory(logger);
 
             //assert
-            Assert.AreEqual<string>(expected[0], actual[actual.Length - 1]);
+            Assert.AreEqual<string>(
+               expected[0].Substring(expected[0].IndexOf(',', 0)),
+               actual[actual.Length - 1].Substring(actual[actual.Length - 1].IndexOf(',', 0))
+               );
         }
 
         [TestMethod]
@@ -123,7 +134,10 @@ namespace Poker.BE.Domain.Utility.Logger.Tests
             string[] actual = GetLogMemory(logger);
 
             //assert
-            Assert.AreEqual<string>(expected[0], actual[actual.Length - 1]);
+            Assert.AreEqual<string>(
+               expected[0].Substring(expected[0].IndexOf(',', 0)),
+               actual[actual.Length - 1].Substring(actual[actual.Length - 1].IndexOf(',', 0))
+               );
         }
 
         [TestMethod]
@@ -138,7 +152,10 @@ namespace Poker.BE.Domain.Utility.Logger.Tests
             string[] actual = GetLogMemory(logger);
 
             //assert
-            Assert.AreEqual<string>(expected[0], actual[actual.Length - 1]);
+            Assert.AreEqual<string>(
+               expected[0].Substring(expected[0].IndexOf(',', 0)),
+               actual[actual.Length - 1].Substring(actual[actual.Length - 1].IndexOf(',', 0))
+               );
         }
 
         [TestMethod()]
@@ -146,27 +163,21 @@ namespace Poker.BE.Domain.Utility.Logger.Tests
         {
             //Arrange
             Exception e = new Exception("exception message");
-            string message =
-                LogTestPrefix("Exception Error", "Critical") + "\n"
-                   + "Message: " + e.Message + "\n"
-                   + "Source: " + e.Source + "\n"
-                   + "Help Link: " + e.HelpLink + LogTestSuffix();
             string expected =
-                LogTestPrefix("Exception Error") +
-                message +
-                LogTestSuffix();
+                LogTestPrefix("Exception Error", "Critical")
+                + "Message: " + e.Message + Logger.ENDL
+                + "Source: " + e.Source + Logger.ENDL
+                + "Help Link: " + e.HelpLink
+                + LogTestSuffix();
 
             //Act
             logger.Error(e, this, "Critical");
             string[] memo = GetLogMemory(logger);
             string actual =
-                memo[memo.Length - 1] +
-                memo[memo.Length - 2] +
-                memo[memo.Length - 3] +
-                memo[memo.Length - 4];
+                memo[memo.Length - 1];
 
             //Assert
-            Assert.AreEqual<string>(expected, actual);
+            Assert.AreEqual<string>(expected.Substring(expected.IndexOf(',', 0)), actual.Substring(actual.IndexOf(',', 0)));
         }
     }
 }

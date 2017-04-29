@@ -15,13 +15,16 @@ namespace Poker.BE.Domain.Utility.Logger
     /// <see cref="http://csharpindepth.com/Articles/General/Singleton.aspx"/>
     public sealed class Logger : ILogger
     {
+        #region Constants
+        public static readonly string ENDL = "; ";
+        public static readonly string DELIMITER = ","; // CSV delimiter
+        #endregion
+
         #region Fields
         private static readonly Logger instance = new Logger();
         private string filetype = default(string);
         private string filename = default(string);
         private string dirPath = default(string);
-        private string delimiter = default(string);
-        private string endl = default(string);
         #endregion
 
         #region Constructors
@@ -39,8 +42,6 @@ namespace Poker.BE.Domain.Utility.Logger
             filetype = "csv";
             filename = "log." + filetype;
             dirPath = "";
-            delimiter = ",";
-            endl = "; ";
         }
 
         public static Logger Instance
@@ -156,10 +157,10 @@ namespace Poker.BE.Domain.Utility.Logger
         {
             return
                 "[" + DateTime.Now.ToShortDateString() + " "
-                + DateTime.Now.ToLongTimeString() + "]" + delimiter
-                + priority + delimiter
-                + name + delimiter
-                + "<" + sender.GetType().FullName + "> :" + delimiter;
+                + DateTime.Now.ToLongTimeString() + "]" + DELIMITER
+                + priority + DELIMITER
+                + name + DELIMITER
+                + "<" + sender.GetType().FullName + "> :" + DELIMITER;
         }
         #endregion
 
@@ -167,6 +168,7 @@ namespace Poker.BE.Domain.Utility.Logger
 
         public void Debug(string message, object sender, string priority = "Low")
         {
+            message = message.Replace("\n", ENDL);
             AppendToFile(
                 LogPrefix("Debug", sender, priority)
                 + message +
@@ -185,6 +187,7 @@ namespace Poker.BE.Domain.Utility.Logger
 
         public void Log(string message, object sender, string priority = "Low")
         {
+            message = message.Replace("\n", ENDL);
             AppendToFile(
                LogPrefix("Logging", sender, priority)
                + message +
@@ -194,7 +197,7 @@ namespace Poker.BE.Domain.Utility.Logger
 
         public void Warn(string message, object sender, string priority = "Medium")
         {
-            message = message.Replace("\n", endl);
+            message = message.Replace("\n", ENDL);
             AppendToFile(
                LogPrefix("Warning", sender, priority)
                + message +
@@ -204,7 +207,7 @@ namespace Poker.BE.Domain.Utility.Logger
 
         public void Error(string message, object sender, string priority = "High")
         {
-            message = message.Replace("\n", endl);
+            message = message.Replace("\n", ENDL);
             AppendToFile(
                LogPrefix("Error", sender, priority)
                + message +
@@ -216,8 +219,8 @@ namespace Poker.BE.Domain.Utility.Logger
         {
             AppendToFile(
                LogPrefix("Exception Error", sender, priority)
-               + "Message: " + e.Message + endl
-               + "Source: " + e.Source + endl
+               + "Message: " + e.Message + ENDL
+               + "Source: " + e.Source + ENDL
                + "Help Link: " + e.HelpLink
                + LogSuffix()
                );
@@ -225,12 +228,12 @@ namespace Poker.BE.Domain.Utility.Logger
 
         public void Error(Exception e, string message, object sender, string priority = "High")
         {
-            message = message.Replace("\n", endl);
+            message = message.Replace("\n", ENDL);
             AppendToFile(
                LogPrefix("Exception Error", sender, priority)
-               + "Our Message: " + message + endl
-               + "Message: " + e.Message + endl
-               + "Source: " + e.Source + endl
+               + "Our Message: " + message + ENDL
+               + "Message: " + e.Message + ENDL
+               + "Source: " + e.Source + ENDL
                + "Help Link: " + e.HelpLink
                + LogSuffix()
                );
@@ -238,7 +241,7 @@ namespace Poker.BE.Domain.Utility.Logger
 
         public void Info(string message, object sender, string priority = "Low")
         {
-            message = message.Replace("\n", endl);
+            message = message.Replace("\n", ENDL);
             AppendToFile(
                LogPrefix("Info", sender, priority)
                + message +
