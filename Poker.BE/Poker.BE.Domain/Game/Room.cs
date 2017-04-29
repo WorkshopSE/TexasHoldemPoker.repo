@@ -19,13 +19,14 @@ namespace Poker.BE.Domain.Game
         #region Fields
         private ICollection<Player> activeAndPassivePlayers;
         private Deck deck;
+        private Chair[] chairs;
         #endregion
 
         #region Properties
-        // TODO: do we need ID for the Room? if so, what type should it be? 'long?' means nullable long.
+        // TODO: Question: do we need ID for the Room? if so, what type should it be? 'long?' means nullable long.
         //public long? ID { get; }
 
-        public ICollection<Chair> Chairs { get; private set; }
+        public ICollection<Chair> Chairs { get => chairs; }
         public Hand CurrentHand { get; private set; }
         public GamePreferences Preferences { get; set; }
         private ICollection<Player> ActivePlayers
@@ -53,11 +54,13 @@ namespace Poker.BE.Domain.Game
         {
             activeAndPassivePlayers = new List<Player>();
             deck = new Deck();
-            Chairs = new Chair[Chair.NCHAIRS_IN_ROOM];
+
+            // Initiate chairs in the room
+            chairs = new Chair[Chair.NCHAIRS_IN_ROOM];
 
             for (int i = 0; i < Chair.NCHAIRS_IN_ROOM; i++)
             {
-                Chairs.ToArray()[i] = new Chair(i);
+                chairs[i] = new Chair(i);
             }
 
             CurrentHand = null;
@@ -69,20 +72,11 @@ namespace Poker.BE.Domain.Game
 
         public Room(Player creator) : this()
         {
-            TakeAChair(0);
+            // Note: the creator is passive palyer at creation.
             activeAndPassivePlayers.Add(creator);
         }
 
-        private void TakeAChair(int index)
-        {
-            // TODO - idan - fix null pointer exception
-            Chairs.ElementAt(index).Take();
-        }
 
-        private void ReleaseAChair(int index)
-        {
-            Chairs.ElementAt(index).Release();
-        }
 
         public Room(Player creator, GamePreferences preferences) : this(creator)
         {
@@ -97,11 +91,21 @@ namespace Poker.BE.Domain.Game
             CurrentHand = new Hand(deck, ActivePlayers);
         }
 
-        // TODO: Take a chair, leave a chair - will chairsSemaphore.WaitOne() or Release()
-
         public void SendMessage()
         {
             //TODO: 'UC006: Send Message to Room’s Chat' - for the ones that doing that
+        }
+        #endregion
+
+        #region Private Functions
+        private void TakeAChair(int index)
+        {
+            chairs[index].Take();
+        }
+
+        private void ReleaseAChair(int index)
+        {
+            chairs[index].Release();
         }
         #endregion
 
