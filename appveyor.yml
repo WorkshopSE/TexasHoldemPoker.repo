@@ -1,12 +1,12 @@
 version: 1.0.{build}
 
 before_build:
-- cmd: >-
-    nuget restore
-    
+- cmd: >-    
     cd Poker.BE/
-    
 
+    nuget restore  
+    
+    
 build:
   project: Poker.BE/
   verbosity: minimal
