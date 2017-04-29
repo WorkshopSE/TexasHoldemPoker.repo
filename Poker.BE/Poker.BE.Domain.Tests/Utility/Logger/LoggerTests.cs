@@ -162,22 +162,30 @@ namespace Poker.BE.Domain.Utility.Logger.Tests
         public void ErrorTest1()
         {
             //Arrange
-            Exception e = new Exception("exception message");
-            string expected =
-                LogTestPrefix("Exception Error", "Critical")
-                + "Message: " + e.Message + Logger.ENDL
-                + "Source: " + e.Source + Logger.ENDL
-                + "Help Link: " + e.HelpLink
-                + LogTestSuffix();
+            try
+            {
+                throw new Exception("test") {
+                    HelpLink = "http://www.google.com"
+                };
+            }
+            catch (Exception e)
+            {
+                string expected =
+                    LogTestPrefix("Exception Error", "Critical")
+                    + "Message: " + e.Message + Logger.ENDL
+                    + "Source: " + e.Source + Logger.ENDL
+                    + "Help Link: " + e.HelpLink
+                    + LogTestSuffix();
 
-            //Act
-            logger.Error(e, this, "Critical");
-            string[] memo = GetLogMemory(logger);
-            string actual =
-                memo[memo.Length - 1];
+                //Act
+                logger.Error(e, this, "Critical");
+                string[] memo = GetLogMemory(logger);
+                string actual =
+                    memo[memo.Length - 1];
 
-            //Assert
-            Assert.AreEqual<string>(expected.Substring(expected.IndexOf(',', 0)), actual.Substring(actual.IndexOf(',', 0)));
+                //Assert
+                Assert.AreEqual<string>(expected.Substring(expected.IndexOf(',', 0)), actual.Substring(actual.IndexOf(',', 0)));
+            }
         }
     }
 }
