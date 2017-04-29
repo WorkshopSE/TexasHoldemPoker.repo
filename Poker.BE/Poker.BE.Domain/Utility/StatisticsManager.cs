@@ -12,7 +12,7 @@ namespace Poker.BE.Domain.Utility
         protected Dictionary<int, Statistics> StatisticsDictionary;
         #endregion
 
-        #region
+        #region Methods
         public StatisticsManager()
         {
             StatisticsDictionary = new Dictionary<int, Statistics>();

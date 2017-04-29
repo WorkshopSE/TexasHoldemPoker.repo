@@ -29,11 +29,7 @@ namespace Poker.BE.Domain.Security
         }
 
         protected bool RemoveUser (string userName){
-            if (CheckExistingUser (userName)){
-                UsersDictionary.Remove(userName);
-                return true;
-            }
-            return false;
+                return UsersDictionary.Remove(userName);
         }
 
         protected bool CheckExistingUser (string userName){
