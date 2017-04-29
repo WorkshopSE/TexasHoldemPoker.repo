@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Poker.BE.Domain.Game.Tests
 {
-    [TestClass()]
+    [TestClass]
     public class RoomTests
     {
 
@@ -30,17 +30,19 @@ namespace Poker.BE.Domain.Game.Tests
             TestContext.WriteLine("end of roomTest");
         }
 
-        [TestMethod]
-        public void StartNewHandTest()
-        {
-            throw new NotImplementedException();
-        }
+        //TODO tests
 
-        [TestMethod]
-        public void SendMessageTest()
-        {
-            throw new NotImplementedException();
-        }
+        //[TestMethod]
+        //public void StartNewHandTest()
+        //{
+        //    throw new NotImplementedException();
+        //}
+
+        //[TestMethod]
+        //public void SendMessageTest()
+        //{
+        //    throw new NotImplementedException();
+        //}
 
     }
 }

@@ -14,7 +14,7 @@ namespace Poker.BE.Domain.Game.Tests
         [TestMethod]
         public void DealCardsTest()
         {
-            throw new NotImplementedException();
+            //TODO
         }
     }
 }
