@@ -75,6 +75,7 @@ namespace Poker.BE.Domain.Game
 
         private void TakeAChair(int index)
         {
+            // TODO - idan - fix null pointer exception
             Chairs.ElementAt(index).Take();
         }
 
