@@ -53,8 +53,6 @@
   <ItemGroup>
     <Compile Include="Game\CardTests.cs" />
     <Compile Include="Game\DeckTests.cs" />
-    <Compile Include="Game\TestableCard.cs" />
-    <Compile Include="Game\TestableDeck.cs" />
     <Compile Include="UnitTest1.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

@@ -31,17 +31,17 @@ namespace Poker.BE.Domain.Game.Tests
 			Assert.AreNotEqual(0, TestCard.ShuffledIndex);
 		}
 
-		[TestMethod]
-		public void CompareToTest()
+		//[TestMethod]
+		/*public void CompareToTest()
 		{
-/*			Card TestCard2 = new Card(Suit.Clubs, Value.Ace);
+			Card TestCard2 = new Card(Suit.Clubs, Value.Ace);
 			Card TestCard3 = new Card(Suit.Hearts, Value.Jack);
 			TestCard1.SetEnumerable(1);
 			TestCard2.SetEnumerable(1);
 			TestCard3.SetEnumerable(2);
 			Assert.AreEqual(0,TestCard1.CompareTo(TestCard2));
 			Assert.AreEqual(-1, TestCard1.CompareTo(TestCard3));
-			Assert.AreEqual(1, TestCard3.CompareTo(TestCard1));*/
-		}
+			Assert.AreEqual(1, TestCard3.CompareTo(TestCard1));
+		}*/
 	}
 }
