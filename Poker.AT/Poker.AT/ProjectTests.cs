@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using AT.Bridge;
+using AT.Domain;
 using NUnitLite;
 
 namespace AT.Tests
@@ -21,7 +22,13 @@ namespace AT.Tests
         {
             return bridge.testCase1(someParam);
         }
-        public string UC2(String someParam)
+
+		internal bool ShuffleCards(Deck TestDeck)
+		{
+			return bridge.ShuffleCards(TestDeck);
+		}
+
+		public string UC2(String someParam)
         {
             return bridge.testCase2(someParam);
         }

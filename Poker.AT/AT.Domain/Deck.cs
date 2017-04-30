@@ -6,10 +6,8 @@ using System.Threading.Tasks;
 
 namespace AT.Domain
 {
-    class Card
-    {
-        //TODO implement entities for testing
-		//אובייקט מזוייף שהגשר יכול להחזיר
-
-    }
+	public class Deck
+	{
+		public Deck(){ }
+	}
 }
