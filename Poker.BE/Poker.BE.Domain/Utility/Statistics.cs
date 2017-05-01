@@ -24,12 +24,23 @@ namespace Poker.BE.Domain.Utility
         #endregion
 
         #region Methods
-        public void AddHandPlayed()
+        public void UpdateStatistic(bool won, int amount)
+        {
+            AddHandsPlayed();
+            if (won)
+            {
+                AddHandsWon();
+                ChangeBalance(amount);
+            }
+            else
+                ChangeBalance(amount);
+        }
+        public void AddHandsPlayed()
         {
             NumOfHandsPlayed++;
         }
 
-        public void AddHandWin()
+        public void AddHandsWon()
         {
             NumOfHandsWon++;
         }

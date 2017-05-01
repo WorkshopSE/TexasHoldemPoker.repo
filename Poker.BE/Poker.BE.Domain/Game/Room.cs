@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Threading;
+using Poker.BE.Domain.Utility;
 
 namespace Poker.BE.Domain.Game
 {
@@ -19,6 +20,7 @@ namespace Poker.BE.Domain.Game
     {
         #region Fields
         private ICollection<Player> activeAndPassivePlayers;
+        private StatisticsManager statisticManager;
         private Deck deck;
         #endregion
 
@@ -107,7 +109,12 @@ namespace Poker.BE.Domain.Game
         
         public void StartRecording()
         {
-            
+            //TODO: UC016: Store & Retrieve Games Information
+        }
+
+        public void UpdateUserStatistics(int userId, bool won, int amount)
+        {
+            statisticManager.UpdateUserStatistics(userId, won, amount);
         }
         #endregion
 

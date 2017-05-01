@@ -8,7 +8,7 @@ namespace Poker.BE.Domain.Utility
 {
     public class StatisticsManager
     {
-        #region Properties
+        #region Fields
         protected Dictionary<int, Statistics> StatisticsDictionary;
         #endregion
 
@@ -43,6 +43,12 @@ namespace Poker.BE.Domain.Utility
         public Statistics GetUserStatistics(int userId)
         {
             return StatisticsDictionary[userId];
+        }
+
+        public void UpdateUserStatistics(int userId, bool won, int amount)
+        {
+            Statistics usersStatistics = GetUserStatistics(userId);
+            usersStatistics.UpdateStatistic(won, amount);
         }
         #endregion
     }

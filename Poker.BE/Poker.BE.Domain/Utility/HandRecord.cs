@@ -6,17 +6,11 @@ using System.Threading.Tasks;
 
 namespace Poker.BE.Domain.Utility
 {
-    public class HandRecord : Record
+    class HandRecord
     {
-        #region Properties;
-        List<RoundRecord>
-        #endregion
-
-        #region Constructors
-        public HandRecord()
+        public HandRecord() : base()
         {
-            //TODO
+
         }
-        #endregion
     }
 }
