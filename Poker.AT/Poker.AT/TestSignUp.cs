@@ -40,7 +40,7 @@ namespace AT.Tests
 			}
 		}
 		[Test]
-		public void UniqeID()
+		public void TestUniqeID()
 		{
 			Assert.AreNotEqual(TestUser.ID, SecondTestUser.ID);
 		}
