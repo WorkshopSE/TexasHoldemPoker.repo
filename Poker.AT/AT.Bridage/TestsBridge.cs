@@ -14,5 +14,7 @@ namespace AT.Bridge
         int testCase1(int someParam);
         string testCase2(string someParam);
 		IList<Card> ShuffleCards(Deck TestDeck);
+		bool Login( string UserName, string Password);
+		User SignUp(string Name, string UserName, string Password);
 	}
 }

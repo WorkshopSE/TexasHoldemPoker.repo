@@ -19,9 +19,14 @@ namespace AT.Tests
             this.bridge = Driver.getBridge();
         }
 
-		internal int SignUp(string v1, string v2, string v3)
+		public User SignUp(string Name, string UserName, string Password)
 		{
-			throw new NotImplementedException();
+			return bridge.SignUp(Name, UserName, Password);
+		}
+
+		public bool Login(string UserName, string Password)
+		{
+			return bridge.Login( UserName, Password);
 		}
 
 		public int UC1(int someParam)

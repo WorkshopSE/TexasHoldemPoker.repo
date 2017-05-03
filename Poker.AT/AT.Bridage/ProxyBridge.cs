@@ -14,11 +14,18 @@ namespace AT.Bridge
         {
             bridge = null;
         }
-        public void setRealBridge(TestsBridge implementation)
+
+
+		public void setRealBridge(TestsBridge implementation)
         {
             if (bridge == null)
                 bridge = implementation;
         }
+
+		public bool Login(string UserName, string Password)
+		{
+			return bridge.Login(UserName,Password);
+		}
 
 		public IList<Card> ShuffleCards(Deck TestDeck)
 		{
@@ -35,5 +42,10 @@ namespace AT.Bridge
         {
             return bridge.testCase2(someParam);
         }
-    }
+
+		public User SignUp(string Name, string UserName, string Password)
+		{
+			return bridge.SignUp(Name, UserName, Password);
+		}
+	}
 }

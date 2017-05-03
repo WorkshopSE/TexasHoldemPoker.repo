@@ -9,9 +9,19 @@ namespace AT.Bridge
 {
     class Stub : TestsBridge
     {
+		public bool Login(string UserName, string Password)
+		{
+			return false;
+		}
+
 		public IList<Card> ShuffleCards(Deck TestDeck)
 		{
 			return new List<Card>();
+		}
+
+		public User SignUp(string Name, string UserName, string Password)
+		{
+			return new User(Name, UserName, Password);
 		}
 
 		public int testCase1(int someParam)

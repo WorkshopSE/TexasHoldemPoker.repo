@@ -9,7 +9,17 @@ namespace AT.Bridge
 {
     class Real : TestsBridge
     {
+		public bool Login(string UserName, string Password)
+		{
+			throw new NotImplementedException();
+		}
+
 		public IList<Card> ShuffleCards(Deck TestDeck)
+		{
+			throw new NotImplementedException();
+		}
+
+		public User SignUp(string Name, string UserName, string Password)
 		{
 			throw new NotImplementedException();
 		}

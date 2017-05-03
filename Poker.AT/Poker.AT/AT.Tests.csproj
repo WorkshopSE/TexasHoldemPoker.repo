@@ -46,6 +46,7 @@
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="TestLogin.cs" />
     <Compile Include="TestShuffleCard.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="ProjectTests.cs" />
