@@ -16,5 +16,6 @@ namespace AT.Bridge
 		IList<Card> ShuffleCards(Deck TestDeck);
 		bool Login( string UserName, string Password);
 		User SignUp(string Name, string UserName, string Password);
+		bool Logout(string UserName, string Password);
 	}
 }

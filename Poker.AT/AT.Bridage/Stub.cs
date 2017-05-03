@@ -9,6 +9,10 @@ namespace AT.Bridge
 {
     class Stub : TestsBridge
     {
+		public bool Logout(string UserName, string Password)
+		{
+			return false;
+		}
 		public bool Login(string UserName, string Password)
 		{
 			return false;

@@ -24,6 +24,11 @@ namespace AT.Tests
 			return bridge.SignUp(Name, UserName, Password);
 		}
 
+		public bool Logout(string UserName, string Password)
+		{
+			return bridge.Logout(UserName, Password);
+		}
+
 		public bool Login(string UserName, string Password)
 		{
 			return bridge.Login( UserName, Password);

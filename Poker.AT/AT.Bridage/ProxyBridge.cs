@@ -21,7 +21,10 @@ namespace AT.Bridge
             if (bridge == null)
                 bridge = implementation;
         }
-
+		public bool Logout(string UserName, string Password)
+		{
+			return bridge.Logout(UserName, Password);
+		}
 		public bool Login(string UserName, string Password)
 		{
 			return bridge.Login(UserName,Password);

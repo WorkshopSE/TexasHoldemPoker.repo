@@ -9,6 +9,10 @@ namespace AT.Bridge
 {
     class Real : TestsBridge
     {
+		public bool Logout(string UserName, string Password)
+		{
+			throw new NotImplementedException();
+		}
 		public bool Login(string UserName, string Password)
 		{
 			throw new NotImplementedException();
