@@ -13,6 +13,6 @@ namespace AT.Bridge
         //Example:
         int testCase1(int someParam);
         string testCase2(string someParam);
-		bool ShuffleCards(Deck TestDeck);
+		IList<Card> ShuffleCards(Deck TestDeck);
 	}
 }

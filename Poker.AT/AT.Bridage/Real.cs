@@ -9,7 +9,7 @@ namespace AT.Bridge
 {
     class Real : TestsBridge
     {
-		public bool ShuffleCards(Deck TestDeck)
+		public IList<Card> ShuffleCards(Deck TestDeck)
 		{
 			throw new NotImplementedException();
 		}

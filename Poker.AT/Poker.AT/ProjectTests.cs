@@ -29,7 +29,7 @@ namespace AT.Tests
             return bridge.testCase1(someParam);
         }
 
-		internal bool ShuffleCards(Deck TestDeck)
+		public IList<Card> ShuffleCards(Deck TestDeck)
 		{
 			return bridge.ShuffleCards(TestDeck);
 		}

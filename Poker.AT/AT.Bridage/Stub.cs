@@ -9,9 +9,9 @@ namespace AT.Bridge
 {
     class Stub : TestsBridge
     {
-		public bool ShuffleCards(Deck TestDeck)
+		public IList<Card> ShuffleCards(Deck TestDeck)
 		{
-			return false;
+			return new List<Card>();
 		}
 
 		public int testCase1(int someParam)

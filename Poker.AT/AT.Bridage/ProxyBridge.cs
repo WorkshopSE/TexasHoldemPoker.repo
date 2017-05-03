@@ -20,7 +20,7 @@ namespace AT.Bridge
                 bridge = implementation;
         }
 
-		public bool ShuffleCards(Deck TestDeck)
+		public IList<Card> ShuffleCards(Deck TestDeck)
 		{
 			return bridge.ShuffleCards(TestDeck);
 		}

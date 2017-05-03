@@ -17,12 +17,13 @@ namespace AT.Tests
 		public new void Setup()
 		{
 			base.Setup();
-			TestDeck = new Deck();
+			Deck TestDeck = new Deck();
+			ShuffleCards(TestDeck);
 		}
 		[Test]
 		public void TestShuffleCards()
 		{
-			Assert.IsTrue(base.ShuffleCards(TestDeck));
+			CollectionAssert.AreNotEqual(ShuffleCards(TestDeck), ShuffleCards(TestDeck));
 		}
 	}
 }
