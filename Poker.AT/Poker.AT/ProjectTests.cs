@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using AT.Bridge;
 using AT.Domain;
 using NUnitLite;
+using System.Drawing;
 
 namespace AT.Tests
 {
@@ -23,7 +24,10 @@ namespace AT.Tests
 		{
 			return bridge.SignUp(Name, UserName, Password);
 		}
-
+		public void EditProfilePassword(User User, string Password )
+		{
+			bridge.EditProfilePassword(User, Password);
+		}
 		public bool Logout(string UserName, string Password)
 		{
 			return bridge.Logout(UserName, Password);
@@ -39,6 +43,11 @@ namespace AT.Tests
             return bridge.testCase1(someParam);
         }
 
+		public void EditProfileEmail(User User, string Email)
+		{
+			bridge.EditProfileEmail(User,Email);
+		}
+
 		public IList<Card> ShuffleCards(Deck TestDeck)
 		{
 			return bridge.ShuffleCards(TestDeck);
@@ -48,5 +57,10 @@ namespace AT.Tests
         {
             return bridge.testCase2(someParam);
         }
-    }
+
+		internal Image EditProfileAvatar(Image TestUserImage)
+		{
+			return bridge.EditProfileAvatar(TestUserImage);
+		}
+	}
 }

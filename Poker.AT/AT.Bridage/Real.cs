@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -38,5 +39,20 @@ namespace AT.Bridge
         {
             throw new NotImplementedException();
         }
-    }
+
+		public void EditProfilePassword(User User, string Password)
+		{
+			throw new NotImplementedException();
+		}
+
+		public void EditProfileEmail(User User, string Email)
+		{
+			throw new NotImplementedException();
+		}
+
+		public Image EditProfileAvatar(Image TestUserImage)
+		{
+			throw new NotImplementedException();
+		}
+	}
 }

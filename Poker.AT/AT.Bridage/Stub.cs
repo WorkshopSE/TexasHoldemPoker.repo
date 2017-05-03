@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -37,5 +38,20 @@ namespace AT.Bridge
         {
             return "FAKE_HERE";
         }
-    }
+
+		public void EditProfilePassword(User User, string Password)
+		{
+			
+		}
+
+		public void EditProfileEmail(User User, string Email)
+		{
+			
+		}
+
+		public Image EditProfileAvatar(Image TestUserImage)
+		{
+			return Image.FromFile("DefaultAvatar");
+		}
+	}
 }

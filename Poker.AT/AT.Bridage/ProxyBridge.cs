@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -49,6 +50,21 @@ namespace AT.Bridge
 		public User SignUp(string Name, string UserName, string Password)
 		{
 			return bridge.SignUp(Name, UserName, Password);
+		}
+
+		public void EditProfilePassword(User User, string Password)
+		{
+			bridge.EditProfilePassword(User,Password);
+		}
+
+		public void EditProfileEmail(User User, string Email)
+		{
+			bridge.EditProfileEmail(User, Email);
+		}
+
+		public Image EditProfileAvatar(Image TestUserImage)
+		{
+			return bridge.EditProfileAvatar(TestUserImage);
 		}
 	}
 }
