@@ -46,33 +46,59 @@ namespace Poker.BE.Domain.Security.Tests
             var userManager = new UserManager();
 
             //Act
-            var res1 = userManager.RemoveUser("yossi");
             userManager.AddUser("yossi", "password", 100);
+            var res1 = userManager.RemoveUser("yossi");
             var res2 = userManager.RemoveUser("yossi");
 
             //Assert
-            Assert.IsFalse(res1);
-            Assert.IsTrue(res2);
+            Assert.IsTrue(res1);
+            Assert.IsFalse(res2);
         }
 
         [TestMethod()]
         public void LogInTest()
         {
-            throw new NotImplementedException();
+            //Arrange
+            var userManager = new UserManager();
+
+            //Act
+            var res1 = userManager.LogIn("yossi", "password") != null;
+            userManager.AddUser("yossi", "mypassword", 200);
+            var res2 = userManager.LogIn("yossi", "password") != null;
+            var res3 = userManager.LogIn("yossi", "mypassword") != null;
+
+            //Assert
+            Assert.IsFalse(res1);
+            Assert.IsFalse(res2);
+            Assert.IsTrue(res3);
         }
 
         [TestMethod()]
         public void LogOutTest()
         {
-            throw new NotImplementedException();
+            // simple code
         }
 
         [TestMethod()]
         public void EditProfileTest()
         {
-            throw new NotImplementedException();
+            //Arrange
+            var userManager = new UserManager();
+
+            //Act
+            var res1 = userManager.EditProfile("yossi", "dana", "password", "hat");
+            userManager.AddUser("yossi", "mypassword", 200);
+            var res2 = userManager.EditProfile("yossi", "dana", "pass", "hat");
+            var res3 = userManager.EditProfile("yossi", "dana", "password", "hat");
+            userManager.AddUser("dana", "danapassword", 200);
+            var res4 = userManager.EditProfile("yossi", "dana", "password", "hat");
+
+            //Assert
+            Assert.IsFalse(res1);
+            Assert.IsFalse(res2);
+            Assert.IsTrue(res3);
+            Assert.IsFalse(res4);
         }
-
-
-
+        
+    }
 }

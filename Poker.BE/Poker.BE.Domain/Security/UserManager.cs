@@ -66,25 +66,21 @@ namespace Poker.BE.Domain.Security
 
         public bool EditProfile (string oldUserName, string newUserName, string newPassword, string newAvatar)
         {
+            if (!CheckExistingUser(oldUserName)) //Check user's existance
+            {
+                return false;
+            }
             User userToUpdate = UsersDictionary[oldUserName];
+            RemoveUser(oldUserName);
 
-            if (!CheckExistingUser(newUserName))    //Check username validation
+            if (CheckExistingUser(newUserName) || !CheckPasswordValidity(newPassword))  //Check new username and password validation
             {
-                userToUpdate.UserName = newUserName;
+                return false;
             }
-            else return false;
-
-            if (!newPassword.Equals(""))        //if password is empty, do nothing (keep the old password)
-            {
-                if (CheckPasswordValidity(newPassword))  //Check password validation
-                {
-                    userToUpdate.Password = newPassword;
-                }
-                else return false;
-            }
-
+            userToUpdate.UserName = newUserName;
+            userToUpdate.Password = newPassword;
             userToUpdate.Avatar = newAvatar;
-
+            UsersDictionary.Add(newUserName, userToUpdate);
             return true;
         }
         #endregion
