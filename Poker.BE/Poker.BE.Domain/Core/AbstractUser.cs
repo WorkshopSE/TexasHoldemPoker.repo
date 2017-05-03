@@ -10,10 +10,11 @@ namespace Poker.BE.Domain.Core
     {
 
         #region Properties
-        protected string UserName { get; set;}
+        public string UserName { get; set;}
         public string Password { get; set; }
-        protected Bank UserBank {get; set;}
-        protected bool IsConnected {get; set;}
+        public string Avatar { get; set; }
+        protected Bank UserBank { get; set; }
+        protected bool IsConnected { get; set; }
         #endregion
 
 

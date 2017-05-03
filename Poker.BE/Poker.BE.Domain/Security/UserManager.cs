@@ -19,7 +19,7 @@ namespace Poker.BE.Domain.Security
             UsersDictionary = new Dictionary <string, User>();
         }
 
-        protected bool AddUser (string userName, string password, double sumToDeposit){
+        public bool AddUser (string userName, string password, double sumToDeposit){         //Sign up to the system
             if ( !CheckExistingUser (userName) && CheckPasswordValidity(password) && sumToDeposit > 0 ){
                 User UserToAdd = new User (userName, password, sumToDeposit);
                 UsersDictionary.Add(userName, UserToAdd);
@@ -28,12 +28,9 @@ namespace Poker.BE.Domain.Security
             return false;
         }
 
-        protected bool RemoveUser (string userName){
-            if (CheckExistingUser (userName)){
-                UsersDictionary.Remove(userName);
-                return true;
-            }
-            return false;
+        public bool RemoveUser (string userName){
+            return UsersDictionary.Remove(userName);    //returns true if found and deleted
+
         }
 
         protected bool CheckExistingUser (string userName){
@@ -41,7 +38,6 @@ namespace Poker.BE.Domain.Security
                 return (UsersDictionary.ContainsKey(userName));
             return false;
         }
-
         
         protected bool CheckPasswordValidity (string password){
             if (password.Length >= 6 ) return true;
@@ -68,7 +64,29 @@ namespace Poker.BE.Domain.Security
             return true;
         }
 
+        public bool EditProfile (string oldUserName, string newUserName, string newPassword, string newAvatar)
+        {
+            User userToUpdate = UsersDictionary[oldUserName];
 
+            if (!CheckExistingUser(newUserName))    //Check username validation
+            {
+                userToUpdate.UserName = newUserName;
+            }
+            else return false;
+
+            if (!newPassword.Equals(""))        //if password is empty, do nothing (keep the old password)
+            {
+                if (CheckPasswordValidity(newPassword))  //Check password validation
+                {
+                    userToUpdate.Password = newPassword;
+                }
+                else return false;
+            }
+
+            userToUpdate.Avatar = newAvatar;
+
+            return true;
+        }
         #endregion
 
     }
