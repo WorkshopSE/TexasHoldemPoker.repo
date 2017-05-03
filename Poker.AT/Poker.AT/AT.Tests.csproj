@@ -50,6 +50,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="ProjectTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TestSignUp.cs" />
     <Compile Include="TestUC1.cs" />
     <Compile Include="TestUC2.cs" />
   </ItemGroup>

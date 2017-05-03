@@ -18,7 +18,13 @@ namespace AT.Tests
         {
             this.bridge = Driver.getBridge();
         }
-        public int UC1(int someParam)
+
+		internal int SignUp(string v1, string v2, string v3)
+		{
+			throw new NotImplementedException();
+		}
+
+		public int UC1(int someParam)
         {
             return bridge.testCase1(someParam);
         }
