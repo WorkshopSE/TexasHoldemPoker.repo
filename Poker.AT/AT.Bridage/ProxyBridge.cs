@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using AT.Domain;
 
 namespace AT.Bridge
 {
@@ -19,8 +20,13 @@ namespace AT.Bridge
                 bridge = implementation;
         }
 
-        //Implementation Example:
-        public int testCase1(int someParam)
+		public IList<Card> ShuffleCards(Deck TestDeck)
+		{
+			return bridge.ShuffleCards(TestDeck);
+		}
+
+		//Implementation Example:
+		public int testCase1(int someParam)
         {
             return bridge.testCase1(someParam);
         }

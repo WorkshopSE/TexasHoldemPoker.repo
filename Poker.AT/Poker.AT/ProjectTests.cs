@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using AT.Bridge;
+using AT.Domain;
 using NUnitLite;
 
 namespace AT.Tests
@@ -17,11 +18,23 @@ namespace AT.Tests
         {
             this.bridge = Driver.getBridge();
         }
-        public int UC1(int someParam)
+
+		internal int SignUp(string v1, string v2, string v3)
+		{
+			throw new NotImplementedException();
+		}
+
+		public int UC1(int someParam)
         {
             return bridge.testCase1(someParam);
         }
-        public string UC2(String someParam)
+
+		public IList<Card> ShuffleCards(Deck TestDeck)
+		{
+			return bridge.ShuffleCards(TestDeck);
+		}
+
+		public string UC2(String someParam)
         {
             return bridge.testCase2(someParam);
         }

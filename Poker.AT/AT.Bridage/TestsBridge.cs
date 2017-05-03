@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AT.Domain;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,5 +13,6 @@ namespace AT.Bridge
         //Example:
         int testCase1(int someParam);
         string testCase2(string someParam);
-    }
+		IList<Card> ShuffleCards(Deck TestDeck);
+	}
 }

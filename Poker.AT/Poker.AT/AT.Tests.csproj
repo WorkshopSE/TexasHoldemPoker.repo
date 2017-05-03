@@ -46,14 +46,19 @@
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="TestShuffleCard.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="ProjectTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TestSignUp.cs" />
     <Compile Include="TestUC1.cs" />
     <Compile Include="TestUC2.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
+    <None Include="App.config" />
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
@@ -62,6 +67,10 @@
     <ProjectReference Include="..\AT.Bridage\AT.Bridage.csproj">
       <Project>{0495f2f3-fa0a-42f4-9d31-f2e3cc6c2852}</Project>
       <Name>AT.Bridage</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\AT.Domain\AT.Domain.csproj">
+      <Project>{72ebefd3-5dee-4cff-aa68-773081d82e82}</Project>
+      <Name>AT.Domain</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
