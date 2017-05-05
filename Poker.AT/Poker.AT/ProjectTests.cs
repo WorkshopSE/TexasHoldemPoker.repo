@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using AT.Bridge;
 using AT.Domain;
 using NUnitLite;
+using System.Drawing;
 
 namespace AT.Tests
 {
@@ -19,15 +20,33 @@ namespace AT.Tests
             this.bridge = Driver.getBridge();
         }
 
-		internal int SignUp(string v1, string v2, string v3)
+		public User SignUp(string Name, string UserName, string Password)
 		{
-			throw new NotImplementedException();
+			return bridge.SignUp(Name, UserName, Password);
+		}
+		public void EditProfilePassword(User User, string Password )
+		{
+			bridge.EditProfilePassword(User, Password);
+		}
+		public bool Logout(string UserName, string Password)
+		{
+			return bridge.Logout(UserName, Password);
+		}
+
+		public bool Login(string UserName, string Password)
+		{
+			return bridge.Login( UserName, Password);
 		}
 
 		public int UC1(int someParam)
         {
             return bridge.testCase1(someParam);
         }
+
+		public void EditProfileEmail(User User, string Email)
+		{
+			bridge.EditProfileEmail(User,Email);
+		}
 
 		public IList<Card> ShuffleCards(Deck TestDeck)
 		{
@@ -38,5 +57,10 @@ namespace AT.Tests
         {
             return bridge.testCase2(someParam);
         }
-    }
+
+		internal Image EditProfileAvatar(Image TestUserImage)
+		{
+			return bridge.EditProfileAvatar(TestUserImage);
+		}
+	}
 }

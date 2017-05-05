@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,9 +10,23 @@ namespace AT.Bridge
 {
     class Stub : TestsBridge
     {
+		public bool Logout(string UserName, string Password)
+		{
+			return false;
+		}
+		public bool Login(string UserName, string Password)
+		{
+			return false;
+		}
+
 		public IList<Card> ShuffleCards(Deck TestDeck)
 		{
 			return new List<Card>();
+		}
+
+		public User SignUp(string Name, string UserName, string Password)
+		{
+			return new User(Name, UserName, Password);
 		}
 
 		public int testCase1(int someParam)
@@ -23,5 +38,20 @@ namespace AT.Bridge
         {
             return "FAKE_HERE";
         }
-    }
+
+		public void EditProfilePassword(User User, string Password)
+		{
+			
+		}
+
+		public void EditProfileEmail(User User, string Email)
+		{
+			
+		}
+
+		public Image EditProfileAvatar(Image TestUserImage)
+		{
+			return Image.FromFile("DefaultAvatar");
+		}
+	}
 }
