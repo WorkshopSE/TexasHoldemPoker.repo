@@ -90,6 +90,23 @@ namespace Poker.BE.Domain.Game
         /// <summary>
         /// UC035: Shuffle cards
         /// </summary>
+        /// <remarks>
+        /// Algorithm description:
+        ///     first we split the deck to 2 small decks,
+        ///     then we flip a coin (random) and choose one of the two small decks.
+        ///     and then we take one random card (yes, second time i use random)
+        ///     from the deck we had chosen. and merge it to the big deck again.
+        ///     
+        ///     second step:
+        ///     we take the big merge deck and randomly pick one card.
+        ///     we randomly chose another position to insert it to the deck again.
+        ///     this is called swapping (randomly).
+        ///     we do this loop for n' (constant) times.
+        /// 
+        /// <autor>
+        /// Idan Izicovich
+        /// </autor>
+        /// </remarks>
         /// <see cref="https://docs.google.com/document/d/1OTee6BGDWK2usL53jdoeBOI-1Jh8wyNejbQ0ZroUhcA/edit#heading=h.kfvwdwvc8xf9"/>
         public void ShuffleCards()
         {
