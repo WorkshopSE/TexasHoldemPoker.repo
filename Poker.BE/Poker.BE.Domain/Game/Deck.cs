@@ -29,15 +29,28 @@ namespace Poker.BE.Domain.Game
         #endregion
 
         #region Properties
-        public ICollection<Card> Cards { get { return cards; } }
+        public ICollection<Card> Cards
+        {
+            get
+            {
+                lock (this)
+                {
+                    return cards;
+                }
+            }
+        }
         #endregion
 
         #region Constructors
         public Deck()
         {
-            cards = GetFullDeck();
-            shuffleTimes = 10;
-            random = new Random();
+            lock (this)
+            {
+                cards = GetFullDeck();
+                shuffleTimes = 10;
+                random = new Random();
+            }
+
         }
 
         public Deck(int shuffleTimes) : this()
@@ -90,22 +103,24 @@ namespace Poker.BE.Domain.Game
             // Note: this defines the amount of swapping to do at this function.
             const int shuffleTimesSwapping = 30;
 
-            for (int i = 0; i < shuffleTimes; i++)
+            lock (this)
             {
-                // splitting the deck to 2 parts
-                var split1 = cards.ToList();
-                split1.RemoveRange(cards.Length / 2, cards.Length / 2);
-
-                var split2 = cards.ToList();
-                split2.RemoveRange(0, cards.Length / 2);
-
-                // merging the parts randomly, at the same time (parallel)
-                var merged = new List<Card>();
-                while (split1.Count > 0 | split2.Count > 0)
+                for (int i = 0; i < shuffleTimes; i++)
                 {
-                    int index;
+                    // splitting the deck to 2 parts
+                    var split1 = cards.ToList();
+                    split1.RemoveRange(cards.Length / 2, cards.Length / 2);
 
-                    Task[] tasks = new Task[] {
+                    var split2 = cards.ToList();
+                    split2.RemoveRange(0, cards.Length / 2);
+
+                    // merging the parts randomly, at the same time (parallel)
+                    var merged = new List<Card>();
+                    while (split1.Count > 0 | split2.Count > 0)
+                    {
+                        int index;
+
+                        Task[] tasks = new Task[] {
                         Task.Factory.StartNew(
                             () =>
                             {
@@ -124,19 +139,20 @@ namespace Poker.BE.Domain.Game
                         )
                     };
 
-                    Task.WaitAll(tasks);
-                }
+                        Task.WaitAll(tasks);
+                    }
 
-                // swapping randomly for n times
-                for (int n = 0; n < shuffleTimesSwapping; n++)
-                {
-                    var picked = merged.ElementAt(random.Next(merged.Count));
-                    merged.Remove(picked);
-                    merged.Insert(random.Next(merged.Count), picked);
-                }
+                    // swapping randomly for n times
+                    for (int n = 0; n < shuffleTimesSwapping; n++)
+                    {
+                        var picked = merged.ElementAt(random.Next(merged.Count));
+                        merged.Remove(picked);
+                        merged.Insert(random.Next(merged.Count), picked);
+                    }
 
-                cards = merged.ToArray();
-            } // for
+                    cards = merged.ToArray();
+                } // for
+            }// lock
         }
 
         /// <summary>
