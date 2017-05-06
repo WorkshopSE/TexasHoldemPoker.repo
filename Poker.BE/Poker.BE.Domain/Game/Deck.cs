@@ -18,38 +18,52 @@ namespace Poker.BE.Domain.Game
     /// </remarks>
     public class Deck
     {
-        //TODO: Gal Wainer - fixme, this is not working well (shuffle cards..)
-        #region Properties
-        List<Card> DeckOfCards; // not initiated in a constructor - calling to null! and you should use IList or ICollection instead as BP.
+        #region Constants
+        public const int NCARDS = checked(Card.NSUIT * Card.NVALUE);
+        #endregion
+
+        #region Fields
+        private Card[] cards;
         #endregion
 
         #region Constructors
-        //TODO: for Gal Wainer?...
-        #endregion
-
-
-        #region Methods
         public Deck()
         {
-            //foreach (Card.Value value in Enum.GetValues(typeof(Card.Value)))
-            //    foreach (Card.Suit suit in Enum.GetValues(typeof(Card.Suit)))
-            //        DeckOfCards.Add(new Card(suit, value));
-            //this.ShuffleCards();
-
+            cards = GetFullDeck();
         }
-        protected void ShuffleCards()
+        #endregion
+
+        #region Private Functions
+        private Card[] GetFullDeck()
         {
-            foreach (Card UnshuffledCard in DeckOfCards)
-                UnshuffledCard.EnumerateCard();
-            DeckOfCards.Sort();
+            Card[] result = new Card[NCARDS];
+            int index = 0;
+
+            for (int i = 0; i < Card.NSUIT; i++)
+            {
+                for (int j = 0; j < Card.NVALUE; j++)
+                {
+                    result[index] = new Card(Card.Suit., Card.Value[j]);
+                    index++;
+                }
+            }
+
+            return result;
+        }
+        #endregion
+
+        #region Methods
+        public void ShuffleCards()
+        {
+
         }
 
-        internal Card PullCard()
+        public Card PullCard()
         {
             throw new NotImplementedException();
         }
 
-        internal ICollection<Card> PullCards(int v)
+        public ICollection<Card> PullCards(int v)
         {
             throw new NotImplementedException();
         }
