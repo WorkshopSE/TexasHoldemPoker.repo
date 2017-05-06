@@ -46,8 +46,8 @@ namespace Poker.BE.Domain.Game
         #endregion
 
         #region Properties
-        protected Suit CardSuit { get; }
-        protected Value CardValue { get; }
+        public Suit CardSuit { get; }
+        public Value CardValue { get; }
 
         // TODO: ?
         protected int ShuffledIndex { get; private set; }
@@ -148,6 +148,11 @@ namespace Poker.BE.Domain.Game
             }
 
             return false;
+        }
+
+        public override string ToString()
+        {
+            return string.Format("{0} {1} :{2}", CardSuit, CardValue, number);
         }
 
         // override object.GetHashCode

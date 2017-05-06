@@ -16,17 +16,28 @@ namespace Poker.BE.Domain.Game.Tests
         private Deck deck;
         #endregion
 
+        #region Properties
+        public TestContext TestContext { get; set; }
+        #endregion
+
         #region Setup
+
+        //public DeckTests()
+        //{
+        //    TestContext = new TestContext();
+        //}
+
         [TestInitialize]
         public void Before()
         {
             deck = new Deck();
         }
 
+
         [TestCleanup]
         public void After()
         {
-            deck = null;
+            //deck = null;
         }
         #endregion
 
@@ -111,8 +122,55 @@ namespace Poker.BE.Domain.Game.Tests
         [TestMethod()]
         public void ShuffleCardsTest()
         {
-            // TODO
-            throw new NotImplementedException();
+            //Arrange
+            var expected = new Deck().Cards.ToArray();
+
+            //Act
+            deck.ShuffleCards();
+            var actual = deck.Cards.ToArray();
+
+            //Assert
+            int equalCount = 0;
+            int shapeCount = 0;
+            for (int j = 0; j < Deck.NCARDS; j++)
+            {
+
+                TestContext.WriteLine("ex{0}={1}; ac{0}={2}",j,expected[j],actual[j]);
+
+                if (expected[j].Equals(actual[j]))
+                {
+                    equalCount++;
+                }
+
+                if (expected[j].CardSuit == actual[j].CardSuit)
+                {
+                    shapeCount++;
+                }
+            }
+
+            var hitRate = equalCount / Deck.NCARDS;
+            var shapeRate = shapeCount / Deck.NCARDS;
+
+            // log
+            TestContext.WriteLine("Hit Rate: {0}\n Shape Rate {1}\n\n", hitRate, shapeRate);
+            TestContext.WriteLine("EXPECTED:");
+            int i = 0;
+            foreach (var item in expected)
+            {
+                TestContext.WriteLine(item.ToString());
+                i++;
+            }
+
+            TestContext.WriteLine("\n\nACTUAL:");
+            i = 0;
+            foreach (var item in actual)
+            {
+                TestContext.WriteLine(item.ToString());
+                i++;
+            }
+            // hit rate less than 10%
+            Assert.IsTrue(hitRate < 0.1);
+
         }
         #endregion
 

@@ -36,7 +36,7 @@ namespace Poker.BE.Domain.Game
         public Deck()
         {
             cards = GetFullDeck();
-            shuffleTimes = 2;
+            shuffleTimes = 10;
             random = new Random();
         }
 
@@ -105,19 +105,26 @@ namespace Poker.BE.Domain.Game
                 {
                     int index;
 
-                    Parallel.Invoke(
-                        () =>
-                        {
-                            index = random.Next(split1.Count);
-                            merged.Add(split1.ElementAt(index));
-                            split1.RemoveAt(index);
-                        },
-                        () =>
-                        {
-                            index = random.Next(split2.Count);
-                            merged.Add(split2.ElementAt(index));
-                            split2.RemoveAt(index);
-                        });
+                    Task[] tasks = new Task[] {
+                        Task.Factory.StartNew(
+                            () =>
+                            {
+                                index = random.Next(split1.Count);
+                                merged.Add(split1.ElementAt(index));
+                                split1.RemoveAt(index);
+                            }
+                        ),
+                        Task.Factory.StartNew(
+                            () =>
+                            {
+                                index = random.Next(split2.Count);
+                                merged.Add(split2.ElementAt(index));
+                                split2.RemoveAt(index);
+                            }
+                        )
+                    };
+
+                    Task.WaitAll(tasks);
                 }
 
                 // swapping randomly for n times
