@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace Poker.BE.Domain.Game
 {
 
-    public class Card
+    public class Card : IComparable
     {
         #region Enums
         public enum Suit
@@ -54,10 +54,18 @@ namespace Poker.BE.Domain.Game
         #endregion
 
         #region Constructors
-        public Card(Suit suit, Value num)
+        public Card(Suit suit, Value val)
         {
             CardSuit = suit;
-            CardValue = num;
+            CardValue = val;
+            number = ValueToNumber(val);
+        }
+
+        public Card(Suit suit, int num)
+        {
+            CardSuit = suit;
+            number = num;
+            CardValue = NumberToValue(number);
         }
         #endregion
 
@@ -91,26 +99,30 @@ namespace Poker.BE.Domain.Game
                 case 3: return Value.Three;
                 case 4: return Value.Four;
                 case 5: return Value.Five;
+                case 6: return Value.Six;
+                case 7: return Value.Seven;
+                case 8: return Value.Eight;
+                case 9: return Value.Nine;
+                case 10: return Value.Ten;
+                case 11: return Value.Jack;
+                case 12: return Value.Queen;
+                case 13: return Value.King;
                 default:
-                    break;
+                    return default(Value);
             }
-            return default(Value);
         }
         #endregion
 
         #region Methods
-        public void EnumerateCard()
+        public int CompareTo(object obj)
         {
-            Random rnd = new Random(DateTime.Now.Millisecond);
-            ShuffledIndex = rnd.Next();
-        }
-        public int CompareTo(Card CardToCompare)
-        {
-            if (ShuffledIndex > CardToCompare.ShuffledIndex)
-                return 1;
-            else if (ShuffledIndex < CardToCompare.ShuffledIndex)
-                return -1;
-            return 0;
+            var other = obj as Card;
+            var result = 0;
+            if (other != null)
+            {
+                result = (this.number > other.number) ? 1 : (this.number < other.number) ? -1 : 0;
+            }
+            return result;
         }
         #endregion
     }
