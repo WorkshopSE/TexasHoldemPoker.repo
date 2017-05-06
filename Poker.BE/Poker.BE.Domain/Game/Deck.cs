@@ -33,10 +33,7 @@ namespace Poker.BE.Domain.Game
         {
             get
             {
-                lock (this)
-                {
-                    return cards;
-                }
+                return cards;
             }
         }
         #endregion
@@ -44,13 +41,9 @@ namespace Poker.BE.Domain.Game
         #region Constructors
         public Deck()
         {
-            lock (this)
-            {
-                cards = GetFullDeck();
-                shuffleTimes = 10;
-                random = new Random();
-            }
-
+            cards = GetFullDeck();
+            shuffleTimes = 10;
+            random = new Random();
         }
 
         public Deck(int shuffleTimes) : this()
@@ -103,56 +96,68 @@ namespace Poker.BE.Domain.Game
             // Note: this defines the amount of swapping to do at this function.
             const int shuffleTimesSwapping = 30;
 
-            lock (this)
+            for (int i = 0; i < shuffleTimes; i++)
             {
-                for (int i = 0; i < shuffleTimes; i++)
+                // splitting the deck to 2 parts
+                var split1 = cards.ToList();
+                split1.RemoveRange(cards.Length / 2, cards.Length / 2);
+
+                var split2 = cards.ToList();
+                split2.RemoveRange(0, cards.Length / 2);
+
+                // merging the parts randomly, at the same time (parallel)
+                var merged = new List<Card>();
+                while (split1.Count > 0 | split2.Count > 0)
                 {
-                    // splitting the deck to 2 parts
-                    var split1 = cards.ToList();
-                    split1.RemoveRange(cards.Length / 2, cards.Length / 2);
+                    int index;
 
-                    var split2 = cards.ToList();
-                    split2.RemoveRange(0, cards.Length / 2);
 
-                    // merging the parts randomly, at the same time (parallel)
-                    var merged = new List<Card>();
-                    while (split1.Count > 0 | split2.Count > 0)
+                    Action action1 = new Action(() =>
                     {
-                        int index;
+                        if (split1.Count > 0)
+                        {
+                            index = random.Next(split1.Count);
+                            merged.Add(split1.ElementAt(index));
+                            split1.RemoveAt(index); 
+                        }
+                    });
 
-                        Task[] tasks = new Task[] {
-                        Task.Factory.StartNew(
-                            () =>
-                            {
-                                index = random.Next(split1.Count);
-                                merged.Add(split1.ElementAt(index));
-                                split1.RemoveAt(index);
-                            }
-                        ),
-                        Task.Factory.StartNew(
-                            () =>
-                            {
-                                index = random.Next(split2.Count);
-                                merged.Add(split2.ElementAt(index));
-                                split2.RemoveAt(index);
-                            }
-                        )
-                    };
-
-                        Task.WaitAll(tasks);
-                    }
-
-                    // swapping randomly for n times
-                    for (int n = 0; n < shuffleTimesSwapping; n++)
+                    Action action2 = new Action(() =>
                     {
-                        var picked = merged.ElementAt(random.Next(merged.Count));
-                        merged.Remove(picked);
-                        merged.Insert(random.Next(merged.Count), picked);
-                    }
+                        if (split2.Count > 0)
+                        {
+                            index = random.Next(split2.Count);
+                            merged.Add(split2.ElementAt(index));
+                            split2.RemoveAt(index); 
+                        }
+                    });
 
-                    cards = merged.ToArray();
-                } // for
-            }// lock
+                    // flip a coin to set which split to merge
+                    int coin = random.Next(2);
+                    switch (coin)
+                    {
+                        case 0:
+                            action1();
+                            break;
+                        case 1:
+                            action2();
+                            break;
+
+                        default: // TODO: delete this default
+                            throw new Exception("programmer mistake!");
+                    }
+                }
+
+                // swapping randomly for n times
+                for (int n = 0; n < shuffleTimesSwapping; n++)
+                {
+                    var picked = merged.ElementAt(random.Next(merged.Count));
+                    merged.Remove(picked);
+                    merged.Insert(random.Next(merged.Count), picked);
+                }
+
+                cards = merged.ToArray();
+            } // for
         }
 
         /// <summary>

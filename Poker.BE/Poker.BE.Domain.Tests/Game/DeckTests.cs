@@ -135,7 +135,7 @@ namespace Poker.BE.Domain.Game.Tests
             for (int j = 0; j < Deck.NCARDS; j++)
             {
 
-                TestContext.WriteLine("ex{0}={1}; ac{0}={2}",j,expected[j],actual[j]);
+                TestContext.WriteLine("ex{0}={1}; ac{0}={2}", j, expected[j], actual[j]);
 
                 if (expected[j].Equals(actual[j]))
                 {
@@ -148,11 +148,13 @@ namespace Poker.BE.Domain.Game.Tests
                 }
             }
 
-            var hitRate = equalCount / Deck.NCARDS;
-            var shapeRate = shapeCount / Deck.NCARDS;
+            double hitRate = (double)equalCount / Deck.NCARDS;
+            double shapeRate = (double)shapeCount / Deck.NCARDS;
 
             // log
-            TestContext.WriteLine("Hit Rate: {0}\n Shape Rate {1}\n\n", hitRate, shapeRate);
+            TestContext.WriteLine("\nHit Count: {0}\n Shape Count {1}\n\n", equalCount, shapeCount);
+            TestContext.WriteLine("\nHit Rate: {0}\n Shape Rate {1}\n\n", hitRate, shapeRate);
+
             TestContext.WriteLine("EXPECTED:");
             int i = 0;
             foreach (var item in expected)
@@ -168,6 +170,7 @@ namespace Poker.BE.Domain.Game.Tests
                 TestContext.WriteLine(item.ToString());
                 i++;
             }
+
             // hit rate less than 10%
             Assert.IsTrue(hitRate < 0.1);
 
