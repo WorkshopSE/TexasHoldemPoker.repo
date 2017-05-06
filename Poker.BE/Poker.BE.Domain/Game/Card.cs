@@ -135,14 +135,19 @@ namespace Poker.BE.Domain.Game
             //   http://go.microsoft.com/fwlink/?LinkId=85238
             //
 
-            if (obj == null || GetType() != obj.GetType())
+            var other = obj as Card;
+
+            if (other == null || obj == null || GetType() != obj.GetType())
             {
                 return false;
             }
+            
+            if(other.number == number & other.CardSuit == CardSuit)
+            {
+                return true;
+            }
 
-            // TODO: write your implementation of Equals() here
-            throw new NotImplementedException();
-            return base.Equals(obj);
+            return false;
         }
 
         // override object.GetHashCode
