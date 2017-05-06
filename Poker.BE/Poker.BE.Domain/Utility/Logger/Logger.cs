@@ -15,6 +15,9 @@ namespace Poker.BE.Domain.Utility.Logger
     /// <see cref="http://csharpindepth.com/Articles/General/Singleton.aspx"/>
     public sealed class Logger : ILogger
     {
+
+        //TODO: IMPORTANT - make the logger thread safe! (using the 'lock' keyword?)
+
         #region Constants
         public static readonly string ENDL = "; ";
         public static readonly string DELIMITER = ","; // CSV delimiter

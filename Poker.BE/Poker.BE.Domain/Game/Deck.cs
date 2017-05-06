@@ -28,6 +28,10 @@ namespace Poker.BE.Domain.Game
         private Random random;
         #endregion
 
+        #region Properties
+        public ICollection<Card> Cards { get { return cards; } }
+        #endregion
+
         #region Constructors
         public Deck()
         {
@@ -77,8 +81,15 @@ namespace Poker.BE.Domain.Game
         #endregion
 
         #region Methods
+        /// <summary>
+        /// UC035: Shuffle cards
+        /// </summary>
+        /// <see cref="https://docs.google.com/document/d/1OTee6BGDWK2usL53jdoeBOI-1Jh8wyNejbQ0ZroUhcA/edit#heading=h.kfvwdwvc8xf9"/>
         public void ShuffleCards()
         {
+            // Note: this defines the amount of swapping to do at this function.
+            const int shuffleTimesSwapping = 30;
+
             for (int i = 0; i < shuffleTimes; i++)
             {
                 // splitting the deck to 2 parts
@@ -109,9 +120,16 @@ namespace Poker.BE.Domain.Game
                         });
                 }
 
-                // swapping randomly
+                // swapping randomly for n times
+                for (int n = 0; n < shuffleTimesSwapping; n++)
+                {
+                    var picked = merged.ElementAt(random.Next(merged.Count));
+                    merged.Remove(picked);
+                    merged.Insert(random.Next(merged.Count), picked);
+                }
 
-            }
+                cards = merged.ToArray();
+            } // for
         }
 
         /// <summary>
