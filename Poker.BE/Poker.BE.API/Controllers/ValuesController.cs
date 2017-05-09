@@ -9,6 +9,8 @@ namespace Poker.BE.API.Controllers
 {
     public class ValuesController : ApiController
     {
+        //TODO delete: this is an example
+
         #region Fields
         private ICollection<string> StringTests =
             new HashSet<string>(new string[] { "value1", "value2" });

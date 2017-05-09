@@ -122,6 +122,8 @@ namespace Poker.BE.Domain.Game.Tests
         [TestMethod()]
         public void ShuffleCardsTest()
         {
+            //TODO: Test that Depends on Random - save the CEID of the random number.
+
             //Arrange
             var expected = new Deck().Cards.ToArray();
 
