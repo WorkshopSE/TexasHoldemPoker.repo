@@ -25,14 +25,16 @@ Please go to [draw.io](http://draw.io) and choose "open from > Device" option. B
 ![alt instructions at draw.io](https://raw.githubusercontent.com/WorkshopSE/TexasHoldemPoker.repo/idan_domain_0/Documentation/2017-04-25_1342.png)
 
 ### Main Docs
-Name | Document Type | Available Versions
----- | ------------- | ------------------
-Glossary | Sheet | 1.0
-Class Diagram | Diagram | 1.0
-Component Diagram | Diagram | 1.0
-Use Case Specification | Doc | 1.0
-Version Summery | Slides | 1.0
-Requirements & Risk Analysis | Sheet | 1.0
+Name | Document Type | Available Sprint # Versions
+---- | ------------- | ---------------------------
+Glossary | Sheet | 0, 1, 2
+Class Diagram | Diagram | 0, 1, 2
+Component Diagram | Diagram | 0, 1
+Use Case Specification | Doc | 0, 1, 2
+Version Summery | Slide | 1
+Class Presentation - Stubs/Mocks | Slide | 1
+Requirements & Risk Analysis | Sheet | 1, 2
+UC Compare (Use Cases Changes Tracking) | Doc | 2
 
 <!--
 ##### Sub Docs
@@ -81,6 +83,8 @@ Requirements & Risk Analysis | Sheet | 1.0
   -->
 
   ## Last Updates & Features
+  + `2017-05-10`:
+    + Communication Layer
   + `2017-04-25`:
     + New documents now available
     + Acceptance Tests System
