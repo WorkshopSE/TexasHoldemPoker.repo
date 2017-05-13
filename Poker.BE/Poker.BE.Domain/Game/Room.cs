@@ -115,7 +115,12 @@ namespace Poker.BE.Domain.Game
             {
                 throw new NotEnoughPlayersException("Cards must be dealt from a proper deck (standard 52-card deck containing no jokers)");
             }
+            //TODO: Add test for precondition - The previous hand has ended. (if it’s the first hand ignore this part).
+            deck.ShuffleCards();
             CurrentHand = new Hand(deck, ActivePlayers);
+            CurrentHand.DealCards();
+            CurrentHand.PlaceBlinds();
+
         }
 
         // TODO: Take a chair, leave a chair - will chairsSemaphore.WaitOne() or Release()
