@@ -9,6 +9,7 @@ namespace Poker.BE.Domain.Game
     public class PlayerManager
     {
         // TODO: complete - set team member to do this
+        /* NOTE: maybe need to be deleted? */
 
     }
 }
