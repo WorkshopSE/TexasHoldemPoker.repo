@@ -53,8 +53,7 @@ namespace Poker.BE.Domain.Core
         /// <returns>a new player</returns>
         private Player CreatePlayer(Room room)
         {
-            // TODO
-            throw new NotImplementedException();
+            return room.CreatePlayer();
         }
         #endregion
 
@@ -98,8 +97,7 @@ namespace Poker.BE.Domain.Core
         /// <see cref="https://docs.google.com/document/d/1OTee6BGDWK2usL53jdoeBOI-1Jh8wyNejbQ0ZroUhcA/edit#heading=h.tzy1eb1jifgr"/>
         public Player EnterRoom(Room room)
         {
-            // TODO
-            throw new NotImplementedException();
+            return CreatePlayer(room);
         }
 
         /// <summary>
@@ -109,7 +107,7 @@ namespace Poker.BE.Domain.Core
         /// <see cref="https://docs.google.com/document/d/1OTee6BGDWK2usL53jdoeBOI-1Jh8wyNejbQ0ZroUhcA/edit#heading=h.eqjp0wvvpmjg"/>
         /// <param name="level">user level</param>
         /// <returns>the new created room</returns>
-        public Room CreateNewRoom(int level)
+        public Room CreateNewRoom(int level, GameConfig config)
         {
             // TODO
             throw new NotImplementedException();

@@ -28,6 +28,7 @@ namespace Poker.BE.Domain.Game
         public Player()
         {
             PrivateCards = new Card[NPRIVATE_CARDS];
+            CurrentState = State.Passive;
         }
         #endregion
 

@@ -47,6 +47,8 @@ namespace Poker.BE.Domain.Game
                     .ToList();
             }
         }
+
+        
         #endregion
 
         #region Constructors
@@ -92,6 +94,13 @@ namespace Poker.BE.Domain.Game
         #endregion
 
         #region Methods
+        internal Player CreatePlayer()
+        {
+            var result = new Player();
+            activeAndPassivePlayers.Add(result);
+            return result;
+        }
+
         public void StartNewHand()
         {
             CurrentHand = new Hand(deck, ActivePlayers);
