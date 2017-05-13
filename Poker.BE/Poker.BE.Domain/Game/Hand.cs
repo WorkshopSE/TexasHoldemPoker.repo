@@ -49,7 +49,10 @@ namespace Poker.BE.Domain.Game
             foreach (Player player in activePlayers)
             {
                 for (int i = 0; i < player.PrivateCards.Length; i++)
+                {
                     player.PrivateCards[i] = deck.PullCard();
+                    player.PrivateCards[i].CardState = Card.State.FaceDown;
+                }
             }
         }
 
