@@ -28,17 +28,18 @@ namespace Poker.BE.Domain.Core
         #endregion
 
         #region Fields
-        private IDictionary<Room, Player> playersManager;
+        private IDictionary<Player, Room> playersManager;
         #endregion
 
         #region Properties
-        public ICollection<Room> Rooms { get { return playersManager.Keys; } }
+        public ICollection<Room> Rooms { get { return playersManager.Values.Distinct().ToList(); } }
+        public ICollection<Player> Players { get { return playersManager.Keys; } }
         #endregion
 
         #region Constructors
         public GameCenter()
         {
-            playersManager = new Dictionary<Room, Player>();
+            playersManager = new Dictionary<Player, Room>();
         }
         #endregion
 
