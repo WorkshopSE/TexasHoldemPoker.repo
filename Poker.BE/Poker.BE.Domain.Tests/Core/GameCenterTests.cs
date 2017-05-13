@@ -1,5 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Poker.BE.Domain.Core;
+using Poker.BE.Domain.Game;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,10 +15,18 @@ namespace Poker.BE.Domain.Core.Tests
         #region Set Up
         
         public TestContext TestContext { get; set; }
+        private GameCenter gameCenter;
 
-        public GameCenterTests()
+        [TestInitialize]
+        public void Before()
         {
-            
+            gameCenter = new GameCenter();
+        }
+
+        [TestCleanup]
+        public void After()
+        {
+            gameCenter = null;
         }
         #endregion
 
@@ -61,8 +70,18 @@ namespace Poker.BE.Domain.Core.Tests
         [TestMethod()]
         public void EnterRoomTest()
         {
-            // TODO
-            throw new NotImplementedException();
+            // TODO idan - continue from here
+
+            //Arrange
+            var expected = default(Player);
+            var actual = default(Player);
+
+            Room room = null;
+            //Act
+            actual = gameCenter.EnterRoom(room);
+
+            //Assert
+            Assert.AreEqual(expected, actual);
         }
 
         [TestMethod()]
