@@ -29,17 +29,24 @@ namespace Poker.BE.Domain.Core
 
         #region Fields
         private IDictionary<Player, Room> playersManager;
+        private IDictionary<Room, League> roomsManager;
+        private IDictionary<int, League> leaguesManager;
+        private ICollection<League> leagues;
         #endregion
 
         #region Properties
-        public ICollection<Room> Rooms { get { return playersManager.Values.Distinct().ToList(); } }
+        public ICollection<Room> Rooms { get { return roomsManager.Keys; } }
         public ICollection<Player> Players { get { return playersManager.Keys; } }
+        public ICollection<League> Leagues { get { return leagues; } }
         #endregion
 
         #region Constructors
         public GameCenter()
         {
             playersManager = new Dictionary<Player, Room>();
+            roomsManager = new Dictionary<Room, League>();
+            leaguesManager = new Dictionary<int, League>();
+            leagues = new List<League>();
         }
         #endregion
 
@@ -55,9 +62,80 @@ namespace Poker.BE.Domain.Core
         {
             return room.CreatePlayer();
         }
+
+        private void AddLeage(int level)
+        {
+            var league = new League();
+            leagues.Add(league);
+            leaguesManager.Add(level, league);
+        }
+
+        private void BindRoomToLeague(Room room, League league)
+        {
+            roomsManager.Add(room, league);
+        }
+
+        private bool RemovePlayer(Player player)
+        {
+            playersManager[player].RemovePlayer(player);
+            return playersManager.Remove(player);
+        }
+
+        private bool RemoveRoom(Room room)
+        {
+            // Note: aggressive approach - all the players kicked out
+            /* TODO: try/catch for gentle approach?
+             * example - if there are players at the room, this removal will fail.
+             * */
+            if (room.Players.Count > 0)
+            {
+                foreach (var player in room.Players)
+                {
+                    RemovePlayer(player);
+                }
+
+                room.ClearAll();
+            }
+
+            // remove the room from the league
+            roomsManager[room].RemoveRoom(room);
+
+            // remove the room from the room's dictionary.
+            return roomsManager.Remove(room);
+        }
+
+        private bool RemoveLeague(League league)
+        {
+            if (league.Rooms.Count > 0)
+            {
+                foreach (var room in league.Rooms)
+                {
+                    RemoveRoom(room);
+                }
+
+                // call clear() of current room, to clean all his resources.
+                league.Rooms.Clear();
+            }
+
+            // remove all occurrences of this league at the league's dictionary
+            foreach (var key in leaguesManager.Where(pair => pair.Value == league).Select(pair => pair.Key))
+            {
+                leaguesManager.Remove(new KeyValuePair<int, League>(key, league));
+            }
+
+            // remove the league from the league collection (field)
+            return leagues.Remove(league);
+        }
+
+        private void BindPlayerToRoom(Player player, Room room)
+        {
+            playersManager.Add(player, room);
+        }
         #endregion
 
         #region Methods
+
+        #region Find an Existing Room
         /// <summary>
         /// Allow the user to find an existing room according to different criteria and enter the room as a spectator.
         /// </summary>
@@ -87,6 +165,7 @@ namespace Poker.BE.Domain.Core
             // TODO
             throw new NotImplementedException();
         }
+        #endregion
 
         /// <summary>
         /// Allow the user to enter a room from a list as a spectator.
@@ -97,7 +176,12 @@ namespace Poker.BE.Domain.Core
         /// <see cref="https://docs.google.com/document/d/1OTee6BGDWK2usL53jdoeBOI-1Jh8wyNejbQ0ZroUhcA/edit#heading=h.tzy1eb1jifgr"/>
         public Player EnterRoom(Room room)
         {
-            return CreatePlayer(room);
+            var player = CreatePlayer(room);
+
+            // for the gameCenter player's dictionary (players manager)
+            BindPlayerToRoom(player, room);
+
+            return player;
         }
 
         /// <summary>

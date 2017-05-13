@@ -67,6 +67,7 @@
     <Compile Include="Game\Wallet.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Security\UserManager.cs" />
+    <Compile Include="Utility\Exceptions\PokerException.cs" />
     <Compile Include="Utility\Logger\ILogger.cs" />
     <Compile Include="Utility\Logger\Logger.cs" />
     <Compile Include="Utility\Notification.cs" />

@@ -29,7 +29,7 @@ namespace Poker.BE.Domain.Game
         public ICollection<Chair> Chairs { get { return chairs; } }
         public Hand CurrentHand { get; private set; }
         public GamePreferences Preferences { get; set; }
-        private ICollection<Player> ActivePlayers
+        public ICollection<Player> ActivePlayers
         {
             get
             {
@@ -38,7 +38,7 @@ namespace Poker.BE.Domain.Game
                     .ToList();
             }
         }
-        private ICollection<Player> PassivePlayers
+        public ICollection<Player> PassivePlayers
         {
             get
             {
@@ -48,6 +48,7 @@ namespace Poker.BE.Domain.Game
             }
         }
 
+        public ICollection<Player> Players { get { return activeAndPassivePlayers; } }
         
         #endregion
 
@@ -70,6 +71,12 @@ namespace Poker.BE.Domain.Game
 
         }
 
+        internal void RemovePlayer(Player player)
+        {
+            // TODO
+            throw new NotImplementedException();
+        }
+
         /// <summary>
         /// UC003 Create a new room 
         /// </summary>
@@ -79,6 +86,8 @@ namespace Poker.BE.Domain.Game
         {
             activeAndPassivePlayers.Add(creator);
         }
+
+        
 
         /// <summary>
         /// UC003 Create a new room 
@@ -94,7 +103,13 @@ namespace Poker.BE.Domain.Game
         #endregion
 
         #region Methods
-        internal Player CreatePlayer()
+        public void ClearAll()
+        {
+            //TODO: this function used be gameCenter do delete the room. all players and other resources of room need to be deleted.
+            throw new NotImplementedException();
+        }
+
+        public Player CreatePlayer()
         {
             var result = new Player();
             activeAndPassivePlayers.Add(result);
