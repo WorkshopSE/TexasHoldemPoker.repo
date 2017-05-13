@@ -101,8 +101,20 @@ namespace Poker.BE.Domain.Game
             return result;
         }
 
+        /// <summary>
+        /// UC014 Start (Deal) a New Hand
+        /// </summary>
+        /// <see cref="https://docs.google.com/document/d/1OTee6BGDWK2usL53jdoeBOI-1Jh8wyNejbQ0ZroUhcA/edit#heading=h.3z6a7b6nlnjj"/>
         public void StartNewHand()
         {
+            if (ActivePlayers.Count < 2)
+            {
+                throw new NotEnoughPlayersException("Its should be at least 2 active players to start new hand!");
+            }
+            if (deck.Cards.Count != Deck.NCARDS)
+            {
+                throw new NotEnoughPlayersException("Cards must be dealt from a proper deck (standard 52-card deck containing no jokers)");
+            }
             CurrentHand = new Hand(deck, ActivePlayers);
         }
 
