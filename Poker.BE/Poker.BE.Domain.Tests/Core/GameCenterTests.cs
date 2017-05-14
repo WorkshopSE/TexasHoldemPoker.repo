@@ -70,13 +70,11 @@ namespace Poker.BE.Domain.Core.Tests
         [TestMethod()]
         public void EnterRoomTest()
         {
-            // TODO idan - continue from here
-
             //Arrange
-            var expected = default(Player);
+            var expected = new Player();
             var actual = default(Player);
+            Room room = new Room(new Player());
 
-            Room room = null;
             //Act
             actual = gameCenter.EnterRoom(room);
 

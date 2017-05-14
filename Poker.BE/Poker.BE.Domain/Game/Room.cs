@@ -47,9 +47,12 @@ namespace Poker.BE.Domain.Game
                     .ToList();
             }
         }
-
         public ICollection<Player> Players { get { return activeAndPassivePlayers; } }
-        
+        public bool IsSpactatorsAllowd { get; }
+        public int MaxNumberOfPlayers { get; private set; }
+        public int MinNumberOfPlayers { get; private set; }
+        public double MinimumBet { get; private set; }
+
         #endregion
 
         #region Constructors
@@ -71,12 +74,6 @@ namespace Poker.BE.Domain.Game
 
         }
 
-        internal void RemovePlayer(Player player)
-        {
-            // TODO
-            throw new NotImplementedException();
-        }
-
         /// <summary>
         /// UC003 Create a new room 
         /// </summary>
@@ -86,8 +83,6 @@ namespace Poker.BE.Domain.Game
         {
             activeAndPassivePlayers.Add(creator);
         }
-
-        
 
         /// <summary>
         /// UC003 Create a new room 
@@ -100,9 +95,22 @@ namespace Poker.BE.Domain.Game
             Preferences = preferences;
         }
 
+        public Room(Player creator, GameConfig config) : this(creator, config.GamePrefrences)
+        {
+            IsSpactatorsAllowd = config.IsSpactatorsAllowd;
+            MaxNumberOfPlayers = config.MaxNumberOfPlayers;
+            MinNumberOfPlayers = config.MinNumberOfPlayers;
+            MinimumBet = config.MinimumBet;
+        }
+
         #endregion
 
         #region Methods
+        public void RemovePlayer(Player player)
+        {
+            // TODO
+            throw new NotImplementedException();
+        }
         public void ClearAll()
         {
             //TODO: this function used be gameCenter do delete the room. all players and other resources of room need to be deleted.

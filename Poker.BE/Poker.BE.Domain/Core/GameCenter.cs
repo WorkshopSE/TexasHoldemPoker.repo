@@ -1,4 +1,5 @@
 ﻿using Poker.BE.Domain.Game;
+using Poker.BE.Domain.Utility.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,7 +31,6 @@ namespace Poker.BE.Domain.Core
         #region Fields
         private IDictionary<Player, Room> playersManager;
         private IDictionary<Room, League> roomsManager;
-        private IDictionary<int, League> leaguesManager;
         private ICollection<League> leagues;
         #endregion
 
@@ -45,7 +45,6 @@ namespace Poker.BE.Domain.Core
         {
             playersManager = new Dictionary<Player, Room>();
             roomsManager = new Dictionary<Room, League>();
-            leaguesManager = new Dictionary<int, League>();
             leagues = new List<League>();
         }
         #endregion
@@ -63,16 +62,10 @@ namespace Poker.BE.Domain.Core
             return room.CreatePlayer();
         }
 
-        private void AddLeage(int level)
+        private void AddLeage(int minLevel, int maxLevel)
         {
-            var league = new League();
+            var league = new League() { MaxLevel = maxLevel, MinLevel = minLevel };
             leagues.Add(league);
-            leaguesManager.Add(level, league);
-        }
-
-        private void BindRoomToLeague(Room room, League league)
-        {
-            roomsManager.Add(room, league);
         }
 
         private bool RemovePlayer(Player player)
@@ -131,6 +124,42 @@ namespace Poker.BE.Domain.Core
         {
             playersManager.Add(player, room);
         }
+
+        private void BindRoomToLeague(Room room, League league)
+        {
+            roomsManager.Add(room, league);
+        }
+
+        private bool SetLeagueLevelRange(int minlevel, int maxLevel, League league)
+        {
+            if (!leagues.Contains(league)) return false;
+
+            league.MaxLevel = maxLevel;
+            league.MinLevel = minlevel;
+
+            return true;
+        }
+
+        /// <summary>
+        /// look up for leagues that their level rang contains the requested level
+        /// </summary>
+        /// <param name="level">the user level</param>
+        /// <returns>a collection of leagues</returns>
+        private ICollection<League> GetAllLeaguesAtLevel(int level)
+        {
+            var result = new List<League>();
+
+            foreach(var league in leagues)
+            {
+                if(league.MinLevel < level & league.MaxLevel > level)
+                {
+                    result.Add(league);
+                }
+            }
+
+            return result;
+        }
+
         #endregion
 
         #region Methods
@@ -193,8 +222,21 @@ namespace Poker.BE.Domain.Core
         /// <returns>the new created room</returns>
         public Room CreateNewRoom(int level, GameConfig config)
         {
-            // TODO
-            throw new NotImplementedException();
+            var creator = new Player();
+
+            // creating the room and adding the creator as a passive player to it.
+            var room = new Room(creator, config);
+            BindPlayerToRoom(creator, room);
+
+            var league = leaguesManager[level] as League;
+
+            if (league == null)
+                throw new LevelNotFoundException("Requested level: " + level);
+
+            // bind
+            BindRoomToLeague(room, league);
+
+            return room;
         }
 
         /// <summary>
