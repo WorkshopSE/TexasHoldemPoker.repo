@@ -81,18 +81,20 @@ namespace Poker.BE.Domain.Security.Tests
             var userManager = new UserManager();
 
             //Act
-            var res1 = userManager.EditProfile("yossi", "dana", "password", "hat");
+            var res1 = userManager.EditProfile("yossi", "yossi", "password", "hat");
             userManager.AddUser("yossi", "mypassword", 200);
-            var res2 = userManager.EditProfile("yossi", "dana", "pass", "hat");
-            var res3 = userManager.EditProfile("yossi", "dana", "password", "hat");
+            var res2 = userManager.EditProfile("yossi", "yossi", "pass", "hat");
+            var res3 = userManager.EditProfile("yossi", "yossi", "password", "hat");
             userManager.AddUser("dana", "danapassword", 200);
             var res4 = userManager.EditProfile("yossi", "dana", "password", "hat");
+            var res5 = userManager.EditProfile("yossi", "bill", "password", "hat");
 
             //Assert
             Assert.IsFalse(res1);
             Assert.IsFalse(res2);
             Assert.IsTrue(res3);
             Assert.IsFalse(res4);
+            Assert.IsTrue(res5);
         }
         
     }

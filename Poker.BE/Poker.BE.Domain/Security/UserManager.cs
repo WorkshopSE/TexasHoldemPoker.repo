@@ -75,8 +75,10 @@ namespace Poker.BE.Domain.Security
 
             if (CheckExistingUser(newUserName) || !CheckPasswordValidity(newPassword))  //Check new username and password validation
             {
+                UsersDictionary.Add(oldUserName, userToUpdate);
                 return false;
             }
+
             userToUpdate.UserName = newUserName;
             userToUpdate.Password = newPassword;
             userToUpdate.Avatar = newAvatar;
