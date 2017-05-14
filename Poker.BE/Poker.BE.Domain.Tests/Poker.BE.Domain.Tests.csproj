@@ -49,6 +49,7 @@
     <Compile Include="Game\HandTests.cs" />
     <Compile Include="Game\RoomTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Security\UserManagerTests.cs" />
     <Compile Include="Utility\Logger\LoggerTests.cs" />
   </ItemGroup>
   <ItemGroup>
