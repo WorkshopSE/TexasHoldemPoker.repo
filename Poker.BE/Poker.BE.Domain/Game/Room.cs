@@ -143,7 +143,7 @@ namespace Poker.BE.Domain.Game
         {
             if (ActivePlayers.Where(player => player.CurrentState == Player.State.ActiveUnfolded).ToList().Count < 2)
             {
-                throw new NotEnoughPlayersException("Its should be at least 2 active players to start new hand!");
+                throw new NotEnoughPlayersException("Its should be at least 2 active players to play move");
             }
             CurrentHand.CurrentRound.PlayMove(move);
             

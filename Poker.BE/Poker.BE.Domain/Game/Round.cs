@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Poker.BE.Domain.Utility.Exceptions;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -76,7 +77,7 @@ namespace Poker.BE.Domain.Game
                 default:
                     {
                         //TODO: print invalid move exception
-                        break;
+                        throw new NotEnoughPlayersException("Invalid Move");
                     }
             }
             //Change Player

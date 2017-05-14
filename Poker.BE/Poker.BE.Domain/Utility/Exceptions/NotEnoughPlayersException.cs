@@ -4,7 +4,7 @@ using System.Runtime.Serialization;
 namespace Poker.BE.Domain.Utility.Exceptions
 {
     [Serializable]
-    internal class NotEnoughPlayersException : Exception
+    public class NotEnoughPlayersException : Exception
     {
         public NotEnoughPlayersException()
         {
