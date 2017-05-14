@@ -58,11 +58,11 @@ namespace Poker.BE.Domain.Game
             }
         }
 
-        public void PlaceBlinds()
+        public void PlaceBlinds(GamePreferences preferences)
         {
-            PlaceSmallBlind();
-            PlaceBigBlind();
-            PlaceAnts();
+            PlaceSmallBlind(preferences);
+            PlaceBigBlind(preferences);
+            PlaceAnts(preferences);
         }
 
         public void endHand()
@@ -76,21 +76,21 @@ namespace Poker.BE.Domain.Game
         /// All of the active players are forced to pay some blind
         /// payment to the pot, regardless to the regular blinds.
         /// </summary>
-        private void PlaceAnts()
+        private void PlaceAnts(GamePreferences preferences)
         {
-            //TODO
+            //TODO: WAIT FOR GamePreferences
             throw new NotImplementedException();
         }
 
-        private void PlaceBigBlind()
+        private void PlaceBigBlind(GamePreferences preferences)
         {
-            //TODO
+            //TODO: WAIT FOR GamePreferences
             throw new NotImplementedException();
         }
 
-        private void PlaceSmallBlind()
+        private void PlaceSmallBlind(GamePreferences preferences)
         {
-            //TODO
+            //TODO: WAIT FOR GamePreferences
             throw new NotImplementedException();
         }
         #endregion

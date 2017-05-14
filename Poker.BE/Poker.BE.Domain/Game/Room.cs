@@ -122,7 +122,7 @@ namespace Poker.BE.Domain.Game
             deck.ShuffleCards();
             CurrentHand = new Hand(deck, ActivePlayers);
             CurrentHand.DealCards();
-            CurrentHand.PlaceBlinds();
+            CurrentHand.PlaceBlinds(Preferences);
             //TODO: Check If HEAD-TO-HEAD / HEADS UP alternative flow workds here.
 
         }
