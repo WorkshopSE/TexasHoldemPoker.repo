@@ -110,12 +110,6 @@ namespace Poker.BE.Domain.Core
                 league.Rooms.Clear();
             }
 
-            // remove all occurrences of this league at the league's dictionary
-            foreach (var key in leaguesManager.Where(pair => pair.Value == league).Select(pair => pair.Key))
-            {
-                leaguesManager.Remove(new KeyValuePair<int, League>(key, league));
-            }
-
             // remove the league from the league collection (field)
             return leagues.Remove(league);
         }
@@ -158,6 +152,12 @@ namespace Poker.BE.Domain.Core
             }
 
             return result;
+        }
+
+        private League FindLeagueToFill(ICollection<League> collection)
+        {
+            // TODO
+            throw new NotImplementedException();
         }
 
         #endregion
@@ -228,12 +228,12 @@ namespace Poker.BE.Domain.Core
             var room = new Room(creator, config);
             BindPlayerToRoom(creator, room);
 
-            var league = leaguesManager[level] as League;
+            League league = FindLeagueToFill(GetAllLeaguesAtLevel(level));
 
             if (league == null)
                 throw new LevelNotFoundException("Requested level: " + level);
 
-            // bind
+            league.Rooms.Add(room);
             BindRoomToLeague(room, league);
 
             return room;
