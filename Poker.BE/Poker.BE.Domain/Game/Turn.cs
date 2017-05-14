@@ -10,19 +10,24 @@ namespace Poker.BE.Domain.Game
     {
         #region Fields
         private Player currentPlayer;
+
+        public Player CurrentPlayer { get => currentPlayer; set => currentPlayer = value; }
         #endregion
 
         #region Constructors
         public Turn(Player player)
         {
-            this.currentPlayer = player;
+            this.CurrentPlayer = player;
         }
         #endregion
 
         #region Methods
         public void Check()
         {
-            //TODO
+            ///  Do noting? 
+            ///  <see cref="Round.calculateNextPlayer" />
+            ///  and <see cref="Round.PlayMove(Round.Move)" />
+            ///  for more information TOMER
         }
 
         public void Call()
@@ -30,22 +35,22 @@ namespace Poker.BE.Domain.Game
             //TODO
         }
 
-        public void Fold(Player player)
+        public void Fold()
         {
             //TODO
         }
 
-        public void Bet(Player player)
+        public void Bet()
         {
             //TODO
         }
 
-        public void Raise(Player player)
+        public void Raise()
         {
             //TODO
         }
 
-        public void AllIn(Player player)
+        public void AllIn()
         {
             //TODO
         }

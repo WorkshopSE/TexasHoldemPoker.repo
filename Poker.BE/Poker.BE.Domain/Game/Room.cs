@@ -44,7 +44,7 @@ namespace Poker.BE.Domain.Game
             get
             {
                 return activeAndPassivePlayers.Where(
-                    player => (player.CurrentState == Player.State.ActiveUnfolded | player.CurrentState == Player.State.ActiveFolded))
+                    player => (player.CurrentState == Player.State.Passive))
                     .ToList();
             }
         }
@@ -141,7 +141,11 @@ namespace Poker.BE.Domain.Game
         /// <see cref="https://docs.google.com/document/d/1OTee6BGDWK2usL53jdoeBOI-1Jh8wyNejbQ0ZroUhcA/edit#heading=h.8f3okxza6g2d"/>
         public void ChoosePlayMove(Round.Move move)
         {
-
+            if (ActivePlayers.Where(player => player.CurrentState == Player.State.ActiveUnfolded).ToList().Count < 2)
+            {
+                throw new NotEnoughPlayersException("Its should be at least 2 active players to start new hand!");
+            }
+            CurrentHand.CurrentRound.PlayMove(move);
             
         }
 
