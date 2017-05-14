@@ -69,12 +69,6 @@ namespace Poker.BE.Domain.Security.Tests
         }
 
         [TestMethod()]
-        public void LogOutTest()
-        {
-            // simple code
-        }
-
-        [TestMethod()]
         public void EditProfileTest()
         {
             //Arrange
