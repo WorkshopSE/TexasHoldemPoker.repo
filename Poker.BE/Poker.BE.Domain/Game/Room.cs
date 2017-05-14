@@ -127,6 +127,16 @@ namespace Poker.BE.Domain.Game
 
         }
 
+        /// <summary>
+        /// UC027 Choose Play Move
+        /// </summary>
+        /// <see cref="https://docs.google.com/document/d/1OTee6BGDWK2usL53jdoeBOI-1Jh8wyNejbQ0ZroUhcA/edit#heading=h.8f3okxza6g2d"/>
+        public void ChoosePlayMove(Round.Move move)
+        {
+
+            
+        }
+
         // TODO: Take a chair, leave a chair - will chairsSemaphore.WaitOne() or Release()
 
         public void SendMessage()
