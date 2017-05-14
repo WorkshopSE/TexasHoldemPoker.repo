@@ -11,7 +11,7 @@ namespace Poker.BE.Domain.Game
         #region Fields
         private Player currentPlayer;
 
-        public Player CurrentPlayer { get => currentPlayer; set => currentPlayer = value; }
+        public Player CurrentPlayer { get { return currentPlayer; } set { currentPlayer = value; } }
         #endregion
 
         #region Constructors
