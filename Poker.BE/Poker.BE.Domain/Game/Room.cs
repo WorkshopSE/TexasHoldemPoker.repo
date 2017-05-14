@@ -20,6 +20,7 @@ namespace Poker.BE.Domain.Game
         private ICollection<Player> activeAndPassivePlayers;
         private Deck deck;
         private Chair[] chairs;
+        private int dealerIndex = 0;
         #endregion
 
         #region Properties
@@ -120,11 +121,18 @@ namespace Poker.BE.Domain.Game
                 throw new NotEnoughPlayersException("The previous hand hasnt ended");
             }
             deck.ShuffleCards();
-            CurrentHand = new Hand(deck, ActivePlayers);
+            Player dealer = ActivePlayers.ElementAt(dealerIndex);
+            CurrentHand = new Hand(dealer, deck, ActivePlayers);
             CurrentHand.DealCards();
             CurrentHand.PlaceBlinds(Preferences);
             //TODO: Check If HEAD-TO-HEAD / HEADS UP alternative flow workds here.
 
+        }
+        public void EndCurrentHand()
+        {
+            CurrentHand.endHand();
+            dealerIndex++;
+            //TODO: implementation
         }
 
         /// <summary>

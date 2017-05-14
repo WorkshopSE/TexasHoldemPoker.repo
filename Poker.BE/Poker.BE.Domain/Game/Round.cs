@@ -28,7 +28,7 @@ namespace Poker.BE.Domain.Game
         #endregion
 
         #region Constructors
-        public Round(Player dealer, List<Player> activeUnfoldedPlayers)
+        public Round(Player dealer, ICollection<Player> activeUnfoldedPlayers)
         {
             this.dealer = dealer;
             this.activeUnfoldedPlayers = activeUnfoldedPlayers;

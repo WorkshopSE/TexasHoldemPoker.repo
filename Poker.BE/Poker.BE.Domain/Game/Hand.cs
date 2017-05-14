@@ -22,14 +22,16 @@ namespace Poker.BE.Domain.Game
         private Deck deck;
         private ICollection<Player> activePlayers;
         private Pot pot;
+        private Player dealer;
         #endregion
 
         #region Properties
         public bool Active { get; set; }
+        public Round CurrentRound { get; }
         #endregion
 
         #region Constructors
-        public Hand(Deck deck, ICollection<Player> players)
+        public Hand(Player dealer, Deck deck, ICollection<Player> players)
         {
             if(players.Count < MINIMAL_NUMBER_OF_ACTIVE_PLAYERS_TO_START)
             {
@@ -38,7 +40,10 @@ namespace Poker.BE.Domain.Game
             this.deck = deck;
             this.activePlayers = players;
             this.pot = new Pot();
+            this.dealer = dealer;
+            this.CurrentRound = new Round(dealer,activePlayers);
             this.Active = true;
+            
         }
         #endregion
 
