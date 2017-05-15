@@ -20,6 +20,7 @@ namespace Poker.BE.Domain.Game
         private ICollection<Player> activeAndPassivePlayers;
         private Deck deck;
         private Chair[] chairs;
+        private int dealerIndex = 0;
         #endregion
 
         #region Properties
@@ -43,7 +44,7 @@ namespace Poker.BE.Domain.Game
             get
             {
                 return activeAndPassivePlayers.Where(
-                    player => (player.CurrentState == Player.State.ActiveUnfolded | player.CurrentState == Player.State.ActiveFolded))
+                    player => (player.CurrentState == Player.State.Passive))
                     .ToList();
             }
         }
@@ -120,11 +121,32 @@ namespace Poker.BE.Domain.Game
                 throw new NotEnoughPlayersException("The previous hand hasnt ended");
             }
             deck.ShuffleCards();
-            CurrentHand = new Hand(deck, ActivePlayers);
+            Player dealer = ActivePlayers.ElementAt(dealerIndex);
+            CurrentHand = new Hand(dealer, deck, ActivePlayers);
             CurrentHand.DealCards();
-            CurrentHand.PlaceBlinds();
+            CurrentHand.PlaceBlinds(Preferences);
             //TODO: Check If HEAD-TO-HEAD / HEADS UP alternative flow workds here.
 
+        }
+        public void EndCurrentHand()
+        {
+            CurrentHand.endHand();
+            dealerIndex++;
+            //TODO: implementation
+        }
+
+        /// <summary>
+        /// UC027 Choose Play Move
+        /// </summary>
+        /// <see cref="https://docs.google.com/document/d/1OTee6BGDWK2usL53jdoeBOI-1Jh8wyNejbQ0ZroUhcA/edit#heading=h.8f3okxza6g2d"/>
+        public void ChoosePlayMove(Round.Move move)
+        {
+            if (ActivePlayers.Where(player => player.CurrentState == Player.State.ActiveUnfolded).ToList().Count < 2)
+            {
+                throw new NotEnoughPlayersException("Its should be at least 2 active players to play move");
+            }
+            CurrentHand.CurrentRound.PlayMove(move);
+            
         }
 
         // TODO: Take a chair, leave a chair - will chairsSemaphore.WaitOne() or Release()
