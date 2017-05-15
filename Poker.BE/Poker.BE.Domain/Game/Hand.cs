@@ -25,6 +25,7 @@ namespace Poker.BE.Domain.Game
         #endregion
 
         #region Properties
+        public bool Active { get; set; }
         #endregion
 
         #region Constructors
@@ -37,6 +38,7 @@ namespace Poker.BE.Domain.Game
             this.deck = deck;
             this.activePlayers = players;
             this.pot = new Pot();
+            this.Active = true;
         }
         #endregion
 
@@ -49,7 +51,10 @@ namespace Poker.BE.Domain.Game
             foreach (Player player in activePlayers)
             {
                 for (int i = 0; i < player.PrivateCards.Length; i++)
+                {
                     player.PrivateCards[i] = deck.PullCard();
+                    player.PrivateCards[i].CardState = Card.State.FaceDown;
+                }
             }
         }
 
@@ -58,6 +63,12 @@ namespace Poker.BE.Domain.Game
             PlaceSmallBlind();
             PlaceBigBlind();
             PlaceAnts();
+        }
+
+        public void endHand()
+        {
+            //TODO: implement
+            this.Active = false;
         }
 
         /// <summary>
