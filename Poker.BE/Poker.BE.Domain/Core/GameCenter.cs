@@ -143,9 +143,9 @@ namespace Poker.BE.Domain.Core
         {
             var result = new List<League>();
 
-            foreach(var league in leagues)
+            foreach (var league in leagues)
             {
-                if(league.MinLevel < level & league.MaxLevel > level)
+                if (league.MinLevel < level & league.MaxLevel > level)
                 {
                     result.Add(league);
                 }
@@ -156,7 +156,7 @@ namespace Poker.BE.Domain.Core
 
         private League FindLeagueToFill(ICollection<League> collection)
         {
-            // TODO
+            // TODO: pick a league to insert the new created room, by the relevant requirements.
             throw new NotImplementedException();
         }
 
@@ -244,13 +244,35 @@ namespace Poker.BE.Domain.Core
         /// </summary>
         /// <remarks>UC020: Join Next Hand</remarks>
         /// <see cref="https://docs.google.com/document/d/1OTee6BGDWK2usL53jdoeBOI-1Jh8wyNejbQ0ZroUhcA/edit#heading=h.yy00l1jatp9d"/>
-        /// <param name="room"></param>
+        /// <param name="player"></param>
         public void JoinNextHand(Player player)
         {
+            /* Checking Preconditions */
+
+            // get the room of the player belongs to
+            if (!playersManager.TryGetValue(player, out Room room))
+            {
+                throw new RoomNotFoundException("Error: Try joining next hand for a player with room that can't be found");
+            }
+
+            // check the user is a spectator
+            if (player.CurrentState != Player.State.Passive)
+            {
+                throw new PlayerModeException("Error: Player is trying to join a hand, but he's not a spectator!");
+            }
+
+
+
             // TODO
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// Allow the player to be a spectator over the table at the room, after playing (get up from the table)
+        /// </summary>
+        /// <remarks>UC013: Stand Up To Spectate</remarks>
+        /// <param name="player"></param>
+        /// <see cref="https://docs.google.com/document/d/1OTee6BGDWK2usL53jdoeBOI-1Jh8wyNejbQ0ZroUhcA/edit#heading=h.kl4k8p3d5mt6"/>
         public void StandUpToSpactate(Player player)
         {
             // TODO

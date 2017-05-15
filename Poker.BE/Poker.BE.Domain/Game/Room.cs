@@ -16,6 +16,10 @@ namespace Poker.BE.Domain.Game
     /// </remarks>
     public class Room
     {
+        #region Constants
+        public const int NCHAIRS_IN_ROOM = 10;
+        #endregion
+
         #region Fields
         private ICollection<Player> activeAndPassivePlayers;
         private Deck deck;
@@ -51,6 +55,14 @@ namespace Poker.BE.Domain.Game
         public bool IsSpactatorsAllowd { get; }
         public int MaxNumberOfPlayers { get; private set; }
         public int MinNumberOfPlayers { get; private set; }
+        public int MaxNumberOfActivePlayers
+        {
+            get { return MaxNumberOfActivePlayers; }
+            private set
+            {
+                MaxNumberOfActivePlayers = (value > NCHAIRS_IN_ROOM) ? NCHAIRS_IN_ROOM : value;
+            }
+        }
         public double MinimumBet { get; private set; }
 
         #endregion
@@ -60,9 +72,9 @@ namespace Poker.BE.Domain.Game
         {
             activeAndPassivePlayers = new List<Player>();
             deck = new Deck();
-            chairs = new Chair[Chair.NCHAIRS_IN_ROOM];
+            chairs = new Chair[NCHAIRS_IN_ROOM];
 
-            for (int i = 0; i < Chair.NCHAIRS_IN_ROOM; i++)
+            for (int i = 0; i < NCHAIRS_IN_ROOM; i++)
             {
                 Chairs.ToArray()[i] = new Chair(i);
             }
@@ -97,7 +109,7 @@ namespace Poker.BE.Domain.Game
 
         public Room(Player creator, GameConfig config) : this(creator, config.GamePrefrences)
         {
-            IsSpactatorsAllowd = config.IsSpactatorsAllowd;
+            IsSpactatorsAllowd = config.IsSpactatorsAllowed;
             MaxNumberOfPlayers = config.MaxNumberOfPlayers;
             MinNumberOfPlayers = config.MinNumberOfPlayers;
             MinimumBet = config.MinimumBet;

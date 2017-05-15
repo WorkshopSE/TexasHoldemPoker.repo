@@ -8,9 +8,7 @@ namespace Poker.BE.Domain.Game
 {
     public class Chair
     {
-        #region Constants
-        public static readonly int NCHAIRS_IN_ROOM = 10;
-        #endregion
+        
 
         #region Fields
         private int index;
