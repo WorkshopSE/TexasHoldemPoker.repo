@@ -71,6 +71,7 @@
     <Compile Include="Utility\Exceptions\PlayerModeException.cs" />
     <Compile Include="Utility\Exceptions\PokerException.cs" />
     <Compile Include="Utility\Exceptions\RoomNotFoundException.cs" />
+    <Compile Include="Utility\Exceptions\RoomRulesException.cs" />
     <Compile Include="Utility\Logger\ILogger.cs" />
     <Compile Include="Utility\Logger\Logger.cs" />
     <Compile Include="Utility\Notification.cs" />

@@ -60,10 +60,18 @@ namespace Poker.BE.Domain.Game
             get { return MaxNumberOfActivePlayers; }
             private set
             {
+                // enforce number of active players < number of chairs.
                 MaxNumberOfActivePlayers = (value > NCHAIRS_IN_ROOM) ? NCHAIRS_IN_ROOM : value;
             }
         }
         public double MinimumBet { get; private set; }
+        public bool IsTableFull
+        {
+            get
+            {
+                return ActivePlayers.Count == MaxNumberOfActivePlayers;
+            }
+        }
 
         #endregion
 
@@ -118,6 +126,18 @@ namespace Poker.BE.Domain.Game
         #endregion
 
         #region Methods
+        /// <summary>
+        /// Converting passive player to active player.
+        /// precondition: the player must be a passive player at the room.
+        /// postcondition: the player is active player at the room.
+        /// </summary>
+        /// <param name="player">a passive player at the room</param>
+        public void JoinPlayerToTable(Player player)
+        {
+            throw new NotImplementedException();
+        }
+
+
         public void RemovePlayer(Player player)
         {
             // TODO
@@ -141,7 +161,17 @@ namespace Poker.BE.Domain.Game
             CurrentHand = new Hand(deck, ActivePlayers);
         }
 
-        // TODO: Take a chair, leave a chair - will chairsSemaphore.WaitOne() or Release()
+        public bool TakeChair(Player player, int index)
+        {
+            // TODO
+            throw new NotImplementedException();
+        }
+
+        public bool LeaveChair(Player player)
+        {
+            // TODO
+            throw new NotImplementedException();
+        }
 
         public void SendMessage()
         {
@@ -159,6 +189,7 @@ namespace Poker.BE.Domain.Game
         {
             chairs[index].Release();
         }
+
         #endregion
 
 

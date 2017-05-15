@@ -245,26 +245,44 @@ namespace Poker.BE.Domain.Core
         /// <remarks>UC020: Join Next Hand</remarks>
         /// <see cref="https://docs.google.com/document/d/1OTee6BGDWK2usL53jdoeBOI-1Jh8wyNejbQ0ZroUhcA/edit#heading=h.yy00l1jatp9d"/>
         /// <param name="player"></param>
-        public void JoinNextHand(Player player)
+        public void JoinNextHand(Player player, int seatIndex, double buyIn)
         {
             /* Checking Preconditions */
 
             // get the room of the player belongs to
             if (!playersManager.TryGetValue(player, out Room room))
             {
-                throw new RoomNotFoundException("Error: Try joining next hand for a player with room that can't be found");
+                throw new RoomNotFoundException("Try joining next hand for a player with room that can't be found");
             }
 
             // check the user is a spectator
             if (player.CurrentState != Player.State.Passive)
             {
-                throw new PlayerModeException("Error: Player is trying to join a hand, but he's not a spectator!");
+                throw new PlayerModeException("Player " + player.Nickname + " is trying to join a hand, but he's not a spectator!");
             }
 
+            // check if table is full
+            if (room.IsTableFull)
+            {
+                throw new RoomRulesException("The Table is full.");
+            }
 
+            // the chosen seat is not taken
+            if (!room.TakeChair(player, seatIndex))
+            {
+                throw new RoomRulesException("The seat is already taken, please try again");
+            }
 
-            // TODO
-            throw new NotImplementedException();
+            // the user has enough money to buy in
+            if(buyIn < room.MinimumBet)
+            {
+                throw new RoomRulesException("Buy in amount is less then the minimum to join the table. Please insert more money!");
+            }
+
+            /* Joining the player to the next hand */
+
+            room.JoinPlayerToTable(player);
+
         }
 
         /// <summary>
