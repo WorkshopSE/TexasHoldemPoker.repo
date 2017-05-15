@@ -270,19 +270,17 @@ namespace Poker.BE.Domain.Core
             // the chosen seat is not taken
             if (!room.TakeChair(player, seatIndex))
             {
-                throw new RoomRulesException("The seat is already taken, please try again");
+                throw new RoomRulesException("The seat is already taken, please try again.");
             }
 
             // the user has enough money to buy in
             if(buyIn < room.MinimumBet)
             {
-                throw new RoomRulesException("Buy in amount is less then the minimum to join the table. Please insert more money!");
+                throw new NotEnoughMoneyException("Buy in amount is less then the minimum to join the table.");
             }
 
             /* Joining the player to the next hand */
-
-            room.JoinPlayerToTable(player);
-
+            room.JoinPlayerToTable(player, buyIn);
         }
 
         /// <summary>

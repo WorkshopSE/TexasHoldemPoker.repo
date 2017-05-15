@@ -6,9 +6,8 @@ using System.Threading.Tasks;
 
 namespace Poker.BE.Domain.Game
 {
-    public class Wallet
+    public class Wallet : Utility.MoneyStorage
     {
-        // TODO: complete - set team member to do this
 
     }
 }

@@ -57,6 +57,7 @@
     <Compile Include="Game\LimitHoldem.cs" />
     <Compile Include="Game\NoLimitHoldem.cs" />
     <Compile Include="Utility\Exceptions\LevelNotFoundException.cs" />
+    <Compile Include="Utility\Exceptions\NotEnoughMoneyException.cs" />
     <Compile Include="Utility\Exceptions\NotEnoughPlayersException.cs" />
     <Compile Include="Game\Player.cs" />
     <Compile Include="Game\Pot.cs" />
@@ -74,6 +75,7 @@
     <Compile Include="Utility\Exceptions\RoomRulesException.cs" />
     <Compile Include="Utility\Logger\ILogger.cs" />
     <Compile Include="Utility\Logger\Logger.cs" />
+    <Compile Include="Utility\MoneyStorage.cs" />
     <Compile Include="Utility\Notification.cs" />
     <Compile Include="Utility\Record.cs" />
     <Compile Include="Utility\RecordManager.cs" />

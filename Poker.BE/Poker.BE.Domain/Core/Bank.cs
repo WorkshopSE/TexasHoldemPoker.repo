@@ -6,8 +6,10 @@ using System.Threading.Tasks;
 
 namespace Poker.BE.Domain.Core
 {
-    public class Bank
+    public class Bank : Utility.MoneyStorage
     {
+        // UNDONE: make this class align with extending MoneyStorage Class.
+
         #region Properties
         protected double Money { get; set;}
 
