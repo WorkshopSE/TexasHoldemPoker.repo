@@ -139,13 +139,13 @@ namespace Poker.BE.Domain.Game
         /// UC027 Choose Play Move
         /// </summary>
         /// <see cref="https://docs.google.com/document/d/1OTee6BGDWK2usL53jdoeBOI-1Jh8wyNejbQ0ZroUhcA/edit#heading=h.8f3okxza6g2d"/>
-        public void ChoosePlayMove(Round.Move move)
+        public void ChoosePlayMove(Round.Move move, int amountToBet)
         {
             if (ActivePlayers.Where(player => player.CurrentState == Player.State.ActiveUnfolded).ToList().Count < 2)
             {
                 throw new NotEnoughPlayersException("Its should be at least 2 active players to play move");
             }
-            CurrentHand.CurrentRound.PlayMove(move);
+            CurrentHand.CurrentRound.PlayMove(move, amountToBet);
             
         }
 

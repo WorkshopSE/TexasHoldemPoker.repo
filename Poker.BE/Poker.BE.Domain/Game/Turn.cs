@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Poker.BE.Domain.Utility.Exceptions;
 
 namespace Poker.BE.Domain.Game
 {
@@ -31,21 +32,23 @@ namespace Poker.BE.Domain.Game
         public void Call(int amount)
         {
             if (amount <= 0)
-                throw new IOException("Raise is lower then previous raise :(  Somthing isn't right...");
+                throw new IOException("Last raise is lower then previous raise :(  Somthing isn't right...");
             this.currentPlayer.SubstractMoney(amount);
         }
 
         public void Fold()
         {
-            currentPlayer.CurrentState = Player.State.ActiveFolded;
+            this.currentPlayer.CurrentState = Player.State.ActiveFolded;
         }
 
-        public void Bet()
+        public void Bet(int amount)
         {
-            //TODO
+            if (amount <= 0)
+                throw new IOException("Can't bet a negetive amount");
+            this.currentPlayer.SubstractMoney(amount);
         }
 
-        public void Raise()
+        public void Raise(int amount)
         {
             //TODO
         }

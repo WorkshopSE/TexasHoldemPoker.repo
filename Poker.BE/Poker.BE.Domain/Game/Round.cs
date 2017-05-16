@@ -29,6 +29,7 @@ namespace Poker.BE.Domain.Game
         private Player dealer;
         private Player currentPlayer;
         private Dictionary<Player, int> liveBets;
+        private int totalRaise;
         private int lastRaise;
         #endregion
 
@@ -44,12 +45,13 @@ namespace Poker.BE.Domain.Game
             {
                 liveBets.Add(player, 0);
             }
+            this.totalRaise = 0;
             this.lastRaise = 0;
         }
         #endregion
 
         #region Methods
-        public void PlayMove(Move playMove)
+        public void PlayMove(Move playMove, int amountToBet)
         {
             switch (playMove)
             {
@@ -60,8 +62,9 @@ namespace Poker.BE.Domain.Game
                     }
                 case  Move.call:
                     {
-                        int amountToCall = lastRaise - liveBets[currentPlayer];
+                        int amountToCall = totalRaise - liveBets[currentPlayer];
                         currentTurn.Call(amountToCall);
+                        liveBets[currentPlayer] = totalRaise;
                         break;
                     }
                 case Move.fold:
@@ -74,12 +77,40 @@ namespace Poker.BE.Domain.Game
                     }
                 case Move.bet:
                     {
-                        currentTurn.Bet();
+                        if (lastRaise > 0)
+                            throw new IOException("Can't bet if someone had bet before... use raise");
+                        int highestAllIn = 0;
+                        foreach (Player player in activeUnfoldedPlayers)
+                        {
+                            if (player.Wallet.amountOfMoney > highestAllIn)
+                                highestAllIn = player.Wallet.amountOfMoney;
+                        }
+                        if (amountToBet > highestAllIn)
+                            throw new ArgumentOutOfRangeException("Bet is bigger than the highest player's all-in");
+
+                        currentTurn.Bet(amountToBet);
+                        lastRaise = amountToBet;
+                        totalRaise += lastRaise;
+                        liveBets[currentPlayer] = totalRaise;
                         break;
                     }
                 case Move.raise:
                     {
-                        currentTurn.Raise();
+                        if (lastRaise == 0)
+                            throw new IOException("Can't bet if someone had bet before... use raise");
+                        int highestAllIn = 0;
+                        foreach (Player player in activeUnfoldedPlayers)
+                        {
+                            if (player.Wallet.amountOfMoney + liveBets[player] > highestAllIn)
+                                highestAllIn = player.Wallet.amountOfMoney;
+                        }
+                        if (totalRaise + amountToBet > highestAllIn)
+                            throw new ArgumentOutOfRangeException("Raise is bigger than the highest player's all-in");
+
+                        currentTurn.Raise(amountToBet);
+                        lastRaise = amountToBet;
+                        totalRaise += lastRaise;
+                        liveBets[currentPlayer] = lastRaise;
                         break;
                     }
                 case Move.allin:
