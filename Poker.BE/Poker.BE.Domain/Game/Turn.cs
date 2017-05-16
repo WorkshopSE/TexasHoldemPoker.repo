@@ -8,7 +8,52 @@ namespace Poker.BE.Domain.Game
 {
     public class Turn
     {
-        // TODO: complete - set team member to do this
+        #region Fields
+        private Player currentPlayer;
 
+        public Player CurrentPlayer { get { return currentPlayer; } set { currentPlayer = value; } }
+        #endregion
+
+        #region Constructors
+        public Turn(Player player)
+        {
+            this.CurrentPlayer = player;
+        }
+        #endregion
+
+        #region Methods
+        public void Check()
+        {
+            ///  Do noting? 
+            ///  <see cref="Round.calculateNextPlayer" />
+            ///  and <see cref="Round.PlayMove(Round.Move)" />
+            ///  for more information TOMER
+        }
+
+        public void Call()
+        {
+            //TODO
+        }
+
+        public void Fold()
+        {
+            //TODO
+        }
+
+        public void Bet()
+        {
+            //TODO
+        }
+
+        public void Raise()
+        {
+            //TODO
+        }
+
+        public void AllIn()
+        {
+            //TODO
+        }
     }
 }
+#endregion

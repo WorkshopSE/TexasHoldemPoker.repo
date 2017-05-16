@@ -33,6 +33,11 @@ namespace Poker.BE.Domain.Game
             Queen,
             King,
         }
+        public enum State
+        {
+            FaceDown,
+            FaceUp,
+        }
 
         #endregion
 
@@ -48,8 +53,8 @@ namespace Poker.BE.Domain.Game
         #region Properties
         public Suit CardSuit { get; }
         public Value CardValue { get; }
+        public State CardState { get; set; }
 
-        // TODO: ?
         protected int ShuffledIndex { get; private set; }
         #endregion
 
@@ -59,6 +64,7 @@ namespace Poker.BE.Domain.Game
             CardSuit = suit;
             CardValue = val;
             number = ValueToNumber(val);
+            CardState = State.FaceUp;
         }
 
         public Card(Suit suit, int num)
@@ -66,6 +72,7 @@ namespace Poker.BE.Domain.Game
             CardSuit = suit;
             number = num;
             CardValue = NumberToValue(number);
+            CardState = State.FaceUp;
         }
         #endregion
 

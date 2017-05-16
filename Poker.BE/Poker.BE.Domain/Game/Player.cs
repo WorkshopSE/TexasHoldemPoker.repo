@@ -8,17 +8,15 @@ namespace Poker.BE.Domain.Game
 {
     public class Player
     {
-        #region Enums
+        #region Constants
         public enum State
         {
             ActiveUnfolded,
             ActiveFolded,
             Passive
         }
-        #endregion
 
-        #region Constants
-        public static readonly int NPRIVATE_CARDS = 2;
+        public const int NPRIVATE_CARDS = 2;
         #endregion
 
         #region Properties
@@ -30,6 +28,7 @@ namespace Poker.BE.Domain.Game
         public Player()
         {
             PrivateCards = new Card[NPRIVATE_CARDS];
+            CurrentState = State.Passive;
         }
         #endregion
 
