@@ -14,7 +14,7 @@ namespace Poker.BE.Domain.Core
     /// <remarks>
     /// <author>Idan Izicovich</author>
     /// </remarks>
-    public class GameCenter
+    public sealed class GameCenter
     {
         // UNDONE: Make the GameCenter a Singleton!
         #region Constants
@@ -42,12 +42,23 @@ namespace Poker.BE.Domain.Core
         #endregion
 
         #region Constructors
-        public GameCenter()
+
+        #region Singleton
+        // for singleton implementation at C#
+        static GameCenter() { }
+        private static readonly GameCenter _instance = new GameCenter();
+        public static GameCenter Instance { get { return _instance; } }
+        #endregion
+
+        // all constructors needs to be private for being a singleton
+        private GameCenter()
         {
             playersManager = new Dictionary<Player, Room>();
             roomsManager = new Dictionary<Room, League>();
             leagues = new List<League>();
         }
+
+
         #endregion
 
         #region Private Functions
@@ -275,7 +286,7 @@ namespace Poker.BE.Domain.Core
             }
 
             // the user has enough money to buy in
-            if(buyIn < room.MinimumBet)
+            if (buyIn < room.MinimumBet)
             {
                 throw new NotEnoughMoneyException("Buy in amount is less then the minimum to join the table.");
             }
@@ -296,7 +307,7 @@ namespace Poker.BE.Domain.Core
             /* Checking Preconditions */
 
             // the player is sitting at the table
-            if(!playersManager.TryGetValue(player, out Room room))
+            if (!playersManager.TryGetValue(player, out Room room))
             {
                 throw new RoomNotFoundException("Unable to stand up - The player is not at the room");
             }

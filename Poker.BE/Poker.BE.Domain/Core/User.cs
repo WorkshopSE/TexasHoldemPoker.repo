@@ -97,7 +97,8 @@ namespace Poker.BE.Domain.Core
                 }
             }
 
-            return 
+            // TODO
+            throw new NotImplementedException();
             
         }
 

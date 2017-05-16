@@ -20,7 +20,7 @@ namespace Poker.BE.Domain.Core.Tests
         [TestInitialize]
         public void Before()
         {
-            gameCenter = new GameCenter();
+            gameCenter = GameCenter.Instance;
         }
 
         [TestCleanup]
