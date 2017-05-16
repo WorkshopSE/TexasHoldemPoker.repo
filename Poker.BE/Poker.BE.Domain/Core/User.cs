@@ -13,7 +13,7 @@ namespace Poker.BE.Domain.Core
     {
         #region Fields
         /* singletons */
-        private GameCenter gameCenter;
+        private GameCenter gameCenter = GameCenter.Instance;
         private ILogger logger = Logger.Instance;
         /* ---------- */
 
@@ -21,7 +21,8 @@ namespace Poker.BE.Domain.Core
 
         #region Properties
         /// <summary>
-        /// Map for the player (user session) ID -> player at the given session
+        /// Map for the player (user session) ID -> player at the given session.
+        /// using the player.GetHashCode() for generating this ID.
         /// </summary>
         /// <remarks>
         /// session ID is the ID we give for a screen the user opens.
@@ -34,7 +35,7 @@ namespace Poker.BE.Domain.Core
         public IDictionary<int, Player> Players { get; set; }
         #endregion
 
-        #region Methods
+        #region Constructors
         public User(string userName, string password, double sumToDeposit)
         {
             UserName = userName;
@@ -43,6 +44,10 @@ namespace Poker.BE.Domain.Core
             IsConnected = true;
             Players = new Dictionary<int, Player>();
         }
+        #endregion
+
+        #region Methods
+
 
         public void Connect()
         {
@@ -82,7 +87,7 @@ namespace Poker.BE.Domain.Core
         }
         #endregion
 
-        public Player EnterRoom(Room room)
+        public int EnterRoom(Room room)
         {
             // check that the user doesn't have already a player in the room
             if (Players.Count > 0 && room.Players.Count > 0)
@@ -97,12 +102,18 @@ namespace Poker.BE.Domain.Core
                 }
             }
 
-            // TODO
-            throw new NotImplementedException();
-            
+            // entering the room
+            var freshPlayer = gameCenter.EnterRoom(room);
+
+            // logging
+            logger.Log(string.Format("User {0} has player {1}",UserName, freshPlayer.GetHashCode()), this, "Medium");
+
+            Players.Add(freshPlayer.GetHashCode(), freshPlayer);
+
+            return freshPlayer.GetHashCode();
         }
 
-        public Room CreateNewRoom(int level, GameConfig config)
+        public void CreateNewRoom(int level, GameConfig config)
         {
             // TODO
             throw new NotImplementedException();
@@ -114,7 +125,7 @@ namespace Poker.BE.Domain.Core
             throw new NotImplementedException();
         }
 
-        public void StandUpToSpactate(int playerId)
+        public void StandUpToSpactate(int sessionID)
         {
             // TODO
             throw new NotImplementedException();
