@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -29,6 +30,8 @@ namespace Poker.BE.Domain.Game
 
         public void Call(int amount)
         {
+            if (amount <= 0)
+                throw new IOException("Raise is lower then previous raise :(  Somthing isn't right...");
             this.currentPlayer.SubstractMoney(amount);
         }
 

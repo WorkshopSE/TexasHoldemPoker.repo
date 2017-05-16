@@ -61,8 +61,6 @@ namespace Poker.BE.Domain.Game
                 case  Move.call:
                     {
                         int amountToCall = lastRaise - liveBets[currentPlayer];
-                        if (amountToCall <= 0)
-                            throw new IOException("Raise is lower then previous raise :(  Somthing isn't right...");
                         currentTurn.Call(amountToCall);
                         break;
                     }

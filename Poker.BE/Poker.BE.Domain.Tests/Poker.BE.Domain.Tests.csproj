@@ -48,6 +48,7 @@
     <Compile Include="Game\ChairTests.cs" />
     <Compile Include="Game\DeckTests.cs" />
     <Compile Include="Game\HandTests.cs" />
+    <Compile Include="Game\PlayerTests.cs" />
     <Compile Include="Game\RoomTests.cs" />
     <Compile Include="Game\RoundTests.cs" />
     <Compile Include="Game\TurnTests.cs" />
