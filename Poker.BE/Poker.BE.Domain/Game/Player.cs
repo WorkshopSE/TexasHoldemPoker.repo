@@ -16,7 +16,7 @@ namespace Poker.BE.Domain.Game
             Passive
         }
 
-        public static readonly int NPRIVATE_CARDS = 2;
+        public const int NPRIVATE_CARDS = 2;
         #endregion
 
         #region Properties

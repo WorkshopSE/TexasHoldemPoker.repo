@@ -95,7 +95,7 @@ namespace Poker.BE.Domain.Game
         #endregion
 
         #region Methods
-        internal Player CreatePlayer()
+        public Player CreatePlayer()
         {
             var result = new Player();
             activeAndPassivePlayers.Add(result);

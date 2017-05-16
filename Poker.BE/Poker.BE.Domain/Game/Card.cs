@@ -55,7 +55,6 @@ namespace Poker.BE.Domain.Game
         public Value CardValue { get; }
         public State CardState { get; set; }
 
-        // TODO: ?
         protected int ShuffledIndex { get; private set; }
         #endregion
 

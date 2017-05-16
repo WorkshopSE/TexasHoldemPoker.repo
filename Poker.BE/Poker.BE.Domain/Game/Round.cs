@@ -22,7 +22,7 @@ namespace Poker.BE.Domain.Game
         }
         #endregion
 
-        #region fields
+        #region Fields
         private ICollection<Player> activeUnfoldedPlayers;
         private Turn currentTurn;
         private Player dealer;
