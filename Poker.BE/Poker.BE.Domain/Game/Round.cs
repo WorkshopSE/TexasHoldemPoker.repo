@@ -9,6 +9,6 @@ namespace Poker.BE.Domain.Game
     public class Round
     {
         // TODO: complete - set team member to do this
-
+        public Turn CurrentTurn { get; internal set; }
     }
 }

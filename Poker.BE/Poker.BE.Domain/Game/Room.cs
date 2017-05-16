@@ -134,10 +134,37 @@ namespace Poker.BE.Domain.Game
         /// <param name="player">a passive player at the room</param>
         public bool JoinPlayerToTable(Player player, double buyIn)
         {
-            if (!PassivePlayers.Contains(player))
+            if (player.CurrentState != Player.State.Passive)
+            {
                 return false;
+            }
 
             return player.JoinToTable(buyIn);
+        }
+
+        /// <summary>
+        /// Make the player to stand up from the table and returning the remaining money from his wallet
+        /// (back to the bank)
+        /// </summary>
+        /// <remarks>UC013: Stand Up To Spectate</remarks>
+        /// <param name="player"></param>
+        /// <returns>the wallet of the player</returns>
+        public double SeparatePlayerFromTable(Player player)
+        {
+            double remainingMoney = 0;
+
+            if (player.CurrentState == Player.State.Passive)
+            {
+                throw new PlayerModeException("Unable to stand up: Player already a spectator.");
+            }
+
+            if (player.CurrentState == Player.State.ActiveUnfolded)
+            {
+                throw new PlayerModeException("Unable to stand up: Player needs to fold first.");
+            }
+
+            remainingMoney = player.StandUp();
+            return remainingMoney;
         }
 
         public void RemovePlayer(Player player)
@@ -145,6 +172,10 @@ namespace Poker.BE.Domain.Game
             // TODO
             throw new NotImplementedException();
         }
+
+        /// <summary>
+        /// Method as a destructor - delete all players and other resources from the room.
+        /// </summary>
         public void ClearAll()
         {
             //TODO: this function used be gameCenter do delete the room. all players and other resources of room need to be deleted.

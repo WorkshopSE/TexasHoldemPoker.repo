@@ -286,13 +286,30 @@ namespace Poker.BE.Domain.Core
         /// <summary>
         /// Allow the player to be a spectator over the table at the room, after playing (get up from the table)
         /// </summary>
+        /// <returns>remaining money from the wallet to transfer back to the user bank</returns>
         /// <remarks>UC013: Stand Up To Spectate</remarks>
         /// <param name="player"></param>
         /// <see cref="https://docs.google.com/document/d/1OTee6BGDWK2usL53jdoeBOI-1Jh8wyNejbQ0ZroUhcA/edit#heading=h.kl4k8p3d5mt6"/>
-        public void StandUpToSpactate(Player player)
+        public double StandUpToSpactate(Player player)
         {
-            // TODO
-            throw new NotImplementedException();
+            /* Checking Preconditions */
+
+            // the player is sitting at the table
+            if(!playersManager.TryGetValue(player, out Room room))
+            {
+                throw new RoomNotFoundException("Unable to stand up - The player is not at the room");
+            }
+
+            // it's the player's turn
+            if (room.CurrentHand.CurrentRound.CurrentTurn.CurrentPlayer != player)
+            {
+                throw new NotPlayersTurnException("Unable to stand up");
+            }
+
+            /* Action - Make the player to stand up */
+            
+
+            return room.SeparatePlayerFromTable(player);
         }
         #endregion
 

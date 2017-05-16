@@ -51,6 +51,15 @@ namespace Poker.BE.Domain.Game
             CurrentState = State.ActiveUnfolded;
             return true;
         }
+        /// <summary>
+        /// Make the player to leave the table, and return his remaining wallet money to the user bank
+        /// </summary>
+        /// <returns>the remaining wallet money</returns>
+        public double StandUp()
+        {
+            // TODO
+            throw new NotImplementedException();
+        }
         #endregion
 
     }

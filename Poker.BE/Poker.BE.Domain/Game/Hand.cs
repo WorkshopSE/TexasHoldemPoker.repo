@@ -38,6 +38,8 @@ namespace Poker.BE.Domain.Game
             this.activePlayers = players;
             this.pot = new Pot();
         }
+
+        public Round CurrentRound { get; internal set; }
         #endregion
 
         #region Methods
