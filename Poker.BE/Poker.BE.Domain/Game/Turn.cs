@@ -24,20 +24,17 @@ namespace Poker.BE.Domain.Game
         #region Methods
         public void Check()
         {
-            ///  Do noting? 
-            ///  <see cref="Round.calculateNextPlayer" />
-            ///  and <see cref="Round.PlayMove(Round.Move)" />
-            ///  for more information TOMER
+            ///  Do noting?
         }
 
-        public void Call()
+        public void Call(int amount)
         {
-            //TODO
+            this.currentPlayer.SubstractMoney(amount);
         }
 
         public void Fold()
         {
-            //TODO
+            currentPlayer.CurrentState = Player.State.ActiveFolded;
         }
 
         public void Bet()
@@ -57,4 +54,3 @@ namespace Poker.BE.Domain.Game
         #endregion
     }
 }
-#endregion

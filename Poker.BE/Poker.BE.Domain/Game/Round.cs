@@ -1,4 +1,5 @@
 ﻿using Poker.BE.Domain.Utility.Exceptions;
+using System.IO;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,6 +28,8 @@ namespace Poker.BE.Domain.Game
         private Turn currentTurn;
         private Player dealer;
         private Player currentPlayer;
+        private Dictionary<Player, int> liveBets;
+        private int lastRaise;
         #endregion
 
         #region Constructors
@@ -36,6 +39,12 @@ namespace Poker.BE.Domain.Game
             this.currentPlayer = this.activeUnfoldedPlayers.ElementAt((activeUnfoldedPlayers.ToList().IndexOf(dealer)+2)%activeUnfoldedPlayers.Count);
             this.activeUnfoldedPlayers = activeUnfoldedPlayers;
             this.currentTurn = new Turn(currentPlayer);
+            this.liveBets = new Dictionary<Player, int>();
+            foreach (Player player in activeUnfoldedPlayers)
+            {
+                liveBets.Add(player, 0);
+            }
+            this.lastRaise = 0;
         }
         #endregion
 
@@ -46,17 +55,23 @@ namespace Poker.BE.Domain.Game
             {
                 case Move.check :
                     {
-                        currentTurn.Call();
+                        currentTurn.Check();  // Do nothing??
                         break;
                     }
                 case  Move.call:
                     {
-                        currentTurn.Check();
+                        int amountToCall = lastRaise - liveBets[currentPlayer];
+                        if (amountToCall <= 0)
+                            throw new IOException("Raise is lower then previous raise :(  Somthing isn't right...");
+                        currentTurn.Call(amountToCall);
                         break;
                     }
                 case Move.fold:
                     {
                         currentTurn.Fold();
+                        Player playerToRemove = this.currentPlayer;
+                        this.currentPlayer = this.activeUnfoldedPlayers.ElementAt((activeUnfoldedPlayers.ToList().IndexOf(this.currentPlayer) - 1) % activeUnfoldedPlayers.Count);
+                        activeUnfoldedPlayers.Remove(playerToRemove);
                         break;
                     }
                 case Move.bet:
