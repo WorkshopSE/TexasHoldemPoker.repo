@@ -68,6 +68,7 @@ namespace Poker.BE.Domain.Core.Tests
         #endregion
 
         [TestMethod()]
+        [ExpectedException(typeof(Exception))]
         public void EnterRoomTest()
         {
             //Arrange

@@ -30,6 +30,7 @@ namespace Poker.BE.Domain.Game
         // TODO: do we need ID for the Room? if so, what type should it be? 'long?' means nullable long.
         //public long? ID { get; }
 
+        public string Name { get; set; }
         public ICollection<Chair> Chairs { get { return chairs; } }
         public Hand CurrentHand { get; private set; }
         public GamePreferences Preferences { get; set; }
@@ -92,6 +93,8 @@ namespace Poker.BE.Domain.Game
             // Note: making default preferences to the room (poker game)
             Preferences = new GamePreferences();
 
+            Name = "Unknown Room";
+
         }
 
         /// <summary>
@@ -121,6 +124,7 @@ namespace Poker.BE.Domain.Game
             MaxNumberOfPlayers = config.MaxNumberOfPlayers;
             MinNumberOfPlayers = config.MinNumberOfPlayers;
             MinimumBet = config.MinimumBet;
+            Name = config.Name;
         }
 
         #endregion
@@ -140,31 +144,6 @@ namespace Poker.BE.Domain.Game
             }
 
             return player.JoinToTable(buyIn);
-        }
-
-        /// <summary>
-        /// Make the player to stand up from the table and returning the remaining money from his wallet
-        /// (back to the bank)
-        /// </summary>
-        /// <remarks>UC013: Stand Up To Spectate</remarks>
-        /// <param name="player"></param>
-        /// <returns>the wallet of the player</returns>
-        public double SeparatePlayerFromTable(Player player)
-        {
-            double remainingMoney = 0;
-
-            if (player.CurrentState == Player.State.Passive)
-            {
-                throw new PlayerModeException("Unable to stand up: Player already a spectator.");
-            }
-
-            if (player.CurrentState == Player.State.ActiveUnfolded)
-            {
-                throw new PlayerModeException("Unable to stand up: Player needs to fold first.");
-            }
-
-            remainingMoney = player.StandUp();
-            return remainingMoney;
         }
 
         public void RemovePlayer(Player player)

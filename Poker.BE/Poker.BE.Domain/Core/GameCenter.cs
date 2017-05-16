@@ -16,6 +16,7 @@ namespace Poker.BE.Domain.Core
     /// </remarks>
     public class GameCenter
     {
+        // UNDONE: Make the GameCenter a Singleton!
         #region Constants
         public enum Move
         {
@@ -307,9 +308,9 @@ namespace Poker.BE.Domain.Core
             }
 
             /* Action - Make the player to stand up */
-            
 
-            return room.SeparatePlayerFromTable(player);
+            room.LeaveChair(player);
+            return player.StandUp();
         }
         #endregion
 

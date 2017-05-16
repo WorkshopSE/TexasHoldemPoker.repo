@@ -70,6 +70,11 @@ namespace Poker.BE.Domain.Game
         /// </summary>
         public double MinimumBet { get; set; }
 
+        /// <summary>
+        /// the room name - set by the user.
+        /// </summary>
+        public string Name { get; set; }
+
         #endregion
     }
 }

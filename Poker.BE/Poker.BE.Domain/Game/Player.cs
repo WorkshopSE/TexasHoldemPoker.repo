@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Poker.BE.Domain.Utility.Exceptions;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -19,12 +20,12 @@ namespace Poker.BE.Domain.Game
         #endregion
 
         #region Fields
-        private Wallet wallet = default(Wallet);
+        private Wallet _wallet = default(Wallet);
         #endregion
 
         #region Properties
         public State CurrentState { get; private set; }
-        public double Wallet { get { return wallet.Value; } private set { } }
+        public double Wallet { get { return _wallet.Value; } private set { _wallet.Value = value; } }
         public Card[] PrivateCards { get; set; }
         public string Nickname { get; set; }
         #endregion
@@ -34,7 +35,7 @@ namespace Poker.BE.Domain.Game
         {
             PrivateCards = new Card[NPRIVATE_CARDS];
             CurrentState = State.Passive;
-            wallet = new Wallet();
+            _wallet = new Wallet();
             Wallet = 0.0;
         }
 
@@ -57,10 +58,19 @@ namespace Poker.BE.Domain.Game
         /// <returns>the remaining wallet money</returns>
         public double StandUp()
         {
-            // TODO
-            throw new NotImplementedException();
+            if (CurrentState == State.Passive)
+            {
+                throw new PlayerModeException("Unable to stand up: Player already a spectator.");
+            }
+
+            if (CurrentState == State.ActiveUnfolded)
+            {
+                throw new PlayerModeException("Unable to stand up: Player needs to fold first.");
+            }
+
+            return Wallet;
         }
         #endregion
 
-    }
+    }// class
 }
