@@ -26,29 +26,12 @@ namespace AT.Tests
 		[Test]
 		public void TestIncorrectUserName()
 		{
-			try
-			{
-				base.Login("Tomer12", "12345");
-				Assert.Fail();
-			}catch(ArgumentException e)
-			{
-				Assert.Pass();
-			}
-			
+			Assert.AreEqual(false, base.Login("Tomer12", "12345"));
 		}
 		[Test]
 		public void TestIncorrectPassword()
 		{
-			try
-			{
-				base.Login("Tomer123", "125");
-				Assert.Fail();
-			}
-			catch (ArgumentException e)
-			{
-				Assert.Pass();
-			}
-
+			Assert.AreEqual(false, base.Login("Tomer123", "125"));
 		}
 
 	}
