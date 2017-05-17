@@ -26,7 +26,7 @@ namespace Poker.BE.Domain.Game
         #region fields
         private ICollection<Player> activeUnfoldedPlayers;
         private Turn currentTurn;
-        private Player dealer;
+        //private Player dealer;        Is dealer needed??
         private Player currentPlayer;
         private Dictionary<Player, int> liveBets;
         private int totalRaise;
@@ -35,10 +35,9 @@ namespace Poker.BE.Domain.Game
         #endregion
 
         #region Constructors
-        public Round(Player dealer, ICollection<Player> activeUnfoldedPlayers, Pot currentPot)
+        public Round(Player currentPlayer, ICollection<Player> activeUnfoldedPlayers, Pot currentPot)
         {
-            this.dealer = dealer;
-            this.currentPlayer = this.activeUnfoldedPlayers.ElementAt((activeUnfoldedPlayers.ToList().IndexOf(dealer)+2)%activeUnfoldedPlayers.Count);
+            this.currentPlayer = currentPlayer;
             this.activeUnfoldedPlayers = activeUnfoldedPlayers;
             this.currentPot = currentPot;
             this.currentTurn = new Turn(currentPlayer, currentPot);
@@ -64,9 +63,57 @@ namespace Poker.BE.Domain.Game
                     }
                 case  Move.call:
                     {
+                        //----------Put money in pot----------//
+                        Pot tempPot = currentPot;
                         int amountToCall = totalRaise - liveBets[currentPlayer];
+                        int playerCurrentBet = liveBets[currentPlayer];
+                        while (amountToCall + playerCurrentBet > tempPot.AmountToClaim)
+                        {
+                            if (tempPot.PartialPot == null)
+                            {
+                                throw new ArgumentException("Not enough partial pots were created! Somthing isn't right!");
+                            }
+
+                            if (playerCurrentBet < tempPot.AmountToClaim)
+                            {
+                                int amountToAdd = tempPot.AmountToClaim - playerCurrentBet; //how much money does the player need to add in order to claim the pot
+                                tempPot.Value += amountToAdd;
+                                liveBets[currentPlayer] += amountToAdd;
+                                currentTurn.Call(amountToAdd);
+                                amountToCall -= amountToAdd;
+                                playerCurrentBet = 0;
+                            }
+                            else
+                            {
+                                playerCurrentBet -= tempPot.AmountToClaim;
+                            }
+
+                            if (!tempPot.PlayersClaimPot.Contains(currentPlayer))
+                                tempPot.PlayersClaimPot.Add(currentPlayer);
+
+                            tempPot = tempPot.PartialPot;
+                        }
+
+                        if (amountToCall + playerCurrentBet < tempPot.AmountToClaim)
+                        {
+                            //Add new partial pot in the middle
+                            Pot newPartialPot = new Pot(tempPot.BasePot);
+                            newPartialPot.PartialPot = tempPot;
+                            tempPot.BasePot = newPartialPot;
+                            newPartialPot.BasePot.PartialPot = newPartialPot;
+
+                            //Set new partial pot fields
+                            foreach (Player player in tempPot.PlayersClaimPot)
+                                newPartialPot.PlayersClaimPot.Add(player);
+                            newPartialPot.PlayersClaimPot.Add(currentPlayer);
+                            newPartialPot.AmountToClaim = amountToCall;
+                            newPartialPot.Value = newPartialPot.PlayersClaimPot.Count * amountToCall;
+
+                            tempPot.AmountToClaim -= amountToCall;
+                            tempPot.Value -= newPartialPot.PlayersClaimPot.Count * amountToCall;
+                        }
                         currentTurn.Call(amountToCall);
-                        liveBets[currentPlayer] = totalRaise;
+
                         break;
                     }
                 case Move.fold:
@@ -129,8 +176,19 @@ namespace Poker.BE.Domain.Game
                         }
                         if (this.currentPlayer.Wallet.amountOfMoney > highestOtherAllIn)
                             throw new IOException("all-in is bigger than the highest other player's all-in... use bet\raise move");
+                        if (currentPlayer.Wallet.amountOfMoney == 0)
+                            throw new ArgumentException("You're already all-in!!");
 
-                        //put money in pot - create partial pot if needed
+                        if (this.currentPlayer.Wallet.amountOfMoney <= totalRaise)
+                            PlayMove(Move.call, this.currentPlayer.Wallet.amountOfMoney);
+                        else
+                        {
+                            PlayMove(Move.call, totalRaise);
+                            PlayMove(Move.raise, this.currentPlayer.Wallet.amountOfMoney);
+                        }
+                        currentTurn.AllIn();
+
+                        /*//put money in pot - create partial pot if needed
                         Pot tempPot = currentPot;
                         int playerCurrentBet = liveBets[currentPlayer];
                         while (currentPlayer.Wallet.amountOfMoney + playerCurrentBet > tempPot.AmountToClaim)
@@ -152,14 +210,13 @@ namespace Poker.BE.Domain.Game
                                 tempPot.PlayersClaimPot.Add(currentPlayer);
                             
                             
-                            if (tempPot.PartialPot != null)
+                            if (tempPot.PartialPot == null)
                             {
                                 tempPot.PartialPot = new Pot(tempPot);
                             }
                             tempPot = tempPot.PartialPot;
-                        }
-                        
-                        currentTurn.AllIn();
+                        }*/
+
                         break;
                     }
                 default:
@@ -174,7 +231,10 @@ namespace Poker.BE.Domain.Game
         }
         private void calculateNextPlayer()
         {
-            this.currentPlayer = this.activeUnfoldedPlayers.ElementAt((activeUnfoldedPlayers.ToList().IndexOf(this.currentPlayer) + 1) % activeUnfoldedPlayers.Count);
+            do
+                this.currentPlayer = this.activeUnfoldedPlayers.ElementAt((activeUnfoldedPlayers.ToList().IndexOf(this.currentPlayer) + 1) % activeUnfoldedPlayers.Count);
+            while (this.currentPlayer.CurrentState == Player.State.ActiveAllIn);
+
         }
         #endregion
     }

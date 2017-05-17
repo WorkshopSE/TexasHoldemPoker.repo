@@ -14,13 +14,18 @@ namespace Poker.BE.Domain.Game.Tests
         [TestMethod()]
         public void RoundTest()
         {
-            throw new NotImplementedException();
+            //Is this count as simple constructor??
         }
 
         [TestMethod()]
         public void PlayMoveTest()
         {
-            throw new NotImplementedException();
+            //Arrange
+            var player1 = new Player();
+            var player2 = new Player();
+            var player3 = new Player();
+            var activeUnfoldedPlayers = new List<Player>();
+            //var round = new Round(player1, )
         }
     }
 }

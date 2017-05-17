@@ -120,27 +120,14 @@ namespace Poker.BE.Domain.Game.Tests
             //Arrange
             var player = new Player();
             var turn = new Turn(player, new Pot(null));
-            Exception expectedException = null;
 
             //Act
-            try
-            {
-                turn.AllIn();
-            }
-            catch (ArgumentException e)
-            {
-                expectedException = e;
-            }
-
             player.AddMoney(200);
             turn.AllIn();
-            var res1 = player.Wallet.amountOfMoney == 0;
-            var res2 = player.CurrentState == Player.State.ActiveAllIn;
+            var res1 = player.CurrentState == Player.State.ActiveAllIn;
 
             //Assert
-            Assert.AreEqual(expectedException.Message, "You're already all-in!!");
             Assert.IsTrue(res1);
-            Assert.IsTrue(res2);
         }
     }
 }
