@@ -39,9 +39,9 @@ namespace Poker.BE.Domain.Game
             }
             this.deck = deck;
             this.activePlayers = players;
-            this.pot = new Pot();
+            this.pot = new Pot(null);
             this.dealer = dealer;
-            this.CurrentRound = new Round(dealer,activePlayers);
+            this.CurrentRound = new Round(dealer,activePlayers, this.pot);
             this.Active = true;
             
         }

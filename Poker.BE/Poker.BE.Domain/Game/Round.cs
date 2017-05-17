@@ -31,15 +31,17 @@ namespace Poker.BE.Domain.Game
         private Dictionary<Player, int> liveBets;
         private int totalRaise;
         private int lastRaise;
+        private Pot currentPot;
         #endregion
 
         #region Constructors
-        public Round(Player dealer, ICollection<Player> activeUnfoldedPlayers)
+        public Round(Player dealer, ICollection<Player> activeUnfoldedPlayers, Pot currentPot)
         {
             this.dealer = dealer;
             this.currentPlayer = this.activeUnfoldedPlayers.ElementAt((activeUnfoldedPlayers.ToList().IndexOf(dealer)+2)%activeUnfoldedPlayers.Count);
             this.activeUnfoldedPlayers = activeUnfoldedPlayers;
-            this.currentTurn = new Turn(currentPlayer);
+            this.currentPot = currentPot;
+            this.currentTurn = new Turn(currentPlayer, currentPot);
             this.liveBets = new Dictionary<Player, int>();
             foreach (Player player in activeUnfoldedPlayers)
             {
@@ -127,6 +129,36 @@ namespace Poker.BE.Domain.Game
                         }
                         if (this.currentPlayer.Wallet.amountOfMoney > highestOtherAllIn)
                             throw new IOException("all-in is bigger than the highest other player's all-in... use bet\raise move");
+
+                        //put money in pot - create partial pot if needed
+                        Pot tempPot = currentPot;
+                        int playerCurrentBet = liveBets[currentPlayer];
+                        while (currentPlayer.Wallet.amountOfMoney + playerCurrentBet > tempPot.AmountToClaim)
+                        {
+                            if (playerCurrentBet < tempPot.AmountToClaim)
+                            {
+                                int amountToAdd = tempPot.AmountToClaim - playerCurrentBet; //how much money does the player need to add in order to claim the pot
+                                tempPot.Value += amountToAdd;
+                                liveBets[currentPlayer] += amountToAdd;
+                                currentPlayer.Wallet.amountOfMoney -= amountToAdd;
+                                playerCurrentBet = 0;
+                            }
+                            else
+                            {
+                                playerCurrentBet -= tempPot.AmountToClaim;
+                            }
+
+                            if (!tempPot.PlayersClaimPot.Contains(currentPlayer))
+                                tempPot.PlayersClaimPot.Add(currentPlayer);
+                            
+                            
+                            if (tempPot.PartialPot != null)
+                            {
+                                tempPot.PartialPot = new Pot(tempPot);
+                            }
+                            tempPot = tempPot.PartialPot;
+                        }
+                        
                         currentTurn.AllIn();
                         break;
                     }

@@ -23,7 +23,7 @@ namespace Poker.BE.Domain.Game.Tests
         {
             //Arrange
             var player = new Player();
-            var turn = new Turn(player);
+            var turn = new Turn(player, new Pot(null));
             Exception expectedException = null;
 
             //Act
@@ -50,7 +50,7 @@ namespace Poker.BE.Domain.Game.Tests
         {
             //Arrange
             var player = new Player();
-            var turn = new Turn(player);
+            var turn = new Turn(player, new Pot(null));
 
             //Act
             turn.Fold();
@@ -65,7 +65,7 @@ namespace Poker.BE.Domain.Game.Tests
         {
             //Arrange
             var player = new Player();
-            var turn = new Turn(player);
+            var turn = new Turn(player, new Pot(null));
             Exception expectedException = null;
 
             //Act
@@ -92,7 +92,7 @@ namespace Poker.BE.Domain.Game.Tests
         {
             //Arrange
             var player = new Player();
-            var turn = new Turn(player);
+            var turn = new Turn(player, new Pot(null));
             Exception expectedException = null;
 
             //Act
@@ -119,7 +119,7 @@ namespace Poker.BE.Domain.Game.Tests
         {
             //Arrange
             var player = new Player();
-            var turn = new Turn(player);
+            var turn = new Turn(player, new Pot(null));
             Exception expectedException = null;
 
             //Act

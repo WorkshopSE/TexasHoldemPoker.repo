@@ -12,14 +12,19 @@ namespace Poker.BE.Domain.Game
     {
         #region Fields
         private Player currentPlayer;
+        private Pot currentPot;
+        #endregion
 
+        #region Properties
         public Player CurrentPlayer { get { return currentPlayer; } set { currentPlayer = value; } }
+        public Pot CurrentPot { get { return currentPot; } set { currentPot = value; } }
         #endregion
 
         #region Constructors
-        public Turn(Player player)
+        public Turn(Player player, Pot pot)
         {
             this.CurrentPlayer = player;
+            this.currentPot = pot;
         }
         #endregion
 
@@ -34,6 +39,7 @@ namespace Poker.BE.Domain.Game
             if (amount <= 0)
                 throw new IOException("Last raise is lower then previous raise :(  Somthing isn't right...");
             this.currentPlayer.SubstractMoney(amount);
+            this.currentPot.Value += amount;
         }
 
         public void Fold()
@@ -59,7 +65,7 @@ namespace Poker.BE.Domain.Game
         {
             if (currentPlayer.Wallet.amountOfMoney == 0)
                 throw new ArgumentException("You're already all-in!!");
-            //TODO - add money to pot
+
             this.currentPlayer.Wallet.amountOfMoney = 0;
             this.currentPlayer.CurrentState = Player.State.ActiveAllIn;
         }
