@@ -24,7 +24,7 @@ namespace Poker.BE.Domain.Game.Tests
             //Arrange
             var player = new Player();
             var turn = new Turn(player);
-            Exception expectedExeption = null;
+            Exception expectedException = null;
 
             //Act
             try
@@ -33,7 +33,7 @@ namespace Poker.BE.Domain.Game.Tests
             }
             catch (NotEnoughMoneyException e)
             {
-                expectedExeption = e;
+                expectedException = e;
             }
 
             player.AddMoney(200);
@@ -41,7 +41,7 @@ namespace Poker.BE.Domain.Game.Tests
             var res2 = player.Wallet.amountOfMoney != 150;
 
             //Assert
-            Assert.AreEqual(expectedExeption.Message, "Player doesn't have enough money!");
+            Assert.AreEqual(expectedException.Message, "Player doesn't have enough money!");
             Assert.IsFalse(res2);
         }
 
@@ -66,7 +66,7 @@ namespace Poker.BE.Domain.Game.Tests
             //Arrange
             var player = new Player();
             var turn = new Turn(player);
-            Exception expectedExeption = null;
+            Exception expectedException = null;
 
             //Act
             try
@@ -75,7 +75,7 @@ namespace Poker.BE.Domain.Game.Tests
             }
             catch (NotEnoughMoneyException e)
             {
-                expectedExeption = e;
+                expectedException = e;
             }
 
             player.AddMoney(200);
@@ -83,7 +83,7 @@ namespace Poker.BE.Domain.Game.Tests
             var res2 = player.Wallet.amountOfMoney != 150;
 
             //Assert
-            Assert.AreEqual(expectedExeption.Message, "Player doesn't have enough money!");
+            Assert.AreEqual(expectedException.Message, "Player doesn't have enough money!");
             Assert.IsFalse(res2);
         }
 
@@ -93,7 +93,7 @@ namespace Poker.BE.Domain.Game.Tests
             //Arrange
             var player = new Player();
             var turn = new Turn(player);
-            Exception expectedExeption = null;
+            Exception expectedException = null;
 
             //Act
             try
@@ -102,7 +102,7 @@ namespace Poker.BE.Domain.Game.Tests
             }
             catch (NotEnoughMoneyException e)
             {
-                expectedExeption = e;
+                expectedException = e;
             }
 
             player.AddMoney(200);
@@ -110,14 +110,37 @@ namespace Poker.BE.Domain.Game.Tests
             var res2 = player.Wallet.amountOfMoney != 150;
 
             //Assert
-            Assert.AreEqual(expectedExeption.Message, "Player doesn't have enough money!");
+            Assert.AreEqual(expectedException.Message, "Player doesn't have enough money!");
             Assert.IsFalse(res2);
         }
 
         [TestMethod()]
         public void AllInTest()
         {
-            throw new NotImplementedException();
+            //Arrange
+            var player = new Player();
+            var turn = new Turn(player);
+            Exception expectedException = null;
+
+            //Act
+            try
+            {
+                turn.AllIn();
+            }
+            catch (ArgumentException e)
+            {
+                expectedException = e;
+            }
+
+            player.AddMoney(200);
+            turn.AllIn();
+            var res1 = player.Wallet.amountOfMoney == 0;
+            var res2 = player.CurrentState == Player.State.ActiveAllIn;
+
+            //Assert
+            Assert.AreEqual(expectedException.Message, "You're already all-in!!");
+            Assert.IsTrue(res1);
+            Assert.IsTrue(res2);
         }
     }
 }

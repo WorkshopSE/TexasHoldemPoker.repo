@@ -57,9 +57,11 @@ namespace Poker.BE.Domain.Game
 
         public void AllIn()
         {
-            this.currentPlayer.CurrentState = Player.State.ActiveAllIn;
+            if (currentPlayer.Wallet.amountOfMoney == 0)
+                throw new ArgumentException("You're already all-in!!");
             //TODO - add money to pot
             this.currentPlayer.Wallet.amountOfMoney = 0;
+            this.currentPlayer.CurrentState = Player.State.ActiveAllIn;
         }
         #endregion
     }
