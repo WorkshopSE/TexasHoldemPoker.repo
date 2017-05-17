@@ -24,7 +24,7 @@ namespace Poker.BE.Domain.Game
         #endregion
 
         #region Properties
-        public State CurrentState { get; private set; }
+        public State CurrentState { get; protected set; }
         public double Wallet { get { return _wallet.Value; } private set { _wallet.Value = value; } }
         public Card[] PrivateCards { get; set; }
         public string Nickname { get; set; }
@@ -68,8 +68,10 @@ namespace Poker.BE.Domain.Game
                 throw new PlayerModeException("Unable to stand up: Player needs to fold first.");
             }
 
+            CurrentState = State.Passive;
             return Wallet;
         }
+
         #endregion
 
     }// class

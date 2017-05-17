@@ -48,7 +48,7 @@ namespace Poker.BE.Domain.Core
 
         #region Methods
 
-
+        // TODO: for Ariel - what is this 2 methods?
         public void Connect()
         {
             IsConnected = true;
@@ -59,8 +59,7 @@ namespace Poker.BE.Domain.Core
             IsConnected = false;
         }
 
-        #region Game Play Methods
-        
+
         #region Find an Existing Room
         public ICollection<Room> FindRoomsByCriteria(int level)
         {
@@ -87,6 +86,14 @@ namespace Poker.BE.Domain.Core
         }
         #endregion
 
+        /// <summary>
+        /// Allow the user to enter a room from a list as a spectator.
+        /// </summary>
+        /// <param name="room">to enter</param>
+        /// <returns>
+        /// Session ID of the new player for this user, for the user to store as a cookie
+        /// </returns>
+        /// <see cref="https://docs.google.com/document/d/1OTee6BGDWK2usL53jdoeBOI-1Jh8wyNejbQ0ZroUhcA/edit#heading=h.tzy1eb1jifgr"/>
         public int EnterRoom(Room room)
         {
             // check that the user doesn't have already a player in the room
@@ -106,33 +113,32 @@ namespace Poker.BE.Domain.Core
             var freshPlayer = gameCenter.EnterRoom(room);
 
             // logging
-            logger.Log(string.Format("User {0} has player {1}",UserName, freshPlayer.GetHashCode()), this, "Medium");
+            logger.Log(string.Format("User {0} has player {1}", UserName, freshPlayer.GetHashCode()),
+                this, "Medium");
 
             Players.Add(freshPlayer.GetHashCode(), freshPlayer);
 
             return freshPlayer.GetHashCode();
         }
 
-        public void CreateNewRoom(int level, GameConfig config)
+        public bool CreateNewRoom(int level, GameConfig config)
         {
             // TODO
             throw new NotImplementedException();
         }
 
-        public void JoinNextHand(Player player, int seatIndex, double buyIn)
+        public bool JoinNextHand(int sessionID, int seatIndex, double buyIn)
         {
             // TODO
             throw new NotImplementedException();
         }
 
-        public void StandUpToSpactate(int sessionID)
+        public bool StandUpToSpactate(int sessionID)
         {
             // TODO
             throw new NotImplementedException();
         }
         #endregion
 
-
-        #endregion
     }
 }

@@ -17,7 +17,7 @@ namespace Poker.BE.Domain.Game.Tests
         public TestContext TestContext { get { return testContext; } set { testContext = value; } }
 
         [TestMethod]
-        public void RoomTest()
+        public void RoomTest()// (:Player, :Preferences)
         {
             //Arrange
             Player player = new Player();
@@ -30,5 +30,81 @@ namespace Poker.BE.Domain.Game.Tests
             TestContext.WriteLine("end of roomTest");
         }
 
+        [TestMethod()]
+        public void RoomTest1() // ()
+        {
+            // TODO
+            throw new NotImplementedException();
+        }
+
+        [TestMethod()]
+        public void RoomTest2() // (:Player)
+        {
+            // TODO
+            throw new NotImplementedException();
+        }
+
+        [TestMethod()]
+        public void RoomTest3() // (:Player, :GameConfig)
+        {
+            // TODO
+            throw new NotImplementedException();
+        }
+
+        [TestMethod()]
+        public void JoinPlayerToTableTest()
+        {
+            // TODO
+            throw new NotImplementedException();
+        }
+
+        [TestMethod()]
+        public void RemovePlayerTest()
+        {
+            // TODO
+            throw new NotImplementedException();
+        }
+
+        [TestMethod()]
+        public void ClearAllTest()
+        {
+            // TODO
+            throw new NotImplementedException();
+        }
+
+        [TestMethod()]
+        public void CreatePlayerTest()
+        {
+            // TODO
+            throw new NotImplementedException();
+        }
+
+        [TestMethod()]
+        public void StartNewHandTest()
+        {
+            // TODO
+            throw new NotImplementedException();
+        }
+
+        [TestMethod()]
+        public void TakeChairTest()
+        {
+            // TODO
+            throw new NotImplementedException();
+        }
+
+        [TestMethod()]
+        public void LeaveChairTest()
+        {
+            // TODO
+            throw new NotImplementedException();
+        }
+
+        [TestMethod()]
+        public void SendMessageTest()
+        {
+            // TODO
+            throw new NotImplementedException();
+        }
     }
 }
