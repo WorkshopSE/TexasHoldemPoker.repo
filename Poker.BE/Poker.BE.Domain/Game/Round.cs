@@ -77,10 +77,12 @@ namespace Poker.BE.Domain.Game
                     }
                 case Move.bet:
                     {
-                        if (lastRaise > 0)
-                            throw new IOException("Can't bet if someone had bet before... use raise");
+                        if (lastRaise > 0 || totalRaise > 0)
+                            throw new IOException("Can't bet if someone had bet before... use raise move");
+                        if (amountToBet == currentPlayer.Wallet.amountOfMoney)
+                            throw new ArgumentOutOfRangeException("Can't bet all of your money... use all-in move");
                         int highestAllIn = 0;
-                        foreach (Player player in activeUnfoldedPlayers)
+                        foreach (Player player in activeUnfoldedPlayers)    //find highest all-in at the table
                         {
                             if (player.Wallet.amountOfMoney > highestAllIn)
                                 highestAllIn = player.Wallet.amountOfMoney;
@@ -97,9 +99,11 @@ namespace Poker.BE.Domain.Game
                 case Move.raise:
                     {
                         if (lastRaise == 0)
-                            throw new IOException("Can't bet if someone had bet before... use raise");
+                            throw new IOException("Can't raise if no one had bet before... use bet move");
+                        if (totalRaise + amountToBet == currentPlayer.Wallet.amountOfMoney + liveBets[currentPlayer])
+                            throw new ArgumentOutOfRangeException("Can't bet all of your money... use all-in move");
                         int highestAllIn = 0;
-                        foreach (Player player in activeUnfoldedPlayers)
+                        foreach (Player player in activeUnfoldedPlayers)    //find highest all-in at the table
                         {
                             if (player.Wallet.amountOfMoney + liveBets[player] > highestAllIn)
                                 highestAllIn = player.Wallet.amountOfMoney;
@@ -115,13 +119,21 @@ namespace Poker.BE.Domain.Game
                     }
                 case Move.allin:
                     {
+                        int highestOtherAllIn = 0;
+                        foreach (Player player in activeUnfoldedPlayers)    //find highest all-in of the other players at the table
+                        {
+                            if (player != this.currentPlayer && player.Wallet.amountOfMoney + liveBets[player] > highestOtherAllIn)
+                                highestOtherAllIn = player.Wallet.amountOfMoney;
+                        }
+                        if (this.currentPlayer.Wallet.amountOfMoney > highestOtherAllIn)
+                            throw new IOException("all-in is bigger than the highest other player's all-in... use bet\raise move");
                         currentTurn.AllIn();
                         break;
                     }
                 default:
                     {
                         //TODO: print invalid move exception
-                        throw new NotEnoughPlayersException("Invalid Move");
+                        throw new ArgumentException("Invalid Move");
                     }
             }
             //Change Player

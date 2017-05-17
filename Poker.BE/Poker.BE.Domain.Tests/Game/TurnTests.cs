@@ -90,7 +90,28 @@ namespace Poker.BE.Domain.Game.Tests
         [TestMethod()]
         public void RaiseTest()
         {
-            throw new NotImplementedException();
+            //Arrange
+            var player = new Player();
+            var turn = new Turn(player);
+            Exception expectedExeption = null;
+
+            //Act
+            try
+            {
+                turn.Raise(50);
+            }
+            catch (NotEnoughMoneyException e)
+            {
+                expectedExeption = e;
+            }
+
+            player.AddMoney(200);
+            turn.Raise(50);
+            var res2 = player.Wallet.amountOfMoney != 150;
+
+            //Assert
+            Assert.AreEqual(expectedExeption.Message, "Player doesn't have enough money!");
+            Assert.IsFalse(res2);
         }
 
         [TestMethod()]

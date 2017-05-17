@@ -14,6 +14,7 @@ namespace Poker.BE.Domain.Game
         {
             ActiveUnfolded,
             ActiveFolded,
+            ActiveAllIn,
             Passive
         }
 

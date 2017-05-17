@@ -50,12 +50,16 @@ namespace Poker.BE.Domain.Game
 
         public void Raise(int amount)
         {
-            //TODO
+            if (amount <= 0)
+                throw new IOException("Can't bet a negetive amount");
+            this.currentPlayer.SubstractMoney(amount);
         }
 
         public void AllIn()
         {
-            //TODO
+            this.currentPlayer.CurrentState = Player.State.ActiveAllIn;
+            //TODO - add money to pot
+            this.currentPlayer.Wallet.amountOfMoney = 0;
         }
         #endregion
     }
