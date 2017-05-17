@@ -78,7 +78,7 @@ namespace Poker.BE.Domain.Game
         /// <see cref="https://docs.google.com/document/d/1ob4bSynssE3UOfehUAFNv_VDpPbybhS4dW_O-v-QDiw/edit#heading=h.tzy1eb1jifgr"/>
         public Room(Player creator) : this()
         {
-            activeAndPassivePlayers.Add(creator);
+            activeAndPassivePlayers.Add(creator); DataMisalignedException;
         }
 
         /// <summary>
