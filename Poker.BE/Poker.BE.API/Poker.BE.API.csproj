@@ -262,16 +262,16 @@
     <Content Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Poker.BE.Domain\Poker.BE.Domain.csproj">
-      <Project>{fe034180-e60e-416e-8d0f-0d9155ac52cc}</Project>
-      <Name>Poker.BE.Domain</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Scripts\jquery-3.1.1.slim.min.map" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Scripts\jquery-3.1.1.min.map" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Poker.BE.Service\Poker.BE.Service.csproj">
+      <Project>{fe55ce81-34e4-49dd-b43d-b62b2490dc34}</Project>
+      <Name>Poker.BE.Service</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

@@ -47,6 +47,17 @@
     <Compile Include="IServices\INotificationService.cs" />
     <Compile Include="IServices\IPokerGamePlayService.cs" />
     <Compile Include="IServices\IProfileService.cs" />
+    <Compile Include="Modules\Requests\EnterRoomRequest.cs" />
+    <Compile Include="Modules\Requests\IRequest.cs" />
+    <Compile Include="Modules\Requests\JoinNextHandRequest.cs" />
+    <Compile Include="Modules\Requests\NewRoomRequest.cs" />
+    <Compile Include="Modules\Requests\StandUpToSpactateRequest.cs" />
+    <Compile Include="Modules\Responses\IResponse.cs" />
+    <Compile Include="Modules\Results\EnterRoomResult.cs" />
+    <Compile Include="Modules\Results\IResult.cs" />
+    <Compile Include="Modules\Results\JoinNextHandResult.cs" />
+    <Compile Include="Modules\Results\NewRoomResult.cs" />
+    <Compile Include="Modules\Results\StandUpToSpactateResult.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\AuthenticationService.cs" />
     <Compile Include="IServices\ILevelService.cs" />
@@ -60,8 +71,12 @@
     <Compile Include="Services\ProfileService.cs" />
     <Compile Include="Services\RoomsService.cs" />
   </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
-    <Folder Include="Modules\Responses\" />
+    <ProjectReference Include="..\Poker.BE.Domain\Poker.BE.Domain.csproj">
+      <Project>{fe034180-e60e-416e-8d0f-0d9155ac52cc}</Project>
+      <Name>Poker.BE.Domain</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
