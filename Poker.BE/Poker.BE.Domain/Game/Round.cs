@@ -8,7 +8,26 @@ namespace Poker.BE.Domain.Game
 {
     public class Round
     {
-        // TODO: complete - set team member to do this
+		#region Fields
+		private int roundNumber; 
+        // 1 - New Round, 2- Flop, 3-River, 4-Turn
+        private Deck deck;
+		#endregion
 
-    }
+		#region Constructors
+        public Round()
+		{
+            roundNumber = 1;
+            PlayPreFlop();
+        }
+
+		#endregion
+
+		#region Methods
+
+
+		#endregion
+
+	}
+
 }
