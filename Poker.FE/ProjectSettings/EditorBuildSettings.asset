@@ -20,6 +20,3 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/MainMenu/SignUp.unity
     guid: 30b46a55e93b12e499a10353d517e939
-  - enabled: 0
-    path: 
-    guid: 0649506e8c2682d4c93f1d9f55c85c26
