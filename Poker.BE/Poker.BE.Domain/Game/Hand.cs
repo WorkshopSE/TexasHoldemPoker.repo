@@ -53,10 +53,10 @@ namespace Poker.BE.Domain.Game
         /// </summary>
         public void DealCards()
         {
-            foreach (Player player in activePlayers)
+            for (int i = 0; i < Player.NPRIVATE_CARDS; i++)
             {
-                for (int i = 0; i < player.PrivateCards.Length; i++)
-                {
+				foreach (Player player in activePlayers)
+				{
                     player.PrivateCards[i] = deck.PullCard();
                     player.PrivateCards[i].CardState = Card.State.FaceDown;
                 }
