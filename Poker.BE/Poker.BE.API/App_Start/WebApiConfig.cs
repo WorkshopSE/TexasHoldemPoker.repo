@@ -16,8 +16,8 @@ namespace Poker.BE.API
 
             config.Routes.MapHttpRoute(
                 name: "DefaultApi",
-                routeTemplate: "api/{controller}/{id}",
-                defaults: new { id = RouteParameter.Optional }
+                routeTemplate: "api/{controller}/{action}/{param}",
+                defaults: new { param = RouteParameter.Optional }
             );
         }
     }

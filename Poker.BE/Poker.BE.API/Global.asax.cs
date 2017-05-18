@@ -15,9 +15,13 @@ namespace Poker.BE.API
         {
             AreaRegistration.RegisterAllAreas();
             GlobalConfiguration.Configure(WebApiConfig.Register);
+
+            // TODO: idan - this is MVC adding, clear this
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
+
+            // UNDONE: idan - add JSON filter here
         }
     }
 }
