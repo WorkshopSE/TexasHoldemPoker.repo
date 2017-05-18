@@ -1,7 +1,6 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
+using LitJson;
 
 
 public class Register : MonoBehaviour {
@@ -9,25 +8,25 @@ public class Register : MonoBehaviour {
     public GameObject password;
     public GameObject confirmPassword;
 
-    private string Username;
-    private string Password;
     private string ConfirmPassword;
-    private string form;
+    private User current = new User();
 
 
     public void RegisterAction()
     {
-        if (Password != "" && Username != "" && ConfirmPassword != "")
+        if (current.Password != "" && current.Username != "" && ConfirmPassword != "")
         {
 
             //TODO : HTTP REQ USING FORM (?)
-            if (!Password.Equals(ConfirmPassword))
+            if (!current.confirmPassword(ConfirmPassword))
             {
                 print("Password doesnt match!");
             }
             else
             {
+                JsonData userJson = JsonMapper.ToJson(current);
                 print("Registration Sucessful");
+                Debug.Log(userJson);
             }
             username.GetComponent<InputField>().text = "";
             password.GetComponent<InputField>().text = "";
@@ -53,8 +52,8 @@ public class Register : MonoBehaviour {
         {
             RegisterAction();
         }
-        Username = username.GetComponent<InputField>().text;
-        Password = password.GetComponent<InputField>().text;
+        current.Username = username.GetComponent<InputField>().text;
+        current.Password = password.GetComponent<InputField>().text;
         ConfirmPassword = confirmPassword.GetComponent<InputField>().text;
     }
 }

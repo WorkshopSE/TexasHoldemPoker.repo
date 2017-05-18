@@ -1,25 +1,23 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
+using LitJson;
 
 
 public class Login : MonoBehaviour {
     public GameObject username;
     public GameObject password;
 
-    private string Username;
-    private string Password;
-    private string form;
+    private User current = new User();
 
 
     public void LoginAction()
     {
-        if (Password != "" && Username != "")
+        if (current.Password != "" && current.Username != "")
         {
-
+            JsonData userJson = JsonMapper.ToJson(current);
             //TODO : HTTP REQ USING FORM (?)
             print("Login Sucessful");
+            Debug.Log(userJson);
             username.GetComponent<InputField>().text = "";
             password.GetComponent<InputField>().text = "";
         }
@@ -39,7 +37,7 @@ public class Login : MonoBehaviour {
         {
             LoginAction();
         }
-        Username = username.GetComponent<InputField>().text;
-        Password = password.GetComponent<InputField>().text;
+        current.Username = username.GetComponent<InputField>().text;
+        current.Password = password.GetComponent<InputField>().text;
     }
 }
