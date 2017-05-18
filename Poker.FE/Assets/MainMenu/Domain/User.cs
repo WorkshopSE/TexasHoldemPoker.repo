@@ -2,46 +2,18 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[System.Serializable]
 public class User {
 
-    private string username;
-    private string password;
-
-#region Properties
-    public string Username
-    {
-        get
-        {
-            return username;
-        }
-
-        set
-        {
-            username = value;
-        }
-    }
-
-    public string Password
-    {
-        get
-        {
-            return password;
-        }
-
-        set
-        {
-            password = value;
-        }
-    }
-#endregion
-
+    public string username;
+    public string password;
 
     public User()
     {
     }
 
-    public bool confirmPassword(string otherPassword)
+    public bool ConfirmPassword(string otherPassword)
     {
-        return Password.Equals(otherPassword);
+        return this.password.Equals(otherPassword);
     }
 }

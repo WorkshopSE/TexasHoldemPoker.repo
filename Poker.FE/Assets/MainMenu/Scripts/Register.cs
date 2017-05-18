@@ -1,37 +1,51 @@
-﻿using UnityEngine;
+﻿using System;
+using System.Collections;
+using UnityEngine;
 using UnityEngine.UI;
-using LitJson;
 
 
 public class Register : MonoBehaviour {
     public GameObject username;
     public GameObject password;
     public GameObject confirmPassword;
-
+    public GameObject registerFeedback;
     private string ConfirmPassword;
     private User current = new User();
+    public float messageDelay = 3f;
 
 
     public void RegisterAction()
     {
-        if (current.Password != "" && current.Username != "" && ConfirmPassword != "")
+        if (current.password != "" && current.username != "" && ConfirmPassword != "")
         {
 
             //TODO : HTTP REQ USING FORM (?)
-            if (!current.confirmPassword(ConfirmPassword))
+            if (current.ConfirmPassword(ConfirmPassword))
             {
-                print("Password doesnt match!");
+                string userJson = JsonUtility.ToJson(current);
+                registerFeedback.GetComponent<Text>().text = "Registration Sucessful";
+                Debug.Log(userJson);
             }
             else
             {
-                JsonData userJson = JsonMapper.ToJson(current);
-                print("Registration Sucessful");
-                Debug.Log(userJson);
+                registerFeedback.GetComponent<Text>().text = "Password Not Match!";
             }
             username.GetComponent<InputField>().text = "";
             password.GetComponent<InputField>().text = "";
             confirmPassword.GetComponent<InputField>().text = "";
         }
+        else
+        {
+            registerFeedback.GetComponent<Text>().text = "Please Fill all Fields";
+        }
+        StartCoroutine(LateFlushFeedback());
+    }
+
+    private IEnumerator LateFlushFeedback()
+    {
+        yield return new WaitForSeconds(messageDelay);
+
+        registerFeedback.GetComponent<Text>().text = "";
     }
 
     // Update is called once per frame
@@ -52,8 +66,8 @@ public class Register : MonoBehaviour {
         {
             RegisterAction();
         }
-        current.Username = username.GetComponent<InputField>().text;
-        current.Password = password.GetComponent<InputField>().text;
+        current.username = username.GetComponent<InputField>().text;
+        current.password = password.GetComponent<InputField>().text;
         ConfirmPassword = confirmPassword.GetComponent<InputField>().text;
     }
 }

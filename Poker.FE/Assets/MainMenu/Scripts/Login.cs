@@ -1,27 +1,43 @@
-﻿using UnityEngine;
+﻿using System;
+using System.Collections;
+using UnityEngine;
 using UnityEngine.UI;
-using LitJson;
 
 
 public class Login : MonoBehaviour {
     public GameObject username;
     public GameObject password;
+    public GameObject loginFeedback;
+    public float messageDelay = 3f;
 
     private User current = new User();
 
 
     public void LoginAction()
     {
-        if (current.Password != "" && current.Username != "")
+        if (current.password != "" && current.username != "")
         {
-            JsonData userJson = JsonMapper.ToJson(current);
+            string userJson = JsonUtility.ToJson(current);
             //TODO : HTTP REQ USING FORM (?)
-            print("Login Sucessful");
+            loginFeedback.GetComponent<Text>().text = "Login Sucessful!";
             Debug.Log(userJson);
             username.GetComponent<InputField>().text = "";
             password.GetComponent<InputField>().text = "";
         }
+        else
+        {
+            loginFeedback.GetComponent<Text>().text = "Please Fill all Fields";
+        }
+        StartCoroutine(LateFlushFeedback());
     }
+
+    private IEnumerator LateFlushFeedback()
+    {
+        yield return new WaitForSeconds(messageDelay);
+
+        loginFeedback.GetComponent<Text>().text = "";
+    }
+
 
     // Update is called once per frame
     void Update()
@@ -37,7 +53,7 @@ public class Login : MonoBehaviour {
         {
             LoginAction();
         }
-        current.Username = username.GetComponent<InputField>().text;
-        current.Password = password.GetComponent<InputField>().text;
+        current.username = username.GetComponent<InputField>().text;
+        current.password = password.GetComponent<InputField>().text;
     }
 }
