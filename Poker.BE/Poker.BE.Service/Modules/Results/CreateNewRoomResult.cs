@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Poker.BE.Service.Modules.Results
 {
-    public class NewRoomResult : IResult
+    public class CreateNewRoomResult : IResult
     {
         /// <summary>
         /// room hash code

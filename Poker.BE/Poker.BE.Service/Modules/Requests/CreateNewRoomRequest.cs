@@ -2,7 +2,7 @@
 
 namespace Poker.BE.Service.Modules.Requests
 {
-    public class NewRoomRequest : IRequest
+    public class CreateNewRoomRequest : IRequest
     {
         public int Level { get; set; }
         public GameConfig GameConfig { get; set; }
