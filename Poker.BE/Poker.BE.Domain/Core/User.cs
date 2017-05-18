@@ -20,19 +20,8 @@ namespace Poker.BE.Domain.Core
         #endregion
 
         #region Properties
-        /// <summary>
-        /// Map for the player (user session) ID -> player at the given session.
-        /// using the player.GetHashCode() for generating this ID.
-        /// </summary>
-        /// <remarks>
-        /// session ID is the ID we give for a screen the user opens.
-        /// this is a need because the user can play several screen at once.
-        /// thus, to play with different players at the same time.
-        /// 
-        /// for now - the user cannot play as several players, at the same room.
-        ///    - this option is blocked.
-        /// </remarks>
-        public IDictionary<int, Player> Players { get; set; }
+        
+        public ICollection<Player> Players { get; set; }
         #endregion
 
         #region Constructors
@@ -42,7 +31,7 @@ namespace Poker.BE.Domain.Core
             Password = password;
             UserBank = new Bank(sumToDeposit);
             IsConnected = true;
-            Players = new Dictionary<int, Player>();
+            Players = new List<Player>();
         }
         #endregion
 
@@ -94,18 +83,20 @@ namespace Poker.BE.Domain.Core
         /// Session ID of the new player for this user, for the user to store as a cookie
         /// </returns>
         /// <see cref="https://docs.google.com/document/d/1OTee6BGDWK2usL53jdoeBOI-1Jh8wyNejbQ0ZroUhcA/edit#heading=h.tzy1eb1jifgr"/>
-        public int EnterRoom(Room room)
+        public Player EnterRoom(Room room)
         {
             // check that the user doesn't have already a player in the room
             if (Players.Count > 0 && room.Players.Count > 0)
             {
                 var result = from player in room.Players
-                             where Players.Values.Contains(player)
+                             where Players.Contains(player)
                              select player;
 
                 if (result.Count() > 0)
                 {
-                    throw new RoomRulesException("the user already play this room: " + room.Name);
+                    throw new RoomRulesException(
+                        string.Format("the user already play this room: {0} with player nickname: {1}",
+                        room.Name, result.First().Nickname));
                 }
             }
 
@@ -118,7 +109,7 @@ namespace Poker.BE.Domain.Core
 
             Players.Add(freshPlayer.GetHashCode(), freshPlayer);
 
-            return freshPlayer.GetHashCode();
+            return freshPlayer;
         }
 
         public bool CreateNewRoom(int level, GameConfig config)

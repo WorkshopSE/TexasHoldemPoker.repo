@@ -5,6 +5,11 @@
         /// <summary>
         /// requested room hash code
         /// </summary>
-        public int room { get; set; }
+        public int Room { get; set; }
+
+        /// <summary>
+        /// requesting user hash code
+        /// </summary>
+        public int User { get; set; }
     }
 }
