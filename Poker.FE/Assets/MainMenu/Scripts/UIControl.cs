@@ -6,7 +6,8 @@ using UnityEngine.SceneManagement;
 public class UIControl : MonoBehaviour {
     public GameObject loadingText;
     public GameObject loadingImage;
-	public void ChangeScene(string sceneName)
+    bool isMute;
+    public void ChangeScene(string sceneName)
     {
         loadingText.SetActive(true);
         loadingImage.SetActive(true);
