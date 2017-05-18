@@ -25,6 +25,7 @@ namespace Poker.BE.Domain.Game
         #endregion
 
         #region Properties
+		public bool handEnded { get; set;}
         #endregion
 
         #region Constructors
@@ -37,6 +38,7 @@ namespace Poker.BE.Domain.Game
             this.deck = deck;
             this.activePlayers = players;
             this.pot = new Pot();
+			handEnded = false;
         }
 
         public Round CurrentRound { get; internal set; }

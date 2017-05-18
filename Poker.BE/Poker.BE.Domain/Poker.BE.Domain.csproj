@@ -56,6 +56,7 @@
     <Compile Include="Game\League.cs" />
     <Compile Include="Game\LimitHoldem.cs" />
     <Compile Include="Game\NoLimitHoldem.cs" />
+    <Compile Include="Utility\Exceptions\HandNotOverException.cs" />
     <Compile Include="Utility\Exceptions\LevelNotFoundException.cs" />
     <Compile Include="Utility\Exceptions\NotEnoughMoneyException.cs" />
     <Compile Include="Utility\Exceptions\NotEnoughPlayersException.cs" />

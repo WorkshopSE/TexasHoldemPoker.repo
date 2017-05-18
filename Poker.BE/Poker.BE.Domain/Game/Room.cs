@@ -167,12 +167,43 @@ namespace Poker.BE.Domain.Game
             activeAndPassivePlayers.Add(result);
             return result;
         }
-
-        public void StartNewHand()
+		/// <summary>
+		/// Allow the system to deal new cards to the players at the table.
+		/// </summary>
+		/// <returns></returns>
+		/// <remarks>UC014: Deal A New Hand</remarks>
+		public void StartNewHand()
         {
-            CurrentHand = new Hand(deck, ActivePlayers);
-        }
+			/* Checking Preconditions */
 
+			//min amount of players
+			if(ActivePlayers.Count()<MinNumberOfPlayers)
+			{
+				throw new NotEnoughPlayersException("not enough players to start hand");
+			}
+
+			//last hand ended 
+
+			if(CurrentHand!=null || !CurrentHand.handEnded)
+			{
+				throw new HandNotOverException("previous hand hasnt ended");
+			}
+			//Deal Cards
+			foreach(Player Player in ActivePlayers)
+			{
+				Player.PrivateCards[0] = deck.PullCard();
+				Player.PrivateCards[1] = deck.PullCard();
+			}
+			//Place Bids
+			CurrentHand.PlaceBlinds();
+			deck.ShuffleCards();
+			CurrentHand = new Hand(deck, ActivePlayers);
+        }
+		public void EndCurrentHand()
+		{
+			//TODO UC31
+			CurrentHand.handEnded = true;
+		}
         public bool TakeChair(Player player, int index)
         {
             // TODO
