@@ -45,9 +45,23 @@ namespace Poker.BE.Domain.Game
             this.Active = true;
             
         }
-        #endregion
+		#endregion
 
-        #region Methods
+		#region Methods
+		/// <summary>
+		/// Function who calls all the Hand functions by order 
+		/// </summary>
+		public void StartNewHand(){
+            GamePreferences gamePre = null; // TODO edit when we will write GamePreference
+            DealCards();
+            PlayPreFlop();
+            PlayFlop();
+            PlayTurn();
+            PlayRiver();
+        }
+
+
+
         /// <summary>
         /// Each player receive 2 face-down cards
         /// </summary>
@@ -98,6 +112,14 @@ namespace Poker.BE.Domain.Game
             //TODO: WAIT FOR GamePreferences
             throw new NotImplementedException();
         }
+
+
+        private void PlayPreFlop() { };
+        private void PlayFlop() { };
+        private void PlayTurn() { };
+        private void PlayRiver() { };
+
+
         #endregion
     }
 }
