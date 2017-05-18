@@ -8,7 +8,24 @@ namespace Poker.BE.Service.Modules.Results
 {
     public abstract class IResult
     {
-        public string ErrorMessage { get; set; }
+        /// <summary>
+        /// error message log with accumulate set (= is +=)
+        /// </summary>
+        public string ErrorMessage
+        {
+            get { return ErrorMessage; }
+            set
+            {
+                if(!ErrorMessage.Equals("") & ErrorMessage != null)
+                {
+                    ErrorMessage += "\n" + value;
+                }
+                else
+                {
+                    ErrorMessage = value;
+                }
+            }
+        }
         public bool? Success { get; set; }
     }
 }

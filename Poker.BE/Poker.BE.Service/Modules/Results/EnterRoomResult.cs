@@ -5,6 +5,13 @@
         /// <summary>
         /// player hash code (session id)
         /// </summary>
-        public int player { get; set; }
+        public int? Player { get; set; }
+
+        public EnterRoomResult()
+        {
+            Player = null;
+            ErrorMessage = "";
+            Success = true;
+        }
     }
 }

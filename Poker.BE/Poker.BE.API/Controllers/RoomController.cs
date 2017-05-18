@@ -1,7 +1,6 @@
 ﻿using Poker.BE.Service.Modules.Requests;
 using Poker.BE.Service.Modules.Results;
 using Poker.BE.Service.IServices;
-using Poker.BE.Service.Services;
 
 using System;
 using System.Collections.Generic;
@@ -21,7 +20,7 @@ namespace Poker.BE.API.Controllers
         #region Constructors
         public RoomController()
         {
-            service = new RoomsService();
+            service = new Service.Services.RoomsService();
         }
         #endregion
 
@@ -35,10 +34,9 @@ namespace Poker.BE.API.Controllers
             {
                 result = service.EnterRoom(request);
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                // TODO
-                throw new NotImplementedException();
+                result.ErrorMessage = e.Message;
             }
 
             return Request.CreateResponse(HttpStatusCode.OK, result);
