@@ -21,7 +21,7 @@ namespace Poker.BE.Domain.Game
         public Pot BasePot { get { return this.basePot; } set { this.basePot = value; } }
 
         public int Value { get { return this.value; } set { this.value = value; } }
-        public int AmountToClaim { get { return this.amountToClaim; } set { this.value = amountToClaim; } }
+        public int AmountToClaim { get { return this.amountToClaim; } set { this.amountToClaim = value; } }
 
         public List<Player> PlayersClaimPot { get { return this.playersClaimPot; } set { this.playersClaimPot = value; } }
         #endregion
@@ -33,6 +33,7 @@ namespace Poker.BE.Domain.Game
             this.amountToClaim = 0;
             this.playersClaimPot = new List<Player>();
             this.basePot = basePot;
+            this.partialPot = null;
         }
         #endregion
 

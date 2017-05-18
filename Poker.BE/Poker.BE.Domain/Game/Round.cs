@@ -63,7 +63,7 @@ namespace Poker.BE.Domain.Game
         #endregion
 
         #region Methods
-        public void PlayMove(Move playMove, int amountToBet)
+        public void PlayMove(Move playMove, int amountToBetOrCall)
         {
             switch (playMove)
             {
@@ -74,39 +74,7 @@ namespace Poker.BE.Domain.Game
                     }
                 case Move.call:
                     {
-                        //----------Put money in pot----------//
-                        //Pot partialPotToCheck = CurrentPot;
-                        int amountToCall = TotalRaise - LiveBets[CurrentPlayer];
-                        int playerCurrentBet = LiveBets[CurrentPlayer];
-
-                        //as long as the player can "fill" this pot, put in the needed amount and mov to the next partial pot
-                        Pot lastPartialPot = FillBasePots(ref amountToCall, ref playerCurrentBet);
-
-
-
-                        if (amountToCall + playerCurrentBet > lastPartialPot.AmountToClaim)
-                            throw new ArgumentException("Not enough partial pots were created! Somthing isn't right!");
-                        else if (amountToCall + playerCurrentBet < lastPartialPot.AmountToClaim) //if call all-in move
-                        {
-                            //Add new partial pot in the middle
-                            Pot newPartialPot = new Pot(lastPartialPot.BasePot);
-                            newPartialPot.PartialPot = lastPartialPot;
-                            lastPartialPot.BasePot = newPartialPot;
-                            newPartialPot.BasePot.PartialPot = newPartialPot;
-
-                            //Set new partial pot fields
-                            foreach (Player player in lastPartialPot.PlayersClaimPot)
-                                newPartialPot.PlayersClaimPot.Add(player);
-                            newPartialPot.PlayersClaimPot.Add(CurrentPlayer);
-                            newPartialPot.AmountToClaim = amountToCall + playerCurrentBet;
-                            newPartialPot.Value = newPartialPot.PlayersClaimPot.Count * newPartialPot.AmountToClaim;
-
-                            //Update last partial pot fields
-                            lastPartialPot.AmountToClaim -= newPartialPot.AmountToClaim;
-                            lastPartialPot.Value -= newPartialPot.Value;
-                        }
-                        CurrentTurn.Call(amountToCall);
-
+                        Call(amountToBetOrCall);
                         break;
                     }
                 case Move.fold:
@@ -122,7 +90,7 @@ namespace Poker.BE.Domain.Game
                         //Check preconditions
                         if (LastRaise > 0 || TotalRaise > 0)
                             throw new IOException("Can't bet if someone had bet before... use raise move");
-                        if (amountToBet == CurrentPlayer.Wallet.amountOfMoney)
+                        if (amountToBetOrCall == CurrentPlayer.Wallet.amountOfMoney)
                             throw new ArgumentOutOfRangeException("Can't bet all of your money... use all-in move");
                         int highestAllIn = 0;
                         foreach (Player player in ActiveUnfoldedPlayers)    //find highest all-in at the table
@@ -130,21 +98,22 @@ namespace Poker.BE.Domain.Game
                             if (player.Wallet.amountOfMoney > highestAllIn)
                                 highestAllIn = player.Wallet.amountOfMoney;
                         }
-                        if (amountToBet > highestAllIn)
+                        if (amountToBetOrCall > highestAllIn)
                             throw new ArgumentOutOfRangeException("Bet is bigger than the highest player's all-in");
 
                         //Make bet
-                        PlayMove(Move.call, 0);     //First call whatever you need to call
-
                         Pot lastPartialPot = currentPot;
                         while (lastPartialPot.PartialPot != null)
                             lastPartialPot = lastPartialPot.PartialPot;
-                        lastPartialPot.Value += amountToBet;
-                        lastPartialPot.AmountToClaim += amountToBet;
-                        CurrentTurn.Bet(amountToBet);
-                        lastRaise = amountToBet;
+
+                        lastPartialPot.Value += amountToBetOrCall;
+                        lastPartialPot.AmountToClaim += amountToBetOrCall;
+                        CurrentTurn.Bet(amountToBetOrCall);
+                        LiveBets[CurrentPlayer] += amountToBetOrCall;
+                        lastPartialPot.PlayersClaimPot.Add(CurrentPlayer);
+                        lastRaise = amountToBetOrCall;
                         totalRaise += LastRaise;
-                        LiveBets[CurrentPlayer] = TotalRaise;
+                        
                         break;
                     }
                 case Move.raise:
@@ -152,22 +121,32 @@ namespace Poker.BE.Domain.Game
                         //Check preconditions
                         if (LastRaise == 0)
                             throw new IOException("Can't raise if no one had bet before... use bet move");
-                        if (TotalRaise + amountToBet == CurrentPlayer.Wallet.amountOfMoney + LiveBets[CurrentPlayer])
+                        if (TotalRaise + amountToBetOrCall == CurrentPlayer.Wallet.amountOfMoney + LiveBets[CurrentPlayer])
                             throw new ArgumentOutOfRangeException("Can't bet all of your money... use all-in move");
+                        if (LastRaise > amountToBetOrCall)
+                            throw new ArgumentException("Can't raise less than last raise");
                         int highestAllIn = 0;
                         foreach (Player player in ActiveUnfoldedPlayers)    //find highest all-in at the table
                         {
                             if (player.Wallet.amountOfMoney + LiveBets[player] > highestAllIn)
                                 highestAllIn = player.Wallet.amountOfMoney;
                         }
-                        if (TotalRaise + amountToBet > highestAllIn)
+                        if (TotalRaise + amountToBetOrCall > highestAllIn)
                             throw new ArgumentOutOfRangeException("Raise is bigger than the highest player's all-in");
 
-                        //Make raise
-                        CurrentTurn.Raise(amountToBet);
-                        lastRaise = amountToBet;
+                        //Make Raise
+                        Call(0);     //First call whatever you need to call
+
+                        Pot lastPartialPot = currentPot;
+                        while (lastPartialPot.PartialPot != null)
+                            lastPartialPot = lastPartialPot.PartialPot;
+
+                        lastPartialPot.Value += amountToBetOrCall;
+                        lastPartialPot.AmountToClaim += amountToBetOrCall;
+                        CurrentTurn.Bet(amountToBetOrCall);
+                        LiveBets[CurrentPlayer] += amountToBetOrCall;
+                        lastRaise = amountToBetOrCall;
                         totalRaise += LastRaise;
-                        LiveBets[CurrentPlayer] = LastRaise;
                         break;
                     }
                 case Move.allin:
@@ -186,11 +165,10 @@ namespace Poker.BE.Domain.Game
 
                         //Make all-in
                         if (this.CurrentPlayer.Wallet.amountOfMoney <= TotalRaise)
-                            PlayMove(Move.call, this.CurrentPlayer.Wallet.amountOfMoney);
+                            PlayMove(Move.call, this.CurrentPlayer.Wallet.amountOfMoney - LiveBets[CurrentPlayer]);
                         else
                         {
-                            PlayMove(Move.call, TotalRaise);
-                            PlayMove(Move.raise, this.CurrentPlayer.Wallet.amountOfMoney);
+                            PlayMove(Move.raise, this.CurrentPlayer.Wallet.amountOfMoney - TotalRaise);
                             //this.currentPot.PartialPot = new Pot(this.currentPot);
                         }
                         CurrentTurn.AllIn();
@@ -217,13 +195,17 @@ namespace Poker.BE.Domain.Game
 
         }
 
-        private Pot FillBasePots(ref int amountToCall, ref int playerCurrentBet)
+        private void Call(int amountToBetOrCall)
         {
+            if (amountToBetOrCall == 0)
+                amountToBetOrCall = TotalRaise - LiveBets[CurrentPlayer];
+            int playerCurrentBet = LiveBets[CurrentPlayer];
+
             Pot partialPotIterator = CurrentPot;
 
             while (partialPotIterator.PartialPot != null)
             {
-                if (amountToCall + playerCurrentBet < partialPotIterator.AmountToClaim)
+                if (amountToBetOrCall + playerCurrentBet < partialPotIterator.AmountToClaim)
                     throw new ArgumentException("Not enough money to fill all pots");
 
                 if (playerCurrentBet < partialPotIterator.AmountToClaim)
@@ -232,7 +214,7 @@ namespace Poker.BE.Domain.Game
                     partialPotIterator.Value += amountToAdd;
                     LiveBets[CurrentPlayer] += amountToAdd;
                     CurrentTurn.Call(amountToAdd);
-                    amountToCall -= amountToAdd;
+                    amountToBetOrCall -= amountToAdd;
                     playerCurrentBet = 0;
                 }
                 else
@@ -247,68 +229,83 @@ namespace Poker.BE.Domain.Game
                 partialPotIterator = partialPotIterator.PartialPot;
             }
 
-            return partialPotIterator;
+
+            Pot lastPartialPot = partialPotIterator;
+            if (amountToBetOrCall + playerCurrentBet > lastPartialPot.AmountToClaim)
+                throw new ArgumentException("Not enough partial pots were created! Somthing isn't right!");
+            else if (amountToBetOrCall + playerCurrentBet < lastPartialPot.AmountToClaim) //if call all-in move
+            {
+                //Add new partial pot in the middle
+                Pot newPartialPot = new Pot(lastPartialPot.BasePot);
+                newPartialPot.PartialPot = lastPartialPot;
+                lastPartialPot.BasePot = newPartialPot;
+                newPartialPot.BasePot.PartialPot = newPartialPot;
+
+                //Set new partial pot fields
+                foreach (Player player in lastPartialPot.PlayersClaimPot)
+                    newPartialPot.PlayersClaimPot.Add(player);
+                newPartialPot.PlayersClaimPot.Add(CurrentPlayer);
+                newPartialPot.AmountToClaim = amountToBetOrCall + playerCurrentBet;
+                newPartialPot.Value = newPartialPot.PlayersClaimPot.Count * newPartialPot.AmountToClaim;
+
+                //Update last partial pot fields
+                lastPartialPot.AmountToClaim -= newPartialPot.AmountToClaim;
+                lastPartialPot.Value -= newPartialPot.Value;
+            }
+
+            //Check if the last pot isn't empty (can happen if someone raised all-in)
+            if (lastPartialPot.AmountToClaim > 0)
+            {
+                CurrentTurn.Call(amountToBetOrCall);
+                LiveBets[CurrentPlayer] += amountToBetOrCall;
+                if (!lastPartialPot.PlayersClaimPot.Contains(CurrentPlayer))
+                    lastPartialPot.PlayersClaimPot.Add(CurrentPlayer);
+            }
+
+
+            //return partialPotIterator;
         }
         #endregion
     }
 }
 
 
+/* Old call (in PlayMove)
+                        if (amountToBetOrCall == 0)
+                            amountToBetOrCall = TotalRaise - LiveBets[CurrentPlayer];
+                        int playerCurrentBet = LiveBets[CurrentPlayer];
 
-/* Call move old while
-   while (amountToCall + playerCurrentBet > partialPotToCheck.AmountToClaim)
+                        //as long as the player can "fill" this pot, put in the needed amount and mov to the next partial pot
+                        Pot lastPartialPot = FillBasePots(ref amountToBetOrCall, ref playerCurrentBet);
+                        
+                        if (amountToBetOrCall + playerCurrentBet > lastPartialPot.AmountToClaim)
+                            throw new ArgumentException("Not enough partial pots were created! Somthing isn't right!");
+                        else if (amountToBetOrCall + playerCurrentBet < lastPartialPot.AmountToClaim) //if call all-in move
                         {
-                            if (partialPotToCheck.PartialPot == null)
-                            {
-                                throw new ArgumentException("Not enough partial pots were created! Somthing isn't right!");
-                            }
+                            //Add new partial pot in the middle
+                            Pot newPartialPot = new Pot(lastPartialPot.BasePot);
+                            newPartialPot.PartialPot = lastPartialPot;
+                            lastPartialPot.BasePot = newPartialPot;
+                            newPartialPot.BasePot.PartialPot = newPartialPot;
 
-                            if (playerCurrentBet < partialPotToCheck.AmountToClaim)
-                            {
-                                int amountToAdd = partialPotToCheck.AmountToClaim - playerCurrentBet; //how much money does the player need to add in order to claim the pot
-                                partialPotToCheck.Value += amountToAdd;
-                                LiveBets[CurrentPlayer] += amountToAdd;
-                                CurrentTurn.Call(amountToAdd);
-                                amountToCall -= amountToAdd;
-                                playerCurrentBet = 0;
-                            }
-                            else
-                            {
-                                playerCurrentBet -= partialPotToCheck.AmountToClaim;
-                            }
+                            //Set new partial pot fields
+                            foreach (Player player in lastPartialPot.PlayersClaimPot)
+                                newPartialPot.PlayersClaimPot.Add(player);
+                            newPartialPot.PlayersClaimPot.Add(CurrentPlayer);
+                            newPartialPot.AmountToClaim = amountToBetOrCall + playerCurrentBet;
+                            newPartialPot.Value = newPartialPot.PlayersClaimPot.Count * newPartialPot.AmountToClaim;
 
-                            if (!partialPotToCheck.PlayersClaimPot.Contains(CurrentPlayer))
-                                partialPotToCheck.PlayersClaimPot.Add(CurrentPlayer);
-
-                            partialPotToCheck = partialPotToCheck.PartialPot;
+                            //Update last partial pot fields
+                            lastPartialPot.AmountToClaim -= newPartialPot.AmountToClaim;
+                            lastPartialPot.Value -= newPartialPot.Value;
                         }
-*/
 
-/* All-in move old while
-        Pot tempPot = currentPot;
-        int playerCurrentBet = liveBets[currentPlayer];
-        while (currentPlayer.Wallet.amountOfMoney + playerCurrentBet > tempPot.AmountToClaim)
-        {
-            if (playerCurrentBet < tempPot.AmountToClaim)
-            {
-                int amountToAdd = tempPot.AmountToClaim - playerCurrentBet; //how much money does the player need to add in order to claim the pot
-                tempPot.Value += amountToAdd;
-                liveBets[currentPlayer] += amountToAdd;
-                currentPlayer.Wallet.amountOfMoney -= amountToAdd;
-                playerCurrentBet = 0;
-            }
-            else
-            {
-                playerCurrentBet -= tempPot.AmountToClaim;
-            }
-            
-            if (!tempPot.PlayersClaimPot.Contains(currentPlayer))
-                tempPot.PlayersClaimPot.Add(currentPlayer);
-            
-            
-            if (tempPot.PartialPot == null)
-            {
-                tempPot.PartialPot = new Pot(tempPot);
-            }
-            tempPot = partialPotToCheck.PartialPot;
-        }*/
+                        //Check if the last pot isn't empty (can happen if someone raised all-in)
+                        if (lastPartialPot.AmountToClaim > 0)
+                        {
+                            CurrentTurn.Call(amountToBetOrCall);
+                            LiveBets[CurrentPlayer] += amountToBetOrCall;
+                            if (!lastPartialPot.PlayersClaimPot.Contains(CurrentPlayer))
+                                lastPartialPot.PlayersClaimPot.Add(CurrentPlayer);
+                        }
+                        */

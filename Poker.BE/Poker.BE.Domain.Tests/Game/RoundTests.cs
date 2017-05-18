@@ -37,23 +37,33 @@ namespace Poker.BE.Domain.Game.Tests
             Exception expectedException = new Exception();
 
             //Act
-            round.PlayMove(Round.Move.check, 0);
-            var res1 = round.CurrentPlayer == player2;
+            round.PlayMove(Round.Move.bet, 50);
+            var res1 = round.CurrentPlayer == player2 && pot.PlayersClaimPot.Contains(player1) && round.LiveBets[player1] == 50
+                        && pot.AmountToClaim == 50 && pot.Value == 50 && round.LastRaise == 50 && round.TotalRaise == 50;
+
+            round.PlayMove(Round.Move.call, 0);
+            var res2 = round.CurrentPlayer == player3 && pot.PlayersClaimPot.Contains(player2) && round.LiveBets[player2] == 50
+                        && pot.AmountToClaim == 50 && pot.Value == 100 && round.LastRaise == 50 && round.TotalRaise == 50;
 
             try
             {
-                round.PlayMove(Round.Move.raise, 50);
+                round.PlayMove(Round.Move.raise, 20);
             }
-            catch (IOException e)
+            catch(ArgumentException e)
             {
                 expectedException = e;
             }
-            round.PlayMove(Round.Move.bet, 50);
-            //var res2 = round.CurrentPlayer == player3 && round.CurrentPot.AmountToClaim
+
+            round.PlayMove(Round.Move.raise, 70);
+            var res3 = round.CurrentPlayer == player1 && pot.PlayersClaimPot.Contains(player3) && round.LiveBets[player3] == 120
+                        && pot.AmountToClaim == 120 && pot.Value == 220 && round.LastRaise == 70 && round.TotalRaise == 120;
+
 
             //Assert
             Assert.IsTrue(res1);
-            Assert.AreEqual(expectedException.Message, "Can't raise if no one had bet before... use bet move");
+            Assert.IsTrue(res2);
+            Assert.AreEqual(expectedException.Message, "Can't raise less than last raise");
+            Assert.IsTrue(res3);
 
         }
     }
