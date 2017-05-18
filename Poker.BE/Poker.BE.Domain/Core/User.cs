@@ -107,7 +107,7 @@ namespace Poker.BE.Domain.Core
             logger.Log(string.Format("User {0} has player {1}", UserName, freshPlayer.GetHashCode()),
                 this, "Medium");
 
-            Players.Add(freshPlayer.GetHashCode(), freshPlayer);
+            Players.Add(freshPlayer);
 
             return freshPlayer;
         }

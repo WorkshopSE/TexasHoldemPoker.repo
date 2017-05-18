@@ -11,9 +11,12 @@ using Poker.BE.Domain.Core;
 
 namespace Poker.BE.Service.Services
 {
+    /// <summary>
+    /// UCC03 Rooms Management
+    /// </summary>
+    /// <see cref="https://docs.google.com/document/d/1OTee6BGDWK2usL53jdoeBOI-1Jh8wyNejbQ0ZroUhcA/edit#heading=h.286w5j2ewu5c"/>
     public class RoomsService : IServices.IRoomsService
     {
-
         #region Properties
         /// <summary>
         /// Map for the player (user session) ID -> player at the given session.
@@ -50,16 +53,13 @@ namespace Poker.BE.Service.Services
 
             if(!Users.TryGetValue(request.User, out User user))
             {
-                throw new UserNotFoundException();
+                throw new UserNotFoundException(string.Format("User ID {0} not found", request.User));
             }
 
             result = new EnterRoomResult()
             {
-                player = request.User
+                player = user.EnterRoom(room).GetHashCode(),
             };
-
-
-            // UNDONE - idan - continue from here 18/5
 
             return result;
         }
