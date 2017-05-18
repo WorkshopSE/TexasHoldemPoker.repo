@@ -11,7 +11,7 @@ public class UIControl : MonoBehaviour {
     {
         loadingText.SetActive(true);
         loadingImage.SetActive(true);
-        SceneManager.LoadScene(sceneName);
+        SceneManager.LoadSceneAsync(sceneName);
     }
     public void DoExitGame()
     {
