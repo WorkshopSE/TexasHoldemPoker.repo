@@ -63,8 +63,6 @@ namespace Poker.BE.Domain.Game
 
         public void AllIn()
         {
-            if (this.currentPlayer.Wallet.amountOfMoney >= 0)
-                throw new ArgumentException("You are not all in! Somthing isn't right!");
             this.currentPlayer.CurrentState = Player.State.ActiveAllIn;
         }
         #endregion

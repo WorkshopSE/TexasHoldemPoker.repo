@@ -28,10 +28,21 @@ namespace Poker.BE.Domain.Game
         private Turn currentTurn;
         //private Player dealer;        Is dealer needed??
         private Player currentPlayer;
+        private Pot currentPot;
         private Dictionary<Player, int> liveBets;
         private int totalRaise;
         private int lastRaise;
-        private Pot currentPot;
+        #endregion
+
+        #region Properties
+        public ICollection<Player> ActiveUnfoldedPlayers { get { return activeUnfoldedPlayers; } }
+        public Turn CurrentTurn { get { return currentTurn; } }
+        public Player CurrentPlayer { get { return currentPlayer; } }
+        public Pot CurrentPot { get { return currentPot; } }
+        public Dictionary<Player, int> LiveBets { get { return liveBets; } }
+        public int TotalRaise { get { return totalRaise; } }
+        public int LastRaise { get { return lastRaise; } }
+
         #endregion
 
         #region Constructors
@@ -44,7 +55,7 @@ namespace Poker.BE.Domain.Game
             this.liveBets = new Dictionary<Player, int>();
             foreach (Player player in activeUnfoldedPlayers)
             {
-                liveBets.Add(player, 0);
+                LiveBets.Add(player, 0);
             }
             this.totalRaise = 0;
             this.lastRaise = 0;
@@ -56,82 +67,65 @@ namespace Poker.BE.Domain.Game
         {
             switch (playMove)
             {
-                case Move.check :
+                case Move.check:
                     {
-                        currentTurn.Check();  // Do nothing??
+                        CurrentTurn.Check();  // Do nothing??
                         break;
                     }
-                case  Move.call:
+                case Move.call:
                     {
                         //----------Put money in pot----------//
-                        Pot tempPot = currentPot;
-                        int amountToCall = totalRaise - liveBets[currentPlayer];
-                        int playerCurrentBet = liveBets[currentPlayer];
-                        while (amountToCall + playerCurrentBet > tempPot.AmountToClaim)
-                        {
-                            if (tempPot.PartialPot == null)
-                            {
-                                throw new ArgumentException("Not enough partial pots were created! Somthing isn't right!");
-                            }
+                        //Pot partialPotToCheck = CurrentPot;
+                        int amountToCall = TotalRaise - LiveBets[CurrentPlayer];
+                        int playerCurrentBet = LiveBets[CurrentPlayer];
 
-                            if (playerCurrentBet < tempPot.AmountToClaim)
-                            {
-                                int amountToAdd = tempPot.AmountToClaim - playerCurrentBet; //how much money does the player need to add in order to claim the pot
-                                tempPot.Value += amountToAdd;
-                                liveBets[currentPlayer] += amountToAdd;
-                                currentTurn.Call(amountToAdd);
-                                amountToCall -= amountToAdd;
-                                playerCurrentBet = 0;
-                            }
-                            else
-                            {
-                                playerCurrentBet -= tempPot.AmountToClaim;
-                            }
+                        //as long as the player can "fill" this pot, put in the needed amount and mov to the next partial pot
+                        Pot lastPartialPot = FillBasePots(ref amountToCall, ref playerCurrentBet);
 
-                            if (!tempPot.PlayersClaimPot.Contains(currentPlayer))
-                                tempPot.PlayersClaimPot.Add(currentPlayer);
 
-                            tempPot = tempPot.PartialPot;
-                        }
 
-                        if (amountToCall + playerCurrentBet < tempPot.AmountToClaim)
+                        if (amountToCall + playerCurrentBet > lastPartialPot.AmountToClaim)
+                            throw new ArgumentException("Not enough partial pots were created! Somthing isn't right!");
+                        else if (amountToCall + playerCurrentBet < lastPartialPot.AmountToClaim) //if call all-in move
                         {
                             //Add new partial pot in the middle
-                            Pot newPartialPot = new Pot(tempPot.BasePot);
-                            newPartialPot.PartialPot = tempPot;
-                            tempPot.BasePot = newPartialPot;
+                            Pot newPartialPot = new Pot(lastPartialPot.BasePot);
+                            newPartialPot.PartialPot = lastPartialPot;
+                            lastPartialPot.BasePot = newPartialPot;
                             newPartialPot.BasePot.PartialPot = newPartialPot;
 
                             //Set new partial pot fields
-                            foreach (Player player in tempPot.PlayersClaimPot)
+                            foreach (Player player in lastPartialPot.PlayersClaimPot)
                                 newPartialPot.PlayersClaimPot.Add(player);
-                            newPartialPot.PlayersClaimPot.Add(currentPlayer);
-                            newPartialPot.AmountToClaim = amountToCall;
-                            newPartialPot.Value = newPartialPot.PlayersClaimPot.Count * amountToCall;
+                            newPartialPot.PlayersClaimPot.Add(CurrentPlayer);
+                            newPartialPot.AmountToClaim = amountToCall + playerCurrentBet;
+                            newPartialPot.Value = newPartialPot.PlayersClaimPot.Count * newPartialPot.AmountToClaim;
 
-                            tempPot.AmountToClaim -= amountToCall;
-                            tempPot.Value -= newPartialPot.PlayersClaimPot.Count * amountToCall;
+                            //Update last partial pot fields
+                            lastPartialPot.AmountToClaim -= newPartialPot.AmountToClaim;
+                            lastPartialPot.Value -= newPartialPot.Value;
                         }
-                        currentTurn.Call(amountToCall);
+                        CurrentTurn.Call(amountToCall);
 
                         break;
                     }
                 case Move.fold:
                     {
-                        currentTurn.Fold();
-                        Player playerToRemove = this.currentPlayer;
-                        this.currentPlayer = this.activeUnfoldedPlayers.ElementAt((activeUnfoldedPlayers.ToList().IndexOf(this.currentPlayer) - 1) % activeUnfoldedPlayers.Count);
-                        activeUnfoldedPlayers.Remove(playerToRemove);
+                        CurrentTurn.Fold();
+                        Player playerToRemove = this.CurrentPlayer;
+                        this.currentPlayer = this.ActiveUnfoldedPlayers.ElementAt((ActiveUnfoldedPlayers.ToList().IndexOf(this.CurrentPlayer) - 1) % ActiveUnfoldedPlayers.Count);
+                        ActiveUnfoldedPlayers.Remove(playerToRemove);
                         break;
                     }
                 case Move.bet:
                     {
-                        if (lastRaise > 0 || totalRaise > 0)
+                        //Check preconditions
+                        if (LastRaise > 0 || TotalRaise > 0)
                             throw new IOException("Can't bet if someone had bet before... use raise move");
-                        if (amountToBet == currentPlayer.Wallet.amountOfMoney)
+                        if (amountToBet == CurrentPlayer.Wallet.amountOfMoney)
                             throw new ArgumentOutOfRangeException("Can't bet all of your money... use all-in move");
                         int highestAllIn = 0;
-                        foreach (Player player in activeUnfoldedPlayers)    //find highest all-in at the table
+                        foreach (Player player in ActiveUnfoldedPlayers)    //find highest all-in at the table
                         {
                             if (player.Wallet.amountOfMoney > highestAllIn)
                                 highestAllIn = player.Wallet.amountOfMoney;
@@ -139,83 +133,69 @@ namespace Poker.BE.Domain.Game
                         if (amountToBet > highestAllIn)
                             throw new ArgumentOutOfRangeException("Bet is bigger than the highest player's all-in");
 
-                        currentTurn.Bet(amountToBet);
+                        //Make bet
+                        PlayMove(Move.call, 0);     //First call whatever you need to call
+
+                        Pot lastPartialPot = currentPot;
+                        while (lastPartialPot.PartialPot != null)
+                            lastPartialPot = lastPartialPot.PartialPot;
+                        lastPartialPot.Value += amountToBet;
+                        lastPartialPot.AmountToClaim += amountToBet;
+                        CurrentTurn.Bet(amountToBet);
                         lastRaise = amountToBet;
-                        totalRaise += lastRaise;
-                        liveBets[currentPlayer] = totalRaise;
+                        totalRaise += LastRaise;
+                        LiveBets[CurrentPlayer] = TotalRaise;
                         break;
                     }
                 case Move.raise:
                     {
-                        if (lastRaise == 0)
+                        //Check preconditions
+                        if (LastRaise == 0)
                             throw new IOException("Can't raise if no one had bet before... use bet move");
-                        if (totalRaise + amountToBet == currentPlayer.Wallet.amountOfMoney + liveBets[currentPlayer])
+                        if (TotalRaise + amountToBet == CurrentPlayer.Wallet.amountOfMoney + LiveBets[CurrentPlayer])
                             throw new ArgumentOutOfRangeException("Can't bet all of your money... use all-in move");
                         int highestAllIn = 0;
-                        foreach (Player player in activeUnfoldedPlayers)    //find highest all-in at the table
+                        foreach (Player player in ActiveUnfoldedPlayers)    //find highest all-in at the table
                         {
-                            if (player.Wallet.amountOfMoney + liveBets[player] > highestAllIn)
+                            if (player.Wallet.amountOfMoney + LiveBets[player] > highestAllIn)
                                 highestAllIn = player.Wallet.amountOfMoney;
                         }
-                        if (totalRaise + amountToBet > highestAllIn)
+                        if (TotalRaise + amountToBet > highestAllIn)
                             throw new ArgumentOutOfRangeException("Raise is bigger than the highest player's all-in");
 
-                        currentTurn.Raise(amountToBet);
+                        //Make raise
+                        CurrentTurn.Raise(amountToBet);
                         lastRaise = amountToBet;
-                        totalRaise += lastRaise;
-                        liveBets[currentPlayer] = lastRaise;
+                        totalRaise += LastRaise;
+                        LiveBets[CurrentPlayer] = LastRaise;
                         break;
                     }
                 case Move.allin:
                     {
+                        //Check preconditions
                         int highestOtherAllIn = 0;
-                        foreach (Player player in activeUnfoldedPlayers)    //find highest all-in of the other players at the table
+                        foreach (Player player in ActiveUnfoldedPlayers)    //find highest all-in of the other players at the table
                         {
-                            if (player != this.currentPlayer && player.Wallet.amountOfMoney + liveBets[player] > highestOtherAllIn)
+                            if (player != this.CurrentPlayer && player.Wallet.amountOfMoney + LiveBets[player] > highestOtherAllIn)
                                 highestOtherAllIn = player.Wallet.amountOfMoney;
                         }
-                        if (this.currentPlayer.Wallet.amountOfMoney > highestOtherAllIn)
+                        if (this.CurrentPlayer.Wallet.amountOfMoney > highestOtherAllIn)
                             throw new IOException("all-in is bigger than the highest other player's all-in... use bet\raise move");
-                        if (currentPlayer.Wallet.amountOfMoney == 0)
+                        if (CurrentPlayer.Wallet.amountOfMoney == 0)
                             throw new ArgumentException("You're already all-in!!");
 
-                        if (this.currentPlayer.Wallet.amountOfMoney <= totalRaise)
-                            PlayMove(Move.call, this.currentPlayer.Wallet.amountOfMoney);
+                        //Make all-in
+                        if (this.CurrentPlayer.Wallet.amountOfMoney <= TotalRaise)
+                            PlayMove(Move.call, this.CurrentPlayer.Wallet.amountOfMoney);
                         else
                         {
-                            PlayMove(Move.call, totalRaise);
-                            PlayMove(Move.raise, this.currentPlayer.Wallet.amountOfMoney);
+                            PlayMove(Move.call, TotalRaise);
+                            PlayMove(Move.raise, this.CurrentPlayer.Wallet.amountOfMoney);
+                            //this.currentPot.PartialPot = new Pot(this.currentPot);
                         }
-                        currentTurn.AllIn();
+                        CurrentTurn.AllIn();
 
-                        /*//put money in pot - create partial pot if needed
-                        Pot tempPot = currentPot;
-                        int playerCurrentBet = liveBets[currentPlayer];
-                        while (currentPlayer.Wallet.amountOfMoney + playerCurrentBet > tempPot.AmountToClaim)
-                        {
-                            if (playerCurrentBet < tempPot.AmountToClaim)
-                            {
-                                int amountToAdd = tempPot.AmountToClaim - playerCurrentBet; //how much money does the player need to add in order to claim the pot
-                                tempPot.Value += amountToAdd;
-                                liveBets[currentPlayer] += amountToAdd;
-                                currentPlayer.Wallet.amountOfMoney -= amountToAdd;
-                                playerCurrentBet = 0;
-                            }
-                            else
-                            {
-                                playerCurrentBet -= tempPot.AmountToClaim;
-                            }
 
-                            if (!tempPot.PlayersClaimPot.Contains(currentPlayer))
-                                tempPot.PlayersClaimPot.Add(currentPlayer);
-                            
-                            
-                            if (tempPot.PartialPot == null)
-                            {
-                                tempPot.PartialPot = new Pot(tempPot);
-                            }
-                            tempPot = tempPot.PartialPot;
-                        }*/
 
                         break;
                     }
@@ -226,16 +206,109 @@ namespace Poker.BE.Domain.Game
                     }
             }
             //Change Player
-            calculateNextPlayer();
-            currentTurn.CurrentPlayer = this.currentPlayer;
+            CalculateNextPlayer();
+            CurrentTurn.CurrentPlayer = this.CurrentPlayer;
         }
-        private void calculateNextPlayer()
+        private void CalculateNextPlayer()
         {
             do
-                this.currentPlayer = this.activeUnfoldedPlayers.ElementAt((activeUnfoldedPlayers.ToList().IndexOf(this.currentPlayer) + 1) % activeUnfoldedPlayers.Count);
-            while (this.currentPlayer.CurrentState == Player.State.ActiveAllIn);
+                this.currentPlayer = this.ActiveUnfoldedPlayers.ElementAt((ActiveUnfoldedPlayers.ToList().IndexOf(this.CurrentPlayer) + 1) % ActiveUnfoldedPlayers.Count);
+            while (this.CurrentPlayer.CurrentState == Player.State.ActiveAllIn);
 
+        }
+
+        private Pot FillBasePots(ref int amountToCall, ref int playerCurrentBet)
+        {
+            Pot partialPotIterator = CurrentPot;
+
+            while (partialPotIterator.PartialPot != null)
+            {
+                if (amountToCall + playerCurrentBet < partialPotIterator.AmountToClaim)
+                    throw new ArgumentException("Not enough money to fill all pots");
+
+                if (playerCurrentBet < partialPotIterator.AmountToClaim)
+                {
+                    int amountToAdd = partialPotIterator.AmountToClaim - playerCurrentBet; //how much money does the player need to add in order to claim the pot
+                    partialPotIterator.Value += amountToAdd;
+                    LiveBets[CurrentPlayer] += amountToAdd;
+                    CurrentTurn.Call(amountToAdd);
+                    amountToCall -= amountToAdd;
+                    playerCurrentBet = 0;
+                }
+                else
+                {
+                    playerCurrentBet -= partialPotIterator.AmountToClaim;
+                }
+
+                //Add the current player to claiming this partial pot
+                if (!partialPotIterator.PlayersClaimPot.Contains(CurrentPlayer))
+                    partialPotIterator.PlayersClaimPot.Add(CurrentPlayer);
+
+                partialPotIterator = partialPotIterator.PartialPot;
+            }
+
+            return partialPotIterator;
         }
         #endregion
     }
 }
+
+
+
+/* Call move old while
+   while (amountToCall + playerCurrentBet > partialPotToCheck.AmountToClaim)
+                        {
+                            if (partialPotToCheck.PartialPot == null)
+                            {
+                                throw new ArgumentException("Not enough partial pots were created! Somthing isn't right!");
+                            }
+
+                            if (playerCurrentBet < partialPotToCheck.AmountToClaim)
+                            {
+                                int amountToAdd = partialPotToCheck.AmountToClaim - playerCurrentBet; //how much money does the player need to add in order to claim the pot
+                                partialPotToCheck.Value += amountToAdd;
+                                LiveBets[CurrentPlayer] += amountToAdd;
+                                CurrentTurn.Call(amountToAdd);
+                                amountToCall -= amountToAdd;
+                                playerCurrentBet = 0;
+                            }
+                            else
+                            {
+                                playerCurrentBet -= partialPotToCheck.AmountToClaim;
+                            }
+
+                            if (!partialPotToCheck.PlayersClaimPot.Contains(CurrentPlayer))
+                                partialPotToCheck.PlayersClaimPot.Add(CurrentPlayer);
+
+                            partialPotToCheck = partialPotToCheck.PartialPot;
+                        }
+*/
+
+/* All-in move old while
+        Pot tempPot = currentPot;
+        int playerCurrentBet = liveBets[currentPlayer];
+        while (currentPlayer.Wallet.amountOfMoney + playerCurrentBet > tempPot.AmountToClaim)
+        {
+            if (playerCurrentBet < tempPot.AmountToClaim)
+            {
+                int amountToAdd = tempPot.AmountToClaim - playerCurrentBet; //how much money does the player need to add in order to claim the pot
+                tempPot.Value += amountToAdd;
+                liveBets[currentPlayer] += amountToAdd;
+                currentPlayer.Wallet.amountOfMoney -= amountToAdd;
+                playerCurrentBet = 0;
+            }
+            else
+            {
+                playerCurrentBet -= tempPot.AmountToClaim;
+            }
+            
+            if (!tempPot.PlayersClaimPot.Contains(currentPlayer))
+                tempPot.PlayersClaimPot.Add(currentPlayer);
+            
+            
+            if (tempPot.PartialPot == null)
+            {
+                tempPot.PartialPot = new Pot(tempPot);
+            }
+            tempPot = partialPotToCheck.PartialPot;
+        }*/
