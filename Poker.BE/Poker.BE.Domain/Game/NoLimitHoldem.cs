@@ -8,7 +8,25 @@ namespace Poker.BE.Domain.Game
 {
     public class NoLimitHoldem : GamePreferences
     {
-        // TODO: complete - set team member to do this
+		#region Fields
+		#endregion
 
-    }
+
+		#region Properties
+		public int MinimumBlind { get; set; }
+		#endregion
+
+		#region Constructors
+        public NoLimitHoldem()
+		{
+            MinimumBlind = 2;
+		}
+		#endregion
+
+		#region Methods
+
+
+		#endregion
+
+	}
 }

@@ -114,10 +114,15 @@ namespace Poker.BE.Domain.Game
         }
 
 
-        private void PlayPreFlop() { };
-        private void PlayFlop() { };
-        private void PlayTurn() { };
-        private void PlayRiver() { };
+        private void PlayPreFlop() {
+            Round PreFlopRound = new Round(dealer, activePlayers, pot);
+
+        
+        
+        }
+        private void PlayFlop() { }
+        private void PlayTurn() { }
+        private void PlayRiver() { } 
 
 
         #endregion

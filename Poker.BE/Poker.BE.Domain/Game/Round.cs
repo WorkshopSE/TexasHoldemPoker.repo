@@ -24,22 +24,36 @@ namespace Poker.BE.Domain.Game
 
         #region Fields
         private ICollection<Player> activeUnfoldedPlayers;
-        private Turn currentTurn;
         private Player dealer;
         private Player currentPlayer;
+        private Pot pot;
         #endregion
 
         #region Constructors
-        public Round(Player dealer, ICollection<Player> activeUnfoldedPlayers)
+        public Round(Player dealer, ICollection<Player> activeUnfoldedPlayers, Pot pot)
         {
             this.dealer = dealer;
-            this.currentPlayer = this.activeUnfoldedPlayers.ElementAt((activeUnfoldedPlayers.ToList().IndexOf(dealer)+2)%activeUnfoldedPlayers.Count);
+            this.currentPlayer = this.activeUnfoldedPlayers.ElementAt((activeUnfoldedPlayers.ToList().IndexOf(dealer) + 2) % activeUnfoldedPlayers.Count);
             this.activeUnfoldedPlayers = activeUnfoldedPlayers;
-            this.currentTurn = new Turn(currentPlayer);
+            this.pot = pot;
         }
-        #endregion
+		#endregion
 
-        #region Methods
+		#region Methods
+        // This is for the PreFlopRound, when the first player to speak is the third one (after big and blind), 
+        // and the big and blind players must put the money before any bet
+		public void StartPreRound()
+		{
+            calculateNextPlayer();
+            Player SmallBlind = currentPlayer;
+
+		}
+
+
+        public void StartRound(){
+            
+        }
+
         public void PlayMove(Move playMove)
         {
             switch (playMove)
