@@ -118,12 +118,50 @@ namespace Poker.BE.Domain.Game
             Round PreFlopRound = new Round(dealer, activePlayers, pot, GamePreference);
             PreFlopRound.StartPreRound();
         }
-        private void PlayFlop() { 
-        
-        }
-        private void PlayTurn() { }
-        private void PlayRiver() { } 
+        private void PlayFlop() {
+            if (NeedNextTurn()){
+				Round Flop = new Round(dealer, activePlayers, pot, GamePreference);
+				Flop.StartRound();
+			}
+            else {
+                PickAWinner();
+            }
+		}
 
+        private void PlayTurn() {
+			if (NeedNextTurn()) {
+				Round TurnRound = new Round(dealer, activePlayers, pot, GamePreference);
+				TurnRound.StartRound();
+			}
+			else {
+			 	PickAWinner();
+			}
+		}
+
+        private void PlayRiver() {
+			if (NeedNextTurn()) {
+				Round River = new Round(dealer, activePlayers, pot, GamePreference);
+				River.StartRound();
+			}
+			else {
+                ShowDown();
+				PickAWinner();
+			}
+		} 
+
+        private bool NeedNextTurn() {
+            return activePlayers.Count() >= 2;
+        }
+
+        private void PickAWinner(){}
+
+        private void ShowDown(){
+            for (int i = 0; i < activePlayers.Count; i++){
+                Card firstPlayerCard = activePlayers.ElementAt(i).PrivateCards[0];
+				Card secondPlayerCard = activePlayers.ElementAt(i).PrivateCards[1];
+                Console.WriteLine("The cards of Player {0} are: {1} {2}, and {3} {4}", i, firstPlayerCard.CardValue, firstPlayerCard.CardSuit, secondPlayerCard.CardValue, secondPlayerCard.CardSuit);
+            }
+        }
 
         #endregion
     }

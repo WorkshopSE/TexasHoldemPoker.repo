@@ -90,6 +90,7 @@ namespace Poker.BE.Domain.Game
                     else{
                         RestBettingPerson = RestBettingPerson + 1;
                     }
+                    numberOfPlayers = activeUnfoldedPlayers.Count;
 				}   
             }
 
@@ -106,7 +107,6 @@ namespace Poker.BE.Domain.Game
 		}
 
 
-
         private void calculateNextPlayer()
         {
             this.currentPlayer = this.activeUnfoldedPlayers.ElementAt((activeUnfoldedPlayers.ToList().IndexOf(this.currentPlayer) + 1) % activeUnfoldedPlayers.Count);
@@ -119,7 +119,6 @@ namespace Poker.BE.Domain.Game
             }
             return false;
         }
-
 
         private void InitializeDictionary(){
             PlayerInvest = new Dictionary<Player, double>();
