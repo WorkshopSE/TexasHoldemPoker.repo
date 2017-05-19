@@ -133,13 +133,13 @@ namespace Poker.BE.Domain.Game
         #endregion
 
         #region Methods
-        public int CompareToNumber(object obj)
+        public int CompareTo(object obj)
         {
             var other = obj as Card;
             var result = 0;
             if (other != null)
             {
-                result = (this.number > other.number) ? 1 : (this.number < other.number) ? -1 : 0;
+                result = (this.number > other.number) ? (this.number - other.number) : (this.number < other.number) ? (this.number - other.number) : 0;
             }
             return result;
         }
