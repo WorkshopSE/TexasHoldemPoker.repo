@@ -133,7 +133,7 @@ namespace Poker.BE.Domain.Game
         #endregion
 
         #region Methods
-        public int CompareTo(object obj)
+        public int CompareToNumber(object obj)
         {
             var other = obj as Card;
             var result = 0;
@@ -144,10 +144,15 @@ namespace Poker.BE.Domain.Game
             return result;
         }
 
-        public int GetValueNumber(){
-            return this.number;
+        public int GetValueNumberWIthAs(){
+            if (this.number == 1) return 14; // in case of an AS
+            else return this.number;
         }
 
+		public int GetValueNumber()
+		{
+			return this.number;
+		}
         public int GetSuitNumber(){
             return SuitToNumber(this.CardSuit);
         }
