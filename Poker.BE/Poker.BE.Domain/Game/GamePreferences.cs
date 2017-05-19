@@ -8,9 +8,11 @@ namespace Poker.BE.Domain.Game
 {
     public class GamePreferences
     {
-        // TODO: complete - set team member to do this
-        /* Notes:
-         * see if this class should be abstract?
-         * */
-    }
+        #region Properties
+        public int SmallBlind { get; set; }
+        public int BigBlind { get { return SmallBlind * 2; } }
+		
+        #endregion
+
+	}
 }

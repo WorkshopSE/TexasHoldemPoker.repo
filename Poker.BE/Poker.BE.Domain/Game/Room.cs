@@ -95,9 +95,9 @@ namespace Poker.BE.Domain.Game
         #endregion
 
         #region Methods
-        public Player CreatePlayer()
+        public Player CreatePlayer(double SumToDeposit)
         {
-            var result = new Player();
+            var result = new Player(SumToDeposit);
             activeAndPassivePlayers.Add(result);
             return result;
         }
@@ -122,7 +122,7 @@ namespace Poker.BE.Domain.Game
             }
             deck.ShuffleCards();
             Player dealer = ActivePlayers.ElementAt(dealerIndex);
-            CurrentHand = new Hand(dealer, deck, ActivePlayers);
+            CurrentHand = new Hand(dealer, deck, ActivePlayers, Preferences);
             CurrentHand.DealCards();
             CurrentHand.PlaceBlinds(Preferences);
             //TODO: Check If HEAD-TO-HEAD / HEADS UP alternative flow workds here.

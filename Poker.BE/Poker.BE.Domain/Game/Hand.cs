@@ -23,6 +23,7 @@ namespace Poker.BE.Domain.Game
         private ICollection<Player> activePlayers;
         private Pot pot;
         private Player dealer;
+        private GamePreferences GamePreference;
         #endregion
 
         #region Properties
@@ -31,7 +32,7 @@ namespace Poker.BE.Domain.Game
         #endregion
 
         #region Constructors
-        public Hand(Player dealer, Deck deck, ICollection<Player> players)
+        public Hand(Player dealer, Deck deck, ICollection<Player> players, GamePreferences GamePreference)
         {
             if(players.Count < MINIMAL_NUMBER_OF_ACTIVE_PLAYERS_TO_START)
             {
@@ -41,9 +42,9 @@ namespace Poker.BE.Domain.Game
             this.activePlayers = players;
             this.pot = new Pot();
             this.dealer = dealer;
-            this.CurrentRound = new Round(dealer,activePlayers);
+			this.GamePreference = GamePreference;
+			this.CurrentRound = new Round(dealer,activePlayers, pot, GamePreference);
             this.Active = true;
-            
         }
 		#endregion
 
@@ -52,7 +53,6 @@ namespace Poker.BE.Domain.Game
 		/// Function who calls all the Hand functions by order 
 		/// </summary>
 		public void StartNewHand(){
-            GamePreferences gamePre = null; // TODO edit when we will write GamePreference
             DealCards();
             PlayPreFlop();
             PlayFlop();
@@ -115,7 +115,7 @@ namespace Poker.BE.Domain.Game
 
 
         private void PlayPreFlop() {
-            Round PreFlopRound = new Round(dealer, activePlayers, pot);
+            Round PreFlopRound = new Round(dealer, activePlayers, pot, GamePreference);
 
         
         

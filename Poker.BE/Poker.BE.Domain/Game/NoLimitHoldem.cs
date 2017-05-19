@@ -11,15 +11,10 @@ namespace Poker.BE.Domain.Game
 		#region Fields
 		#endregion
 
-
-		#region Properties
-		public int MinimumBlind { get; set; }
-		#endregion
-
 		#region Constructors
         public NoLimitHoldem()
 		{
-            MinimumBlind = 2;
+            SmallBlind = 2;
 		}
 		#endregion
 

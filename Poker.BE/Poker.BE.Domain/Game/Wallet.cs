@@ -8,7 +8,43 @@ namespace Poker.BE.Domain.Game
 {
     public class Wallet
     {
-        // TODO: complete - set team member to do this
+		#region Properties
+		public double Money { get; set; }
 
-    }
+		#endregion
+
+		#region Constructors
+		public Wallet(double sumToDeposit)
+		{
+			Deposit(sumToDeposit);
+		}
+		#endregion
+
+		#region Methods
+		public bool CanWithdraw(double sum)
+		{
+			return (sum < Money);
+		}
+
+		public bool Withdraw(double sum)
+		{
+			if (CanWithdraw(sum))
+			{
+				Money = Money - sum;
+				return true;
+			}
+			return false;
+		}
+
+		public void Deposit(double sum)
+		{
+			Money = Money + sum;
+		}
+
+
+
+		#endregion
+
+
+	}
 }

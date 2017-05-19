@@ -51,9 +51,9 @@ namespace Poker.BE.Domain.Core
         /// <see cref="https://docs.google.com/document/d/1OTee6BGDWK2usL53jdoeBOI-1Jh8wyNejbQ0ZroUhcA/edit#heading=h.my2n008zu6pu"/>
         /// <param name="room">the player enters to it</param>
         /// <returns>a new player</returns>
-        private Player CreatePlayer(Room room)
+        private Player CreatePlayer(Room room, double SumToDeposit)
         {
-            return room.CreatePlayer();
+            return room.CreatePlayer(SumToDeposit);
         }
         #endregion
 
@@ -97,7 +97,8 @@ namespace Poker.BE.Domain.Core
         /// <see cref="https://docs.google.com/document/d/1OTee6BGDWK2usL53jdoeBOI-1Jh8wyNejbQ0ZroUhcA/edit#heading=h.tzy1eb1jifgr"/>
         public Player EnterRoom(Room room)
         {
-            return CreatePlayer(room);
+            double SumToDeposit = 0; // TODO Need to ask (and check!) the player about the sum he wants to deposit for the room play
+            return CreatePlayer(room, SumToDeposit);
         }
 
         /// <summary>

@@ -16,7 +16,12 @@ namespace Poker.BE.Domain.Game
             Passive
         }
 
-        public const int NPRIVATE_CARDS = 2;
+		#region Fields
+        public Wallet PlayerWallet;
+		#endregion
+
+
+		public const int NPRIVATE_CARDS = 2;
         #endregion
 
         #region Properties
@@ -25,12 +30,29 @@ namespace Poker.BE.Domain.Game
         #endregion
 
         #region Constructors
-        public Player()
+        public Player(double SumToDeposit)
         {
+            PlayerWallet = new Wallet(SumToDeposit);
             PrivateCards = new Card[NPRIVATE_CARDS];
             CurrentState = State.Passive;
         }
+		#endregion
+
+		#region Methods
+        public void ExitPlayer(){
+            // we need to put back the Player Wallet remaining to the user Bank back.
+        }
+
+        public bool Pay (double SumToPay){
+            if(PlayerWallet.CanWithdraw(SumToPay)){
+                PlayerWallet.Withdraw(SumToPay);
+                return true;
+            }
+            return false;
+        }
         #endregion
 
-    }
+
+
+	}
 }
