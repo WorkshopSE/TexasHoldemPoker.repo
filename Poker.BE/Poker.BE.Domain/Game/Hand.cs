@@ -24,6 +24,7 @@ namespace Poker.BE.Domain.Game
         private Pot pot;
         private Player dealer;
         private GamePreferences GamePreference;
+        private int step;
         #endregion
 
         #region Properties
@@ -45,6 +46,7 @@ namespace Poker.BE.Domain.Game
 			this.GamePreference = GamePreference;
 			this.CurrentRound = new Round(dealer,activePlayers, pot, GamePreference);
             this.Active = true;
+            this.step = 0;
         }
 		#endregion
 
@@ -55,10 +57,27 @@ namespace Poker.BE.Domain.Game
 		public void StartNewHand(){
             DealCards();
             PlayPreFlop();
-            PlayFlop();
-            PlayTurn();
-            PlayRiver();
         }
+
+        public void ContinueHand(){
+            if (step == 0){
+				PlayFlop();
+                step = step + 1;
+			}
+            if (step == 1){
+				PlayTurn();
+                step= step + 1;
+			}
+            if (step == 2){
+				PlayRiver();
+                step = step + 1;
+			}
+            if (step == 3){
+				ShowDown();
+                PickAWinner();
+                step = step + 1;
+			}
+		}
 
 
 
@@ -118,11 +137,13 @@ namespace Poker.BE.Domain.Game
             Round PreFlopRound = new Round(dealer, activePlayers, pot, GamePreference);
             PreFlopRound.StartPreRound();
         }
+
         private void PlayFlop() {
             if (NeedNextTurn()){
 				Round Flop = new Round(dealer, activePlayers, pot, GamePreference);
 				Flop.StartRound();
-			}
+                UpdatePotAndActivePlayersFromLastRound(Flop);
+            }
             else {
                 PickAWinner();
             }
@@ -132,6 +153,7 @@ namespace Poker.BE.Domain.Game
 			if (NeedNextTurn()) {
 				Round TurnRound = new Round(dealer, activePlayers, pot, GamePreference);
 				TurnRound.StartRound();
+                UpdatePotAndActivePlayersFromLastRound(TurnRound);
 			}
 			else {
 			 	PickAWinner();
@@ -142,9 +164,9 @@ namespace Poker.BE.Domain.Game
 			if (NeedNextTurn()) {
 				Round River = new Round(dealer, activePlayers, pot, GamePreference);
 				River.StartRound();
+                UpdatePotAndActivePlayersFromLastRound(River);
 			}
 			else {
-                ShowDown();
 				PickAWinner();
 			}
 		} 
@@ -153,7 +175,18 @@ namespace Poker.BE.Domain.Game
             return activePlayers.Count() >= 2;
         }
 
-        private void PickAWinner(){}
+        private void PickAWinner() {
+            Player Winner = null;
+
+            if (activePlayers.Count == 1) { // in case that only one player remains and all other players folds
+                Winner = activePlayers.ElementAt(0);
+            }
+            else{
+                
+            }
+            GetPotToWinner(Winner);
+            endHand();
+        }
 
         private void ShowDown(){
             for (int i = 0; i < activePlayers.Count; i++){
@@ -161,6 +194,16 @@ namespace Poker.BE.Domain.Game
 				Card secondPlayerCard = activePlayers.ElementAt(i).PrivateCards[1];
                 Console.WriteLine("The cards of Player {0} are: {1} {2}, and {3} {4}", i, firstPlayerCard.CardValue, firstPlayerCard.CardSuit, secondPlayerCard.CardValue, secondPlayerCard.CardSuit);
             }
+        }
+
+        private void UpdatePotAndActivePlayersFromLastRound(Round LastRound){
+            activePlayers = LastRound.GetActivePlayersAfterRound();
+            pot = LastRound.GetPotAfterRound();
+		}
+
+        private void GetPotToWinner(Player Winner){
+            double potValue = pot.GetValue();
+            Winner.PlayerWallet.Deposit(potValue);
         }
 
         #endregion

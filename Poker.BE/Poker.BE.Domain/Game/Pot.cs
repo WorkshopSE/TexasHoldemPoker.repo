@@ -10,7 +10,7 @@ namespace Poker.BE.Domain.Game
     {
 
 		#region Fields
-		private int PotValue;
+		private double PotValue;
 		#endregion
 
 
@@ -25,11 +25,11 @@ namespace Poker.BE.Domain.Game
 		#endregion
 
 		#region Methods
-        public void AddValue (int SumToAdd){
+        public void AddValue (double SumToAdd){
             PotValue = PotValue + SumToAdd;
         }
 
-		public int GetValue()
+		public double GetValue()
 		{
             return PotValue;
 		}

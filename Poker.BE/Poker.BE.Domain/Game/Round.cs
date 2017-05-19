@@ -134,6 +134,14 @@ namespace Poker.BE.Domain.Game
         }
 
 
+        public ICollection<Player> GetActivePlayersAfterRound(){
+            return activeUnfoldedPlayers;
+        }
+
+		public Pot GetPotAfterRound() {
+            return pot;
+		}
+
         #endregion
     }
 }
