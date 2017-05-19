@@ -81,7 +81,7 @@ namespace Poker.BE.Domain.Game
 			}
             if (step == 3){
 				ShowDown();
-                PickAWinner();
+                PickAWinnerForCurrentHand();
                 step = step + 1;
 			}
 		}
@@ -152,7 +152,7 @@ namespace Poker.BE.Domain.Game
                 UpdatePotAndActivePlayersFromLastRound(Flop);
             }
             else {
-                PickAWinner();
+                PickAWinnerForCurrentHand();
             }
 		}
 
@@ -163,7 +163,7 @@ namespace Poker.BE.Domain.Game
                 UpdatePotAndActivePlayersFromLastRound(TurnRound);
 			}
 			else {
-			 	PickAWinner();
+			 	PickAWinnerForCurrentHand();
 			}
 		}
 
@@ -174,7 +174,7 @@ namespace Poker.BE.Domain.Game
                 UpdatePotAndActivePlayersFromLastRound(River);
 			}
 			else {
-				PickAWinner();
+				PickAWinnerForCurrentHand();
 			}
 		} 
 
@@ -182,7 +182,7 @@ namespace Poker.BE.Domain.Game
             return activePlayers.Count() >= 2;
         }
 
-        private void PickAWinner() {
+        private void PickAWinnerForCurrentHand() {
             Player Winner = null;
 
             if (activePlayers.Count == 1) { // in case that only one player remains and all other players folds
