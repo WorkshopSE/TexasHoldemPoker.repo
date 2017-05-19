@@ -25,6 +25,7 @@ namespace Poker.BE.Domain.Game
         private Player dealer;
         private GamePreferences GamePreference;
         private int step;
+        private Card[] ChoosenCards;
         #endregion
 
         #region Properties
@@ -47,6 +48,7 @@ namespace Poker.BE.Domain.Game
 			this.CurrentRound = new Round(dealer,activePlayers, pot, GamePreference);
             this.Active = true;
             this.step = 0;
+            this.ChoosenCards = new Card[5];
         }
 		#endregion
 
@@ -61,14 +63,19 @@ namespace Poker.BE.Domain.Game
 
         public void ContinueHand(){
             if (step == 0){
+				ChoosenCards[0] = deck.PullCard();
+				ChoosenCards[1] = deck.PullCard();
+				ChoosenCards[2] = deck.PullCard();
 				PlayFlop();
-                step = step + 1;
+				step = step + 1;
 			}
             if (step == 1){
+				ChoosenCards[3] = deck.PullCard();
 				PlayTurn();
                 step= step + 1;
 			}
             if (step == 2){
+				ChoosenCards[4] = deck.PullCard();
 				PlayRiver();
                 step = step + 1;
 			}
