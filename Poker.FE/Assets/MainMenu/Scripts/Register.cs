@@ -25,12 +25,12 @@ public class Register : MonoBehaviour {
                 string userJson = JsonUtility.ToJson(current);
                 registerFeedback.GetComponent<Text>().text = "Registration Sucessful";
                 Debug.Log(userJson);
+                username.GetComponent<InputField>().text = "";
             }
             else
             {
                 registerFeedback.GetComponent<Text>().text = "Password Not Match!";
             }
-            username.GetComponent<InputField>().text = "";
             password.GetComponent<InputField>().text = "";
             confirmPassword.GetComponent<InputField>().text = "";
         }
@@ -44,7 +44,6 @@ public class Register : MonoBehaviour {
     private IEnumerator LateFlushFeedback()
     {
         yield return new WaitForSeconds(messageDelay);
-
         registerFeedback.GetComponent<Text>().text = "";
     }
 

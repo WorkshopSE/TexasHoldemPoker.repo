@@ -9,12 +9,20 @@ public class UIControl : MonoBehaviour {
     bool isMute;
     public void ChangeScene(string sceneName)
     {
-        loadingText.SetActive(true);
-        loadingImage.SetActive(true);
+        ShowLoading();
         SceneManager.LoadSceneAsync(sceneName);
     }
     public void DoExitGame()
     {
         Application.Quit();
+    }
+    public void ShowLoading()
+    {
+        if (loadingText.activeSelf || loadingImage.activeSelf)
+        {
+            return;
+        }
+        loadingText.SetActive(true);
+        loadingImage.SetActive(true);
     }
 }

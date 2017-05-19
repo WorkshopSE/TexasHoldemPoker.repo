@@ -140,7 +140,7 @@ RectTransform:
   - {fileID: 338669647}
   - {fileID: 832203540}
   m_Father: {fileID: 887986311}
-  m_RootOrder: 3
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -356,7 +356,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 887986311}
-  m_RootOrder: 2
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &354583993
 MonoBehaviour:
@@ -605,7 +605,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 887986311}
-  m_RootOrder: 6
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -823,6 +823,8 @@ MonoBehaviour:
   username: {fileID: 848251654}
   password: {fileID: 1298207099}
   loginFeedback: {fileID: 338669646}
+  UIControl: {fileID: 887986306}
+  messageDelay: 3
 --- !u!1 &848251654
 GameObject:
   m_ObjectHideFlags: 0
@@ -1149,12 +1151,12 @@ RectTransform:
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_Children:
   - {fileID: 1444763250}
-  - {fileID: 1608837102}
   - {fileID: 354583992}
   - {fileID: 27777078}
   - {fileID: 1096595691}
   - {fileID: 1367897527}
   - {fileID: 631610029}
+  - {fileID: 1608837102}
   - {fileID: 1833553342}
   m_Father: {fileID: 0}
   m_RootOrder: 1
@@ -1266,7 +1268,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 887986311}
-  m_RootOrder: 4
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -1667,7 +1669,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 887986311}
-  m_RootOrder: 5
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -1843,7 +1845,7 @@ GameObject:
   - component: {fileID: 1608837104}
   - component: {fileID: 1608837103}
   m_Layer: 5
-  m_Name: Exit BTN
+  m_Name: Back BTN
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1861,7 +1863,7 @@ RectTransform:
   m_Children:
   - {fileID: 1297298970}
   m_Father: {fileID: 887986311}
-  m_RootOrder: 1
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}

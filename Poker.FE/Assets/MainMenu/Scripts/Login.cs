@@ -8,6 +8,7 @@ public class Login : MonoBehaviour {
     public GameObject username;
     public GameObject password;
     public GameObject loginFeedback;
+    public GameObject UIControl;
     public float messageDelay = 3f;
 
     private User current = new User();
@@ -20,6 +21,7 @@ public class Login : MonoBehaviour {
             string userJson = JsonUtility.ToJson(current);
             //TODO : HTTP REQ USING FORM (?)
             loginFeedback.GetComponent<Text>().text = "Login Sucessful!";
+            UIControl.GetComponent<UIControl>().ShowLoading();
             Debug.Log(userJson);
             username.GetComponent<InputField>().text = "";
             password.GetComponent<InputField>().text = "";
@@ -34,7 +36,10 @@ public class Login : MonoBehaviour {
     private IEnumerator LateFlushFeedback()
     {
         yield return new WaitForSeconds(messageDelay);
-
+        if (loginFeedback.GetComponent<Text>().text.Equals("Login Sucessful!"))
+        {
+            UIControl.GetComponent<UIControl>().ChangeScene("MainMenu");
+        }
         loginFeedback.GetComponent<Text>().text = "";
     }
 
