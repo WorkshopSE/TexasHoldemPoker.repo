@@ -5,11 +5,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Poker.BE.Service.Modules.Requests;
+using Poker.BE.Domain.Core;
+using Poker.BE.Domain.Utility.Exceptions;
+using Poker.BE.Domain.Security;
 
 namespace Poker.BE.Service.Services
 {
     public class AuthenticationService : IServices.IAuthenticationService
     {
+		public UserManager Manager { get; set; }
 		public LoginResult Login(LoginRequest request)
 		{
 			var result = default(LoginResult);
@@ -24,6 +28,10 @@ namespace Poker.BE.Service.Services
 		public SignUpResult SignUp(SignUpRequest request)
 		{
 			var result = default(SignUpResult);
+			result = new SignUpResult()
+			{
+				User = Manager.LogIn(request.UserName, request.Password).GetHashCode(),
+			};
 			return result;
 		}
 	}
