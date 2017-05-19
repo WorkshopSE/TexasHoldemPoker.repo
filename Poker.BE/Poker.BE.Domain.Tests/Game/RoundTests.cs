@@ -34,7 +34,8 @@ namespace Poker.BE.Domain.Game.Tests
             activeUnfoldedPlayers.Add(player3);
             var pot = new Pot(null);
             var round = new Round(player1, activeUnfoldedPlayers, pot);
-            Exception expectedException = new Exception();
+            Exception expectedException1 = new Exception();
+            Exception expectedException2 = new Exception();
 
             //Act
             round.PlayMove(Round.Move.bet, 50);
@@ -51,7 +52,7 @@ namespace Poker.BE.Domain.Game.Tests
             }
             catch(ArgumentException e)
             {
-                expectedException = e;
+                expectedException1 = e;
             }
 
             round.PlayMove(Round.Move.raise, 70);
@@ -68,14 +69,31 @@ namespace Poker.BE.Domain.Game.Tests
                         && !round.CurrentPot.PartialPot.PlayersClaimPot.Contains(player2) && round.CurrentPot.PartialPot.PlayersClaimPot.Contains(player1)
                         && round.LiveBets[player2] == 350 && round.CurrentPot.AmountToClaim == 350 && round.CurrentPot.Value == 820  
                         && round.CurrentPot.PartialPot.Value == 150 && round.CurrentPot.PartialPot.AmountToClaim == 150;
-                        
+
+            try
+            {
+                round.PlayMove(Round.Move.allin, 0);
+            }
+            catch (IOException e)
+            {
+                expectedException2 = e;
+            }
+
+            //round.PlayMove(Round.Move.fold, 0);
+            var res6 = !round.CurrentPot.PlayersClaimPot.Contains(player3) && !round.CurrentPot.PartialPot.PlayersClaimPot.Contains(player3)
+                        && round.LiveBets[player3] == 120 && round.CurrentPot.AmountToClaim == 350 && round.CurrentPot.Value == 820
+                        && round.CurrentPot.PartialPot.Value == 150 && round.CurrentPot.PartialPot.AmountToClaim == 150;
+
             //Assert
             Assert.IsTrue(res1);
             Assert.IsTrue(res2);
-            Assert.AreEqual(expectedException.Message, "Can't raise less than last raise");
+            Assert.AreEqual(expectedException1.Message, "Can't raise less than last raise");
             Assert.IsTrue(res3);
             Assert.IsTrue(res4);
             Assert.IsTrue(res5);
+            Assert.AreEqual(expectedException2.Message, "all-in is bigger than the highest other player's all-in... use bet\raise move");
+            Assert.IsTrue(res6);
+
 
         }
     }

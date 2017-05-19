@@ -81,9 +81,20 @@ namespace Poker.BE.Domain.Game
                     {
                         CurrentTurn.Fold();
                         Player playerToRemove = this.CurrentPlayer;
+
+                        //Remover player from all pots
+                        Pot partialPotIterator = CurrentPot;
+                        while (partialPotIterator != null)
+                        {
+                            partialPotIterator.PlayersClaimPot.Remove(playerToRemove);
+                            partialPotIterator = partialPotIterator.PartialPot;
+                        }
+                        
+                        //Remove player from round
                         this.currentPlayer = this.ActiveUnfoldedPlayers.ElementAt((ActiveUnfoldedPlayers.ToList().IndexOf(this.CurrentPlayer) - 1) % ActiveUnfoldedPlayers.Count);
                         ActiveUnfoldedPlayers.Remove(playerToRemove);
-                        break;
+                        return;
+                        //break;
                     }
                 case Move.bet:
                     {
