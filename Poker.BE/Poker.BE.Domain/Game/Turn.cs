@@ -37,9 +37,8 @@ namespace Poker.BE.Domain.Game
         public void Call(int amount)
         {
             if (amount <= 0)
-                throw new IOException("Last raise is lower then previous raise :(  Somthing isn't right...");
+                throw new IOException("negative call :(  Somthing isn't right...");
             this.currentPlayer.SubstractMoney(amount);
-            this.currentPot.Value += amount;
         }
 
         public void Fold()

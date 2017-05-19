@@ -63,11 +63,11 @@ namespace Poker.BE.Domain.Game.Tests
                         && pot.AmountToClaim == 500 && pot.Value == 670 && round.LastRaise == 380 && round.TotalRaise == 500
                         && pot.PartialPot != null && pot.PartialPot.AmountToClaim == 0 && pot.PartialPot.Value == 0;
 
-            round.PlayMove(Round.Move.allin, 0);
+            /*round.PlayMove(Round.Move.allin, 0);
             var res5 = round.CurrentPlayer == player3 && pot.PartialPot.PlayersClaimPot.Contains(player2) && round.LiveBets[player1] == 500
                         && pot.AmountToClaim == 500 && pot.Value == 670 && round.LastRaise == 380 && round.TotalRaise == 500
                         && pot.PartialPot != null && pot.PartialPot.AmountToClaim == 0;
-
+                        */
             //Assert
             Assert.IsTrue(res1);
             Assert.IsTrue(res2);
