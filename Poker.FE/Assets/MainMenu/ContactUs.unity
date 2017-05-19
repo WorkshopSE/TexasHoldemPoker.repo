@@ -310,7 +310,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 399.99997, y: 229.8837}
+  m_AnchoredPosition: {x: 399.99997, y: 229.88371}
   m_SizeDelta: {x: 100, y: 99.75845}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &887986306
@@ -340,7 +340,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 887986306}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c9a451351be9b5843a1cb755d2e0ae9a, type: 3}
+  m_Script: {fileID: 11500000, guid: d5d777e9f6b1a604bb93ace0b4fbc6cd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   loadingText: {fileID: 631610026}
@@ -749,7 +749,7 @@ Animator:
   m_GameObject: {fileID: 1367897523}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 74d89ad4ad76ab840a559e04ba54d437, type: 2}
+  m_Controller: {fileID: 9100000, guid: 7b5e4303389ba6f4b8a3c03fe834a781, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -776,7 +776,7 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 21300000, guid: b6f29e5aa1ed24f4d8664b4bfe6440a9, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 9fbbe8ce77272b54bb92fa22347a8e82, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -805,7 +805,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 399.99997, y: 229.8837}
+  m_AnchoredPosition: {x: 399.99997, y: 229.88371}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1444763249
@@ -862,7 +862,7 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 21300000, guid: 3ee154618e15157449d1db77195cb620, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 6a1280f95a0ebc04492ec57e8809f78c, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -977,7 +977,7 @@ GameObject:
   - component: {fileID: 1608837104}
   - component: {fileID: 1608837103}
   m_Layer: 5
-  m_Name: Exit BTN
+  m_Name: Back BTN
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1121,7 +1121,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: -43.50009, y: 10.999998}
+  m_AnchoredPosition: {x: -43.500122, y: 11}
   m_SizeDelta: {x: 87, y: 22}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2008675570
@@ -1132,7 +1132,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 2008675568}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 716b2c2cf9250b44784b65ebc0462798, type: 3}
+  m_Script: {fileID: 11500000, guid: df8fbb216eae8664d84d56d2e7dc4f8e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!114 &2008675571
