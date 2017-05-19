@@ -129,7 +129,7 @@ namespace Poker.BE.Domain.Game
 
                         //Make all-in
                         if (this.CurrentPlayer.Wallet.amountOfMoney + LiveBets[currentPlayer] <= TotalRaise)
-                            Call(this.CurrentPlayer.Wallet.amountOfMoney - LiveBets[CurrentPlayer]);
+                            Call(this.CurrentPlayer.Wallet.amountOfMoney);
                         else
                         {
                             Call(0);
@@ -172,12 +172,10 @@ namespace Poker.BE.Domain.Game
             Pot partialPotIterator = CurrentPot;
             Pot lastPartialPot = partialPotIterator;
             int amountToAdd = amountToBetOrCall;    //how much money does the player need to add in order to claim the pot
+            int lastPlayerCurrentBet = 0;
 
             while (partialPotIterator != null && partialPotIterator.AmountToClaim > 0 && amountToBetOrCall > 0)
             {
-                //if (amountToBetOrCall + playerCurrentBet < partialPotIterator.AmountToClaim)
-                //    throw new ArgumentException("Not enough money to fill all pots");
-
                 if (playerCurrentBet < partialPotIterator.AmountToClaim)
                 {
                     if (amountToBetOrCall + playerCurrentBet >= partialPotIterator.AmountToClaim) //if regular call
@@ -188,7 +186,9 @@ namespace Poker.BE.Domain.Game
                     LiveBets[CurrentPlayer] += amountToAdd;
                     partialPotIterator.Value += amountToAdd;
                     amountToBetOrCall -= amountToAdd;
+                    lastPlayerCurrentBet = playerCurrentBet;
                     playerCurrentBet = 0;
+                    
                 }
                 else
                 {
@@ -202,11 +202,9 @@ namespace Poker.BE.Domain.Game
                 lastPartialPot = partialPotIterator;
                 partialPotIterator = partialPotIterator.PartialPot;
             }
-
             
             if (amountToBetOrCall + playerCurrentBet > lastPartialPot.AmountToClaim)
                 throw new ArgumentException("Not enough partial pots were created! Somthing isn't right!");
-
             
             if (CurrentPlayer.Wallet.amountOfMoney == 0) //if call all-in move
             {
@@ -218,16 +216,18 @@ namespace Poker.BE.Domain.Game
                     newPartialPot.BasePot.PartialPot = newPartialPot;
                 else
                     this.currentPot = newPartialPot;
-
+                
                 //Update partial pot's fields
                 foreach (Player player in lastPartialPot.PlayersClaimPot)
                     newPartialPot.PlayersClaimPot.Add(player);
-                newPartialPot.PlayersClaimPot.Remove(CurrentPlayer);
+                lastPartialPot.PlayersClaimPot.Remove(CurrentPlayer);
 
-                newPartialPot.AmountToClaim = amountToAdd + playerCurrentBet;
+                newPartialPot.AmountToClaim = amountToAdd + lastPlayerCurrentBet;
                 lastPartialPot.AmountToClaim -= newPartialPot.AmountToClaim;
                 newPartialPot.Value = lastPartialPot.Value - (lastPartialPot.AmountToClaim * lastPartialPot.PlayersClaimPot.Count);
                 lastPartialPot.Value = lastPartialPot.AmountToClaim * lastPartialPot.PlayersClaimPot.Count;
+
+                
             }
             /*
             //Check if the last pot isn't empty (can happen if someone raised all-in)

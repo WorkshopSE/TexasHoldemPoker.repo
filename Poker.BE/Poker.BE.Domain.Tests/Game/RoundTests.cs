@@ -63,17 +63,19 @@ namespace Poker.BE.Domain.Game.Tests
                         && pot.AmountToClaim == 500 && pot.Value == 670 && round.LastRaise == 380 && round.TotalRaise == 500
                         && pot.PartialPot != null && pot.PartialPot.AmountToClaim == 0 && pot.PartialPot.Value == 0;
 
-            /*round.PlayMove(Round.Move.allin, 0);
-            var res5 = round.CurrentPlayer == player3 && pot.PartialPot.PlayersClaimPot.Contains(player2) && round.LiveBets[player1] == 500
-                        && pot.AmountToClaim == 500 && pot.Value == 670 && round.LastRaise == 380 && round.TotalRaise == 500
-                        && pot.PartialPot != null && pot.PartialPot.AmountToClaim == 0;
-                        */
+            round.PlayMove(Round.Move.allin, 0);
+            var res5 = round.CurrentPlayer == player3 && round.CurrentPot.PlayersClaimPot.Contains(player1) && round.CurrentPot.PlayersClaimPot.Contains(player2)
+                        && !round.CurrentPot.PartialPot.PlayersClaimPot.Contains(player2) && round.CurrentPot.PartialPot.PlayersClaimPot.Contains(player1)
+                        && round.LiveBets[player2] == 350 && round.CurrentPot.AmountToClaim == 350 && round.CurrentPot.Value == 820  
+                        && round.CurrentPot.PartialPot.Value == 150 && round.CurrentPot.PartialPot.AmountToClaim == 150;
+                        
             //Assert
             Assert.IsTrue(res1);
             Assert.IsTrue(res2);
             Assert.AreEqual(expectedException.Message, "Can't raise less than last raise");
             Assert.IsTrue(res3);
             Assert.IsTrue(res4);
+            Assert.IsTrue(res5);
 
         }
     }
