@@ -240,16 +240,6 @@ namespace Poker.BE.Domain.Game
 
                 
             }
-            /*
-            //Check if the last pot isn't empty (can happen if someone raised all-in)
-            if (lastPartialPot.AmountToClaim > 0)
-            {
-                CurrentTurn.Call(amountToBetOrCall);
-                LiveBets[CurrentPlayer] += amountToBetOrCall;
-                if (!lastPartialPot.PlayersClaimPot.Contains(CurrentPlayer))
-                    lastPartialPot.PlayersClaimPot.Add(CurrentPlayer);
-            }
-            */
         }
 
         private void RaisePreconditions(int amountToRaise)
@@ -289,44 +279,3 @@ namespace Poker.BE.Domain.Game
         #endregion
     }
 }
-
-
-/* Old call (in PlayMove)
-                        if (amountToBetOrCall == 0)
-                            amountToBetOrCall = TotalRaise - LiveBets[CurrentPlayer];
-                        int playerCurrentBet = LiveBets[CurrentPlayer];
-
-                        //as long as the player can "fill" this pot, put in the needed amount and mov to the next partial pot
-                        Pot lastPartialPot = FillBasePots(ref amountToBetOrCall, ref playerCurrentBet);
-                        
-                        if (amountToBetOrCall + playerCurrentBet > lastPartialPot.AmountToClaim)
-                            throw new ArgumentException("Not enough partial pots were created! Somthing isn't right!");
-                        else if (amountToBetOrCall + playerCurrentBet < lastPartialPot.AmountToClaim) //if call all-in move
-                        {
-                            //Add new partial pot in the middle
-                            Pot newPartialPot = new Pot(lastPartialPot.BasePot);
-                            newPartialPot.PartialPot = lastPartialPot;
-                            lastPartialPot.BasePot = newPartialPot;
-                            newPartialPot.BasePot.PartialPot = newPartialPot;
-
-                            //Set new partial pot fields
-                            foreach (Player player in lastPartialPot.PlayersClaimPot)
-                                newPartialPot.PlayersClaimPot.Add(player);
-                            newPartialPot.PlayersClaimPot.Add(CurrentPlayer);
-                            newPartialPot.AmountToClaim = amountToBetOrCall + playerCurrentBet;
-                            newPartialPot.Value = newPartialPot.PlayersClaimPot.Count * newPartialPot.AmountToClaim;
-
-                            //Update last partial pot fields
-                            lastPartialPot.AmountToClaim -= newPartialPot.AmountToClaim;
-                            lastPartialPot.Value -= newPartialPot.Value;
-                        }
-
-                        //Check if the last pot isn't empty (can happen if someone raised all-in)
-                        if (lastPartialPot.AmountToClaim > 0)
-                        {
-                            CurrentTurn.Call(amountToBetOrCall);
-                            LiveBets[CurrentPlayer] += amountToBetOrCall;
-                            if (!lastPartialPot.PlayersClaimPot.Contains(CurrentPlayer))
-                                lastPartialPot.PlayersClaimPot.Add(CurrentPlayer);
-                        }
-                        */
