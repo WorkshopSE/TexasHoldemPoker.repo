@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Poker.BE.Service.Modules.Requests;
 
 namespace Poker.BE.Service.Services
 {
@@ -14,6 +15,16 @@ namespace Poker.BE.Service.Services
 			var result = default(LoginResult);
 			return result;
 		}
+		public LogoutResult Logout(LogoutRequest request)
+		{
+			var result = default(LogoutResult);
+			return result;
+		}
 
+		public SignUpResult SignUp(SignUpRequest request)
+		{
+			var result = default(SignUpResult);
+			return result;
+		}
 	}
 }
