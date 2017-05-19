@@ -25,7 +25,7 @@ namespace Poker.BE.Domain.Game
         #endregion
 
         #region Properties
-        public State CurrentState { get; private set; }
+        public State CurrentState { get; set; }
         public Card[] PrivateCards { get; set; }
         #endregion
 

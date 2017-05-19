@@ -9,15 +9,17 @@ namespace Poker.BE.Domain.Game
     public class Turn
     {
         #region Fields
-        private Player currentPlayer;
-
-        public Player CurrentPlayer { get { return currentPlayer; } set { currentPlayer = value; } }
+        private bool CanCheck;
+        private bool IsPlayerFold { get; set; }
+        public Player CurrentPlayer { get; set; }
         #endregion
 
         #region Constructors
-        public Turn(Player player)
+        public Turn(Player player, bool CanCheck)
         {
             this.CurrentPlayer = player;
+            this.CanCheck = CanCheck;
+            this.IsPlayerFold = false;
         }
         #endregion
 
@@ -37,7 +39,7 @@ namespace Poker.BE.Domain.Game
 
         public void Fold()
         {
-            //TODO
+            IsPlayerFold = true;
         }
 
         public void Bet()
@@ -54,6 +56,7 @@ namespace Poker.BE.Domain.Game
         {
             //TODO
         }
+
     }
 }
 #endregion

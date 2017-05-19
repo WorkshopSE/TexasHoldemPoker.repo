@@ -29,10 +29,10 @@ namespace Poker.BE.Domain.Game
         private Pot pot;
 		private GamePreferences GamePreference;
         private double SumToEqual;
-        // this is the way we have to now how much each player invested in the round
+        // this is the way we have to now how much each player invested in the round 
         private Dictionary<Player, double> PlayerInvest;
-        //this boolean helps us to know if the betting round is over
-        private bool endBetting;
+        //this variable helps us to know if the betting round is over
+        private int RestBettingPerson;
 
         #endregion
 
@@ -45,6 +45,7 @@ namespace Poker.BE.Domain.Game
             this.activeUnfoldedPlayers = activeUnfoldedPlayers;
             this.pot = pot;
             this.GamePreference = GamePreference;
+            this.RestBettingPerson = 0;
         }
 		#endregion
 
@@ -65,64 +66,47 @@ namespace Poker.BE.Domain.Game
             SumToEqual = BigBlindAmount;
 
             calculateNextPlayer();
-            PlayBettingRound();
+            StartRound();
 		}
 
         // the functions is reponsable of the player turns
-        public void PlayBettingRound(){
-            
-        }
 
         public void StartRound(){
-            int numberOfPlayers = activeUnfoldedPlayers.Count;
-            while (!endBetting){
-				for (int i = 0; i < numberOfPlayers; i++)
+           int numberOfPlayers = activeUnfoldedPlayers.Count;
+            while (RestBettingPerson < numberOfPlayers){
+                for (int i = 0 ; i < numberOfPlayers; i++)
 				{
-                    Player currentPlayer = 
-                    if(PlayerInvest)
-
+                    if(PlayerInvest.ContainsKey(currentPlayer) && currentPlayer.CurrentState.Equals("ActiveUnfolded")){
+                        if (PlayerInvest[currentPlayer] < SumToEqual){ // it means that someone bet more than actual player
+                            PlayBetTurn(currentPlayer);
+                        }
+                        else{ 
+                            PlayTurn(currentPlayer);
+                        }
+                        if (PlayerInvest[currentPlayer] > SumToEqual){
+                            RestBettingPerson = 0;
+                        }
+                    }
+                    else{
+                        RestBettingPerson = RestBettingPerson + 1;
+                    }
 				}   
             }
 
         }
 
-        public void PlayMove(Move playMove)
-        {
-            switch (playMove)
-            {
-                case Move.check :
-                    {
-                        break;
-                    }
-                case  Move.call:
-                    {
-                        break;
-                    }
-                case Move.fold:
-                    {
-                        break;
-                    }
-                case Move.bet:
-                    {
-                        break;
-                    }
-                case Move.raise:
-                    {
-                        break;
-                    }
-                case Move.allin:
-                    {
-                        break;
-                    }
-                default:
-                    {
-                        //TODO: print invalid move exception
-                        throw new NotEnoughPlayersException("Invalid Move");
-                    }
-            }
-            //Change Player
-            calculateNextPlayer();
+        private void PlayBetTurn(Player CurrentPlayer){
+            bool canCheck = false;
+            Turn playerTurn = new Turn(CurrentPlayer, canCheck);
         }
+
+        private void PlayTurn (Player CurrentPlayer) {
+			bool canCheck = true;
+			Turn playerTurn = new Turn(CurrentPlayer, canCheck);
+		}
+
+
+
         private void calculateNextPlayer()
         {
             this.currentPlayer = this.activeUnfoldedPlayers.ElementAt((activeUnfoldedPlayers.ToList().IndexOf(this.currentPlayer) + 1) % activeUnfoldedPlayers.Count);

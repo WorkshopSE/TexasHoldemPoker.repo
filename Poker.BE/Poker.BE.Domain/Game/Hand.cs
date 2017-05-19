@@ -116,11 +116,11 @@ namespace Poker.BE.Domain.Game
 
         private void PlayPreFlop() {
             Round PreFlopRound = new Round(dealer, activePlayers, pot, GamePreference);
-
-        
+            PreFlopRound.StartPreRound();
+        }
+        private void PlayFlop() { 
         
         }
-        private void PlayFlop() { }
         private void PlayTurn() { }
         private void PlayRiver() { } 
 

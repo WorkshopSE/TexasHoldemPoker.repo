@@ -145,7 +145,7 @@ namespace Poker.BE.Domain.Game
             {
                 throw new NotEnoughPlayersException("Its should be at least 2 active players to play move");
             }
-            CurrentHand.CurrentRound.PlayMove(move);
+          //  CurrentHand.CurrentRound.PlayMove(move); TODO 
             
         }
 
