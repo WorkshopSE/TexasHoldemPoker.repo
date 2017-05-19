@@ -58,12 +58,22 @@ namespace Poker.BE.Domain.Game.Tests
             var res3 = round.CurrentPlayer == player1 && pot.PlayersClaimPot.Contains(player3) && round.LiveBets[player3] == 120
                         && pot.AmountToClaim == 120 && pot.Value == 220 && round.LastRaise == 70 && round.TotalRaise == 120;
 
+            round.PlayMove(Round.Move.allin, 0);
+            var res4 = round.CurrentPlayer == player2 && pot.PlayersClaimPot.Contains(player1) && round.LiveBets[player1] == 500
+                        && pot.AmountToClaim == 500 && pot.Value == 670 && round.LastRaise == 380 && round.TotalRaise == 500
+                        && pot.PartialPot != null && pot.PartialPot.AmountToClaim == 0 && pot.PartialPot.Value == 0;
+
+            round.PlayMove(Round.Move.allin, 0);
+            var res5 = round.CurrentPlayer == player3 && pot.PartialPot.PlayersClaimPot.Contains(player2) && round.LiveBets[player1] == 500
+                        && pot.AmountToClaim == 500 && pot.Value == 670 && round.LastRaise == 380 && round.TotalRaise == 500
+                        && pot.PartialPot != null && pot.PartialPot.AmountToClaim == 0;
 
             //Assert
             Assert.IsTrue(res1);
             Assert.IsTrue(res2);
             Assert.AreEqual(expectedException.Message, "Can't raise less than last raise");
             Assert.IsTrue(res3);
+            Assert.IsTrue(res4);
 
         }
     }
