@@ -118,6 +118,18 @@ namespace Poker.BE.Domain.Game
                     return default(Value);
             }
         }
+
+		private int SuitToNumber(Suit suit)
+		{
+			switch (suit)
+			{
+				case Suit.Hearts: return 1;
+				case Suit.Clubs: return 2;
+				case Suit.Spades: return 3;
+				case Suit.Diamonds: return 4;
+				default: return -1;
+			}
+		}
         #endregion
 
         #region Methods
@@ -130,6 +142,14 @@ namespace Poker.BE.Domain.Game
                 result = (this.number > other.number) ? 1 : (this.number < other.number) ? -1 : 0;
             }
             return result;
+        }
+
+        public int GetValueNumber(){
+            return this.number;
+        }
+
+        public int GetSuitNumber(){
+            return SuitToNumber(this.CardSuit);
         }
 
         // override object.Equals

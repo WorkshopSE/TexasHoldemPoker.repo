@@ -8,7 +8,8 @@ namespace Poker.BE.Domain.Game
 
 		#region Fields
 		private ICollection<Player> Players;
-		private Card[] ChoosenCards;
+		private Card[] FifthHandCard;
+		private Dictionary<Player, Card[]> PlayerSevenCards;
 		#endregion
 
 		#region Properties
@@ -16,16 +17,50 @@ namespace Poker.BE.Domain.Game
 		#endregion
 
 		#region Constructors
-        public PickAWinner (ICollection<Player> Players, Card[] ChoosenCards)
+        public PickAWinner (ICollection<Player> Players, Card[] FifthHandCard)
 		{
             this.Players = Players;
-            this.ChoosenCards = ChoosenCards;
-		}
+            this.FifthHandCard = FifthHandCard;
+            InitializeDictionnary();
+            GetWinner();
+        }
 		#endregion
 
 		#region Methods
         private Player GetWinner(){
             return null;
+        }
+
+        private void InitializeDictionnary(){
+            PlayerSevenCards = new Dictionary<Player, Card[]>();
+            foreach (Player player in Players){
+                Card[] PlayerSevenCardArray = new Card[7];
+                for (int i = 0; i < 2; i++){
+                    PlayerSevenCardArray[i] = player.PrivateCards[i];
+                }
+                for (int k = 0; k < 5; k++){
+                    PlayerSevenCardArray[k + 2] = FifthHandCard[k];
+                }
+                SortSevenCardsByValue(PlayerSevenCardArray);
+                PlayerSevenCards.Add(player, PlayerSevenCardArray);
+            }
+        }
+
+        private void SortSevenCardsByValue (Card[] CardArray){
+            Card[] SortedArrayCard = new Card[7];
+            for (int i = 0; i < CardArray.Length; i++){
+                for (int k = i+1; k < 6; k++){
+                    if ( CardArray[i].GetValueNumber() > CardArray[k].GetValueNumber()){
+                        Swap(CardArray[i], CardArray[k]); 
+                    }
+                }
+            }
+        }
+
+        private void Swap (Card Card1, Card Card2){
+            Card tmp = Card1;
+            Card1 = Card2;
+            Card2 = Card1;
         }
 
 		private Player IsHighCard(Card[] PlayerAndTableCards, ICollection<Player> players) {

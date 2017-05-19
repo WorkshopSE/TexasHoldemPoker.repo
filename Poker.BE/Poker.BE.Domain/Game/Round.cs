@@ -39,14 +39,14 @@ namespace Poker.BE.Domain.Game
 		#region Constructors
 		public Round(Player dealer, ICollection<Player> activeUnfoldedPlayers, Pot pot, GamePreferences GamePreference)
         {
-			InitializeDictionary();
 			this.dealer = dealer;
             this.currentPlayer = this.activeUnfoldedPlayers.ElementAt((activeUnfoldedPlayers.ToList().IndexOf(dealer) + 2) % activeUnfoldedPlayers.Count);
             this.activeUnfoldedPlayers = activeUnfoldedPlayers;
             this.pot = pot;
             this.GamePreference = GamePreference;
             this.RestBettingPerson = 0;
-        }
+			InitializeDictionary();
+		}
 		#endregion
 
 		#region Methods
