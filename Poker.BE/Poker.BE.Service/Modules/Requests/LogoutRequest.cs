@@ -8,6 +8,6 @@ namespace Poker.BE.Service.Modules.Requests
 {
 	public class LogoutRequest : IRequest
 	{
-		
+		public int User { get; set; }
 	}
 }

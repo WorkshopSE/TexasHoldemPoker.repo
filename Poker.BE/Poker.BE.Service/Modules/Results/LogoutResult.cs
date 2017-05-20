@@ -8,5 +8,6 @@ namespace Poker.BE.Service.Modules.Results
 {
 	public class LogoutResult : IResult
 	{
+		public int User { get; internal set; }
 	}
 }
