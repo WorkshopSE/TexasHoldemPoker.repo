@@ -6,6 +6,13 @@ namespace Poker.BE.Domain.Game
 {
     public class GameConfig
     {
+        #region Fields
+        private bool _isSpactatorsAllowed;
+        private int _minNumberOfPlayers;
+        private int _maxNumberOfPlayers;
+        private double _buyInCost;
+        private double _minimumBet;
+        #endregion
 
         #region Properties
 
@@ -19,14 +26,16 @@ namespace Poker.BE.Domain.Game
         /// </summary>
         public bool IsSpactatorsAllowed
         {
-            get { return IsSpactatorsAllowed; }
+            get { return _isSpactatorsAllowed; }
             set
             {
                 // when spectator not allowed, enforce it on max number of players
                 if (!value & MaxNumberOfPlayers > MaxNumberOfActivePlayers)
                 {
-                    MaxNumberOfPlayers = MaxNumberOfActivePlayers;
+                    _maxNumberOfPlayers = MaxNumberOfActivePlayers;
                 }
+
+                _isSpactatorsAllowed = value;
             }
         }
 
@@ -35,9 +44,9 @@ namespace Poker.BE.Domain.Game
         /// </summary>
         public int MinNumberOfPlayers
         {
-            get { return MinNumberOfPlayers; }
+            get { return _minNumberOfPlayers; }
             // enforce min >= 2
-            set { MinNumberOfPlayers = (value < 2) ? 2 : value; }
+            set { _minNumberOfPlayers = (value < 2) ? 2 : value; }
         }
 
         /// <summary>
@@ -45,11 +54,11 @@ namespace Poker.BE.Domain.Game
         /// </summary>
         public int MaxNumberOfPlayers
         {
-            get { return MaxNumberOfPlayers; }
+            get { return _maxNumberOfPlayers; }
             set
             {
                 // enforce max number of players when spectators not allowed.
-                MaxNumberOfPlayers =
+                _maxNumberOfPlayers =
                     (!IsSpactatorsAllowed & value > MaxNumberOfActivePlayers) ?
                     MaxNumberOfActivePlayers : value;
             }
@@ -66,18 +75,18 @@ namespace Poker.BE.Domain.Game
         /// </summary>
         public double BuyInCost
         {
-            get { return BuyInCost; }
+            get { return _buyInCost; }
 
             // NOTE: adapt the set of buy in cost to the minimum bet
             set
             {
                 if (value < MinimumBet)
                 {
-                    MinimumBet = BuyInCost = value;
+                    _minimumBet = _buyInCost = value;
                 }
                 else
                 {
-                    BuyInCost = value;
+                    _buyInCost = value;
                 }
             }
         }
@@ -88,18 +97,18 @@ namespace Poker.BE.Domain.Game
         /// </summary>
         public double MinimumBet
         {
-            get { return MinimumBet; }
+            get { return _minimumBet; }
 
             // Note: adapt the set of minimum bet to the buy in cost
             set
             {
-                if (value > BuyInCost)
+                if (value > _buyInCost)
                 {
-                    MinimumBet = BuyInCost = value;
+                    _minimumBet = _buyInCost = value;
                 }
                 else
                 {
-                    MinimumBet = value;
+                    _minimumBet = value;
                 }
             }
         }

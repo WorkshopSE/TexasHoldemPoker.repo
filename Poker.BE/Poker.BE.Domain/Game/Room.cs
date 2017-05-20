@@ -24,6 +24,7 @@ namespace Poker.BE.Domain.Game
         private ICollection<Player> activeAndPassivePlayers;
         private Deck deck;
         private Chair[] chairs;
+        private int _maxNumberOfActivePlayers;
         #endregion
 
         #region Properties
@@ -68,11 +69,11 @@ namespace Poker.BE.Domain.Game
         public int MinNumberOfPlayers { get; private set; }
         public int MaxNumberOfActivePlayers
         {
-            get { return MaxNumberOfActivePlayers; }
+            get { return _maxNumberOfActivePlayers; }
             private set
             {
                 // enforce number of active players < number of chairs.
-                MaxNumberOfActivePlayers = (value > NCHAIRS_IN_ROOM) ? NCHAIRS_IN_ROOM : value;
+                _maxNumberOfActivePlayers = (value > NCHAIRS_IN_ROOM) ? NCHAIRS_IN_ROOM : value;
             }
         }
         public double MinimumBet { get; private set; }
