@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Poker.BE.Domain.Core;
+using Poker.BE.Domain.Utility.Exceptions;
 
 namespace Poker.BE.Domain.Security
 {
@@ -19,13 +20,16 @@ namespace Poker.BE.Domain.Security
             UsersDictionary = new Dictionary <string, User>();
         }
 
-        protected bool AddUser (string userName, string password, double sumToDeposit){
-            if ( !CheckExistingUser (userName) && CheckPasswordValidity(password) && sumToDeposit > 0 ){
-                User UserToAdd = new User (userName, password, sumToDeposit);
-                UsersDictionary.Add(userName, UserToAdd);
-                return true;
-            }
-            return false;
+        public bool AddUser (string userName, string password, double sumToDeposit){
+			if (CheckExistingUser(userName))
+				throw new UserNameTakenException();
+			if (!CheckPasswordValidity(password))
+				throw new InvalidPasswordException();
+			if (sumToDeposit < 0)
+				throw new InvalidDepositException();
+            User UserToAdd = new User (userName, password, sumToDeposit);
+            UsersDictionary.Add(userName, UserToAdd);
+            return true;
         }
 
         protected bool RemoveUser (string userName){

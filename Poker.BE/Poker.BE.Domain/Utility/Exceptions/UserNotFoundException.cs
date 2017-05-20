@@ -4,7 +4,7 @@ using System.Runtime.Serialization;
 namespace Poker.BE.Domain.Utility.Exceptions
 {
     [Serializable]
-    public class UserNotFoundException : Exception
+    public class UserNotFoundException : PokerException
     {
         public UserNotFoundException()
         {

@@ -8,5 +8,9 @@ namespace Poker.BE.Service.Modules.Results
 {
 	public class LoginResult : IResult
 	{
+		/// <summary>
+		/// user hash code 
+		/// </summary>
+		public int User { get; set; }
 	}
 }
