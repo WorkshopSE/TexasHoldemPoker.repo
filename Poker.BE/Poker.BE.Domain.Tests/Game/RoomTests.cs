@@ -100,32 +100,58 @@ namespace Poker.BE.Domain.Game.Tests
         public void RoomTest3() // (:Player, :GameConfig)
         {
             //Arrange
-            var player = new Player();
+
+            var expPlayer = new Player();
             const string expName = "test room 3";
-            const double expBuyinCost = 50.2;
-            GamePreferences expGamePreferences = new GamePreferences();
             const bool expIsSpecAllowed = false;
-            const int expNActive = 8;
-            const int expMaxNumberPlayers = 9;
-            const double expMinBet = 8.6;
+            GamePreferences expGamePreferences = new GamePreferences();
             const int expMinPlayers = 3;
-            var confing = new GameConfig() {
-                BuyInCost = expBuyinCost,
+
+            // changed parameters
+            const double insertBuyinCost = 50.2;
+            const int insertNActive = 8;
+            const int insertMaxNumberPlayers = 9;
+            const double insertMinBet = 8.6;
+
+            // expected results by the parameters // undone - idan continue from here.
+            double expBuyinCost = Math.Max(insertBuyinCost, insertMinBet);
+            double expMinBet = Math.Min(insertMinBet, insertBuyinCost);
+            int expNActive = expIsSpecAllowed ? insertNActive : insertMaxNumberPlayers;
+            int expMaxNumberPlayers = expIsSpecAllowed ? insertMaxNumberPlayers : insertNActive;
+
+            var expConfig = new GameConfig() {
+                BuyInCost = insertBuyinCost,
                 GamePrefrences = expGamePreferences,
                 IsSpactatorsAllowed = expIsSpecAllowed,
-                MaxNumberOfActivePlayers = expNActive,
-                MaxNumberOfPlayers = expMaxNumberPlayers,
-                MinimumBet = expMinBet,
+                MaxNumberOfActivePlayers = insertNActive,
+                MaxNumberOfPlayers = insertMaxNumberPlayers,
+                MinimumBet = insertMinBet,
                 MinNumberOfPlayers = expMinPlayers,
                 Name = expName,
             };
 
             //Act
-            var actual = new Room(player, confing);
+            var actual = new Room(expPlayer, expConfig);
 
             //Assert
-            Assert.AreEqual(expName, actual.Name);
-            Assert.AreEqual(expNActive, actual.MinNumberOfPlayers);
+            Assert.AreEqual(1, actual.Players.Count, "one player in new room");
+            Assert.AreEqual(expPlayer, actual.Players.First(), "the creator is first");
+            Assert.AreEqual(Player.State.Passive, expPlayer.CurrentState, "the creator is passive");
+            Assert.AreEqual(1, actual.PassivePlayers.Count, "one passive player");
+            Assert.AreEqual(0, actual.ActivePlayers.Count, "zero active players");
+            Assert.IsTrue(actual.PassivePlayers.Contains(expPlayer), "the creator found in passive players collection at room");
+            Assert.AreEqual(null, actual.CurrentHand, "current hand null");
+            Assert.AreEqual(false, actual.IsTableFull, "table not full");
+
+            // 8 Configurations of game-config
+            Assert.AreEqual(insertBuyinCost, actual.BuyInCost, "default buy in");
+            Assert.AreEqual(expIsSpecAllowed, actual.IsSpactatorsAllowd, "default spectators allowed");
+            Assert.AreEqual(expConfig.MaxNumberOfActivePlayers, actual.MaxNumberOfActivePlayers, "max active players default");
+            Assert.AreEqual(expConfig.MaxNumberOfPlayers, actual.MaxNumberOfPlayers, "default max players number");
+            Assert.AreEqual(expConfig.MinimumBet, actual.MinimumBet, "minimum bet default");
+            Assert.AreEqual(expConfig.MinNumberOfPlayers, actual.MinNumberOfPlayers, "min players default");
+            Assert.AreEqual(expConfig.Name, actual.Name, "default name");
+            // TODO: idan - add assert for default game preferences.
         }
 
         [TestMethod()]
