@@ -193,14 +193,14 @@ namespace Poker.BE.Domain.Game
         /// postcondition: the player is active player at the room.
         /// </summary>
         /// <param name="player">a passive player at the room</param>
-        public bool JoinPlayerToTable(Player player, double buyIn)
+        public bool JoinPlayerToTable(Player player)
         {
             if (player.CurrentState != Player.State.Passive)
             {
                 return false;
             }
 
-            return player.JoinToTable(buyIn);
+            return player.JoinToTable(BuyInCost);
         }
 
         public void RemovePlayer(Player player)

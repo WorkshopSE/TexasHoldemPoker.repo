@@ -169,8 +169,15 @@ namespace Poker.BE.Domain.Game.Tests
         [TestMethod()]
         public void JoinPlayerToTableTest()
         {
-            // TODO
-            throw new NotImplementedException();
+            //Arrange
+            var expPlayer = room.PassivePlayers.First();
+
+            //Act
+            var actual = room.JoinPlayerToTable(expPlayer);
+
+            //Assert
+            Assert.IsTrue(actual);
+            Assert.IsTrue(room.ActivePlayers.Contains(expPlayer));
         }
 
         [TestMethod()]
