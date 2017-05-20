@@ -27,6 +27,12 @@ namespace Poker.BE.Domain.Game
         // TODO: do we need ID for the Room? if so, what type should it be? 'long?' means nullable long.
         //public long? ID { get; }
 
+        /* UNDONE: Tomer - 
+            we'll just return the totalRaise field that holds the highest raise so far at the table.
+            that will let the next player know what's the amount of money he needs to invest in order to keep playing.
+            that's enough, right?
+         */
+
         public ICollection<Chair> Chairs { get { return chairs; } }
         public Hand CurrentHand { get; private set; }
         public GamePreferences Preferences { get; set; }
