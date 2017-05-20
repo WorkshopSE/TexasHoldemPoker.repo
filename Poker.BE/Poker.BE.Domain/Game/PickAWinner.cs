@@ -111,7 +111,7 @@ namespace Poker.BE.Domain.Game
                 for (int i = 0; i < 2; i++){
                     PlayerSevenCardArray[i] = player.PrivateCards[i];
                 }
-                for (int k = 0; k < 5; k++){
+                for (int k = 0; k < FIVEBESTCARDS; k++){
                     PlayerSevenCardArray[k + 2] = FifthHandCard[k];
                 }
                 SortSevenCardsByValue(PlayerSevenCardArray);
@@ -122,7 +122,7 @@ namespace Poker.BE.Domain.Game
         private void SortSevenCardsByValue (Card[] CardArray){
             Card[] SortedArrayCard = new Card[7];
             for (int i = 0; i < CardArray.Length; i++){
-                for (int k = i+1; k < 6; k++){
+                for (int k = i+1; k < FIVEBESTCARDS + 1; k++){
                     if ( CardArray[i].GetValueNumber() > CardArray[k].GetValueNumber()){
                         CardArray = Swap(CardArray, i, k); 
                     }
@@ -142,7 +142,7 @@ namespace Poker.BE.Domain.Game
         // NumberOrderIndex = 1
 		private int HighFiveCardValue (Card[] PlayerAndTableCards) {
             int i=0;
-            int exponant = 4;
+            int exponant = FIVEBESTCARDS -1;
             double sum = 0;
             int j = 6;
             while (PlayerAndTableCards[i].GetValueNumber() == 1){ // in case we have an or more AS
@@ -225,7 +225,7 @@ namespace Poker.BE.Domain.Game
         }
 
         private int IsAsStraight(Card[] PlayerAndTableCards) {
-            int[] asStraightIndex = new int[5];
+            int[] asStraightIndex = new int[FIVEBESTCARDS];
             for (int i = 0; i < PlayerAndTableCards.Length; i++)
             {
                 int CardValue = PlayerAndTableCards[i].GetValueNumberWIthAs() - 10;
@@ -274,7 +274,7 @@ namespace Poker.BE.Domain.Game
         private int IsFourOfAKind(Card[] PlayerAndTableCards) {
             int i;
 			int Count = 1;
-			for (i = 0; i < PlayerAndTableCards.Length - 1 && Count < 4; i++)
+			for (i = 0; i < PlayerAndTableCards.Length - 1 && Count < FIVEBESTCARDS - 1; i++)
 			{
 				if (PlayerAndTableCards[i].CompareTo(PlayerAndTableCards[i + 1]) == 0)
 				{
@@ -323,8 +323,6 @@ namespace Poker.BE.Domain.Game
             return FALSERESULT;
         }
 		#endregion
-
-
 
 	}
 }
