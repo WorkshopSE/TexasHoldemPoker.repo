@@ -8,7 +8,16 @@ namespace Poker.BE.Domain.Game
 {
     public class Wallet
     {
-        // TODO: complete - set team member to do this
+        #region Properties
+        public int amountOfMoney { get; set; }
+        #endregion
+
+        #region Contructors
+        public Wallet(int amount)
+        {
+            this.amountOfMoney = amount;
+        }
+        #endregion
 
     }
 }

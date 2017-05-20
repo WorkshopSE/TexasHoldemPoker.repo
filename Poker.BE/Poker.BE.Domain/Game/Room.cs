@@ -27,6 +27,12 @@ namespace Poker.BE.Domain.Game
         // TODO: do we need ID for the Room? if so, what type should it be? 'long?' means nullable long.
         //public long? ID { get; }
 
+        /* UNDONE: Tomer - 
+            we'll just return the totalRaise field that holds the highest raise so far at the table.
+            that will let the next player know what's the amount of money he needs to invest in order to keep playing.
+            that's enough, right?
+         */
+
         public ICollection<Chair> Chairs { get { return chairs; } }
         public Hand CurrentHand { get; private set; }
         public GamePreferences Preferences { get; set; }
@@ -139,13 +145,13 @@ namespace Poker.BE.Domain.Game
         /// UC027 Choose Play Move
         /// </summary>
         /// <see cref="https://docs.google.com/document/d/1OTee6BGDWK2usL53jdoeBOI-1Jh8wyNejbQ0ZroUhcA/edit#heading=h.8f3okxza6g2d"/>
-        public void ChoosePlayMove(Round.Move move)
+        public void ChoosePlayMove(Round.Move move, int amountToBet)
         {
             if (ActivePlayers.Where(player => player.CurrentState == Player.State.ActiveUnfolded).ToList().Count < 2)
             {
                 throw new NotEnoughPlayersException("Its should be at least 2 active players to play move");
             }
-            CurrentHand.CurrentRound.PlayMove(move);
+            CurrentHand.CurrentRound.PlayMove(move, amountToBet);
             
         }
 
