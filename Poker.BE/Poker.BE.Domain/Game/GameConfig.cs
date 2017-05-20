@@ -128,5 +128,38 @@ namespace Poker.BE.Domain.Game
         }
         #endregion
 
+        #region Methods
+        // override object.Equals
+        public override bool Equals(object obj)
+        {
+            //       
+            // See the full list of guidelines at
+            //   http://go.microsoft.com/fwlink/?LinkID=85237  
+            // and also the guidance for operator== at
+            //   http://go.microsoft.com/fwlink/?LinkId=85238
+            //
+
+            if (obj == null || GetType() != obj.GetType())
+            {
+                return false;
+            }
+
+            // TODO: write your implementation of Equals() here
+            var other = obj as GameConfig;
+            if (other == null) return false;
+
+            return
+                //this.GamePreferences.Equals(other.GamePreferences) && // undone: override GamePreferences.Equals(:object)
+                this.BuyInCost.Equals(other.BuyInCost) &&
+                this.IsSpactatorsAllowed == other.IsSpactatorsAllowed &&
+                this.MaxNumberOfActivePlayers == other.MaxNumberOfActivePlayers &&
+                this.MaxNumberOfPlayers == other.MaxNumberOfPlayers &&
+                this.MinimumBet == other.MinimumBet &&
+                this.Name.Equals(other.Name) &&
+                this.MinNumberOfPlayers == other.MinNumberOfPlayers;
+        }
+
+        #endregion
+
     }
 }

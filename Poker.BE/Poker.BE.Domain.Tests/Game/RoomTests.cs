@@ -52,22 +52,31 @@ namespace Poker.BE.Domain.Game.Tests
         {
             //Arrange
             var player = new Player();
-            var expected = player;
+            var expPlayer = player;
+            var expConfig = new GameConfig();
 
             //Act
             var actual = new Room(player);
 
             //Assert
             Assert.AreEqual(1, actual.Players.Count, "one player in new room");
-            Assert.AreEqual(expected, actual.Players.First(), "the creator is first");
+            Assert.AreEqual(expPlayer, actual.Players.First(), "the creator is first");
             Assert.AreEqual(Player.State.Passive, player.CurrentState, "the creator is passive");
             Assert.AreEqual(1, actual.PassivePlayers.Count, "one passive player");
             Assert.AreEqual(0, actual.ActivePlayers.Count , "zero active players");
-            Assert.IsTrue(actual.PassivePlayers.Contains(expected), "the creator found in passive players collection at room");
-            Assert.AreEqual(null, actual.CurrentHand);
-            Assert.AreEqual(true, actual.IsSpactatorsAllowd);
-            Assert.AreEqual(false , actual.IsTableFull);
-            Assert.AreEqual( ,actual.)
+            Assert.IsTrue(actual.PassivePlayers.Contains(expPlayer), "the creator found in passive players collection at room");
+            Assert.AreEqual(null, actual.CurrentHand, "current hand null");
+            Assert.AreEqual(false , actual.IsTableFull, "table not full");
+
+            // 8 Configurations of game-config
+            Assert.AreEqual(expConfig.BuyInCost, actual.BuyInCost, "default buy in");
+            Assert.AreEqual(true, actual.IsSpactatorsAllowd, "default spectators allowed");
+            Assert.AreEqual(expConfig.MaxNumberOfActivePlayers, actual.MaxNumberOfActivePlayers, "max active players default");
+            Assert.AreEqual(expConfig.MaxNumberOfPlayers, actual.MaxNumberOfPlayers, "default max players number");
+            Assert.AreEqual(expConfig.MinimumBet, actual.MinimumBet, "minimum bet default");
+            Assert.AreEqual(expConfig.MinNumberOfPlayers, actual.MinNumberOfPlayers, "min players default");
+            Assert.AreEqual(expConfig.Name, actual.Name, "default name");
+            // TODO: idan - add assert for default game preferences.
         }
 
         [TestMethod()]
