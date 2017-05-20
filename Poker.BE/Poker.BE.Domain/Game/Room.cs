@@ -38,22 +38,32 @@ namespace Poker.BE.Domain.Game
         {
             get
             {
-                return activeAndPassivePlayers.Where(
-                    player => (player.CurrentState == Player.State.ActiveUnfolded | player.CurrentState == Player.State.ActiveFolded))
-                    .ToList();
+                // TODO clean this comment code
+                //return activeAndPassivePlayers.Where(
+                //    player => (player.CurrentState == Player.State.ActiveUnfolded | player.CurrentState == Player.State.ActiveFolded))
+                //    .ToList();
+
+                var result = from player in activeAndPassivePlayers
+                             where player.CurrentState != Player.State.Passive
+                             select player;
+
+                return result.ToList();
+
             }
         }
         public ICollection<Player> PassivePlayers
         {
             get
             {
-                return activeAndPassivePlayers.Where(
-                    player => (player.CurrentState == Player.State.ActiveUnfolded | player.CurrentState == Player.State.ActiveFolded))
-                    .ToList();
+                var result = from player in activeAndPassivePlayers
+                             where player.CurrentState == Player.State.Passive
+                             select player;
+
+                return result.ToList();
             }
         }
         public ICollection<Player> Players { get { return activeAndPassivePlayers; } }
-        public bool IsSpactatorsAllowd { get; }
+        public bool IsSpactatorsAllowd { get; private set; }
         public int MaxNumberOfPlayers { get; private set; }
         public int MinNumberOfPlayers { get; private set; }
         public int MaxNumberOfActivePlayers
@@ -73,6 +83,7 @@ namespace Poker.BE.Domain.Game
                 return ActivePlayers.Count == MaxNumberOfActivePlayers;
             }
         }
+        public double BuyInCost { get; private set; }
 
         #endregion
 
@@ -90,10 +101,8 @@ namespace Poker.BE.Domain.Game
 
             CurrentHand = null;
 
-            // Note: making default preferences to the room (poker game)
-            Preferences = new GamePreferences();
-
-            Name = "Unknown Room";
+            // Note: default configuration
+            Configure(new GameConfig());
 
         }
 
@@ -120,11 +129,34 @@ namespace Poker.BE.Domain.Game
 
         public Room(Player creator, GameConfig config) : this(creator, config.GamePrefrences)
         {
+            Configure(config);
+        }
+
+        #endregion
+
+        #region Private Functions
+
+        private void Configure(GameConfig config)
+        {
+            /*Note: 8 configurations */
             IsSpactatorsAllowd = config.IsSpactatorsAllowed;
             MaxNumberOfPlayers = config.MaxNumberOfPlayers;
+            MaxNumberOfActivePlayers = config.MaxNumberOfActivePlayers;
             MinNumberOfPlayers = config.MinNumberOfPlayers;
             MinimumBet = config.MinimumBet;
+            BuyInCost = config.BuyInCost;
             Name = config.Name;
+            Preferences = config.GamePrefrences;
+        }
+
+        private void TakeAChair(int index)
+        {
+            chairs[index].Take();
+        }
+
+        private void ReleaseAChair(int index)
+        {
+            chairs[index].Release();
         }
 
         #endregion
@@ -190,20 +222,6 @@ namespace Poker.BE.Domain.Game
             //TODO: 'UC006: Send Message to Room’s Chat' - for the ones that doing that
         }
         #endregion
-
-        #region Private Functions
-        private void TakeAChair(int index)
-        {
-            chairs[index].Take();
-        }
-
-        private void ReleaseAChair(int index)
-        {
-            chairs[index].Release();
-        }
-
-        #endregion
-
 
     }//class
 }

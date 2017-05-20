@@ -110,5 +110,23 @@ namespace Poker.BE.Domain.Game
         public string Name { get; set; }
 
         #endregion
+
+        #region Constructors
+        /// <summary>
+        /// default configuration
+        /// </summary>
+        public GameConfig()
+        {
+            BuyInCost = 50.0;
+            GamePrefrences = new GamePreferences();
+            IsSpactatorsAllowed = true;
+            MaxNumberOfActivePlayers = 10;
+            MaxNumberOfPlayers = 15;
+            MinNumberOfPlayers = 2;
+            MinimumBet = 5.0;
+            Name = "Unknown Room";
+        }
+        #endregion
+
     }
 }
