@@ -21,7 +21,7 @@ namespace Poker.BE.Domain.Security
 			UsersDictionary = new Dictionary<string, User>();
 		}
 
-		public bool AddUser(string userName, string password, double sumToDeposit)
+		public User AddUser(string userName, string password, double sumToDeposit)
 		{
 			if (CheckExistingUser(userName))
 				throw new UserNameTakenException();
@@ -31,7 +31,7 @@ namespace Poker.BE.Domain.Security
 				throw new InvalidDepositException();
 			User UserToAdd = new User(userName, password, sumToDeposit);
 			UsersDictionary.Add(userName, UserToAdd);
-			return true;
+			return UserToAdd;
 		}
 
 		protected bool RemoveUser(string userName)

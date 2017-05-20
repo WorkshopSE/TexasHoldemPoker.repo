@@ -17,7 +17,21 @@ namespace Poker.BE.Service.Services
 		public UserManager Manager { get; set; }
 		public LoginResult Login(LoginRequest request)
 		{
-			var result = default(LoginResult);
+			var result = new LoginResult();
+			try
+			{
+				result.User = Manager.LogIn(request.UserName, request.Password).GetHashCode();
+			}
+			catch(UserNotFoundException e)
+			{
+				result.Success = false;
+				result.ErrorMessage = e.Message;
+			}
+			catch(IncorrectPasswordException e)
+			{
+				result.Success = false;
+				result.ErrorMessage = e.Message;
+			}
 			return result;
 		}
 		public LogoutResult Logout(LogoutRequest request)
