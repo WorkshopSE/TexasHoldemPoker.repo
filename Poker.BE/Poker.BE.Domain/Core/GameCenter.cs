@@ -16,7 +16,6 @@ namespace Poker.BE.Domain.Core
     /// </remarks>
     public sealed class GameCenter
     {
-        // UNDONE: Make the GameCenter a Singleton!
         #region Constants
         public enum Move
         {
@@ -185,25 +184,25 @@ namespace Poker.BE.Domain.Core
         /// <see cref="https://docs.google.com/document/d/1OTee6BGDWK2usL53jdoeBOI-1Jh8wyNejbQ0ZroUhcA/edit#heading=h.tvbd8487o8xd"/>
         public ICollection<Room> FindRoomsByCriteria(int level)
         {
-            // TODO
+            // TODO: idan
             throw new NotImplementedException();
         }
 
         public ICollection<Room> FindRoomsByCriteria(Player player)
         {
-            // TODO
+            // TODO: idan
             throw new NotImplementedException();
         }
 
         public ICollection<Room> FindRoomsByCriteria(GamePreferences preferences)
         {
-            // TODO
+            // TODO: idan
             throw new NotImplementedException();
         }
 
         public ICollection<Room> FindRoomsByCriteria(double betSize)
         {
-            // TODO
+            // TODO: idan
             throw new NotImplementedException();
         }
         #endregion

@@ -20,8 +20,6 @@ namespace Poker.BE.API
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
-
-            // UNDONE: idan - add JSON filter here
         }
     }
 }

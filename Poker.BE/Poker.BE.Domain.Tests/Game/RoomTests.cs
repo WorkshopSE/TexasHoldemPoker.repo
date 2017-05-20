@@ -15,11 +15,13 @@ namespace Poker.BE.Domain.Game.Tests
         #region Setup
         public TestContext TestContext { get; set; }
         private Room room;
+        private Player roomCreator;
 
         [TestInitialize]
         public void Before()
         {
-            room = new Room();
+            roomCreator = new Player();
+            room = new Room(roomCreator);
         }
 
         [TestCleanup]
@@ -56,9 +58,12 @@ namespace Poker.BE.Domain.Game.Tests
             var actual = new Room(player);
 
             //Assert
-            Assert.IsTrue(actual.Players.Count == 1);
-            Assert.AreEqual(expected, actual.Players.First());
-            Assert.IsTrue(actual.PassivePlayers.Contains(expected));
+            Assert.AreEqual(1, actual.Players.Count, "one player in new room");
+            Assert.AreEqual(expected, actual.Players.First(), "the creator is first");
+            Assert.AreEqual(Player.State.Passive, player.CurrentState, "the creator is passive");
+
+            //fixme - idan - continue from here - fix passive players collection at Room
+            Assert.IsTrue(actual.PassivePlayers.Contains(expected), "the creator found in passive players collection at room");
         }
 
         [TestMethod()]
@@ -66,21 +71,31 @@ namespace Poker.BE.Domain.Game.Tests
         {
             //Arrange
             var player = new Player();
+            const string expName = "test room 3";
+            const double expBuyinCost = 50.2;
+            GamePreferences expGamePreferences = new GamePreferences();
+            const bool expIsSpecAllowed = false;
+            const int expNActive = 8;
+            const int expMaxNumberPlayers = 9;
+            const double expMinBet = 8.6;
+            const int expMinPlayers = 3;
             var confing = new GameConfig() {
-                BuyInCost = 50.2,
-                GamePrefrences = new GamePreferences(),
-                IsSpactatorsAllowed = false,
-                MaxNumberOfActivePlayers = 8,
-                MaxNumberOfPlayers = 9,
-                MinimumBet = 
+                BuyInCost = expBuyinCost,
+                GamePrefrences = expGamePreferences,
+                IsSpactatorsAllowed = expIsSpecAllowed,
+                MaxNumberOfActivePlayers = expNActive,
+                MaxNumberOfPlayers = expMaxNumberPlayers,
+                MinimumBet = expMinBet,
+                MinNumberOfPlayers = expMinPlayers,
+                Name = expName,
             };
-            var expected = ;
 
             //Act
-            var actual = 1;
+            var actual = new Room(player, confing);
 
             //Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expName, actual.Name);
+            Assert.AreEqual(expNActive, actual.MinNumberOfPlayers);
         }
 
         [TestMethod()]

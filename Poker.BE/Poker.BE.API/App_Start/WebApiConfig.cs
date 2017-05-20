@@ -11,7 +11,7 @@ namespace Poker.BE.API
         {
             // Web API configuration and services
 
-            //Setting the configuration for Json Formatting
+            // Setting the configuration for Json Formatting
             var jsonFormatter = config.Formatters.JsonFormatter;
             jsonFormatter.SerializerSettings.PreserveReferencesHandling = Newtonsoft.Json.PreserveReferencesHandling.Objects;
             config.Formatters.Remove(config.Formatters.XmlFormatter);
