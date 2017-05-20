@@ -1,5 +1,4 @@
 ﻿using Poker.BE.Domain.Utility.Exceptions;
-using System.IO;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -100,9 +99,9 @@ namespace Poker.BE.Domain.Game
                     {
                         //Check preconditions
                         if (LastRaise > 0 || TotalRaise > 0)
-                            throw new IOException("Can't bet if someone had bet before... use raise move");
+                            throw new GameRulesException("Can't bet if someone had bet before... use raise move");
                         if (TotalRaise + amountToBetOrCall == CurrentPlayer.Wallet.amountOfMoney + LiveBets[CurrentPlayer])
-                            throw new ArgumentOutOfRangeException("Can't bet all of your money... use all-in move");
+                            throw new WrongIOException("Can't use bet move for all of your money... use all-in move");
                         RaisePreconditions(amountToBetOrCall);
 
                         //Make bet
@@ -114,9 +113,9 @@ namespace Poker.BE.Domain.Game
                     {
                         //Check preconditions
                         if (LastRaise == 0)
-                            throw new IOException("Can't raise if no one had bet before... use bet move");
+                            throw new GameRulesException("Can't raise if no one had bet before... use bet move");
                         if (TotalRaise + amountToBetOrCall == CurrentPlayer.Wallet.amountOfMoney + LiveBets[CurrentPlayer])
-                            throw new ArgumentOutOfRangeException("Can't bet all of your money... use all-in move");
+                            throw new WrongIOException("Can't use raise move for all of your money... use all-in move");
                         RaisePreconditions(amountToBetOrCall);
 
                         //Make Raise
@@ -134,9 +133,9 @@ namespace Poker.BE.Domain.Game
                                 highestOtherAllIn = player.Wallet.amountOfMoney;
                         }
                         if (this.CurrentPlayer.Wallet.amountOfMoney > highestOtherAllIn)
-                            throw new IOException("all-in is bigger than the highest other player's all-in... use bet\raise move");
+                            throw new GameRulesException("all-in is bigger than the highest other player's all-in... use bet\raise move");
                         if (CurrentPlayer.Wallet.amountOfMoney == 0)
-                            throw new ArgumentException("You're already all-in!!");
+                            throw new WrongIOException("You're already all-in!!");
 
                         //Make all-in
                         if (this.CurrentPlayer.Wallet.amountOfMoney + LiveBets[currentPlayer] <= TotalRaise)
@@ -145,7 +144,7 @@ namespace Poker.BE.Domain.Game
                         {
                             Call(0);
                             if (LiveBets[currentPlayer] != totalRaise)
-                                throw new ArgumentException("Didn't call right!");
+                                throw new WrongIOException("Didn't call right!");
                             RaisePreconditions(this.CurrentPlayer.Wallet.amountOfMoney + LiveBets[CurrentPlayer] - TotalRaise);
                             Raise(this.CurrentPlayer.Wallet.amountOfMoney + LiveBets[CurrentPlayer] - TotalRaise);
 
@@ -159,7 +158,7 @@ namespace Poker.BE.Domain.Game
                 default:
                     {
                         //TODO: print invalid move exception
-                        throw new ArgumentException("Invalid Move");
+                        throw new GameRulesException("Invalid Move");
                     }
             }
             //Change Player
@@ -215,7 +214,7 @@ namespace Poker.BE.Domain.Game
             }
             
             if (amountToBetOrCall + playerCurrentBet > lastPartialPot.AmountToClaim)
-                throw new ArgumentException("Not enough partial pots were created! Somthing isn't right!");
+                throw new WrongIOException("Not enough partial pots were created! Somthing isn't right!");
             
             if (CurrentPlayer.Wallet.amountOfMoney == 0) //if call all-in move
             {
@@ -245,7 +244,7 @@ namespace Poker.BE.Domain.Game
         private void RaisePreconditions(int amountToRaise)
         {
             if (LastRaise > amountToRaise)
-                throw new ArgumentException("Can't raise less than last raise");
+                throw new GameRulesException("Can't raise less than last raise");
             int highestAllIn = 0;
             foreach (Player player in ActiveUnfoldedPlayers)    //find highest all-in at the table
             {
@@ -253,7 +252,7 @@ namespace Poker.BE.Domain.Game
                     highestAllIn = player.Wallet.amountOfMoney + LiveBets[player];
             }
             if (TotalRaise + amountToRaise > highestAllIn)
-                throw new ArgumentOutOfRangeException("Raise is bigger than the highest player's all-in");
+                throw new GameRulesException("Raise is bigger than the highest player's all-in");
         }
 
         private void Raise(int amountToRaise)

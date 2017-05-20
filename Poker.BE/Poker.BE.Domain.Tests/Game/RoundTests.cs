@@ -1,5 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.IO;
+using Poker.BE.Domain.Utility.Exceptions;
 using Poker.BE.Domain.Game;
 using System;
 using System.Collections.Generic;
@@ -50,7 +50,7 @@ namespace Poker.BE.Domain.Game.Tests
             {
                 round.PlayMove(Round.Move.raise, 20);
             }
-            catch(ArgumentException e)
+            catch(GameRulesException e)
             {
                 expectedException1 = e;
             }
@@ -74,7 +74,7 @@ namespace Poker.BE.Domain.Game.Tests
             {
                 round.PlayMove(Round.Move.allin, 0);
             }
-            catch (IOException e)
+            catch (GameRulesException e)
             {
                 expectedException2 = e;
             }
