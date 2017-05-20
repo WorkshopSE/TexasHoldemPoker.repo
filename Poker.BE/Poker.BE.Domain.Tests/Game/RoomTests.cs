@@ -1,5 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Poker.BE.Domain.Game;
+using Poker.BE.Domain.Utility.Exceptions;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -230,31 +232,46 @@ namespace Poker.BE.Domain.Game.Tests
         }
 
         [TestMethod()]
-        public void StartNewHandTest()
-        {
-            // TODO
-            throw new NotImplementedException();
-        }
-
-        [TestMethod()]
         public void TakeChairTest()
         {
-            // TODO
-            throw new NotImplementedException();
+            //Arrange
+            var expPlayer = new Player();
+
+            //Act
+            var actual1 = room.TakeChair(expPlayer, 2);
+            var actTable = room.TableLocationOfActivePlayers.Count;
+            var actual2 = room.TakeChair(roomCreator, 9);
+            
+            //Assert
+            Assert.AreEqual(false, actual1);
+            Assert.AreEqual(0, actTable);
+            Assert.AreEqual(false, room.Chairs.ElementAt(2).IsBusy);
+
+            Assert.AreEqual(true, actual2);
+            Assert.AreEqual(1, room.TableLocationOfActivePlayers.Count);
+            Assert.AreEqual(roomCreator, room.TableLocationOfActivePlayers[room.Chairs.ElementAt(9)]);
+            Assert.AreEqual(true, room.Chairs.ElementAt(9).IsBusy);
         }
 
         [TestMethod()]
         public void LeaveChairTest()
         {
-            // TODO
-            throw new NotImplementedException();
+            //Arrange
+
+            //Act
+            room.TakeChair(roomCreator, 3);
+            var actual1 = room.TableLocationOfActivePlayers.Count;
+            var actChair = room.Chairs.ElementAt(3).IsBusy;
+            room.LeaveChair(roomCreator);
+            var actual2 = room.TableLocationOfActivePlayers.Count;
+            var actChair2 = room.Chairs.ElementAt(3).IsBusy;
+
+            //Assert
+            Assert.AreEqual(1, actual1);
+            Assert.AreEqual(0, actual2);
+            Assert.AreEqual(true, actChair);
+            Assert.AreEqual(false, actChair2);
         }
 
-        [TestMethod()]
-        public void SendMessageTest()
-        {
-            // TODO
-            throw new NotImplementedException();
-        }
-    }
+    } // class
 }

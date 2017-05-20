@@ -71,6 +71,7 @@
     <Compile Include="Security\UserManager.cs" />
     <Compile Include="Utility\Exceptions\NotPlayersTurnException.cs" />
     <Compile Include="Utility\Exceptions\PlayerModeException.cs" />
+    <Compile Include="Utility\Exceptions\PlayerNotFoundException.cs" />
     <Compile Include="Utility\Exceptions\PokerException.cs" />
     <Compile Include="Utility\Exceptions\RoomNotFoundException.cs" />
     <Compile Include="Utility\Exceptions\RoomRulesException.cs" />

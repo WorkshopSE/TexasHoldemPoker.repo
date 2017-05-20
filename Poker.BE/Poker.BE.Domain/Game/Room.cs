@@ -63,6 +63,7 @@ namespace Poker.BE.Domain.Game
             }
         }
         public ICollection<Player> Players { get { return activeAndPassivePlayers; } }
+        public IDictionary<Chair, Player> TableLocationOfActivePlayers { get; private set; }
 
         #region GameConfig Properties (8)
         public GamePreferences Preferences
@@ -129,15 +130,17 @@ namespace Poker.BE.Domain.Game
         private Room()
         {
             activeAndPassivePlayers = new List<Player>();
+
             deck = new Deck();
             chairs = new Chair[NCHAIRS_IN_ROOM];
 
             for (int i = 0; i < NCHAIRS_IN_ROOM; i++)
             {
-                Chairs.ToArray()[i] = new Chair(i);
+                chairs[i] = new Chair(i);
             }
 
             CurrentHand = null;
+            TableLocationOfActivePlayers = new Dictionary<Chair, Player>();
 
             // Note: default configuration
             config = new GameConfig();
@@ -168,20 +171,6 @@ namespace Poker.BE.Domain.Game
         {
             /*Note: 8 configurations */
             this.config = config;
-        }
-
-        #endregion
-
-        #region Private Functions
-
-        private void TakeAChair(int index)
-        {
-            chairs[index].Take();
-        }
-
-        private void ReleaseAChair(int index)
-        {
-            chairs[index].Release();
         }
 
         #endregion
@@ -236,14 +225,32 @@ namespace Poker.BE.Domain.Game
 
         public bool TakeChair(Player player, int index)
         {
-            // TODO
-            throw new NotImplementedException();
+            var result = PassivePlayers.Where(item => item == player);
+            if (result.Count() != 1 || !chairs[index].Take())
+            {
+                return false;
+            }
+
+            // register player location at the table.
+            TableLocationOfActivePlayers.Add(chairs[index], player);
+
+            return true;
         }
 
-        public bool LeaveChair(Player player)
+        public void LeaveChair(Player player)
         {
-            // TODO
-            throw new NotImplementedException();
+            if (TableLocationOfActivePlayers.Values.Contains(player))
+            {
+                foreach (var chair in TableLocationOfActivePlayers.Keys)
+                {
+                    if(TableLocationOfActivePlayers[chair] == player)
+                    {
+                        TableLocationOfActivePlayers.Remove(chair);
+                        chair.Release();
+                        return;
+                    }
+                }
+            }
         }
 
         public void SendMessage()

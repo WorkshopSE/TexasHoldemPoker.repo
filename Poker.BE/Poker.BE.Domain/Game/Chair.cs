@@ -15,6 +15,10 @@ namespace Poker.BE.Domain.Game
         private bool isBusy;
         #endregion
 
+        #region Properties
+        public bool IsBusy { get { return isBusy; } }
+        #endregion
+
         #region Constructors
         public Chair(int index)
         {
