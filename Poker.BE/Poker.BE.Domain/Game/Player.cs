@@ -37,7 +37,12 @@ namespace Poker.BE.Domain.Game
             CurrentState = State.Passive;
             _wallet = new Wallet();
             Wallet = 0.0;
+            Nickname = "";
         }
+
+        #endregion
+
+        #region Methods
 
         public bool JoinToTable(double buyIn)
         {
@@ -52,6 +57,7 @@ namespace Poker.BE.Domain.Game
             CurrentState = State.ActiveUnfolded;
             return true;
         }
+        
         /// <summary>
         /// Make the player to leave the table, and return his remaining wallet money to the user bank
         /// </summary>
@@ -70,6 +76,37 @@ namespace Poker.BE.Domain.Game
 
             CurrentState = State.Passive;
             return Wallet;
+        }
+
+        // override object.Equals
+        public override bool Equals(object obj)
+        {
+            //       
+            // See the full list of guidelines at
+            //   http://go.microsoft.com/fwlink/?LinkID=85237  
+            // and also the guidance for operator== at
+            //   http://go.microsoft.com/fwlink/?LinkId=85238
+            //
+
+            if (obj == null || GetType() != obj.GetType())
+            {
+                return false;
+            }
+
+            var other = obj as Player;
+            return 
+                other != null 
+                && CurrentState == other.CurrentState
+                && Nickname.Equals(other.Nickname)
+                //&& this.PrivateCards.Equals(other.PrivateCards) //TODO override card.equals
+                && Wallet.Equals(other.Wallet)
+                ;
+        }
+
+        // override object.GetHashCode
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
         }
 
         #endregion

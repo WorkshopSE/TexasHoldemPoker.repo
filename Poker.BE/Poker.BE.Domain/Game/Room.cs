@@ -205,17 +205,21 @@ namespace Poker.BE.Domain.Game
 
         public void RemovePlayer(Player player)
         {
-            // TODO
-            throw new NotImplementedException();
+            activeAndPassivePlayers.Remove(player);
         }
 
         /// <summary>
         /// Method as a destructor - delete all players and other resources from the room.
         /// </summary>
+        /// <remarks>
+        /// this function used be gameCenter do delete the room.
+        /// All players and other resources of room need to be deleted.
+        /// </remarks>
         public void ClearAll()
         {
-            //TODO: this function used be gameCenter do delete the room. all players and other resources of room need to be deleted.
-            throw new NotImplementedException();
+            this.activeAndPassivePlayers.Clear();
+            this.CurrentHand = null;
+            this.Name = new GameConfig().Name;
         }
 
         public Player CreatePlayer()

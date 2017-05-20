@@ -183,22 +183,50 @@ namespace Poker.BE.Domain.Game.Tests
         [TestMethod()]
         public void RemovePlayerTest()
         {
-            // TODO
-            throw new NotImplementedException();
+            //Arrange
+            var expected = room.Players.First();
+
+            //Act
+            var actual = room;
+            room.RemovePlayer(expected);
+
+            //Assert
+            Assert.IsFalse(actual.Players.Contains(expected));
+            Assert.IsFalse(actual.PassivePlayers.Contains(expected));
+            Assert.IsFalse(actual.ActivePlayers.Contains(expected));
         }
 
         [TestMethod()]
         public void ClearAllTest()
         {
-            // TODO
-            throw new NotImplementedException();
+            //Arrange
+
+            //Act
+            room.ClearAll();
+            var actual = room;
+
+            //Assert
+            Assert.AreEqual(0, actual.ActivePlayers.Count);
+            Assert.AreEqual(0, actual.PassivePlayers.Count);
+            Assert.AreEqual(0, actual.Players.Count);
+            //Assert.AreEqual(0, actual.Preferences); // TODO
+            Assert.AreEqual(false, actual.IsTableFull);
+            Assert.AreEqual(null, actual.CurrentHand);
+            Assert.IsNotNull(actual.Name);
+
         }
 
         [TestMethod()]
         public void CreatePlayerTest()
         {
-            // TODO
-            throw new NotImplementedException();
+            //Arrange
+            var expected = new Player();
+
+            //Act
+            var actual = room.CreatePlayer();
+
+            //Assert
+            Assert.AreEqual(expected, actual);
         }
 
         [TestMethod()]
