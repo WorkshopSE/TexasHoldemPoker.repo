@@ -10,8 +10,8 @@ using System.Web.Http;
 
 namespace Poker.BE.API.Controllers
 {
-    public class AuthenticationController : ApiController
-    {
+	public class AuthenticationController : ApiController
+	{
 		#region Fields
 		private IAuthenticationService service;
 		#endregion
@@ -66,6 +66,7 @@ namespace Poker.BE.API.Controllers
 			catch (Exception e)
 			{
 				result.ErrorMessage = e.Message;
+				return Request.CreateErrorResponse(HttpStatusCode.InternalServerError);
 			}
 
 			return Request.CreateResponse(HttpStatusCode.OK, result);

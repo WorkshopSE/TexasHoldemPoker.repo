@@ -15,15 +15,15 @@ namespace Poker.BE.Domain.Utility.Exceptions
 		}
 
 		public HandNotOverException(string message) : base(message)
-        {
+		{
 		}
 
 		public HandNotOverException(string message, Exception innerException) : base(message, innerException)
-        {
+		{
 		}
 
 		protected HandNotOverException(SerializationInfo info, StreamingContext context) : base(info, context)
-        {
+		{
 		}
 	}
 }
