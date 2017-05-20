@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace Poker.BE.Domain.Utility.Exceptions
 {
 	[Serializable]
-	class InvalidDepositException : PokerException
+	public class InvalidDepositException : PokerException
 	{
 		public InvalidDepositException()
 		{

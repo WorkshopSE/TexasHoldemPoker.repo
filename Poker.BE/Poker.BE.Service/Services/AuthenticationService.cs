@@ -8,11 +8,12 @@ using Poker.BE.Service.Modules.Requests;
 using Poker.BE.Domain.Core;
 using Poker.BE.Domain.Utility.Exceptions;
 using Poker.BE.Domain.Security;
+using Poker.BE.Domain.Utility.Logger;
 
 namespace Poker.BE.Service.Services
 {
-    public class AuthenticationService : IServices.IAuthenticationService
-    {
+	public class AuthenticationService : IServices.IAuthenticationService
+	{
 		public UserManager Manager { get; set; }
 		public LoginResult Login(LoginRequest request)
 		{
@@ -27,11 +28,26 @@ namespace Poker.BE.Service.Services
 
 		public SignUpResult SignUp(SignUpRequest request)
 		{
-			var result = default(SignUpResult);
-			result = new SignUpResult()
+			var result = new SignUpResult();
+			try
 			{
-				User = Manager.LogIn(request.UserName, request.Password).GetHashCode(),
-			};
+				result.User = Manager.AddUser(request.UserName, request.Password, request.Deposit).GetHashCode();
+			}
+			catch (UserNameTakenException e)
+			{
+				result.Success = false;
+				result.ErrorMessage = e.Message;
+			}
+			catch (IncorrectPasswordException e)
+			{
+				result.Success = false;
+				result.ErrorMessage = e.Message;
+			}
+			catch (InvalidDepositException e)
+			{
+				result.Success = false;
+				result.ErrorMessage = e.Message;
+			}
 			return result;
 		}
 	}
