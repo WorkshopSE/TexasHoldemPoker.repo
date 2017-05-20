@@ -79,6 +79,8 @@ namespace Poker.BE.Domain.Security
 
 		public bool LogOut(User userToLogout)
 		{
+			if (!CheckExistingUser(userToLogout.UserName)) // We check that the user is existing in our DB
+				throw new UserNotFoundException();
 			userToLogout.Disconnect();
 			return true;
 		}
