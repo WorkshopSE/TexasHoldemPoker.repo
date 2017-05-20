@@ -166,29 +166,13 @@ namespace Poker.BE.Domain.Game
 
         public Room(Player creator, GameConfig config) : this(creator, config.Preferences)
         {
-            Configure(config);
+            /*Note: 8 configurations */
+            this.config = config;
         }
 
         #endregion
 
         #region Private Functions
-
-        private void Configure(GameConfig config)
-        {
-
-            /*Note: 8 configurations */
-            config = new GameConfig()
-            {
-                IsSpactatorsAllowed = config.IsSpactatorsAllowed,
-                MaxNumberOfPlayers = config.MaxNumberOfPlayers,
-                MaxNumberOfActivePlayers = config.MaxNumberOfActivePlayers,
-                MinNumberOfPlayers = config.MinNumberOfPlayers,
-                MinimumBet = config.MinimumBet,
-                BuyInCost = config.BuyInCost,
-                Name = config.Name,
-                Preferences = config.Preferences,
-            };
-        }
 
         private void TakeAChair(int index)
         {

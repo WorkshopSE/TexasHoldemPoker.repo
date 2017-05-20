@@ -104,13 +104,11 @@ namespace Poker.BE.Domain.Game
             // NOTE: adapt the set of buy in cost to the minimum bet
             set
             {
-                if (value < MinimumBet)
+                _buyInCost = value;
+
+                if (_buyInCost < MinimumBet)
                 {
-                    _minimumBet = _buyInCost = value;
-                }
-                else
-                {
-                    _buyInCost = value;
+                    _minimumBet = _buyInCost;
                 }
             }
         }
@@ -154,7 +152,7 @@ namespace Poker.BE.Domain.Game
         /// </summary>
         public GameConfig()
         {
-            BuyInCost = 50.0;
+            BuyInCost = 60.0;
             Preferences = new GamePreferences();
             IsSpactatorsAllowed = true;
             MaxNumberOfActivePlayers = 10;

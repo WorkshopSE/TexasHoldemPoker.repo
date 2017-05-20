@@ -100,7 +100,7 @@ namespace Poker.BE.Domain.Game.Tests
         public void RoomTest3() // (:Player, :GameConfig)
         {
             //Arrange
-
+            #region Arrange
             var expPlayer = new Player();
             const string expName = "test room 3";
             const bool expIsSpecAllowed = false;
@@ -117,10 +117,11 @@ namespace Poker.BE.Domain.Game.Tests
             double expBuyinCost = Math.Max(insertBuyinCost, insertMinBet);
             double expMinBet = Math.Min(insertMinBet, insertBuyinCost);
             int expNActive = expIsSpecAllowed ? insertNActive : insertMaxNumberPlayers;
-            int expMaxNumberPlayers = expIsSpecAllowed ? insertMaxNumberPlayers : insertNActive;
+            int expMaxNumberPlayers = insertMaxNumberPlayers;
 
 
-            var expConfig = new GameConfig() {
+            var expConfig = new GameConfig()
+            {
                 BuyInCost = insertBuyinCost,
                 Preferences = expGamePreferences,
                 IsSpactatorsAllowed = expIsSpecAllowed,
@@ -129,12 +130,14 @@ namespace Poker.BE.Domain.Game.Tests
                 MinimumBet = insertMinBet,
                 MinNumberOfPlayers = expMinPlayers,
                 Name = expName,
-            };
+            }; 
+            #endregion
 
             //Act
             var actual = new Room(expPlayer, expConfig);
 
             //Assert
+            #region Default asserts
             Assert.AreEqual(1, actual.Players.Count, "one player in new room");
             Assert.AreEqual(expPlayer, actual.Players.First(), "the creator is first");
             Assert.AreEqual(Player.State.Passive, expPlayer.CurrentState, "the creator is passive");
@@ -142,15 +145,23 @@ namespace Poker.BE.Domain.Game.Tests
             Assert.AreEqual(0, actual.ActivePlayers.Count, "zero active players");
             Assert.IsTrue(actual.PassivePlayers.Contains(expPlayer), "the creator found in passive players collection at room");
             Assert.AreEqual(null, actual.CurrentHand, "current hand null");
-            Assert.AreEqual(false, actual.IsTableFull, "table not full");
+            Assert.AreEqual(false, actual.IsTableFull, "table not full"); 
+            #endregion
 
             // 8 Configurations of game-config
-            Assert.AreEqual(expBuyinCost, actual.BuyInCost, "default buy in"); //fixme - idan
-            Assert.AreEqual(expIsSpecAllowed, actual.IsSpactatorsAllowed, "default spectators allowed");
-            Assert.AreEqual(expNActive, actual.MaxNumberOfActivePlayers, "max active players default");
-            Assert.AreEqual(expMaxNumberPlayers, actual.MaxNumberOfPlayers, "default max players number");
+            Assert.AreEqual<double>(expBuyinCost, actual.BuyInCost, "exp buy in");
+            Assert.AreEqual(expIsSpecAllowed, actual.IsSpactatorsAllowed, "exp spectators not allowed");
+            Assert.AreEqual(expNActive, actual.MaxNumberOfActivePlayers, "exp max active players");
+
+            Assert.AreEqual(expMaxNumberPlayers, actual.MaxNumberOfPlayers, "max players number");
+            Assert.IsTrue(!expIsSpecAllowed && actual.MaxNumberOfActivePlayers == actual.MaxNumberOfPlayers, "number of players without spectators");
+            Assert.IsFalse(actual.MaxNumberOfActivePlayers > actual.MaxNumberOfPlayers, "active players equal or less to all players at the room");
+
             Assert.AreEqual(expMinBet, actual.MinimumBet, "minimum bet default");
             Assert.AreEqual(expMinPlayers, actual.MinNumberOfPlayers, "min players default");
+            Assert.IsFalse(actual.MinimumBet > actual.BuyInCost, "minBet <= buyIn");
+
+            Assert.IsNotNull(actual.Name, "name not null");
             Assert.AreEqual(expName, actual.Name, "default name");
             // TODO: idan - add assert for default game preferences.
         }
