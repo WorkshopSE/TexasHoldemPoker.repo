@@ -27,13 +27,17 @@ namespace Poker.BE.Domain.Game
         #endregion
 
         #region Constructors
-        public Pot(Pot basePot)
+        public Pot()
         {
             this.value = 0;
             this.amountToClaim = 0;
             this.playersClaimPot = new List<Player>();
-            this.basePot = basePot;
             this.partialPot = null;
+        }
+
+        public Pot(Pot basePot) : this()
+        {
+            this.basePot = basePot;
         }
         #endregion
 
