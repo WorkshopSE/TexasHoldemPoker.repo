@@ -6,12 +6,16 @@ namespace Poker.BE.Domain.Game
 {
     public class GameConfig
     {
+
         #region Fields
+        private int _maxNumberOfActivePlayers;
+        private int _maxNumberOfPlayers;
         private bool _isSpactatorsAllowed;
         private int _minNumberOfPlayers;
-        private int _maxNumberOfPlayers;
         private double _buyInCost;
         private double _minimumBet;
+        private string _name;
+        private GamePreferences _preferences;
         #endregion
 
         #region Properties
@@ -19,7 +23,11 @@ namespace Poker.BE.Domain.Game
         /// <summary>
         /// Choose between 3 game modes: “Limit Hold’em”, “No-Limit Hold’em” and “Pot Limit Hold’em”. when ‘Limit Hold’em’ is chosen the user is requested to enter a max bet limit.
         /// </summary>
-        public GamePreferences GamePrefrences { get; set; }
+        public GamePreferences Preferences
+        {
+            get { return _preferences; }
+            set { _preferences = value; }
+        }
 
         /// <summary>
         /// choose whether spectating a game is allowed or not.
@@ -29,13 +37,11 @@ namespace Poker.BE.Domain.Game
             get { return _isSpactatorsAllowed; }
             set
             {
-                // when spectator not allowed, enforce it on max number of players
-                if (!value & MaxNumberOfPlayers > MaxNumberOfActivePlayers)
-                {
-                    _maxNumberOfPlayers = MaxNumberOfActivePlayers;
-                }
-
                 _isSpactatorsAllowed = value;
+
+                // refresh the depended properties
+                MaxNumberOfPlayers = _maxNumberOfPlayers;
+                MaxNumberOfActivePlayers = _maxNumberOfActivePlayers;
             }
         }
 
@@ -45,8 +51,11 @@ namespace Poker.BE.Domain.Game
         public int MinNumberOfPlayers
         {
             get { return _minNumberOfPlayers; }
-            // enforce min >= 2
-            set { _minNumberOfPlayers = (value < 2) ? 2 : value; }
+            set
+            {
+                //enforce min >= 2
+                _minNumberOfPlayers = (value < 2) ? 2 : value;
+            }
         }
 
         /// <summary>
@@ -57,17 +66,32 @@ namespace Poker.BE.Domain.Game
             get { return _maxNumberOfPlayers; }
             set
             {
-                // enforce max number of players when spectators not allowed.
-                _maxNumberOfPlayers =
-                    (!IsSpactatorsAllowed & value > MaxNumberOfActivePlayers) ?
-                    MaxNumberOfActivePlayers : value;
+                _maxNumberOfPlayers = (value < _maxNumberOfActivePlayers) ? _maxNumberOfActivePlayers : value;
+                if (!_isSpactatorsAllowed)
+                {
+                    _maxNumberOfActivePlayers = _maxNumberOfPlayers;
+                }
             }
         }
 
         /// <summary>
         /// choose the max amount of players in the table (active players)
         /// </summary>
-        public int MaxNumberOfActivePlayers { get; set; }
+        public int MaxNumberOfActivePlayers
+        {
+            get { return _maxNumberOfActivePlayers; }
+            set
+            {
+                // enforce number of active players < number of chairs.
+                _maxNumberOfActivePlayers = (value > Room.NCHAIRS_IN_ROOM) ? Room.NCHAIRS_IN_ROOM : value;
+
+                // enforce max number of players when spectators not allowed.
+                _maxNumberOfPlayers =
+                    (!IsSpactatorsAllowed & value > MaxNumberOfActivePlayers) ?
+                    MaxNumberOfActivePlayers : value;
+            }
+
+        }
 
         /// <summary>
         /// choose the cost of joining the game.
@@ -116,7 +140,11 @@ namespace Poker.BE.Domain.Game
         /// <summary>
         /// the room name - set by the user.
         /// </summary>
-        public string Name { get; set; }
+        public string Name
+        {
+            get { return _name; }
+            set { _name = value ?? ""; }
+        }
 
         #endregion
 
@@ -127,7 +155,7 @@ namespace Poker.BE.Domain.Game
         public GameConfig()
         {
             BuyInCost = 50.0;
-            GamePrefrences = new GamePreferences();
+            Preferences = new GamePreferences();
             IsSpactatorsAllowed = true;
             MaxNumberOfActivePlayers = 10;
             MaxNumberOfPlayers = 15;
@@ -166,6 +194,11 @@ namespace Poker.BE.Domain.Game
                 this.MinimumBet == other.MinimumBet &&
                 this.Name.Equals(other.Name) &&
                 this.MinNumberOfPlayers == other.MinNumberOfPlayers;
+        }
+
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
         }
 
         #endregion

@@ -24,17 +24,16 @@ namespace Poker.BE.Domain.Game
         private ICollection<Player> activeAndPassivePlayers;
         private Deck deck;
         private Chair[] chairs;
-        private int _maxNumberOfActivePlayers;
+        private GameConfig config;
+
         #endregion
 
         #region Properties
         // TODO: do we need ID for the Room? if so, what type should it be? 'long?' means nullable long.
         //public long? ID { get; }
 
-        public string Name { get; set; }
         public ICollection<Chair> Chairs { get { return chairs; } }
         public Hand CurrentHand { get; private set; }
-        public GamePreferences Preferences { get; set; }
         public ICollection<Player> ActivePlayers
         {
             get
@@ -64,19 +63,57 @@ namespace Poker.BE.Domain.Game
             }
         }
         public ICollection<Player> Players { get { return activeAndPassivePlayers; } }
-        public bool IsSpactatorsAllowd { get; private set; }
-        public int MaxNumberOfPlayers { get; private set; }
-        public int MinNumberOfPlayers { get; private set; }
+
+        #region GameConfig Properties (8)
+        public GamePreferences Preferences
+        {
+            get { return config.Preferences; }
+            set { config.Preferences = value; }
+        }
+
+        public string Name
+        {
+            get { return config.Name; }
+            set { config.Name = value; }
+        }
+
+        public bool IsSpactatorsAllowed
+        {
+            get { return config.IsSpactatorsAllowed; }
+            set { config.IsSpactatorsAllowed = value; }
+        }
+
+        public int MaxNumberOfPlayers
+        {
+            get { return config.MaxNumberOfPlayers; }
+            set { config.MaxNumberOfPlayers = value; }
+        }
+
+        public int MinNumberOfPlayers
+        {
+            get { return config.MinNumberOfPlayers; }
+            set { config.MinNumberOfPlayers = value; }
+        }
+
         public int MaxNumberOfActivePlayers
         {
-            get { return _maxNumberOfActivePlayers; }
-            private set
-            {
-                // enforce number of active players < number of chairs.
-                _maxNumberOfActivePlayers = (value > NCHAIRS_IN_ROOM) ? NCHAIRS_IN_ROOM : value;
-            }
+            get { return config.MaxNumberOfActivePlayers; }
+            set { config.MaxNumberOfActivePlayers = value; }
         }
-        public double MinimumBet { get; private set; }
+
+        public double MinimumBet
+        {
+            get { return config.MinimumBet; }
+            set { config.MinimumBet = value; }
+        }
+
+        public double BuyInCost
+        {
+            get { return config.BuyInCost; }
+            set { config.BuyInCost = value; }
+        }
+        #endregion
+
         public bool IsTableFull
         {
             get
@@ -84,7 +121,7 @@ namespace Poker.BE.Domain.Game
                 return ActivePlayers.Count == MaxNumberOfActivePlayers;
             }
         }
-        public double BuyInCost { get; private set; }
+
 
         #endregion
 
@@ -103,8 +140,7 @@ namespace Poker.BE.Domain.Game
             CurrentHand = null;
 
             // Note: default configuration
-            Configure(new GameConfig());
-
+            config = new GameConfig();
         }
 
         /// <summary>
@@ -128,7 +164,7 @@ namespace Poker.BE.Domain.Game
             Preferences = preferences;
         }
 
-        public Room(Player creator, GameConfig config) : this(creator, config.GamePrefrences)
+        public Room(Player creator, GameConfig config) : this(creator, config.Preferences)
         {
             Configure(config);
         }
@@ -139,15 +175,19 @@ namespace Poker.BE.Domain.Game
 
         private void Configure(GameConfig config)
         {
+
             /*Note: 8 configurations */
-            IsSpactatorsAllowd = config.IsSpactatorsAllowed;
-            MaxNumberOfPlayers = config.MaxNumberOfPlayers;
-            MaxNumberOfActivePlayers = config.MaxNumberOfActivePlayers;
-            MinNumberOfPlayers = config.MinNumberOfPlayers;
-            MinimumBet = config.MinimumBet;
-            BuyInCost = config.BuyInCost;
-            Name = config.Name;
-            Preferences = config.GamePrefrences;
+            config = new GameConfig()
+            {
+                IsSpactatorsAllowed = config.IsSpactatorsAllowed,
+                MaxNumberOfPlayers = config.MaxNumberOfPlayers,
+                MaxNumberOfActivePlayers = config.MaxNumberOfActivePlayers,
+                MinNumberOfPlayers = config.MinNumberOfPlayers,
+                MinimumBet = config.MinimumBet,
+                BuyInCost = config.BuyInCost,
+                Name = config.Name,
+                Preferences = config.Preferences,
+            };
         }
 
         private void TakeAChair(int index)

@@ -54,7 +54,7 @@ namespace Poker.BE.Domain.Game.Tests
 
             // 8 Configurations of game-config
             Assert.AreEqual(expConfig.BuyInCost, actual.BuyInCost, "default buy in");
-            Assert.AreEqual(true, actual.IsSpactatorsAllowd, "default spectators allowed");
+            Assert.AreEqual(true, actual.IsSpactatorsAllowed, "default spectators allowed");
             Assert.AreEqual(expConfig.MaxNumberOfActivePlayers, actual.MaxNumberOfActivePlayers, "max active players default");
             Assert.AreEqual(expConfig.MaxNumberOfPlayers, actual.MaxNumberOfPlayers, "default max players number");
             Assert.AreEqual(expConfig.MinimumBet, actual.MinimumBet, "minimum bet default");
@@ -87,7 +87,7 @@ namespace Poker.BE.Domain.Game.Tests
 
             // 8 Configurations of game-config
             Assert.AreEqual(expConfig.BuyInCost, actual.BuyInCost, "default buy in");
-            Assert.AreEqual(true, actual.IsSpactatorsAllowd, "default spectators allowed");
+            Assert.AreEqual(true, actual.IsSpactatorsAllowed, "default spectators allowed");
             Assert.AreEqual(expConfig.MaxNumberOfActivePlayers, actual.MaxNumberOfActivePlayers, "max active players default");
             Assert.AreEqual(expConfig.MaxNumberOfPlayers, actual.MaxNumberOfPlayers, "default max players number");
             Assert.AreEqual(expConfig.MinimumBet, actual.MinimumBet, "minimum bet default");
@@ -113,15 +113,16 @@ namespace Poker.BE.Domain.Game.Tests
             const int insertMaxNumberPlayers = 9;
             const double insertMinBet = 8.6;
 
-            // expected results by the parameters // undone - idan continue from here.
+            // expected results by the parameters
             double expBuyinCost = Math.Max(insertBuyinCost, insertMinBet);
             double expMinBet = Math.Min(insertMinBet, insertBuyinCost);
             int expNActive = expIsSpecAllowed ? insertNActive : insertMaxNumberPlayers;
             int expMaxNumberPlayers = expIsSpecAllowed ? insertMaxNumberPlayers : insertNActive;
 
+
             var expConfig = new GameConfig() {
                 BuyInCost = insertBuyinCost,
-                GamePrefrences = expGamePreferences,
+                Preferences = expGamePreferences,
                 IsSpactatorsAllowed = expIsSpecAllowed,
                 MaxNumberOfActivePlayers = insertNActive,
                 MaxNumberOfPlayers = insertMaxNumberPlayers,
@@ -144,13 +145,13 @@ namespace Poker.BE.Domain.Game.Tests
             Assert.AreEqual(false, actual.IsTableFull, "table not full");
 
             // 8 Configurations of game-config
-            Assert.AreEqual(insertBuyinCost, actual.BuyInCost, "default buy in");
-            Assert.AreEqual(expIsSpecAllowed, actual.IsSpactatorsAllowd, "default spectators allowed");
-            Assert.AreEqual(expConfig.MaxNumberOfActivePlayers, actual.MaxNumberOfActivePlayers, "max active players default");
-            Assert.AreEqual(expConfig.MaxNumberOfPlayers, actual.MaxNumberOfPlayers, "default max players number");
-            Assert.AreEqual(expConfig.MinimumBet, actual.MinimumBet, "minimum bet default");
-            Assert.AreEqual(expConfig.MinNumberOfPlayers, actual.MinNumberOfPlayers, "min players default");
-            Assert.AreEqual(expConfig.Name, actual.Name, "default name");
+            Assert.AreEqual(expBuyinCost, actual.BuyInCost, "default buy in"); //fixme - idan
+            Assert.AreEqual(expIsSpecAllowed, actual.IsSpactatorsAllowed, "default spectators allowed");
+            Assert.AreEqual(expNActive, actual.MaxNumberOfActivePlayers, "max active players default");
+            Assert.AreEqual(expMaxNumberPlayers, actual.MaxNumberOfPlayers, "default max players number");
+            Assert.AreEqual(expMinBet, actual.MinimumBet, "minimum bet default");
+            Assert.AreEqual(expMinPlayers, actual.MinNumberOfPlayers, "min players default");
+            Assert.AreEqual(expName, actual.Name, "default name");
             // TODO: idan - add assert for default game preferences.
         }
 
