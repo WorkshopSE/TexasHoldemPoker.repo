@@ -12,43 +12,75 @@ namespace Poker.BE.Domain.Game.Tests
     public class RoomTests
     {
 
-        private TestContext testContext;
+        #region Setup
+        public TestContext TestContext { get; set; }
+        private Room room;
 
-        public TestContext TestContext { get { return testContext; } set { testContext = value; } }
+        [TestInitialize]
+        public void Before()
+        {
+            room = new Room();
+        }
+
+        [TestCleanup]
+        public void After()
+        {
+            room = null;
+        }
+        #endregion
 
         [TestMethod]
         public void RoomTest()// (:Player, :Preferences)
         {
             //Arrange
-            Player player = new Player();
-            GamePreferences preferences = new GamePreferences();
+            var player = new Player();
+            var preferences = new GamePreferences();
+            var expected = new Room(player, preferences);
+
 
             //Act
-            var result = new Room(player, preferences);
+            var actual = new Room(player, preferences);
 
             //Assert
-            TestContext.WriteLine("end of roomTest");
-        }
 
-        [TestMethod()]
-        public void RoomTest1() // ()
-        {
-            // TODO
-            throw new NotImplementedException();
         }
 
         [TestMethod()]
         public void RoomTest2() // (:Player)
         {
-            // TODO
-            throw new NotImplementedException();
+            //Arrange
+            var player = new Player();
+            var expected = player;
+
+            //Act
+            var actual = new Room(player);
+
+            //Assert
+            Assert.IsTrue(actual.Players.Count == 1);
+            Assert.AreEqual(expected, actual.Players.First());
+            Assert.IsTrue(actual.PassivePlayers.Contains(expected));
         }
 
         [TestMethod()]
         public void RoomTest3() // (:Player, :GameConfig)
         {
-            // TODO
-            throw new NotImplementedException();
+            //Arrange
+            var player = new Player();
+            var confing = new GameConfig() {
+                BuyInCost = 50.2,
+                GamePrefrences = new GamePreferences(),
+                IsSpactatorsAllowed = false,
+                MaxNumberOfActivePlayers = 8,
+                MaxNumberOfPlayers = 9,
+                MinimumBet = 
+            };
+            var expected = ;
+
+            //Act
+            var actual = 1;
+
+            //Assert
+            Assert.AreEqual(expected, actual);
         }
 
         [TestMethod()]

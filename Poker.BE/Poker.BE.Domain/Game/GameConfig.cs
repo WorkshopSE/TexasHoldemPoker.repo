@@ -62,13 +62,47 @@ namespace Poker.BE.Domain.Game
 
         /// <summary>
         /// choose the cost of joining the game.
+        /// always higher than minimum bet
         /// </summary>
-        public double BuyInCost { get; set; }
+        public double BuyInCost
+        {
+            get { return BuyInCost; }
+
+            // NOTE: adapt the set of buy in cost to the minimum bet
+            set
+            {
+                if (value < MinimumBet)
+                {
+                    MinimumBet = BuyInCost = value;
+                }
+                else
+                {
+                    BuyInCost = value;
+                }
+            }
+        }
 
         /// <summary>
         /// The creator sets the big blind of the room’s table.
+        /// always lower than buy in cost
         /// </summary>
-        public double MinimumBet { get; set; }
+        public double MinimumBet
+        {
+            get { return MinimumBet; }
+
+            // Note: adapt the set of minimum bet to the buy in cost
+            set
+            {
+                if (value > BuyInCost)
+                {
+                    MinimumBet = BuyInCost = value;
+                }
+                else
+                {
+                    MinimumBet = value;
+                }
+            }
+        }
 
         /// <summary>
         /// the room name - set by the user.
