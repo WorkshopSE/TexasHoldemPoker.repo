@@ -306,7 +306,7 @@ namespace Poker.BE.Domain.Core
             }
 
             // the user has enough money to buy in
-            if (buyIn < room.MinimumBet)
+            if (buyIn < room.BuyInCost)
             {
                 throw new NotEnoughMoneyException("Buy in amount is less then the minimum to join the table.");
             }

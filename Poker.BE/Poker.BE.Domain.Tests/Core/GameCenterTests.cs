@@ -13,7 +13,7 @@ namespace Poker.BE.Domain.Core.Tests
     public class GameCenterTests
     {
         #region Set Up
-        
+
         public TestContext TestContext { get; set; }
         private GameCenter gameCenter;
 
@@ -102,10 +102,53 @@ namespace Poker.BE.Domain.Core.Tests
         }
 
         [TestMethod()]
+        [ExpectedException(typeof(Utility.Exceptions.NotEnoughMoneyException))]
         public void JoinNextHandTest()
         {
-            // TODO
-            throw new NotImplementedException();
+            //Arrange
+            var expRoom = gameCenter.CreateNewRoom(1, new GameConfig(), out Player expPlayer);
+            double inBuyin = expRoom.BuyInCost - 20.2;
+            int inSeatIndex = 2;
+
+            //Act
+            gameCenter.JoinNextHand(expPlayer, inSeatIndex, inBuyin);
+
+            //Assert
+
+            // if no exception occurs
+            Assert.Fail();
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(Utility.Exceptions.PlayerNotFoundException))]
+        public void JoinNextHandTest1()
+        {
+            //Arrange
+            //var expected = ;
+
+            Player expPlayer = null;
+            double inBuyin = 0;
+            int inSeatIndex = 0;
+
+            //Act
+            gameCenter.JoinNextHand(expPlayer, inSeatIndex, inBuyin);
+
+            //Assert
+            //Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(Utility.Exceptions.RoomRulesException))]
+        public void JoinNextHandTest2()
+        {
+            //Arrange
+            //var expected = ;
+
+            //Act
+            //var actual = ;
+
+            //Assert
+            //Assert.AreEqual(expected, actual);
         }
 
         [TestMethod()]
