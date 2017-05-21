@@ -167,7 +167,8 @@ namespace Poker.BE.Domain.Core.Tests
             int inLevel = 3;
 
             //Act
-            var actual = gameCenter.CreateNewRoom(inLevel, inConfig, out Player actCreator);
+            Player actCreator;
+            var actual = gameCenter.CreateNewRoom(inLevel, inConfig, out actCreator);
 
             //Assert
             Assert.AreEqual(expPlayer, actCreator, "eq creators");
