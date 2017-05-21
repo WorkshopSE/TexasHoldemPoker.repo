@@ -220,7 +220,8 @@ namespace Poker.BE.Domain.Core
 
             if (player != null)
             {
-                if (!playersManager.TryGetValue(player, out Room room))
+                Room room = null;
+                if (!playersManager.TryGetValue(player, out room))
                 {
                     throw new RoomNotFoundException("room not found for player: " + player.GetHashCode().ToString());
                 }
@@ -321,7 +322,8 @@ namespace Poker.BE.Domain.Core
             /* Checking Preconditions */
 
             // get the room of the player belongs to
-            if (!playersManager.TryGetValue(player, out Room room))
+            Room room = null;
+            if (!playersManager.TryGetValue(player, out room))
             {
                 throw new RoomNotFoundException("Try joining next hand for a player with room that can't be found");
             }
