@@ -24,7 +24,39 @@ namespace Poker.BE.Service.Services
             var result = new ChoosePlayMoveResult();
             try
             {
-                result.TotalRaise = round.PlayMove(request.playMove, request.amountToBetOrCall);
+                switch (request.playMove)
+                {
+                    case "check":
+                        {
+                            result.TotalRaise = round.PlayMove(Round.Move.check, 0);
+                            break;
+                        }
+                    case "call":
+                        {
+                            result.TotalRaise = round.PlayMove(Round.Move.call, request.amountToBetOrCall);
+                            break;
+                        }
+                    case "fold":
+                        {
+                            result.TotalRaise = round.PlayMove(Round.Move.fold, 0);
+                            break;
+                        }
+                    case "bet":
+                        {
+                            result.TotalRaise = round.PlayMove(Round.Move.bet, request.amountToBetOrCall);
+                            break;
+                        }
+                    case "raise":
+                        {
+                            result.TotalRaise = round.PlayMove(Round.Move.raise, request.amountToBetOrCall);
+                            break;
+                        }
+                    case "all in":
+                        {
+                            result.TotalRaise = round.PlayMove(Round.Move.allin, request.amountToBetOrCall);
+                            break;
+                        }
+                }
             }
             catch (GameRulesException e)
             {

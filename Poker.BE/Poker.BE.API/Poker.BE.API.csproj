@@ -266,6 +266,10 @@
       <Project>{fe034180-e60e-416e-8d0f-0d9155ac52cc}</Project>
       <Name>Poker.BE.Domain</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Poker.BE.Service\Poker.BE.Service.csproj">
+      <Project>{FE55CE81-34E4-49DD-B43D-B62B2490DC34}</Project>
+      <Name>Poker.BE.Service</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Scripts\jquery-3.1.1.slim.min.map" />

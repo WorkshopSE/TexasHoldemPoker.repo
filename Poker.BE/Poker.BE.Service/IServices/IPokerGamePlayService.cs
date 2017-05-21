@@ -9,7 +9,7 @@ namespace Poker.BE.Service.IServices
     /// UCC06: Poker Game-play
     /// </summary>
     /// <see cref="https://docs.google.com/document/d/1ob4bSynssE3UOfehUAFNv_VDpPbybhS4dW_O-v-QDiw/edit#heading=h.kaxnrwixytqc"/>
-    interface IPokerGamePlayService
+    public interface IPokerGamePlayService
     {
         StartNewHandResult StartNewHand(StartNewHandRequest request);
         ChoosePlayMoveResult ChoosePlayMove(ChoosePlayMoveRequest request);
