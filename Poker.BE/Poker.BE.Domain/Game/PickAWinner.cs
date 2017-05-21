@@ -39,7 +39,6 @@ namespace Poker.BE.Domain.Game
             bool winnerFounded = false, severalWinners = false;
             int numberOfPlayers = PlayerSevenCards.Count, k=0, ans=0, winnerIndex=0;
             int[] arrayWinners = new int[numberOfPlayers];
-            Player winner = null;
             for (int i = NUMBERORDER; i > 0 && !winnerFounded; i--){
                 foreach ( Player player in Players){
                     ans = CheckPlayerByOrder(player, i);
@@ -60,15 +59,16 @@ namespace Poker.BE.Domain.Game
                         }
                     }
                     if (!severalWinners){
-                        winner = getPlayerByDictionnaryAndIndex(winnerIndex);
+                        Winner = getPlayerByDictionnaryAndIndex(winnerIndex);
                     }
                 }
                 else{
                     k = 0;
                 }
             }
-            return winner;
+            return Winner;
         }
+
 
         private int CheckPlayerByOrder(Player player, int numberRound){
             Card[] playerCardArray = null;

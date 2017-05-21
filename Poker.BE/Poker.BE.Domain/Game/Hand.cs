@@ -189,7 +189,8 @@ namespace Poker.BE.Domain.Game
                 Winner = activePlayers.ElementAt(0);
             }
             else{
-                
+                PickAWinner PickTheHandWinner = new PickAWinner(activePlayers, ChoosenCards);
+                Winner = PickTheHandWinner.Winner;
             }
             GetPotToWinner(Winner);
             endHand();
