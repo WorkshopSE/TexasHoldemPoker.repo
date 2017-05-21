@@ -162,8 +162,11 @@ namespace Poker.BE.Domain.Game
                     }
             }
             //Change Player
+            //TODO - move the calculateNextPlayer to StartNewRound method
             CalculateNextPlayer();
             CurrentTurn.CurrentPlayer = this.CurrentPlayer;
+
+            //TODO - return totalRaise field (for the next player to know how much to call).
         }
         private void CalculateNextPlayer()
         {
