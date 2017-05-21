@@ -33,28 +33,87 @@ namespace Poker.BE.Domain.Core.Tests
 
         #region Find an Existing Room - Functions Overloading Tests
         [TestMethod()]
-        public void FindRoomsByCriteriaTest()
+        public void FindRoomsByCriteriaTest_level()
+        {
+            //Arrange
+
+            GameConfig config = new GameConfig();
+            int level = 4;
+            var expRoom = gameCenter.CreateNewRoom(level, config, out Player creator);
+            Exception expE = null;
+            expRoom.Name = "test room";
+
+
+            TestContext.WriteLine("min level {0} max level {1}", gameCenter.Leagues.Single().MinLevel, gameCenter.Leagues.Single().MaxLevel);
+
+            //Act
+            var actRoom = gameCenter.FindRoomsByCriteria(45);
+            try
+            {
+                gameCenter.FindRoomsByCriteria(0);
+
+                Assert.Fail("exception missing");
+            }
+            catch (Utility.Exceptions.RoomNotFoundException e)
+            {
+                expE = e;
+            }
+
+            //Assert
+            Assert.IsNotNull(expE);
+            TestContext.WriteLine("exception message: {0}", expE.Message);
+            Assert.AreEqual(1, actRoom.Count);
+            Assert.AreEqual(expRoom, actRoom.Single());
+        }
+
+        [TestMethod]
+        public void FindRoomsByCriteriaTest_multiple_rooms()
+        {
+            //Arrange
+            GameConfig config = new GameConfig();
+            int level = 4;
+            var expRoom = gameCenter.CreateNewRoom(level, config, out Player creator).Name = "test room 1";
+            var expRoom2 = gameCenter.CreateNewRoom(level, config, out Player creator2).Name = "test room 2";
+
+            //Act
+            var actual = gameCenter.FindRoomsByCriteria(25);
+
+            //Assert
+            Assert.AreEqual(2, actual.Count);
+        }
+
+        [TestMethod()]
+        public void FindRoomsByCriteriaTest_player()
+        {
+            //Arrange
+            var expRoom = gameCenter.CreateNewRoom(6, new GameConfig(), out Player expPlayer);
+
+            //Act
+            var actual = gameCenter.FindRoomsByCriteria(-1, expPlayer);
+            try
+            {
+                gameCenter.FindRoomsByCriteria(-1, new Player());
+                Assert.Fail("room not found exception");
+            }
+            catch (Utility.Exceptions.RoomNotFoundException e)
+            {
+                TestContext.WriteLine("exception message " + e.Message);
+            }
+
+            //Assert
+            Assert.AreEqual(1, actual.Count);
+            Assert.AreEqual(expRoom, actual.Single());
+        }
+
+        [TestMethod()]
+        public void FindRoomsByCriteriaTest_perf()
         {
             // TODO
             throw new NotImplementedException();
         }
 
         [TestMethod()]
-        public void FindRoomsByCriteriaTest1()
-        {
-            // TODO
-            throw new NotImplementedException();
-        }
-
-        [TestMethod()]
-        public void FindRoomsByCriteriaTest2()
-        {
-            // TODO
-            throw new NotImplementedException();
-        }
-
-        [TestMethod()]
-        public void FindRoomsByCriteriaTest3()
+        public void FindRoomsByCriteriaTest_betsize()
         {
             // TODO
             throw new NotImplementedException();
@@ -170,7 +229,7 @@ namespace Poker.BE.Domain.Core.Tests
             //Assert
             Assert.AreEqual(Player.State.ActiveUnfolded, expPlayer.CurrentState);
             Assert.AreEqual(buyIn, expPlayer.Wallet);
-            Assert.AreEqual(expPlayer , expRoom.TableLocationOfActivePlayers[expRoom.Chairs.ElementAt(seatIndex)]);
+            Assert.AreEqual(expPlayer, expRoom.TableLocationOfActivePlayers[expRoom.Chairs.ElementAt(seatIndex)]);
             Assert.AreEqual(1, expRoom.ActivePlayers.Count);
         }
 

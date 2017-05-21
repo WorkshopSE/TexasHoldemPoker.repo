@@ -209,13 +209,13 @@ namespace Poker.BE.Domain.Core
             if (level > 0)
             {
                 var collections = (from league in leagues
-                                   where league.MinLevel < level & league.MaxLevel > level
+                                   where league.MinLevel <= level & league.MaxLevel >= level
                                    select league.Rooms);
 
                 var flat =
                     collections.Aggregate(new List<Room>(), (acc, x) => acc.Concat(x).ToList())
                     .Distinct(new Utility.AddressComparer<Room>());
-                result.Concat(flat);
+                result.AddRange(flat);
             }
 
             if (player != null)
@@ -247,6 +247,17 @@ namespace Poker.BE.Domain.Core
             if (betSize > 0)
             {
                 // TODO
+            }
+
+            if (result.Count == 0)
+            {
+                throw new RoomNotFoundException(
+                    "no rooms are find by the criteria: "
+                    + (level > -1 ? "level: " + level : "")
+                    + (player != null ? "player id: " + player.GetHashCode() : "")
+                    + (preferences != null ? "game preferences: " + preferences.GetType().Name : "")
+                    + (betSize > -1.0 ? "bet size: " + betSize : "")
+                    );
             }
 
             return result;
