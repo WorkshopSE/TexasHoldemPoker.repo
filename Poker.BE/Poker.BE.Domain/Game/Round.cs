@@ -165,6 +165,9 @@ namespace Poker.BE.Domain.Game
             CalculateNextPlayer();
             CurrentTurn.CurrentPlayer = this.CurrentPlayer;
         }
+        #endregion
+
+        #region Private Functions
         private void CalculateNextPlayer()
         {
             do
