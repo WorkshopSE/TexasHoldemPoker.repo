@@ -206,28 +206,47 @@ namespace Poker.BE.Domain.Core
         {
             var result = new List<Room>();
 
-            if(level > 0)
+            if (level > 0)
             {
                 var collections = (from league in leagues
                                    where league.MinLevel < level & league.MaxLevel > level
                                    select league.Rooms);
-                var flat = collections.Aggregate(new List<Room>(), (acc, x) => acc.Concat(x).ToList());
+
+                var flat =
+                    collections.Aggregate(new List<Room>(), (acc, x) => acc.Concat(x).ToList())
+                    .Distinct(new Utility.AddressComparer<Room>());
                 result.Concat(flat);
             }
 
-            if(player != null)
+            if (player != null)
             {
+                if (!playersManager.TryGetValue(player, out Room room))
+                {
+                    throw new RoomNotFoundException("room not found for player: " + player.GetHashCode());
+                }
 
+                if (result.Count == 0)
+                {
+                    result.Add(room);
+                }
+                else
+                {
+                    result = (from item in result where item == room select item).ToList();
+                    if (result.Count != 1)
+                    {
+                        throw new RoomNotFoundException("mismatch of searching room. only 1 occurrence didn't returned");
+                    }
+                }
             }
 
-            if(preferences != null)
+            if (preferences != null)
             {
-
+                // undone - idan - continue from here
             }
 
-            if(betSize > 0)
+            if (betSize > 0)
             {
-
+                // TODO
             }
 
             return result;
@@ -348,7 +367,7 @@ namespace Poker.BE.Domain.Core
             }
             catch (NullReferenceException)
             {
-                if(player.CurrentState == Player.State.Passive)
+                if (player.CurrentState == Player.State.Passive)
                 {
                     throw new RoomRulesException("Player is already a spectator");
                 }
