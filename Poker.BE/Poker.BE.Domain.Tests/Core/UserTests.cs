@@ -57,7 +57,8 @@ namespace Poker.BE.Domain.Core.Tests
             //Arrange
 
             //Act
-            var actRoom = user.CreateNewRoom(1, new GameConfig(), out Player creator);
+            Player creator;
+            var actRoom = user.CreateNewRoom(1, new GameConfig(), out creator);
 
             //Assert
             Assert.IsTrue(user.Players.Contains(creator, new Utility.AddressComparer<Player>()));
@@ -67,7 +68,8 @@ namespace Poker.BE.Domain.Core.Tests
         public void EnterRoomTest()
         {
             //Arrange
-            var expRoom = user.CreateNewRoom(1, new GameConfig() { Name = "test room" }, out Player creator);
+            Player creator;
+            var expRoom = user.CreateNewRoom(1, new GameConfig() { Name = "test room" }, out creator);
             creator.Nickname = "test player";
 
             //Act
@@ -92,7 +94,8 @@ namespace Poker.BE.Domain.Core.Tests
         public void JoinNextHand()
         {
             //Arrange
-            var room = user.CreateNewRoom(1, new GameConfig() { Name = "test room" }, out Player creator);
+            Player creator;
+            var room = user.CreateNewRoom(1, new GameConfig() { Name = "test room" }, out creator);
 
             //Act
             try
@@ -114,7 +117,8 @@ namespace Poker.BE.Domain.Core.Tests
         public void StandUpToSpactateTest()
         {
             //Arrange
-            var room = user.CreateNewRoom(1, new GameConfig() { Name = "test room" }, out Player creator);
+            Player creator;
+            var room = user.CreateNewRoom(1, new GameConfig() { Name = "test room" }, out creator);
             user.JoinNextHand(creator, 0, room.BuyInCost + 20.2);
             user.Players.Single().CurrentState = Player.State.ActiveFolded;
 

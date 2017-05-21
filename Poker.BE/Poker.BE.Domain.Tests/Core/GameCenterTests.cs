@@ -39,7 +39,8 @@ namespace Poker.BE.Domain.Core.Tests
 
             GameConfig config = new GameConfig();
             int level = 4;
-            var expRoom = gameCenter.CreateNewRoom(level, config, out Player creator);
+            Player creator;
+            var expRoom = gameCenter.CreateNewRoom(level, config, out creator);
             Exception expE = null;
             expRoom.Name = "test room";
 
@@ -72,8 +73,9 @@ namespace Poker.BE.Domain.Core.Tests
             //Arrange
             GameConfig config = new GameConfig();
             int level = 4;
-            var expRoom = gameCenter.CreateNewRoom(level, config, out Player creator).Name = "test room 1";
-            var expRoom2 = gameCenter.CreateNewRoom(level, config, out Player creator2).Name = "test room 2";
+            Player creator, creator2;
+            var expRoom = gameCenter.CreateNewRoom(level, config, out creator).Name = "test room 1";
+            var expRoom2 = gameCenter.CreateNewRoom(level, config, out creator2).Name = "test room 2";
 
             //Act
             var actual = gameCenter.FindRoomsByCriteria(25);
@@ -86,7 +88,8 @@ namespace Poker.BE.Domain.Core.Tests
         public void FindRoomsByCriteriaTest_player()
         {
             //Arrange
-            var expRoom = gameCenter.CreateNewRoom(6, new GameConfig(), out Player expPlayer);
+            Player expPlayer;
+            var expRoom = gameCenter.CreateNewRoom(6, new GameConfig(), out expPlayer);
 
             //Act
             var actual = gameCenter.FindRoomsByCriteria(-1, expPlayer);
@@ -181,7 +184,8 @@ namespace Poker.BE.Domain.Core.Tests
         public void JoinNextHandTest()
         {
             //Arrange
-            var expRoom = gameCenter.CreateNewRoom(1, new GameConfig(), out Player expPlayer);
+            Player expPlayer;
+            var expRoom = gameCenter.CreateNewRoom(1, new GameConfig(), out expPlayer);
             double inBuyin = expRoom.BuyInCost - 20.2;
             int inSeatIndex = 2;
 
@@ -220,7 +224,8 @@ namespace Poker.BE.Domain.Core.Tests
         {
             //Arrange
             int seatIndex = 200;
-            var expRoom = gameCenter.CreateNewRoom(1, new GameConfig(), out Player expPlayer);
+            Player expPlayer;
+            var expRoom = gameCenter.CreateNewRoom(1, new GameConfig(), out expPlayer);
             double buyIn = expRoom.BuyInCost + 2.5;
 
             //Act
@@ -234,7 +239,8 @@ namespace Poker.BE.Domain.Core.Tests
         public void JoinNextHand_success()
         {
             //Arrange
-            var expRoom = gameCenter.CreateNewRoom(1, new GameConfig(), out Player expPlayer);
+            Player expPlayer;
+            var expRoom = gameCenter.CreateNewRoom(1, new GameConfig(), out expPlayer);
             expPlayer.Nickname = "yosi";
             int seatIndex = 4;
             double buyIn = expRoom.BuyInCost;
@@ -254,7 +260,8 @@ namespace Poker.BE.Domain.Core.Tests
         public void StandUpToSpactateTest()
         {
             //Arrange
-            var expRoom = gameCenter.CreateNewRoom(1, new GameConfig(), out Player actPlayer);
+            Player actPlayer;
+            var expRoom = gameCenter.CreateNewRoom(1, new GameConfig(), out actPlayer);
             actPlayer.Nickname = "yossi";
             var expMoney = expRoom.BuyInCost;
             gameCenter.JoinNextHand(actPlayer, 2, expMoney);
@@ -270,7 +277,8 @@ namespace Poker.BE.Domain.Core.Tests
         public void StandUpToSpactateTest_success()
         {
             //Arrange
-            var expRoom = gameCenter.CreateNewRoom(1, new GameConfig(), out Player actPlayer);
+            Player actPlayer;
+            var expRoom = gameCenter.CreateNewRoom(1, new GameConfig(), out actPlayer);
             actPlayer.Nickname = "yossi";
             var expMoney = expRoom.BuyInCost;
             gameCenter.JoinNextHand(actPlayer, 2, expMoney);

@@ -60,12 +60,14 @@ namespace Poker.BE.Service.Services
 
             try
             {
-                if (!Rooms.TryGetValue(request.Room, out Room room))
+                Room room;
+                if (!Rooms.TryGetValue(request.Room, out room))
                 {
                     throw new RoomNotFoundException(string.Format("Requested room ID {0} not found", request.Room));
                 }
 
-                if (!Users.TryGetValue(request.User, out User user))
+                User user;
+                if (!Users.TryGetValue(request.User, out user))
                 {
                     throw new UserNotFoundException(string.Format("User ID {0} not found", request.User));
                 }
