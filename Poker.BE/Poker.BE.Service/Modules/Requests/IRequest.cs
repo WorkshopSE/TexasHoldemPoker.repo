@@ -6,8 +6,7 @@ using System.Threading.Tasks;
 
 namespace Poker.BE.Service.Modules.Requests
 {
-    public class StartNewHandRequest : IRequest
+    interface IRequest
     {
-        //TODO
     }
 }

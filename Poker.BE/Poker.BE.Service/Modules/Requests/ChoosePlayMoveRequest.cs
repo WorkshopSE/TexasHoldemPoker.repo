@@ -2,8 +2,7 @@
 
 namespace Poker.BE.Service.Modules.Requests
 {
-    //TODO - Add implementaion of IRequest
-    public class ChoosePlayMoveRequest
+    public class ChoosePlayMoveRequest : IRequest
     {
         public Round.Move playMove { get; set; }    //do we prefer to change it to string?
         public int amountToBetOrCall { get; set; }

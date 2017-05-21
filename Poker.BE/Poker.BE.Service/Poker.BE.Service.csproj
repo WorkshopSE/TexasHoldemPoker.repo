@@ -48,6 +48,7 @@
     <Compile Include="IServices\IPokerGamePlayService.cs" />
     <Compile Include="IServices\IProfileService.cs" />
     <Compile Include="Modules\Requests\ChoosePlayMoveRequest.cs" />
+    <Compile Include="Modules\Requests\IRequest.cs" />
     <Compile Include="Modules\Requests\StartNewHandRequest.cs" />
     <Compile Include="Modules\Results\ChoosePlayMoveResult.cs" />
     <Compile Include="Modules\Results\IResult.cs" />
