@@ -196,37 +196,42 @@ namespace Poker.BE.Domain.Core
 
         #region Methods
 
-        #region Find an Existing Room
         /// <summary>
         /// Allow the user to find an existing room according to different criteria and enter the room as a spectator.
         /// </summary>
         /// <remarks>UC004: Find an Existing Room</remarks>
         /// <returns>Collection of rooms</returns>
         /// <see cref="https://docs.google.com/document/d/1OTee6BGDWK2usL53jdoeBOI-1Jh8wyNejbQ0ZroUhcA/edit#heading=h.tvbd8487o8xd"/>
-        public ICollection<Room> FindRoomsByCriteria(int level)
+        public ICollection<Room> FindRoomsByCriteria(int level = -1, Player player = null, GamePreferences preferences = null, double betSize = -1.0)
         {
-            // TODO: idan
-            throw new NotImplementedException();
-        }
+            var result = new List<Room>();
 
-        public ICollection<Room> FindRoomsByCriteria(Player player)
-        {
-            // TODO: idan
-            throw new NotImplementedException();
-        }
+            if(level > 0)
+            {
+                var collections = (from league in leagues
+                                   where league.MinLevel < level & league.MaxLevel > level
+                                   select league.Rooms);
+                var flat = collections.Aggregate(new List<Room>(), (acc, x) => acc.Concat(x).ToList());
+                result.Concat(flat);
+            }
 
-        public ICollection<Room> FindRoomsByCriteria(GamePreferences preferences)
-        {
-            // TODO: idan
-            throw new NotImplementedException();
-        }
+            if(player != null)
+            {
 
-        public ICollection<Room> FindRoomsByCriteria(double betSize)
-        {
-            // TODO: idan
-            throw new NotImplementedException();
+            }
+
+            if(preferences != null)
+            {
+
+            }
+
+            if(betSize > 0)
+            {
+
+            }
+
+            return result;
         }
-        #endregion
 
         /// <summary>
         /// Allow the user to enter a room from a list as a spectator.
@@ -333,9 +338,20 @@ namespace Poker.BE.Domain.Core
             }
 
             // it's the player's turn
-            if (room.CurrentHand.CurrentRound.CurrentTurn.CurrentPlayer != player)
+
+            try
             {
-                throw new NotPlayersTurnException("Unable to stand up");
+                if (room.CurrentHand.CurrentRound.CurrentTurn.CurrentPlayer != player)
+                {
+                    throw new NotPlayersTurnException("Unable to stand up");
+                }
+            }
+            catch (NullReferenceException)
+            {
+                if(player.CurrentState == Player.State.Passive)
+                {
+                    throw new RoomRulesException("Player is already a spectator");
+                }
             }
 
             /* Action - Make the player to stand up */

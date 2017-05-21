@@ -24,7 +24,7 @@ namespace Poker.BE.Domain.Game
         #endregion
 
         #region Properties
-        public State CurrentState { get; protected set; }
+        public State CurrentState { get; set; }
         public double Wallet { get { return _wallet.Value; } private set { _wallet.Value = value; } }
         public Card[] PrivateCards { get; set; }
         public string Nickname { get; set; }

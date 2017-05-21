@@ -116,17 +116,17 @@ namespace Poker.BE.Domain.Core.Tests
             //Assert
 
             // if no exception occurs
-            Assert.Fail();
+            Assert.Fail("not enough money");
         }
 
         [TestMethod]
-        [ExpectedException(typeof(Utility.Exceptions.PlayerNotFoundException))]
+        [ExpectedException(typeof(Utility.Exceptions.RoomNotFoundException))]
         public void JoinNextHandTest1()
         {
             //Arrange
             //var expected = ;
 
-            Player expPlayer = null;
+            Player expPlayer = new Player();
             double inBuyin = 0;
             int inSeatIndex = 0;
 
@@ -134,7 +134,9 @@ namespace Poker.BE.Domain.Core.Tests
             gameCenter.JoinNextHand(expPlayer, inSeatIndex, inBuyin);
 
             //Assert
-            //Assert.AreEqual(expected, actual);
+
+            // if no exception
+            Assert.Fail("room not found for player");
         }
 
         [TestMethod]
@@ -142,20 +144,71 @@ namespace Poker.BE.Domain.Core.Tests
         public void JoinNextHandTest2()
         {
             //Arrange
-            //var expected = ;
+            int seatIndex = 200;
+            var expRoom = gameCenter.CreateNewRoom(1, new GameConfig(), out Player expPlayer);
+            double buyIn = expRoom.BuyInCost + 2.5;
 
             //Act
-            //var actual = ;
+            gameCenter.JoinNextHand(expPlayer, seatIndex, buyIn);
 
             //Assert
-            //Assert.AreEqual(expected, actual);
+            Assert.Fail("seat taken / not exists");
+        }
+
+        [TestMethod]
+        public void JoinNextHand_success()
+        {
+            //Arrange
+            var expRoom = gameCenter.CreateNewRoom(1, new GameConfig(), out Player expPlayer);
+            expPlayer.Nickname = "yosi";
+            int seatIndex = 4;
+            double buyIn = expRoom.BuyInCost;
+
+            //Act
+            gameCenter.JoinNextHand(expPlayer, seatIndex, buyIn);
+
+            //Assert
+            Assert.AreEqual(Player.State.ActiveUnfolded, expPlayer.CurrentState);
+            Assert.AreEqual(buyIn, expPlayer.Wallet);
+            Assert.AreEqual(expPlayer , expRoom.TableLocationOfActivePlayers[expRoom.Chairs.ElementAt(seatIndex)]);
+            Assert.AreEqual(1, expRoom.ActivePlayers.Count);
         }
 
         [TestMethod()]
+        [ExpectedException(typeof(Utility.Exceptions.PlayerModeException))]
         public void StandUpToSpactateTest()
         {
-            // TODO
-            throw new NotImplementedException();
+            //Arrange
+            var expRoom = gameCenter.CreateNewRoom(1, new GameConfig(), out Player actPlayer);
+            actPlayer.Nickname = "yossi";
+            var expMoney = expRoom.BuyInCost;
+            gameCenter.JoinNextHand(actPlayer, 2, expMoney);
+
+            //Act
+            var actMoney = gameCenter.StandUpToSpactate(actPlayer);
+
+            //Assert
+            Assert.Fail("expected exception: player mode exception");
+        }
+
+        [TestMethod]
+        public void StandUpToSpactateTest_success()
+        {
+            //Arrange
+            var expRoom = gameCenter.CreateNewRoom(1, new GameConfig(), out Player actPlayer);
+            actPlayer.Nickname = "yossi";
+            var expMoney = expRoom.BuyInCost;
+            gameCenter.JoinNextHand(actPlayer, 2, expMoney);
+
+            actPlayer.CurrentState = Player.State.ActiveFolded;
+
+            //Act
+            var actMoney = gameCenter.StandUpToSpactate(actPlayer);
+
+            //Assert
+            Assert.AreEqual(expMoney, actMoney);
+            Assert.AreEqual(Player.State.Passive, actPlayer.CurrentState);
+            Assert.AreEqual(0, expRoom.ActivePlayers.Count);
         }
     }
 }

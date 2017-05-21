@@ -225,16 +225,23 @@ namespace Poker.BE.Domain.Game
 
         public bool TakeChair(Player player, int index)
         {
-            var result = PassivePlayers.Where(item => item == player);
-            if (result.Count() != 1 || !chairs[index].Take())
+            try
             {
-                return false;
+                var result = PassivePlayers.Where(item => item == player);
+                if (result.Count() != 1 || !chairs[index].Take())
+                {
+                    return false;
+                }
+
+                // register player location at the table.
+                TableLocationOfActivePlayers.Add(chairs[index], player);
+
+                return true;
             }
-
-            // register player location at the table.
-            TableLocationOfActivePlayers.Add(chairs[index], player);
-
-            return true;
+            catch (IndexOutOfRangeException)
+            {
+                throw new RoomRulesException("chair index does not exists");
+            }
         }
 
         public void LeaveChair(Player player)
