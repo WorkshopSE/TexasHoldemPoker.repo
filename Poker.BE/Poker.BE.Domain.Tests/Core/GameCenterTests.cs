@@ -26,16 +26,10 @@ namespace Poker.BE.Domain.Core.Tests
         [TestCleanup]
         public void After()
         {
+            gameCenter.ClearAll();
             gameCenter = null;
         }
         #endregion
-
-        [TestMethod()]
-        public void GameCenterTest()
-        {
-            // TODO - simple constructor - may not need to test?
-            throw new NotImplementedException();
-        }
 
         #region Find an Existing Room - Functions Overloading Tests
         [TestMethod()]
@@ -68,7 +62,6 @@ namespace Poker.BE.Domain.Core.Tests
         #endregion
 
         [TestMethod()]
-        [ExpectedException(typeof(Exception))]
         public void EnterRoomTest()
         {
             //Arrange
@@ -80,14 +73,32 @@ namespace Poker.BE.Domain.Core.Tests
             actual = gameCenter.EnterRoom(room);
 
             //Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual, "returned player");
+            Assert.IsNotNull(actual.Nickname, "nickname not null");
+            Assert.AreEqual(0, actual.Wallet, "wallet = 0 (before buy in to table)");
         }
 
         [TestMethod()]
         public void CreateNewRoomTest()
         {
-            // TODO
-            throw new NotImplementedException();
+            //Arrange
+            var expPlayer = new Player();
+            var expRoom = new Room(expPlayer);
+
+            GameConfig inConfig = new GameConfig();
+            int inLevel = 3;
+
+            //Act
+            var actual = gameCenter.CreateNewRoom(inLevel, inConfig, out Player actCreator);
+
+            //Assert
+            Assert.AreEqual(expPlayer, actCreator, "eq creators");
+            Assert.AreEqual(1, gameCenter.Rooms.Count, "rooms count");
+            Assert.AreEqual(1, gameCenter.Players.Count, "players count");
+            Assert.AreEqual(1, gameCenter.Leagues.Count, "leagues count");
+            Assert.AreEqual(actual, gameCenter.Rooms.First(), "room is registered");
+            Assert.AreEqual(expPlayer, gameCenter.Players.First(), "player is registered");
+            Assert.IsTrue(gameCenter.Leagues.First().Rooms.Contains(actual), "league is registered and contain room");
         }
 
         [TestMethod()]

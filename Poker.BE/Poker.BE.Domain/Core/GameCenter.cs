@@ -26,6 +26,16 @@ namespace Poker.BE.Domain.Core
             Call,
             AllIn
         }
+
+        /// <summary>
+        /// clears all game-center resources
+        /// </summary>
+        public void ClearAll()
+        {
+            playersManager.Clear();
+            roomsManager.Clear();
+            leagues.Clear();
+        }
         #endregion
 
         #region Fields
@@ -73,10 +83,11 @@ namespace Poker.BE.Domain.Core
             return room.CreatePlayer();
         }
 
-        private void AddLeage(int minLevel, int maxLevel)
+        private League AddLeage(int minLevel = League.MIN_LEVEL, int maxLevel = League.MAX_LEVEL)
         {
             var league = new League() { MaxLevel = maxLevel, MinLevel = minLevel };
             leagues.Add(league);
+            return league;
         }
 
         private bool RemovePlayer(Player player)
@@ -162,13 +173,23 @@ namespace Poker.BE.Domain.Core
                 }
             }
 
+            if (result.Count == 0)
+            {
+                result.Add(AddLeage());
+            }
+
             return result;
         }
 
-        private League FindLeagueToFill(ICollection<League> collection)
+        private League FindLeagueToFill(ICollection<League> leaguesPartialGroup)
         {
             // TODO: pick a league to insert the new created room, by the relevant requirements.
-            throw new NotImplementedException();
+
+            // HACK: this is a stub return
+            return
+                (from league in leaguesPartialGroup
+                 where !league.IsFull
+                 select league).First();
         }
 
         #endregion
@@ -231,9 +252,9 @@ namespace Poker.BE.Domain.Core
         /// <see cref="https://docs.google.com/document/d/1OTee6BGDWK2usL53jdoeBOI-1Jh8wyNejbQ0ZroUhcA/edit#heading=h.eqjp0wvvpmjg"/>
         /// <param name="level">user level</param>
         /// <returns>the new created room</returns>
-        public Room CreateNewRoom(int level, GameConfig config)
+        public Room CreateNewRoom(int level, GameConfig config, out Player creator)
         {
-            var creator = new Player();
+            creator = new Player();
 
             // creating the room and adding the creator as a passive player to it.
             var room = new Room(creator, config);

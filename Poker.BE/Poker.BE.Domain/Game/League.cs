@@ -21,6 +21,7 @@ namespace Poker.BE.Domain.Game
         public ICollection<Room> Rooms { get; set; }
         public int MaxLevel { get; set; }
         public int MinLevel { get; set; }
+        public bool IsFull { get; internal set; }
         #endregion
 
         #region Constructors
