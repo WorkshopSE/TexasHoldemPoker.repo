@@ -14,6 +14,7 @@ namespace Poker.BE.Domain.Game
         {
             ActiveUnfolded,
             ActiveFolded,
+            ActiveAllIn,
             Passive
         }
         public const int NPRIVATE_CARDS = 2;
@@ -109,7 +110,18 @@ namespace Poker.BE.Domain.Game
             return base.GetHashCode();
         }
 
-        #endregion
 
-    }// class
+        public void AddMoney(int amount)
+        {
+            this.Wallet.amountOfMoney += amount;
+        }
+
+        public void SubstractMoney(int amount)
+        {
+            if (Wallet.amountOfMoney < amount)
+                throw new NotEnoughMoneyException("Player doesn't have enough money!");
+            this.Wallet.amountOfMoney -= amount;
+        }
+        #endregion
+    }
 }

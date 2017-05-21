@@ -22,13 +22,16 @@ namespace Poker.BE.Domain.Game
         private Deck deck;
         private ICollection<Player> activePlayers;
         private Pot pot;
+        private Player dealer;
         #endregion
 
         #region Properties
+        public bool Active { get; set; }
+        public Round CurrentRound { get; }
         #endregion
 
         #region Constructors
-        public Hand(Deck deck, ICollection<Player> players)
+        public Hand(Player dealer, Deck deck, ICollection<Player> players)
         {
             if(players.Count < MINIMAL_NUMBER_OF_ACTIVE_PLAYERS_TO_START)
             {
@@ -36,7 +39,11 @@ namespace Poker.BE.Domain.Game
             }
             this.deck = deck;
             this.activePlayers = players;
-            this.pot = new Pot();
+            this.pot = new Pot(null);
+            this.dealer = dealer;
+            this.CurrentRound = new Round(dealer,activePlayers, this.pot);
+            this.Active = true;
+            
         }
 
         public Round CurrentRound { get; internal set; }
@@ -51,15 +58,24 @@ namespace Poker.BE.Domain.Game
             foreach (Player player in activePlayers)
             {
                 for (int i = 0; i < player.PrivateCards.Length; i++)
+                {
                     player.PrivateCards[i] = deck.PullCard();
+                    player.PrivateCards[i].CardState = Card.State.FaceDown;
+                }
             }
         }
 
-        public void PlaceBlinds()
+        public void PlaceBlinds(GamePreferences preferences)
         {
-            PlaceSmallBlind();
-            PlaceBigBlind();
-            PlaceAnts();
+            PlaceSmallBlind(preferences);
+            PlaceBigBlind(preferences);
+            PlaceAnts(preferences);
+        }
+
+        public void endHand()
+        {
+            //TODO: implement
+            this.Active = false;
         }
 
         /// <summary>
@@ -67,21 +83,21 @@ namespace Poker.BE.Domain.Game
         /// All of the active players are forced to pay some blind
         /// payment to the pot, regardless to the regular blinds.
         /// </summary>
-        private void PlaceAnts()
+        private void PlaceAnts(GamePreferences preferences)
         {
-            //TODO
+            //TODO: WAIT FOR GamePreferences
             throw new NotImplementedException();
         }
 
-        private void PlaceBigBlind()
+        private void PlaceBigBlind(GamePreferences preferences)
         {
-            //TODO
+            //TODO: WAIT FOR GamePreferences
             throw new NotImplementedException();
         }
 
-        private void PlaceSmallBlind()
+        private void PlaceSmallBlind(GamePreferences preferences)
         {
-            //TODO
+            //TODO: WAIT FOR GamePreferences
             throw new NotImplementedException();
         }
         #endregion

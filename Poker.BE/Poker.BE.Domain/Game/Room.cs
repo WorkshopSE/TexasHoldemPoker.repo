@@ -25,12 +25,18 @@ namespace Poker.BE.Domain.Game
         private Deck deck;
         private Chair[] chairs;
         private GameConfig config;
-
+		private int dealerIndex = 0;
         #endregion
 
         #region Properties
         // TODO: do we need ID for the Room? if so, what type should it be? 'long?' means nullable long.
         //public long? ID { get; }
+
+        /* UNDONE: Tomer - 
+            we'll just return the totalRaise field that holds the highest raise so far at the table.
+            that will let the next player know what's the amount of money he needs to invest in order to keep playing.
+            that's enough, right?
+         */
 
         public ICollection<Chair> Chairs { get { return chairs; } }
         public Hand CurrentHand { get; private set; }
@@ -218,9 +224,51 @@ namespace Poker.BE.Domain.Game
             return result;
         }
 
+        /// <summary>
+        /// UC014 Start (Deal) a New Hand
+        /// </summary>
+        /// <see cref="https://docs.google.com/document/d/1OTee6BGDWK2usL53jdoeBOI-1Jh8wyNejbQ0ZroUhcA/edit#heading=h.3z6a7b6nlnjj"/>
         public void StartNewHand()
         {
-            CurrentHand = new Hand(deck, ActivePlayers);
+            if (ActivePlayers.Count < 2)
+            {
+                throw new NotEnoughPlayersException("Its should be at least 2 active players to start new hand!");
+            }
+            if (deck.Cards.Count != Deck.NCARDS)
+            {
+                throw new NotEnoughPlayersException("Cards must be dealt from a proper deck (standard 52-card deck containing no jokers)");
+            }
+            if (this.CurrentHand != null && this.CurrentHand.Active)
+            {
+                throw new NotEnoughPlayersException("The previous hand hasnt ended");
+            }
+            deck.ShuffleCards();
+            Player dealer = ActivePlayers.ElementAt(dealerIndex);
+            CurrentHand = new Hand(dealer, deck, ActivePlayers);
+            CurrentHand.DealCards();
+            CurrentHand.PlaceBlinds(Preferences);
+            //TODO: Check If HEAD-TO-HEAD / HEADS UP alternative flow workds here.
+
+        }
+        public void EndCurrentHand()
+        {
+            CurrentHand.endHand();
+            dealerIndex++;
+            //TODO: implementation
+        }
+
+        /// <summary>
+        /// UC027 Choose Play Move
+        /// </summary>
+        /// <see cref="https://docs.google.com/document/d/1OTee6BGDWK2usL53jdoeBOI-1Jh8wyNejbQ0ZroUhcA/edit#heading=h.8f3okxza6g2d"/>
+        public void ChoosePlayMove(Round.Move move, int amountToBet)
+        {
+            if (ActivePlayers.Where(player => player.CurrentState == Player.State.ActiveUnfolded).ToList().Count < 2)
+            {
+                throw new NotEnoughPlayersException("Its should be at least 2 active players to play move");
+            }
+            CurrentHand.CurrentRound.PlayMove(move, amountToBet);
+            
         }
 
         public bool TakeChair(Player player, int index)
