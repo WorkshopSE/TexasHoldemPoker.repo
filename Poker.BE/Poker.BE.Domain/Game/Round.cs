@@ -31,6 +31,7 @@ namespace Poker.BE.Domain.Game
         private Dictionary<Player, int> liveBets;
         private int totalRaise;
         private int lastRaise;
+        //TODO - Add a Player-type field for the last player to raise (so we'll know when to end the round)
         #endregion
 
         #region Properties
