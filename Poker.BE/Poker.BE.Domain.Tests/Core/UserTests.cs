@@ -1,5 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Poker.BE.Domain.Core;
+using Poker.BE.Domain.Game;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -50,31 +52,87 @@ namespace Poker.BE.Domain.Core.Tests
         //}
 
         [TestMethod()]
-        public void EnterRoomTest()
-        {
-            // TODO
-            throw new NotImplementedException();
-        }
-
-        [TestMethod()]
         public void CreateNewRoomTest()
         {
-            // TODO
-            throw new NotImplementedException();
+            //Arrange
+
+            //Act
+            var actRoom = user.CreateNewRoom(1, new GameConfig(), out Player creator);
+
+            //Assert
+            Assert.IsTrue(user.Players.Contains(creator, new Utility.AddressComparer<Player>()));
         }
 
         [TestMethod()]
-        public void JoinNextHandTest()
+        public void EnterRoomTest()
         {
-            // TODO
-            throw new NotImplementedException();
+            //Arrange
+            var expRoom = user.CreateNewRoom(1, new GameConfig() { Name = "test room" }, out Player creator);
+            creator.Nickname = "test player";
+
+            //Act
+            try
+            {
+                user.EnterRoom(expRoom);
+                Assert.Fail("expected exception");
+            }
+            catch (Utility.Exceptions.RoomRulesException e)
+            {
+                TestContext.WriteLine(e.Message);
+            }
+            var user2 = new User();
+            var player2 = user2.EnterRoom(expRoom);
+
+            //Assert
+            Assert.IsTrue(user.Players.Contains(creator, new Utility.AddressComparer<Player>()));
+            Assert.IsTrue(user2.Players.Contains(player2, new Utility.AddressComparer<Player>()));
+        }
+
+        [TestMethod]
+        public void JoinNextHand()
+        {
+            //Arrange
+            var room = user.CreateNewRoom(1, new GameConfig() { Name = "test room" }, out Player creator);
+
+            //Act
+            try
+            {
+                user.JoinNextHand(new Player(), 0, room.BuyInCost);
+                Assert.Fail("expected exception");
+            }
+            catch (Utility.Exceptions.PlayerNotFoundException)
+            {
+            }
+
+            user.JoinNextHand(creator, 0, room.BuyInCost + 20.2);
+
+            //Assert
+            Assert.AreEqual(Player.State.ActiveUnfolded, user.Players.Single().CurrentState);
         }
 
         [TestMethod()]
         public void StandUpToSpactateTest()
         {
-            // TODO
-            throw new NotImplementedException();
+            //Arrange
+            var room = user.CreateNewRoom(1, new GameConfig() { Name = "test room" }, out Player creator);
+            user.JoinNextHand(creator, 0, room.BuyInCost + 20.2);
+            user.Players.Single().CurrentState = Player.State.ActiveFolded;
+
+            //Act
+            try
+            {
+                user.StandUpToSpactate(new Player());
+                Assert.Fail("expected exception");
+            }
+            catch (Utility.Exceptions.PlayerNotFoundException)
+            {
+            }
+
+            var act = user.StandUpToSpactate(user.Players.Single());
+
+            //Assert
+            Assert.AreEqual(Player.State.Passive, user.Players.Single().CurrentState);
+            Assert.AreEqual(room.BuyInCost + 20.2, act);
         }
     }
 }

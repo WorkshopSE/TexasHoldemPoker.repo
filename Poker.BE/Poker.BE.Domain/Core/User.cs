@@ -82,7 +82,7 @@ namespace Poker.BE.Domain.Core
             if (Players.Count > 0 && room.Players.Count > 0)
             {
                 var result = from player in room.Players
-                             where Players.Contains(player)
+                             where Players.Contains(player, new Utility.AddressComparer<Player>())
                              select player;
 
                 if (result.Count() > 0)
@@ -105,22 +105,37 @@ namespace Poker.BE.Domain.Core
             return freshPlayer;
         }
 
-        public bool CreateNewRoom(int level, GameConfig config)
+        public Room CreateNewRoom(int level, GameConfig config, out Player creator)
         {
-            // TODO
-            throw new NotImplementedException();
+            var result = gameCenter.CreateNewRoom(level, config, out creator);
+            Players.Add(creator);
+
+            // log info
+            logger.Info(string.Format("user {0} has created an new room {1}", GetHashCode(), result.GetHashCode()), this);
+
+            return result;
         }
 
-        public bool JoinNextHand(int sessionID, int seatIndex, double buyIn)
+        public void JoinNextHand(Player player, int seatIndex, double buyIn)
         {
-            // TODO
-            throw new NotImplementedException();
+            if(!Players.Contains(player, new Utility.AddressComparer<Player>()))
+            {
+                throw new PlayerNotFoundException("the user doesn't have this player");
+            }
+            
+            gameCenter.JoinNextHand(player, seatIndex, buyIn);
         }
 
-        public bool StandUpToSpactate(int sessionID)
+        public double StandUpToSpactate(Player player)
         {
-            // TODO
-            throw new NotImplementedException();
+            if (!Players.Contains(player, new Utility.AddressComparer<Player>()))
+            {
+                throw new PlayerNotFoundException("the user doesn't have this player");
+            }
+
+            UserBank.Money = gameCenter.StandUpToSpactate(player);
+            
+            return UserBank.Money;
         }
         #endregion
 

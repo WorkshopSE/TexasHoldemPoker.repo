@@ -351,7 +351,7 @@ namespace Poker.BE.Domain.Core
             }
 
             /* Joining the player to the next hand */
-            room.JoinPlayerToTable(player);
+            room.JoinPlayerToTable(player, buyIn);
         }
 
         /// <summary>

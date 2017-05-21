@@ -175,7 +175,7 @@ namespace Poker.BE.Domain.Game.Tests
             var expPlayer = room.PassivePlayers.First();
 
             //Act
-            var actual = room.JoinPlayerToTable(expPlayer);
+            var actual = room.JoinPlayerToTable(expPlayer, room.BuyInCost + 10.3);
 
             //Assert
             Assert.IsTrue(actual);
