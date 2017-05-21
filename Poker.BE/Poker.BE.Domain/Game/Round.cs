@@ -62,7 +62,7 @@ namespace Poker.BE.Domain.Game
         #endregion
 
         #region Methods
-        public void PlayMove(Move playMove, int amountToBetOrCall)
+        public int PlayMove(Move playMove, int amountToBetOrCall)
         {
             switch (playMove)
             {
@@ -92,7 +92,7 @@ namespace Poker.BE.Domain.Game
                         //Remove player from round
                         this.currentPlayer = this.ActiveUnfoldedPlayers.ElementAt((ActiveUnfoldedPlayers.ToList().IndexOf(this.CurrentPlayer) - 1) % ActiveUnfoldedPlayers.Count);
                         ActiveUnfoldedPlayers.Remove(playerToRemove);
-                        return;
+                        return TotalRaise;
                         //break;
                     }
                 case Move.bet:
@@ -164,6 +164,8 @@ namespace Poker.BE.Domain.Game
             //Change Player
             CalculateNextPlayer();
             CurrentTurn.CurrentPlayer = this.CurrentPlayer;
+
+            return TotalRaise;
         }
         #endregion
 
