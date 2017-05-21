@@ -222,7 +222,7 @@ namespace Poker.BE.Domain.Core
             {
                 if (!playersManager.TryGetValue(player, out Room room))
                 {
-                    throw new RoomNotFoundException("room not found for player: " + player.GetHashCode());
+                    throw new RoomNotFoundException("room not found for player: " + player.GetHashCode().ToString());
                 }
 
                 if (result.Count == 0)
@@ -366,7 +366,8 @@ namespace Poker.BE.Domain.Core
             /* Checking Preconditions */
 
             // the player is sitting at the table
-            if (!playersManager.TryGetValue(player, out Room room))
+            Room room = null;
+            if (!playersManager.TryGetValue(player, out room))
             {
                 throw new RoomNotFoundException("Unable to stand up - The player is not at the room");
             }
