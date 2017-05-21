@@ -20,18 +20,26 @@ namespace Poker.BE.Domain.Core
         #endregion
 
         #region Properties
-        
+
         public ICollection<Player> Players { get; set; }
         #endregion
 
         #region Constructors
-        public User(string userName, string password, double sumToDeposit)
+        public User()
+        {
+            IsConnected = false;
+            Password = "";
+            Players = new List<Player>();
+            UserBank = new Bank();
+            UserName = GetHashCode().ToString();
+        }
+
+        public User(string userName, string password, double sumToDeposit) : this()
         {
             UserName = userName;
             Password = password;
             UserBank = new Bank(sumToDeposit);
             IsConnected = true;
-            Players = new List<Player>();
         }
         #endregion
 
@@ -48,32 +56,17 @@ namespace Poker.BE.Domain.Core
             IsConnected = false;
         }
 
-
-        #region Find an Existing Room
-        public ICollection<Room> FindRoomsByCriteria(int level)
+        #region UCC03 Rooms Management Methods
+        /// <summary>
+        /// Allow the user to find an existing room according to different criteria and enter the room as a spectator.
+        /// </summary>
+        /// <remarks>UC004: Find an Existing Room</remarks>
+        /// <returns>Collection of rooms</returns>
+        /// <see cref="https://docs.google.com/document/d/1OTee6BGDWK2usL53jdoeBOI-1Jh8wyNejbQ0ZroUhcA/edit#heading=h.tvbd8487o8xd"/>
+        public ICollection<Room> FindRoomsByCriteria(int level = -1, Player player = null, GamePreferences preferences = null, double betSize = -1.0)
         {
-            // TODO
-            throw new NotImplementedException();
+            return gameCenter.FindRoomsByCriteria(level, player, preferences, betSize);
         }
-
-        public ICollection<Room> FindRoomsByCriteria(Player player)
-        {
-            // TODO
-            throw new NotImplementedException();
-        }
-
-        public ICollection<Room> FindRoomsByCriteria(GamePreferences preferences)
-        {
-            // TODO
-            throw new NotImplementedException();
-        }
-
-        public ICollection<Room> FindRoomsByCriteria(double betSize)
-        {
-            // TODO
-            throw new NotImplementedException();
-        }
-        #endregion
 
         /// <summary>
         /// Allow the user to enter a room from a list as a spectator.
@@ -129,6 +122,9 @@ namespace Poker.BE.Domain.Core
             // TODO
             throw new NotImplementedException();
         }
+        #endregion
+
+
         #endregion
 
     }

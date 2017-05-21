@@ -241,12 +241,16 @@ namespace Poker.BE.Domain.Core
 
             if (preferences != null)
             {
-                // undone - idan - continue from here
+                // undone - idan - continue from here - after game preferences will be implemented.
             }
 
             if (betSize > 0)
             {
-                // TODO
+                result.AddRange(
+                    from room in Rooms
+                    where room.MinimumBet == betSize
+                    select room
+                    );
             }
 
             if (result.Count == 0)
