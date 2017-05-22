@@ -46,7 +46,6 @@ namespace Poker.BE.Domain.Game
             
         }
 
-        public Round CurrentRound { get; internal set; }
         #endregion
 
         #region Methods

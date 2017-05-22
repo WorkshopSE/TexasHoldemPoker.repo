@@ -153,7 +153,7 @@ namespace Poker.BE.Domain.Core.Tests
             //Assert
             Assert.AreEqual(expected, actual, "returned player");
             Assert.IsNotNull(actual.Nickname, "nickname not null");
-            Assert.AreEqual(0, actual.Wallet, "wallet = 0 (before buy in to table)");
+            Assert.AreEqual(0, actual.WalletValue, "wallet = 0 (before buy in to table)");
         }
 
         [TestMethod()]
@@ -251,7 +251,7 @@ namespace Poker.BE.Domain.Core.Tests
 
             //Assert
             Assert.AreEqual(Player.State.ActiveUnfolded, expPlayer.CurrentState);
-            Assert.AreEqual(buyIn, expPlayer.Wallet);
+            Assert.AreEqual(buyIn, expPlayer.WalletValue);
             Assert.AreEqual(expPlayer, expRoom.TableLocationOfActivePlayers[expRoom.Chairs.ElementAt(seatIndex)]);
             Assert.AreEqual(1, expRoom.ActivePlayers.Count);
         }

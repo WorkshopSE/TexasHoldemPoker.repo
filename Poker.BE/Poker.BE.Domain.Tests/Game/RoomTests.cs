@@ -281,7 +281,7 @@ namespace Poker.BE.Domain.Game.Tests
             //Arrange
             Player player1 = new Player();
             GamePreferences preferences = new GamePreferences();
-            GameCenter center = new GameCenter();
+            GameCenter center = GameCenter.Instance;
             Room room = new Room(player1, preferences);
             Exception expectedExcetpion = null;
             //Act
@@ -318,7 +318,7 @@ namespace Poker.BE.Domain.Game.Tests
             //Arrange
             Player player1 = new Player();
             GamePreferences preferences = new GamePreferences();
-            GameCenter center = new GameCenter();
+            GameCenter center = GameCenter.Instance;
             Room room = new Room(player1, preferences);
             Exception expectedExcetpion = null;
             //Act

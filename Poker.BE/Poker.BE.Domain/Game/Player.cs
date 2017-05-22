@@ -26,7 +26,8 @@ namespace Poker.BE.Domain.Game
 
         #region Properties
         public State CurrentState { get; set; }
-        public double Wallet { get { return _wallet.Value; } private set { _wallet.Value = value; } }
+        public Wallet Wallet { get { return _wallet; } }
+        public double WalletValue { get { return _wallet.Value; } private set { _wallet.Value = value; } }
         public Card[] PrivateCards { get; set; }
         public string Nickname { get; set; }
         #endregion
@@ -37,7 +38,7 @@ namespace Poker.BE.Domain.Game
             PrivateCards = new Card[NPRIVATE_CARDS];
             CurrentState = State.Passive;
             _wallet = new Wallet();
-            Wallet = 0.0;
+            WalletValue = 0.0;
             Nickname = "";
         }
 
@@ -53,7 +54,7 @@ namespace Poker.BE.Domain.Game
             }
 
             // buy in to wallet
-            Wallet = buyIn;
+            WalletValue = buyIn;
 
             CurrentState = State.ActiveUnfolded;
             return true;
@@ -76,7 +77,7 @@ namespace Poker.BE.Domain.Game
             }
 
             CurrentState = State.Passive;
-            return Wallet;
+            return WalletValue;
         }
 
         // override object.Equals
@@ -100,7 +101,7 @@ namespace Poker.BE.Domain.Game
                 && CurrentState == other.CurrentState
                 && Nickname.Equals(other.Nickname)
                 //&& this.PrivateCards.Equals(other.PrivateCards) //TODO override card.equals
-                && Wallet.Equals(other.Wallet)
+                && WalletValue.Equals(other.WalletValue)
                 ;
         }
 
@@ -113,14 +114,14 @@ namespace Poker.BE.Domain.Game
 
         public void AddMoney(int amount)
         {
-            this.Wallet.amountOfMoney += amount;
+            _wallet.AmountOfMoney += amount;
         }
 
         public void SubstractMoney(int amount)
         {
-            if (Wallet.amountOfMoney < amount)
+            if (_wallet.AmountOfMoney < amount)
                 throw new NotEnoughMoneyException("Player doesn't have enough money!");
-            this.Wallet.amountOfMoney -= amount;
+            _wallet.AmountOfMoney -= amount;
         }
         #endregion
     }

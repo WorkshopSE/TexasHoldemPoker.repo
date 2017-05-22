@@ -38,7 +38,7 @@ namespace Poker.BE.Domain.Game.Tests
 
             player.AddMoney(200);
             turn.Call(50);
-            var res2 = player.Wallet.amountOfMoney != 150;
+            var res2 = player.Wallet.AmountOfMoney != 150;
 
             //Assert
             Assert.AreEqual(expectedException.Message, "Player doesn't have enough money!");
@@ -80,7 +80,7 @@ namespace Poker.BE.Domain.Game.Tests
 
             player.AddMoney(200);
             turn.Bet(50);
-            var res2 = player.Wallet.amountOfMoney != 150;
+            var res2 = player.Wallet.AmountOfMoney != 150;
 
             //Assert
             Assert.AreEqual(expectedException.Message, "Player doesn't have enough money!");
@@ -107,7 +107,7 @@ namespace Poker.BE.Domain.Game.Tests
 
             player.AddMoney(200);
             turn.Raise(50);
-            var res2 = player.Wallet.amountOfMoney != 150;
+            var res2 = player.Wallet.AmountOfMoney != 150;
 
             //Assert
             Assert.AreEqual(expectedException.Message, "Player doesn't have enough money!");

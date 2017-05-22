@@ -143,7 +143,7 @@ namespace Poker.BE.Domain.Game.Tests
             player.AddMoney(100);
 
             //Assert
-            Assert.AreEqual(player.Wallet.amountOfMoney, 100);
+            Assert.AreEqual(player.Wallet.AmountOfMoney, 100);
         }
 
         [TestMethod()]
@@ -168,7 +168,7 @@ namespace Poker.BE.Domain.Game.Tests
 
             //Assert
             Assert.AreEqual(expectedException.Message, "Player doesn't have enough money!");
-            Assert.AreEqual(player.Wallet.amountOfMoney, 50);
+            Assert.AreEqual(player.Wallet.AmountOfMoney, 50);
         }
     }
 }
