@@ -22,9 +22,9 @@ namespace Poker.BE.Domain.Game.Tests
         public void PlayMoveTest()
         {
             //Arrange
-            var player1 = new Player();
-            var player2 = new Player();
-            var player3 = new Player();
+            var player1 = new Player() { Nickname = "test player 1" };
+            var player2 = new Player() { Nickname = "test player 2" };
+            var player3 = new Player() { Nickname = "test player 3" };
             player1.AddMoney(500);
             player2.AddMoney(350);
             player3.AddMoney(600);
@@ -50,7 +50,7 @@ namespace Poker.BE.Domain.Game.Tests
             {
                 round.PlayMove(Round.Move.raise, 20);
             }
-            catch(GameRulesException e)
+            catch (GameRulesException e)
             {
                 expectedException1 = e;
             }
@@ -67,7 +67,7 @@ namespace Poker.BE.Domain.Game.Tests
             round.PlayMove(Round.Move.allin, 0);
             var res5 = round.CurrentPlayer == player3 && round.CurrentPot.PlayersClaimPot.Contains(player1) && round.CurrentPot.PlayersClaimPot.Contains(player2)
                         && !round.CurrentPot.PartialPot.PlayersClaimPot.Contains(player2) && round.CurrentPot.PartialPot.PlayersClaimPot.Contains(player1)
-                        && round.LiveBets[player2] == 350 && round.CurrentPot.AmountToClaim == 350 && round.CurrentPot.Value == 820  
+                        && round.LiveBets[player2] == 350 && round.CurrentPot.AmountToClaim == 350 && round.CurrentPot.Value == 820
                         && round.CurrentPot.PartialPot.Value == 150 && round.CurrentPot.PartialPot.AmountToClaim == 150;
 
             try
