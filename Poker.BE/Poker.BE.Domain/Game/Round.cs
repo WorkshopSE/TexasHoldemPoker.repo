@@ -216,7 +216,8 @@ namespace Poker.BE.Domain.Game
             if (amountToBetOrCall + playerCurrentBet > lastPartialPot.AmountToClaim)
                 throw new WrongIOException("Not enough partial pots were created! Something isn't right!");
 
-            if (CurrentPlayer.Wallet.AmountOfMoney == 0) //if call all-in move
+            //if this is a call all-in move
+            if (CurrentPlayer.Wallet.AmountOfMoney == 0)
             {
                 //Add new partial pot in the middle
                 Pot newPartialPot = new Pot(lastPartialPot.BasePot)
