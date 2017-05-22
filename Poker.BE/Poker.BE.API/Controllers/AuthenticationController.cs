@@ -10,6 +10,7 @@ using System.Web.Http;
 
 namespace Poker.BE.API.Controllers
 {
+	//TODO @idan add logger
 	public class AuthenticationController : ApiController
 	{
 		#region Fields
@@ -35,7 +36,7 @@ namespace Poker.BE.API.Controllers
 			}
 			catch (Exception e)
 			{
-				result.ErrorMessage = e.Message;
+				result.ErrorMessage += " " + e.Message;
 				return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, e);
 			}
 
@@ -51,7 +52,7 @@ namespace Poker.BE.API.Controllers
 			}
 			catch (Exception e)
 			{
-				result.ErrorMessage = e.Message;
+				result.ErrorMessage += " " + e.Message;
 				return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, e);
 			}
 
@@ -67,8 +68,8 @@ namespace Poker.BE.API.Controllers
 			}
 			catch (Exception e)
 			{
-				result.ErrorMessage = e.Message;
-				return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, e);
+				result.ErrorMessage += " " + e.Message;
+				return Request.CreateResponse(HttpStatusCode.InternalServerError, result);
 			}
 
 			return Request.CreateResponse(HttpStatusCode.OK, result);

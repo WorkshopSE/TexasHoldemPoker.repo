@@ -14,8 +14,14 @@ namespace Poker.BE.Service.Services
 {
 	public class AuthenticationService : IServices.IAuthenticationService
 	{
-		public UserManager Manager { get; set; }
+		#region fields
+		public UserManager Manager;
+		#endregion
+
+		#region properties
 		public IDictionary<int, User> Users { get; set; }
+		#endregion
+
 		public LoginResult Login(LoginRequest request)
 		{
 			var result = new LoginResult();
@@ -28,7 +34,7 @@ namespace Poker.BE.Service.Services
 				result.Success = false;
 				result.ErrorMessage = e.Message;
 			}
-			catch(IncorrectPasswordException e)
+			catch (IncorrectPasswordException e)
 			{
 				result.Success = false;
 				result.ErrorMessage = e.Message;
@@ -47,14 +53,13 @@ namespace Poker.BE.Service.Services
 			{
 				result.User = Manager.LogOut(user).GetHashCode();
 			}
-			catch(UserNotFoundException e)
+			catch (UserNotFoundException e)
 			{
 				result.Success = false;
 				result.ErrorMessage = e.Message;
 			}
 			return result;
 		}
-
 		public SignUpResult SignUp(SignUpRequest request)
 		{
 			var result = new SignUpResult();

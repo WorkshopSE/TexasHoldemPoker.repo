@@ -11,7 +11,7 @@ namespace Poker.BE.Domain.Security
 	public class UserManager
 	{
 		#region Properties
-		protected Dictionary<string, User> UsersDictionary;
+		public IDictionary<string, User> UsersDictionary;
 
 		#endregion
 
