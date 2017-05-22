@@ -79,7 +79,7 @@ namespace Poker.BE.Domain.Game
             CurrentState = State.Passive;
             return WalletValue;
         }
-
+/*
         // override object.Equals
         public override bool Equals(object obj)
         {
@@ -104,7 +104,7 @@ namespace Poker.BE.Domain.Game
                 && WalletValue.Equals(other.WalletValue)
                 ;
         }
-
+*/
         // override object.GetHashCode
         public override int GetHashCode()
         {

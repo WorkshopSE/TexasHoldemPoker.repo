@@ -68,11 +68,14 @@ namespace Poker.BE.Domain.Game
             {
                 case Move.check:
                     {
+                        if (TotalRaise > 0)
+                            throw new GameRulesException("Can't check if someone had raised");
                         CurrentTurn.Check();  // Do nothing??
                         break;
                     }
                 case Move.call:
                     {
+
                         Call(amountToBetOrCall);
                         break;
                     }
@@ -139,7 +142,10 @@ namespace Poker.BE.Domain.Game
 
                         //Make all-in
                         if (this.CurrentPlayer.Wallet.AmountOfMoney + LiveBets[currentPlayer] <= TotalRaise)
+                        {
+                            
                             Call(this.CurrentPlayer.Wallet.AmountOfMoney);
+                        }
                         else
                         {
                             Call(0);
@@ -161,14 +167,21 @@ namespace Poker.BE.Domain.Game
                         throw new GameRulesException("Invalid Move");
                     }
             }
+            
             //Change Player
             CalculateNextPlayer();
+ 
             CurrentTurn.CurrentPlayer = this.CurrentPlayer;
         }
         private void CalculateNextPlayer()
         {
             do
+            {
+                
                 this.currentPlayer = this.ActiveUnfoldedPlayers.ElementAt((ActiveUnfoldedPlayers.ToList().IndexOf(this.CurrentPlayer) + 1) % ActiveUnfoldedPlayers.Count);
+                
+
+            }
             while (this.CurrentPlayer.CurrentState == Player.State.ActiveAllIn);
 
         }
@@ -247,8 +260,6 @@ namespace Poker.BE.Domain.Game
                 lastPartialPot.AmountToClaim -= newPartialPot.AmountToClaim;
                 newPartialPot.Value = lastPartialPot.Value - (lastPartialPot.AmountToClaim * lastPartialPot.PlayersClaimPot.Count);
                 lastPartialPot.Value = lastPartialPot.AmountToClaim * lastPartialPot.PlayersClaimPot.Count;
-
-
             }
         }
 
