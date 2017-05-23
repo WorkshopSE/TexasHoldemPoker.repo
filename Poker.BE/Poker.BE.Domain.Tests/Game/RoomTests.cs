@@ -246,12 +246,12 @@ namespace Poker.BE.Domain.Game.Tests
             //Assert
             Assert.AreEqual(false, actual1);
             Assert.AreEqual(0, actTable);
-            Assert.AreEqual(false, room.Chairs.ElementAt(2).IsBusy);
+            Assert.AreEqual(false, room.Chairs.ElementAt(2).IsTaken);
 
             Assert.AreEqual(true, actual2);
             Assert.AreEqual(1, room.TableLocationOfActivePlayers.Count);
             Assert.AreEqual(roomCreator, room.TableLocationOfActivePlayers[room.Chairs.ElementAt(9)]);
-            Assert.AreEqual(true, room.Chairs.ElementAt(9).IsBusy);
+            Assert.AreEqual(true, room.Chairs.ElementAt(9).IsTaken);
         }
 
         [TestMethod()]
@@ -262,10 +262,10 @@ namespace Poker.BE.Domain.Game.Tests
             //Act
             room.TakeChair(roomCreator, 3);
             var actual1 = room.TableLocationOfActivePlayers.Count;
-            var actChair = room.Chairs.ElementAt(3).IsBusy;
+            var actChair = room.Chairs.ElementAt(3).IsTaken;
             room.LeaveChair(roomCreator);
             var actual2 = room.TableLocationOfActivePlayers.Count;
-            var actChair2 = room.Chairs.ElementAt(3).IsBusy;
+            var actChair2 = room.Chairs.ElementAt(3).IsTaken;
 
             //Assert
             Assert.AreEqual(1, actual1);

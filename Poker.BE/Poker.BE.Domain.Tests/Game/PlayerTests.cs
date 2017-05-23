@@ -170,5 +170,22 @@ namespace Poker.BE.Domain.Game.Tests
             Assert.AreEqual(expectedException.Message, "Player doesn't have enough money!");
             Assert.AreEqual(player.Wallet.AmountOfMoney, 50);
         }
+
+        [TestMethod]
+        public void Equals()
+        {
+            //Arrange
+            var other = new Player();
+
+            //Act
+            var afalse = player.Equals(other);
+            player.Nickname = "test";
+            other.Nickname = "test";
+            var atrue = player.Equals(other);
+
+            //Assert
+            Assert.IsTrue(atrue);
+            Assert.IsFalse(afalse);
+        }
     }
 }

@@ -96,6 +96,13 @@ namespace Poker.BE.Domain.Game
             }
 
             var other = obj as Player;
+
+            // Note: when nickname == "" -> shallow compare.
+            if (Nickname.Equals("") && other.Nickname.Equals(""))
+            {
+                return this == other;
+            }
+
             return 
                 other != null 
                 && CurrentState == other.CurrentState

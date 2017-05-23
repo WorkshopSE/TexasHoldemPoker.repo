@@ -22,6 +22,7 @@ namespace Poker.BE.Domain.Core
 
         public Bank(double sumToDeposit)
         {
+            // TODO: Ariel / Tomer - test sumToDeposit > 0
             Deposit(sumToDeposit);
         }
         #endregion
