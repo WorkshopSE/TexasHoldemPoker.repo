@@ -143,12 +143,13 @@ namespace Poker.BE.Domain.Core.Tests
         public void EnterRoomTest()
         {
             //Arrange
-            var expected = new Player();
+            var expected = new Player() { Nickname = "test player" };
             var actual = default(Player);
-            Room room = new Room(new Player());
+            Room room = new Room(new Player() { Nickname = "test player" });
 
             //Act
             actual = gameCenter.EnterRoom(room);
+            actual.Nickname = "test player";
 
             //Assert
             Assert.AreEqual(expected, actual, "returned player");
@@ -160,7 +161,7 @@ namespace Poker.BE.Domain.Core.Tests
         public void CreateNewRoomTest()
         {
             //Arrange
-            var expPlayer = new Player();
+            var expPlayer = new Player() { Nickname = "test player" };
             var expRoom = new Room(expPlayer);
 
             GameConfig inConfig = new GameConfig();
@@ -169,6 +170,7 @@ namespace Poker.BE.Domain.Core.Tests
             //Act
             Player actCreator;
             var actual = gameCenter.CreateNewRoom(inLevel, inConfig, out actCreator);
+            actCreator.Nickname = "test player";
 
             //Assert
             Assert.AreEqual(expPlayer, actCreator, "eq creators");

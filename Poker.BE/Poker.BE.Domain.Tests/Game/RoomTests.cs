@@ -223,10 +223,11 @@ namespace Poker.BE.Domain.Game.Tests
         public void CreatePlayerTest()
         {
             //Arrange
-            var expected = new Player();
+            var expected = new Player() { Nickname = "test player" };
 
             //Act
             var actual = room.CreatePlayer();
+            actual.Nickname = "test player";
 
             //Assert
             Assert.AreEqual(expected, actual);
