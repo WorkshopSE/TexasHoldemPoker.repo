@@ -4,16 +4,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Poker.BE.Domain.Core
+namespace Poker.BE.Service.Modules.Requests
 {
-	public abstract class AbstractUser
+	public class SignUpRequest : IRequest
 	{
-
-		#region Properties
+		/// <summary>
+		/// requesting user hash code
+		/// </summary>
 		public string UserName { get; set; }
 		public string Password { get; set; }
-		public Bank UserBank { get; set; }
-		public bool IsConnected { get; set; }
-		#endregion
+		public double Deposit { get;  set; }
 	}
 }
