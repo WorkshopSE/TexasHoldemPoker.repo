@@ -31,6 +31,7 @@ namespace Poker.BE.Domain.Game
         private Dictionary<Player, int> liveBets;
         private int totalRaise;
         private int lastRaise;
+        private Player lastPlayer;
         #endregion
 
         #region Properties
@@ -41,6 +42,7 @@ namespace Poker.BE.Domain.Game
         public Dictionary<Player, int> LiveBets { get { return liveBets; } }
         public int TotalRaise { get { return totalRaise; } }
         public int LastRaise { get { return lastRaise; } }
+        public Player LastPlayer { get { return lastPlayer; } }
 
         #endregion
 
@@ -62,13 +64,21 @@ namespace Poker.BE.Domain.Game
         #endregion
 
         #region Methods
-        public void PlayMove(Move playMove, int amountToBetOrCall)
+        public void startRound(bool isPreFlop)
+        {
+            lastPlayer = CurrentPlayer;
+            //TODO
+        }
+
+        public int PlayMove(Move playMove, int amountToBetOrCall)
         {
             switch (playMove)
             {
                 case Move.check:
                     {
-                        CurrentTurn.Check();  // Do nothing??
+                        if (TotalRaise > 0)
+                            throw new GameRulesException("Can't check if someone had raised before");
+                            CurrentTurn.Check();  // Do nothing??
                         break;
                     }
                 case Move.call:
@@ -92,7 +102,7 @@ namespace Poker.BE.Domain.Game
                         //Remove player from round
                         this.currentPlayer = this.ActiveUnfoldedPlayers.ElementAt((ActiveUnfoldedPlayers.ToList().IndexOf(this.CurrentPlayer) - 1) % ActiveUnfoldedPlayers.Count);
                         ActiveUnfoldedPlayers.Remove(playerToRemove);
-                        return;
+                        return TotalRaise;
                         //break;
                     }
                 case Move.bet:
@@ -164,7 +174,10 @@ namespace Poker.BE.Domain.Game
             //Change Player
             CalculateNextPlayer();
             CurrentTurn.CurrentPlayer = this.CurrentPlayer;
+
+            return TotalRaise;
         }
+
         private void CalculateNextPlayer()
         {
             do
@@ -294,6 +307,8 @@ namespace Poker.BE.Domain.Game
 
             if (currentPlayer.Wallet.AmountOfMoney == 0)
                 lastPartialPot.PartialPot = new Pot(lastPartialPot);
+
+            lastPlayer = CurrentPlayer;
         }
         #endregion
     }
