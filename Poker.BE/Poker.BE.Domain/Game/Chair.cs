@@ -8,20 +8,22 @@ namespace Poker.BE.Domain.Game
 {
     public class Chair
     {
-        #region Constants
-        public static readonly int NCHAIRS_IN_ROOM = 10;
-        #endregion
+        
 
         #region Fields
         private int index;
-        private bool isBusy;
+        private bool isTaken;
+        #endregion
+
+        #region Properties
+        public bool IsTaken { get { return isTaken; } }
         #endregion
 
         #region Constructors
         public Chair(int index)
         {
             this.index = index;
-            lock (this) { isBusy = false; }
+            lock (this) { isTaken = false; }
         }
 
         #endregion
@@ -29,18 +31,18 @@ namespace Poker.BE.Domain.Game
         #region Methods
         public bool Take()
         {
-            if (isBusy) return false;
+            if (isTaken) return false;
             lock (this)
             {
-                if (isBusy) return false;
-                isBusy = true;
+                if (isTaken) return false;
+                isTaken = true;
             }
             return true;
         }
 
         public void Release()
         {
-            lock (this) { isBusy = false; }
+            lock (this) { isTaken = false; }
         }
         #endregion
 

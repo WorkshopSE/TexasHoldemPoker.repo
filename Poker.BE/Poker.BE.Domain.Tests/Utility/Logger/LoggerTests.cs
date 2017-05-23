@@ -90,7 +90,7 @@ namespace Poker.BE.Domain.Utility.Logger.Tests
         public void ErrorTest()
         {
             //Arrange
-            string message = "test";
+            string message = "test_errortest0";
             string[] expected = new string[] { LogTestPrefix("Error", "High") + message + LogTestSuffix() };
 
             //Act

@@ -6,16 +6,21 @@ using System.Threading.Tasks;
 
 namespace Poker.BE.Domain.Game
 {
-    public class Wallet
+    public class Wallet : Utility.MoneyStorage
     {
         #region Properties
-        public int amountOfMoney { get; set; }
+        public int AmountOfMoney { get; set; }
         #endregion
 
-        #region Contructors
+        #region Constructors
+        public Wallet() : base() { }
+        public Wallet(Currency currency) : base(currency) { }
+        public Wallet(Currency currency, double amount) : base(currency, amount) { }
+
+        // fixme - make wallet unified by ucc03/6
         public Wallet(int amount)
         {
-            this.amountOfMoney = amount;
+            AmountOfMoney = amount;
         }
         #endregion
 

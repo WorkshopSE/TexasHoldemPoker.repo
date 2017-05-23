@@ -45,6 +45,7 @@ namespace Poker.BE.Domain.Game
             this.Active = true;
             
         }
+
         #endregion
 
         #region Methods

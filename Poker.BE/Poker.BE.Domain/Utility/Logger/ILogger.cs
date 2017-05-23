@@ -8,8 +8,7 @@ namespace Poker.BE.Domain.Utility.Logger
 {
     public interface ILogger
     {
-        /* Note:
-         * Every function should deliver:
+        /* Note: Every function should deliver:
          * time stamp
          * severity / priority - type & color of message
          * the message

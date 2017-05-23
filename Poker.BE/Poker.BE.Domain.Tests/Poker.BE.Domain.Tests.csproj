@@ -45,6 +45,8 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Core\GameCenterTests.cs" />
+    <Compile Include="Core\UserTests.cs" />
     <Compile Include="Game\ChairTests.cs" />
     <Compile Include="Game\DeckTests.cs" />
     <Compile Include="Game\HandTests.cs" />
