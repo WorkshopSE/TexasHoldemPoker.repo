@@ -81,7 +81,7 @@ namespace Poker.BE.Domain.Utility
 
             switch (currency)
             {
-                // UNDONE: call a service that gets the actual currency gate.
+                // TODO: call a service that gets the actual currency gate.
                 case Currency.USD:
                 case Currency.NIS:
                 case Currency.CHIP:

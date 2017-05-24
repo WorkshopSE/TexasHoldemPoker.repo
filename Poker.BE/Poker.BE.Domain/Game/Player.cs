@@ -14,6 +14,7 @@ namespace Poker.BE.Domain.Game
         {
             ActiveUnfolded,
             ActiveFolded,
+            ActiveAllIn,
             Passive
         }
         public const int NPRIVATE_CARDS = 2;
@@ -24,8 +25,9 @@ namespace Poker.BE.Domain.Game
         #endregion
 
         #region Properties
-        public State CurrentState { get; protected set; }
-        public double Wallet { get { return _wallet.Value; } private set { _wallet.Value = value; } }
+        public State CurrentState { get; set; }
+        public Wallet Wallet { get { return _wallet; } }
+        public double WalletValue { get { return _wallet.Value; } private set { _wallet.Value = value; } }
         public Card[] PrivateCards { get; set; }
         public string Nickname { get; set; }
         #endregion
@@ -36,8 +38,13 @@ namespace Poker.BE.Domain.Game
             PrivateCards = new Card[NPRIVATE_CARDS];
             CurrentState = State.Passive;
             _wallet = new Wallet();
-            Wallet = 0.0;
+            WalletValue = 0.0;
+            Nickname = "";
         }
+
+        #endregion
+
+        #region Methods
 
         public bool JoinToTable(double buyIn)
         {
@@ -47,11 +54,12 @@ namespace Poker.BE.Domain.Game
             }
 
             // buy in to wallet
-            Wallet = buyIn;
+            WalletValue = buyIn;
 
             CurrentState = State.ActiveUnfolded;
             return true;
         }
+        
         /// <summary>
         /// Make the player to leave the table, and return his remaining wallet money to the user bank
         /// </summary>
@@ -69,10 +77,59 @@ namespace Poker.BE.Domain.Game
             }
 
             CurrentState = State.Passive;
-            return Wallet;
+            return WalletValue;
         }
 
-        #endregion
+        // override object.Equals
+        public override bool Equals(object obj)
+        {
+            //       
+            // See the full list of guidelines at
+            //   http://go.microsoft.com/fwlink/?LinkID=85237  
+            // and also the guidance for operator== at
+            //   http://go.microsoft.com/fwlink/?LinkId=85238
+            //
 
-    }// class
+            if (obj == null || GetType() != obj.GetType())
+            {
+                return false;
+            }
+
+            var other = obj as Player;
+
+            // Note: when nickname == "" -> shallow compare.
+            if (Nickname.Equals("") && other.Nickname.Equals(""))
+            {
+                return this == other;
+            }
+
+            return 
+                other != null 
+                && CurrentState == other.CurrentState
+                && Nickname.Equals(other.Nickname)
+                //&& this.PrivateCards.Equals(other.PrivateCards) //TODO override card.equals
+                && WalletValue.Equals(other.WalletValue)
+                ;
+        }
+
+        // override object.GetHashCode
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
+
+
+        public void AddMoney(int amount)
+        {
+            _wallet.AmountOfMoney += amount;
+        }
+
+        public void SubstractMoney(int amount)
+        {
+            if (_wallet.AmountOfMoney < amount)
+                throw new NotEnoughMoneyException("Player doesn't have enough money!");
+            _wallet.AmountOfMoney -= amount;
+        }
+        #endregion
+    }
 }

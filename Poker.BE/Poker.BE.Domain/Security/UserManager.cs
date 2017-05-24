@@ -21,6 +21,7 @@ namespace Poker.BE.Domain.Security
 			UsersDictionary = new Dictionary<string, User>();
 		}
 
+
 		public User AddUser(string userName, string password, double sumToDeposit)
 		{
 			if (CheckExistingUser(userName))
@@ -34,29 +35,23 @@ namespace Poker.BE.Domain.Security
 			return UserToAdd;
 		}
 
-		protected bool RemoveUser(string userName)
-		{
-			if (CheckExistingUser(userName))
-			{
-				UsersDictionary.Remove(userName);
-				return true;
-			}
-			return false;
-		}
 
-		protected bool CheckExistingUser(string userName)
-		{
-			if (userName != null)
-				return (UsersDictionary.ContainsKey(userName));
-			return false;
-		}
+        public bool RemoveUser (string userName){
+            return UsersDictionary.Remove(userName);    //returns true if found and deleted
 
+        }
 
-		protected bool CheckPasswordValidity(string password)
+        protected bool CheckExistingUser (string userName){
+            if (userName != null)
+                return (UsersDictionary.ContainsKey(userName));
+            return false;
+        }
+        
+        protected bool CheckPasswordValidity (string password){
 		{
-			if (password.Length >= 6) return true;
-			return false;
-		}
+            if (password.Length >= 6 ) return true;
+            return false;
+        }
 
 		public User LogIn(string userName, string password)
 		{
@@ -77,16 +72,36 @@ namespace Poker.BE.Domain.Security
 			return null;
 		}
 
-		public bool LogOut(User userToLogout)
+        public bool LogOut (User userToLogout){
 		{
 			if (!CheckExistingUser(userToLogout.UserName)) // We check that the user is existing in our DB
 				throw new UserNotFoundException();
-			userToLogout.Disconnect();
-			return true;
-		}
+            userToLogout.Disconnect();
+            return true;
+        }
 
+        public bool EditProfile (string oldUserName, string newUserName, string newPassword, string newAvatar)
+        {
+            if (!CheckExistingUser(oldUserName)) //Check user's existance
+            {
+                return false;
+            }
+            User userToUpdate = UsersDictionary[oldUserName];
+            RemoveUser(oldUserName);
 
-		#endregion
+            if (CheckExistingUser(newUserName) || !CheckPasswordValidity(newPassword))  //Check new username and password validation
+            {
+                UsersDictionary.Add(oldUserName, userToUpdate);
+                return false;
+            }
 
-	}
+            userToUpdate.UserName = newUserName;
+            userToUpdate.Password = newPassword;
+            userToUpdate.Avatar = newAvatar;
+            UsersDictionary.Add(newUserName, userToUpdate);
+            return true;
+        }
+        #endregion
+
+    }
 }

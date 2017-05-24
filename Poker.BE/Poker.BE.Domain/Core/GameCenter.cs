@@ -16,7 +16,6 @@ namespace Poker.BE.Domain.Core
     /// </remarks>
     public sealed class GameCenter
     {
-        // UNDONE: Make the GameCenter a Singleton!
         #region Constants
         public enum Move
         {
@@ -26,6 +25,16 @@ namespace Poker.BE.Domain.Core
             Raise,
             Call,
             AllIn
+        }
+
+        /// <summary>
+        /// clears all game-center resources
+        /// </summary>
+        public void ClearAll()
+        {
+            playersManager.Clear();
+            roomsManager.Clear();
+            leagues.Clear();
         }
         #endregion
 
@@ -74,10 +83,11 @@ namespace Poker.BE.Domain.Core
             return room.CreatePlayer();
         }
 
-        private void AddLeage(int minLevel, int maxLevel)
+        private League AddLeage(int minLevel = League.MIN_LEVEL, int maxLevel = League.MAX_LEVEL)
         {
             var league = new League() { MaxLevel = maxLevel, MinLevel = minLevel };
             leagues.Add(league);
+            return league;
         }
 
         private bool RemovePlayer(Player player)
@@ -163,50 +173,100 @@ namespace Poker.BE.Domain.Core
                 }
             }
 
+            if (result.Count == 0)
+            {
+                result.Add(AddLeage());
+            }
+
             return result;
         }
 
-        private League FindLeagueToFill(ICollection<League> collection)
+        private League FindLeagueToFill(ICollection<League> leaguesPartialGroup)
         {
             // TODO: pick a league to insert the new created room, by the relevant requirements.
-            throw new NotImplementedException();
+
+            // HACK: this is a stub return
+            return
+                (from league in leaguesPartialGroup
+                 where !league.IsFull
+                 select league).First();
         }
 
         #endregion
 
         #region Methods
 
-        #region Find an Existing Room
         /// <summary>
         /// Allow the user to find an existing room according to different criteria and enter the room as a spectator.
         /// </summary>
         /// <remarks>UC004: Find an Existing Room</remarks>
         /// <returns>Collection of rooms</returns>
         /// <see cref="https://docs.google.com/document/d/1OTee6BGDWK2usL53jdoeBOI-1Jh8wyNejbQ0ZroUhcA/edit#heading=h.tvbd8487o8xd"/>
-        public ICollection<Room> FindRoomsByCriteria(int level)
+        public ICollection<Room> FindRoomsByCriteria(int level = -1, Player player = null, GamePreferences preferences = null, double betSize = -1.0)
         {
-            // TODO
-            throw new NotImplementedException();
-        }
+            var result = new List<Room>();
 
-        public ICollection<Room> FindRoomsByCriteria(Player player)
-        {
-            // TODO
-            throw new NotImplementedException();
-        }
+            if (level > 0)
+            {
+                var collections = (from league in leagues
+                                   where league.MinLevel <= level & league.MaxLevel >= level
+                                   select league.Rooms);
 
-        public ICollection<Room> FindRoomsByCriteria(GamePreferences preferences)
-        {
-            // TODO
-            throw new NotImplementedException();
-        }
+                var flat =
+                    collections.Aggregate(new List<Room>(), (acc, x) => acc.Concat(x).ToList())
+                    .Distinct(new Utility.AddressComparer<Room>());
+                result.AddRange(flat);
+            }
 
-        public ICollection<Room> FindRoomsByCriteria(double betSize)
-        {
-            // TODO
-            throw new NotImplementedException();
+            if (player != null)
+            {
+                Room room = null;
+                if (!playersManager.TryGetValue(player, out room))
+                {
+                    throw new RoomNotFoundException("room not found for player: " + player.GetHashCode().ToString());
+                }
+
+                if (result.Count == 0)
+                {
+                    result.Add(room);
+                }
+                else
+                {
+                    result = (from item in result where item == room select item).ToList();
+                    if (result.Count != 1)
+                    {
+                        throw new RoomNotFoundException("mismatch of searching room. only 1 occurrence didn't returned");
+                    }
+                }
+            }
+
+            if (preferences != null)
+            {
+                // undone - idan - continue from here - after game preferences will be implemented.
+            }
+
+            if (betSize > 0)
+            {
+                result.AddRange(
+                    from room in Rooms
+                    where room.MinimumBet == betSize
+                    select room
+                    );
+            }
+
+            if (result.Count == 0)
+            {
+                throw new RoomNotFoundException(
+                    "no rooms are find by the criteria: "
+                    + (level > -1 ? "level: " + level : "")
+                    + (player != null ? "player id: " + player.GetHashCode() : "")
+                    + (preferences != null ? "game preferences: " + preferences.GetType().Name : "")
+                    + (betSize > -1.0 ? "bet size: " + betSize : "")
+                    );
+            }
+
+            return result;
         }
-        #endregion
 
         /// <summary>
         /// Allow the user to enter a room from a list as a spectator.
@@ -232,9 +292,9 @@ namespace Poker.BE.Domain.Core
         /// <see cref="https://docs.google.com/document/d/1OTee6BGDWK2usL53jdoeBOI-1Jh8wyNejbQ0ZroUhcA/edit#heading=h.eqjp0wvvpmjg"/>
         /// <param name="level">user level</param>
         /// <returns>the new created room</returns>
-        public Room CreateNewRoom(int level, GameConfig config)
+        public Room CreateNewRoom(int level, GameConfig config, out Player creator)
         {
-            var creator = new Player();
+            creator = new Player();
 
             // creating the room and adding the creator as a passive player to it.
             var room = new Room(creator, config);
@@ -262,7 +322,8 @@ namespace Poker.BE.Domain.Core
             /* Checking Preconditions */
 
             // get the room of the player belongs to
-            if (!playersManager.TryGetValue(player, out Room room))
+            Room room = null;
+            if (!playersManager.TryGetValue(player, out room))
             {
                 throw new RoomNotFoundException("Try joining next hand for a player with room that can't be found");
             }
@@ -286,7 +347,7 @@ namespace Poker.BE.Domain.Core
             }
 
             // the user has enough money to buy in
-            if (buyIn < room.MinimumBet)
+            if (buyIn < room.BuyInCost)
             {
                 throw new NotEnoughMoneyException("Buy in amount is less then the minimum to join the table.");
             }
@@ -307,15 +368,27 @@ namespace Poker.BE.Domain.Core
             /* Checking Preconditions */
 
             // the player is sitting at the table
-            if (!playersManager.TryGetValue(player, out Room room))
+            Room room = null;
+            if (!playersManager.TryGetValue(player, out room))
             {
                 throw new RoomNotFoundException("Unable to stand up - The player is not at the room");
             }
 
             // it's the player's turn
-            if (room.CurrentHand.CurrentRound.CurrentTurn.CurrentPlayer != player)
+
+            try
             {
-                throw new NotPlayersTurnException("Unable to stand up");
+                if (room.CurrentHand.CurrentRound.CurrentTurn.CurrentPlayer != player)
+                {
+                    throw new NotPlayersTurnException("Unable to stand up");
+                }
+            }
+            catch (NullReferenceException)
+            {
+                if (player.CurrentState == Player.State.Passive)
+                {
+                    throw new RoomRulesException("Player is already a spectator");
+                }
             }
 
             /* Action - Make the player to stand up */
