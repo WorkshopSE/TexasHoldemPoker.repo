@@ -33,7 +33,7 @@ namespace Poker.BE.Domain.Game.Tests
             activeUnfoldedPlayers.Add(player2);
             activeUnfoldedPlayers.Add(player3);
             var pot = new Pot(null);
-            var round = new Round(player1, activeUnfoldedPlayers, pot);
+            var round = new Round(player1, activeUnfoldedPlayers, pot, true);
             Exception expectedException1 = new Exception();
             Exception expectedException2 = new Exception();
 

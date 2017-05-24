@@ -23,6 +23,7 @@ namespace Poker.BE.Domain.Game
         private ICollection<Player> activePlayers;
         private Pot pot;
         private Player dealer;
+        private GameConfig gameConfig;
         #endregion
 
         #region Properties
@@ -31,7 +32,7 @@ namespace Poker.BE.Domain.Game
         #endregion
 
         #region Constructors
-        public Hand(Player dealer, Deck deck, ICollection<Player> players)
+        public Hand(Player dealer, Deck deck, ICollection<Player> players, GameConfig gameConfig)
         {
             if(players.Count < MINIMAL_NUMBER_OF_ACTIVE_PLAYERS_TO_START)
             {
@@ -39,20 +40,34 @@ namespace Poker.BE.Domain.Game
             }
             this.deck = deck;
             this.activePlayers = players;
-            this.pot = new Pot(null);
+            this.pot = new Pot();
             this.dealer = dealer;
-            this.CurrentRound = new Round(dealer,activePlayers, this.pot);
+            this.CurrentRound = new Round(dealer, activePlayers, this.pot, true);
             this.Active = true;
+            this.gameConfig = gameConfig;
             
         }
 
         #endregion
 
         #region Methods
+        public void PrepareHand()
+        {
+            deck.ShuffleCards();
+            PlaceBlinds();
+            DealCards();
+        }
+
+        public void endHand()
+        {
+            //TODO: implement
+            this.Active = false;
+        }
+
         /// <summary>
         /// Each player receive 2 face-down cards
         /// </summary>
-        public void DealCards()
+        private void DealCards()
         {
             foreach (Player player in activePlayers)
             {
@@ -64,37 +79,35 @@ namespace Poker.BE.Domain.Game
             }
         }
 
-        public void PlaceBlinds(GamePreferences preferences)
+        private void PlaceBlinds()
         {
-            PlaceSmallBlind(preferences);
-            PlaceBigBlind(preferences);
-            PlaceAnts(preferences);
+            PlaceSmallBlind(this.gameConfig);
+            PlaceBigBlind(this.gameConfig);
+            PlaceAntes(this.gameConfig);
         }
 
-        public void endHand()
-        {
-            //TODO: implement
-            this.Active = false;
-        }
+
 
         /// <summary>
         /// If needed:
         /// All of the active players are forced to pay some blind
         /// payment to the pot, regardless to the regular blinds.
         /// </summary>
-        private void PlaceAnts(GamePreferences preferences)
+        private void PlaceAntes(GameConfig config)
+        {
+            foreach (Player player in activePlayers)
+            {
+                player.SubstractMoney(config.AntesValue);
+            }
+        }
+
+        private void PlaceBigBlind(GameConfig config)
         {
             //TODO: WAIT FOR GamePreferences
             throw new NotImplementedException();
         }
 
-        private void PlaceBigBlind(GamePreferences preferences)
-        {
-            //TODO: WAIT FOR GamePreferences
-            throw new NotImplementedException();
-        }
-
-        private void PlaceSmallBlind(GamePreferences preferences)
+        private void PlaceSmallBlind(GameConfig config)
         {
             //TODO: WAIT FOR GamePreferences
             throw new NotImplementedException();

@@ -244,9 +244,8 @@ namespace Poker.BE.Domain.Game
             }
             deck.ShuffleCards();
             Player dealer = ActivePlayers.ElementAt(dealerIndex);
-            CurrentHand = new Hand(dealer, deck, ActivePlayers);
-            CurrentHand.DealCards();
-            CurrentHand.PlaceBlinds(Preferences);
+            CurrentHand = new Hand(dealer, deck, ActivePlayers, config);
+            CurrentHand.PrepareHand();
             //TODO: Check If HEAD-TO-HEAD / HEADS UP alternative flow workds here.
 
         }

@@ -119,12 +119,12 @@ namespace Poker.BE.Domain.Game
         }
 
 
-        public void AddMoney(int amount)
+        public void AddMoney(double amount)
         {
             _wallet.AmountOfMoney += amount;
         }
 
-        public void SubstractMoney(int amount)
+        public void SubstractMoney(double amount)
         {
             if (_wallet.AmountOfMoney < amount)
                 throw new NotEnoughMoneyException("Player doesn't have enough money!");

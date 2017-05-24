@@ -14,6 +14,7 @@ namespace Poker.BE.Domain.Game
         private int _minNumberOfPlayers;
         private double _buyInCost;
         private double _minimumBet;
+        private double _antes;
         private string _name;
         private GamePreferences _preferences;
         #endregion
@@ -133,6 +134,15 @@ namespace Poker.BE.Domain.Game
                     _minimumBet = value;
                 }
             }
+        }
+
+        /// <summary>
+        /// The creator sets the antes of the room’s table.
+        /// </summary>
+        public double AntesValue
+        {
+            get { return _antes; }
+            set { _minimumBet = value; }
         }
 
         /// <summary>

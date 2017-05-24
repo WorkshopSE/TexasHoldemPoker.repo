@@ -11,8 +11,8 @@ namespace Poker.BE.Domain.Game
         #region Fields
         private Pot partialPot;
         private Pot basePot;
-        private int value;
-        private int amountToClaim;
+        private double value;
+        private double amountToClaim;
         private List<Player> playersClaimPot;
         #endregion
 
@@ -20,8 +20,8 @@ namespace Poker.BE.Domain.Game
         public Pot PartialPot { get { return this.partialPot; } set { this.partialPot = value; } }
         public Pot BasePot { get { return this.basePot; } set { this.basePot = value; } }
 
-        public int Value { get { return this.value; } set { this.value = value; } }
-        public int AmountToClaim { get { return this.amountToClaim; } set { this.amountToClaim = value; } }
+        public double Value { get { return this.value; } set { this.value = value; } }
+        public double AmountToClaim { get { return this.amountToClaim; } set { this.amountToClaim = value; } }
 
         public List<Player> PlayersClaimPot { get { return this.playersClaimPot; } set { this.playersClaimPot = value; } }
         #endregion
@@ -42,7 +42,7 @@ namespace Poker.BE.Domain.Game
         #endregion
 
         #region Methods
-        public void AddToPot(int amount)
+        public void AddToPot(double amount)
         {
             this.value += amount;
         }

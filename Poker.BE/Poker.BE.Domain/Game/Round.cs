@@ -25,12 +25,14 @@ namespace Poker.BE.Domain.Game
         #region Fields
         private ICollection<Player> activeUnfoldedPlayers;
         private Turn currentTurn;
-        //private Player dealer;        Is dealer needed??
+        private Player dealer;
         private Player currentPlayer;
         private Pot currentPot;
-        private Dictionary<Player, int> liveBets;
-        private int totalRaise;
-        private int lastRaise;
+        private Dictionary<Player, double> liveBets;
+        private double totalRaise;
+        private double lastRaise;
+        private Player lastPlayerToRaise;
+        private bool canBigBlindPlayerCheck;
         #endregion
 
         #region Properties
@@ -38,37 +40,72 @@ namespace Poker.BE.Domain.Game
         public Turn CurrentTurn { get { return currentTurn; } }
         public Player CurrentPlayer { get { return currentPlayer; } }
         public Pot CurrentPot { get { return currentPot; } }
-        public Dictionary<Player, int> LiveBets { get { return liveBets; } }
-        public int TotalRaise { get { return totalRaise; } }
-        public int LastRaise { get { return lastRaise; } }
+        public Dictionary<Player, double> LiveBets { get { return liveBets; } }
+        public double TotalRaise { get { return totalRaise; } }
+        public double LastRaise { get { return lastRaise; } }
+        public Player LastPlayerToRaise { get { return lastPlayerToRaise; } }
 
         #endregion
 
         #region Constructors
-        public Round(Player currentPlayer, ICollection<Player> activeUnfoldedPlayers, Pot currentPot)
+        public Round(Player dealer, ICollection<Player> activeUnfoldedPlayers, Pot currentPot, bool isPreflop)
         {
-            this.currentPlayer = currentPlayer;
+            //Set up players info
+            this.dealer = dealer;
             this.activeUnfoldedPlayers = activeUnfoldedPlayers;
-            this.currentPot = currentPot;
-            this.currentTurn = new Turn(currentPlayer, currentPot);
-            this.liveBets = new Dictionary<Player, int>();
+            this.liveBets = new Dictionary<Player, double>();
             foreach (Player player in activeUnfoldedPlayers)
             {
                 LiveBets.Add(player, 0);
             }
+            if (isPreflop)
+            {
+                this.currentPlayer = this.activeUnfoldedPlayers.ElementAt((this.activeUnfoldedPlayers.ToList().IndexOf(dealer) + 3) % this.activeUnfoldedPlayers.Count);
+                this.lastPlayerToRaise = this.activeUnfoldedPlayers.ElementAt((this.activeUnfoldedPlayers.ToList().IndexOf(dealer) + 2) % this.activeUnfoldedPlayers.Count);
+            }
+            else
+            {
+                this.currentPlayer = this.activeUnfoldedPlayers.ElementAt((this.activeUnfoldedPlayers.ToList().IndexOf(dealer) + 1) % this.activeUnfoldedPlayers.Count);
+                this.lastPlayerToRaise = dealer;
+            }
+
+            //Set up raise info
             this.totalRaise = 0;
             this.lastRaise = 0;
+            
+
+            //Others
+            this.currentPot = currentPot;
+            this.currentTurn = new Turn(currentPlayer, currentPot);
+            this.canBigBlindPlayerCheck = isPreflop;
         }
         #endregion
 
         #region Methods
-        public void PlayMove(Move playMove, int amountToBetOrCall)
+        public void startRound(bool isPreFlop)
+        {
+            lastPlayerToRaise = CurrentPlayer;
+            //TODO
+        }
+
+        public double PlayMove(Move playMove, int amountToBetOrCall)
         {
             switch (playMove)
             {
                 case Move.check:
                     {
-                        CurrentTurn.Check();  // Do nothing??
+                        if (TotalRaise == 0)
+                            CurrentTurn.Check();  // Do nothing??
+                        else if ((canBigBlindPlayerCheck && 
+                                currentPlayer == this.activeUnfoldedPlayers.ElementAt((this.activeUnfoldedPlayers.ToList().IndexOf(dealer) + 2) % this.activeUnfoldedPlayers.Count)) && 
+                                liveBets[CurrentPlayer] == TotalRaise)
+                        {
+                            CurrentTurn.Check();    // Do nothing??
+                            canBigBlindPlayerCheck = false;
+                        }
+                        else
+                            throw new GameRulesException("Can't check if someone had raised before");
+                        
                         break;
                     }
                 case Move.call:
@@ -92,7 +129,7 @@ namespace Poker.BE.Domain.Game
                         //Remove player from round
                         this.currentPlayer = this.ActiveUnfoldedPlayers.ElementAt((ActiveUnfoldedPlayers.ToList().IndexOf(this.CurrentPlayer) - 1) % ActiveUnfoldedPlayers.Count);
                         ActiveUnfoldedPlayers.Remove(playerToRemove);
-                        return;
+                        return TotalRaise;
                         //break;
                     }
                 case Move.bet:
@@ -126,7 +163,7 @@ namespace Poker.BE.Domain.Game
                 case Move.allin:
                     {
                         //Check preconditions
-                        int highestOtherAllIn = 0;
+                        double highestOtherAllIn = 0;
                         foreach (Player player in ActiveUnfoldedPlayers)    //find highest all-in of the other players at the table
                         {
                             if (player != this.CurrentPlayer && player.Wallet.AmountOfMoney + LiveBets[player] > highestOtherAllIn)
@@ -164,7 +201,12 @@ namespace Poker.BE.Domain.Game
             //Change Player
             CalculateNextPlayer();
             CurrentTurn.CurrentPlayer = this.CurrentPlayer;
+
+            return TotalRaise;
         }
+        #endregion
+
+        #region Private Functions
         private void CalculateNextPlayer()
         {
             do
@@ -173,16 +215,16 @@ namespace Poker.BE.Domain.Game
 
         }
 
-        private void Call(int amountToBetOrCall)
+        private void Call(double amountToBetOrCall)
         {
             if (amountToBetOrCall == 0)
                 amountToBetOrCall = TotalRaise - LiveBets[CurrentPlayer];
-            int playerCurrentBet = LiveBets[CurrentPlayer];
+            double playerCurrentBet = LiveBets[CurrentPlayer];
 
             Pot partialPotIterator = CurrentPot;
             Pot lastPartialPot = partialPotIterator;
-            int amountToAdd = amountToBetOrCall;    //how much money does the player need to add in order to claim the pot
-            int lastPlayerCurrentBet = 0;
+            double amountToAdd = amountToBetOrCall;    //how much money does the player need to add in order to claim the pot
+            double lastPlayerCurrentBet = 0;
 
             while (partialPotIterator != null && partialPotIterator.AmountToClaim > 0 && amountToBetOrCall > 0)
             {
@@ -246,19 +288,17 @@ namespace Poker.BE.Domain.Game
                 lastPartialPot.AmountToClaim -= newPartialPot.AmountToClaim;
                 newPartialPot.Value = lastPartialPot.Value - (lastPartialPot.AmountToClaim * lastPartialPot.PlayersClaimPot.Count);
                 lastPartialPot.Value = lastPartialPot.AmountToClaim * lastPartialPot.PlayersClaimPot.Count;
-
-
             }
         }
 
-        private void RaisePreconditions(int amountToRaise)
+        private void RaisePreconditions(double amountToRaise)
         {
             if (LastRaise > amountToRaise)
             {
                 throw new GameRulesException("Can't raise less than last raise");
             }
 
-            int highestAllIn = 0;
+            double highestAllIn = 0;
 
             //Note: find highest all-in at the table
             foreach (Player player in ActiveUnfoldedPlayers)
@@ -275,7 +315,7 @@ namespace Poker.BE.Domain.Game
             }
         }
 
-        private void Raise(int amountToRaise)
+        private void Raise(double amountToRaise)
         {
             Pot lastPartialPot = currentPot;
             while (lastPartialPot.PartialPot != null)
@@ -294,6 +334,8 @@ namespace Poker.BE.Domain.Game
 
             if (currentPlayer.Wallet.AmountOfMoney == 0)
                 lastPartialPot.PartialPot = new Pot(lastPartialPot);
+
+            lastPlayerToRaise = CurrentPlayer;
         }
         #endregion
     }

@@ -34,7 +34,7 @@ namespace Poker.BE.Domain.Game
             ///  Do noting?
         }
 
-        public void Call(int amount)
+        public void Call(double amount)
         {
             if (amount <= 0)
                 throw new IOException("negative call :(  Somthing isn't right...");
@@ -46,14 +46,14 @@ namespace Poker.BE.Domain.Game
             this.currentPlayer.CurrentState = Player.State.ActiveFolded;
         }
 
-        public void Bet(int amount)
+        public void Bet(double amount)
         {
             if (amount <= 0)
                 throw new IOException("Can't bet a negetive amount");
             this.currentPlayer.SubstractMoney(amount);
         }
 
-        public void Raise(int amount)
+        public void Raise(double amount)
         {
             if (amount <= 0)
                 throw new IOException("Can't bet a negetive amount");
