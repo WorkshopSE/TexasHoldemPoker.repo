@@ -142,7 +142,7 @@ namespace Poker.BE.Domain.Game
         public double AntesValue
         {
             get { return _antes; }
-            set { _minimumBet = value; }
+            set { _antes = value; }
         }
 
         /// <summary>
@@ -169,6 +169,7 @@ namespace Poker.BE.Domain.Game
             MaxNumberOfPlayers = 15;
             MinNumberOfPlayers = 2;
             MinimumBet = 5.0;
+            AntesValue = 0;
             Name = "Unknown Room";
         }
         #endregion
@@ -200,6 +201,7 @@ namespace Poker.BE.Domain.Game
                 this.MaxNumberOfActivePlayers == other.MaxNumberOfActivePlayers &&
                 this.MaxNumberOfPlayers == other.MaxNumberOfPlayers &&
                 this.MinimumBet == other.MinimumBet &&
+                this._antes == other._antes &&
                 this.Name.Equals(other.Name) &&
                 this.MinNumberOfPlayers == other.MinNumberOfPlayers;
         }

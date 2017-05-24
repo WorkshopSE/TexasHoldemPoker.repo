@@ -246,8 +246,6 @@ namespace Poker.BE.Domain.Game
             Player dealer = ActivePlayers.ElementAt(dealerIndex);
             CurrentHand = new Hand(dealer, deck, ActivePlayers, config);
             CurrentHand.PrepareHand();
-            //TODO: Check If HEAD-TO-HEAD / HEADS UP alternative flow workds here.
-
         }
         public void EndCurrentHand()
         {

@@ -32,7 +32,8 @@ namespace Poker.BE.Domain.Game
         private double totalRaise;
         private double lastRaise;
         private Player lastPlayerToRaise;
-        private bool canBigBlindPlayerCheck;
+        private bool isPreflop;
+        private GameConfig config;
         #endregion
 
         #region Properties
@@ -48,8 +49,10 @@ namespace Poker.BE.Domain.Game
         #endregion
 
         #region Constructors
-        public Round(Player dealer, ICollection<Player> activeUnfoldedPlayers, Pot currentPot, bool isPreflop)
+        public Round(Player dealer, ICollection<Player> activeUnfoldedPlayers, Pot currentPot, bool isPreflop, GameConfig config)
         {
+            this.isPreflop = isPreflop;
+
             //Set up players info
             this.dealer = dealer;
             this.activeUnfoldedPlayers = activeUnfoldedPlayers;
@@ -58,16 +61,8 @@ namespace Poker.BE.Domain.Game
             {
                 LiveBets.Add(player, 0);
             }
-            if (isPreflop)
-            {
-                this.currentPlayer = this.activeUnfoldedPlayers.ElementAt((this.activeUnfoldedPlayers.ToList().IndexOf(dealer) + 3) % this.activeUnfoldedPlayers.Count);
-                this.lastPlayerToRaise = this.activeUnfoldedPlayers.ElementAt((this.activeUnfoldedPlayers.ToList().IndexOf(dealer) + 2) % this.activeUnfoldedPlayers.Count);
-            }
-            else
-            {
-                this.currentPlayer = this.activeUnfoldedPlayers.ElementAt((this.activeUnfoldedPlayers.ToList().IndexOf(dealer) + 1) % this.activeUnfoldedPlayers.Count);
-                this.lastPlayerToRaise = dealer;
-            }
+            this.currentPlayer = this.activeUnfoldedPlayers.ElementAt((this.activeUnfoldedPlayers.ToList().IndexOf(dealer) + 1) % this.activeUnfoldedPlayers.Count);
+            this.lastPlayerToRaise = dealer;
 
             //Set up raise info
             this.totalRaise = 0;
@@ -77,7 +72,7 @@ namespace Poker.BE.Domain.Game
             //Others
             this.currentPot = currentPot;
             this.currentTurn = new Turn(currentPlayer, currentPot);
-            this.canBigBlindPlayerCheck = isPreflop;
+            this.config = config;
         }
         #endregion
 
@@ -88,20 +83,22 @@ namespace Poker.BE.Domain.Game
             //TODO
         }
 
-        public double PlayMove(Move playMove, int amountToBetOrCall)
+        public double PlayMove(Move playMove, double amountToBetOrCall)
         {
             switch (playMove)
             {
                 case Move.check:
                     {
-                        if (TotalRaise == 0)
+                        //if no one had raised
+                        if (TotalRaise == config.AntesValue)
+                        {
                             CurrentTurn.Check();  // Do nothing??
-                        else if ((canBigBlindPlayerCheck && 
-                                currentPlayer == this.activeUnfoldedPlayers.ElementAt((this.activeUnfoldedPlayers.ToList().IndexOf(dealer) + 2) % this.activeUnfoldedPlayers.Count)) && 
-                                liveBets[CurrentPlayer] == TotalRaise)
+                        }
+                        else if ((isPreflop &&
+                                currentPlayer == this.activeUnfoldedPlayers.ElementAt((this.activeUnfoldedPlayers.ToList().IndexOf(dealer) + 2) % this.activeUnfoldedPlayers.Count)) &&
+                                liveBets[CurrentPlayer] == config.MinimumBet + config.AntesValue)
                         {
                             CurrentTurn.Check();    // Do nothing??
-                            canBigBlindPlayerCheck = false;
                         }
                         else
                             throw new GameRulesException("Can't check if someone had raised before");

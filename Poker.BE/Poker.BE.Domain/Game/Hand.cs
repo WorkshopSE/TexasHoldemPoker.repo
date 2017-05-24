@@ -42,7 +42,7 @@ namespace Poker.BE.Domain.Game
             this.activePlayers = players;
             this.pot = new Pot();
             this.dealer = dealer;
-            this.CurrentRound = new Round(dealer, activePlayers, this.pot, true);
+            this.CurrentRound = new Round(dealer, activePlayers, this.pot, true, this.gameConfig);
             this.Active = true;
             this.gameConfig = gameConfig;
             
@@ -81,36 +81,51 @@ namespace Poker.BE.Domain.Game
 
         private void PlaceBlinds()
         {
-            PlaceSmallBlind(this.gameConfig);
-            PlaceBigBlind(this.gameConfig);
-            PlaceAntes(this.gameConfig);
+            PlaceAntes();
+            PlaceSmallBlind();
+            PlaceBigBlind();
         }
-
-
 
         /// <summary>
         /// If needed:
         /// All of the active players are forced to pay some blind
         /// payment to the pot, regardless to the regular blinds.
         /// </summary>
-        private void PlaceAntes(GameConfig config)
+        private void PlaceAntes()
         {
-            foreach (Player player in activePlayers)
+            if (gameConfig.AntesValue == 0)
+                return;
+
+            //first player has to "bet" the ante
+            if (CurrentRound.CurrentPlayer.Wallet.AmountOfMoney < gameConfig.AntesValue)
+                CurrentRound.PlayMove(Round.Move.allin, gameConfig.AntesValue);
+            else
+                CurrentRound.PlayMove(Round.Move.bet, gameConfig.AntesValue);
+
+            //other players "call" the ante
+            for (int i = 1; i < CurrentRound.ActiveUnfoldedPlayers.Count; i++)
             {
-                player.SubstractMoney(config.AntesValue);
+                if (CurrentRound.CurrentPlayer.Wallet.AmountOfMoney < gameConfig.AntesValue)
+                    CurrentRound.PlayMove(Round.Move.allin, gameConfig.AntesValue);
+                else
+                    CurrentRound.PlayMove(Round.Move.call, gameConfig.AntesValue);
             }
         }
 
-        private void PlaceBigBlind(GameConfig config)
+        private void PlaceSmallBlind()
         {
-            //TODO: WAIT FOR GamePreferences
-            throw new NotImplementedException();
+            if (CurrentRound.CurrentPlayer.Wallet.AmountOfMoney < gameConfig.AntesValue)
+                CurrentRound.PlayMove(Round.Move.allin, gameConfig.MinimumBet / 2);
+            else
+                CurrentRound.PlayMove(Round.Move.raise, gameConfig.MinimumBet / 2);
         }
 
-        private void PlaceSmallBlind(GameConfig config)
+        private void PlaceBigBlind()
         {
-            //TODO: WAIT FOR GamePreferences
-            throw new NotImplementedException();
+            if (CurrentRound.CurrentPlayer.Wallet.AmountOfMoney < gameConfig.AntesValue)
+                CurrentRound.PlayMove(Round.Move.allin, gameConfig.MinimumBet);
+            else
+                CurrentRound.PlayMove(Round.Move.raise, gameConfig.MinimumBet);
         }
         #endregion
     }
