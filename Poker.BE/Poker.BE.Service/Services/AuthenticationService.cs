@@ -44,8 +44,7 @@ namespace Poker.BE.Service.Services
 		public LogoutResult Logout(LogoutRequest request)
 		{
 			var result = default(LogoutResult);
-			if (!Users.TryGetValue(request.User, out User user))
-			{
+			if (!Users.TryGetValue(request.User, out User user)){
 				result.Success = false;
 				result.ErrorMessage = "User ID {0} not found";
 			}
