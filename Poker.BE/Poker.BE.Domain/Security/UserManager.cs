@@ -12,7 +12,6 @@ namespace Poker.BE.Domain.Security
 	{
 		#region Properties
 		public IDictionary<string, User> UsersDictionary;
-
 		#endregion
 
 		#region Methods
@@ -20,7 +19,6 @@ namespace Poker.BE.Domain.Security
 		{
 			UsersDictionary = new Dictionary<string, User>();
 		}
-
 
 		public User AddUser(string userName, string password, double sumToDeposit)
 		{
@@ -41,14 +39,13 @@ namespace Poker.BE.Domain.Security
 
         }
 
-        protected bool CheckExistingUser (string userName){
+        public bool CheckExistingUser (string userName){
             if (userName != null)
                 return (UsersDictionary.ContainsKey(userName));
             return false;
         }
         
         protected bool CheckPasswordValidity (string password){
-		{
             if (password.Length >= 6 ) return true;
             return false;
         }
@@ -73,7 +70,6 @@ namespace Poker.BE.Domain.Security
 		}
 
         public bool LogOut (User userToLogout){
-		{
 			if (!CheckExistingUser(userToLogout.UserName)) // We check that the user is existing in our DB
 				throw new UserNotFoundException();
             userToLogout.Disconnect();
