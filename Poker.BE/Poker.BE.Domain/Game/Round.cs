@@ -77,10 +77,11 @@ namespace Poker.BE.Domain.Game
         #endregion
 
         #region Methods
-        public void startRound(bool isPreFlop)
+        public ICollection<Player> StartRound()
         {
             lastPlayerToRaise = CurrentPlayer;
             //TODO
+            return activeUnfoldedPlayers;
         }
 
         public double PlayMove(Move playMove, double amountToBetOrCall)
@@ -90,15 +91,12 @@ namespace Poker.BE.Domain.Game
                 case Move.check:
                     {
                         //if no one had raised
-                        if (TotalRaise == config.AntesValue)
+                        if ((isPreflop && TotalRaise == config.AntesValue) || (!isPreflop && TotalRaise == 0) ||
+                            (isPreflop &&
+                                currentPlayer == this.activeUnfoldedPlayers.ElementAt((this.activeUnfoldedPlayers.ToList().IndexOf(dealer) + 2) % this.activeUnfoldedPlayers.Count) &&
+                                liveBets[CurrentPlayer] == config.MinimumBet + config.AntesValue))
                         {
                             CurrentTurn.Check();  // Do nothing??
-                        }
-                        else if ((isPreflop &&
-                                currentPlayer == this.activeUnfoldedPlayers.ElementAt((this.activeUnfoldedPlayers.ToList().IndexOf(dealer) + 2) % this.activeUnfoldedPlayers.Count)) &&
-                                liveBets[CurrentPlayer] == config.MinimumBet + config.AntesValue)
-                        {
-                            CurrentTurn.Check();    // Do nothing??
                         }
                         else
                             throw new GameRulesException("Can't check if someone had raised before");

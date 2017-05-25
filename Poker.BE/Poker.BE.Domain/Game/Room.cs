@@ -22,7 +22,6 @@ namespace Poker.BE.Domain.Game
 
         #region Fields
         private ICollection<Player> activeAndPassivePlayers;
-        private Deck deck;
         private Chair[] chairs;
         private GameConfig config;
 		private int dealerIndex = 0;
@@ -137,7 +136,6 @@ namespace Poker.BE.Domain.Game
         {
             activeAndPassivePlayers = new List<Player>();
 
-            deck = new Deck();
             chairs = new Chair[NCHAIRS_IN_ROOM];
 
             for (int i = 0; i < NCHAIRS_IN_ROOM; i++)
@@ -234,22 +232,19 @@ namespace Poker.BE.Domain.Game
             {
                 throw new NotEnoughPlayersException("Its should be at least 2 active players to start new hand!");
             }
-            if (deck.Cards.Count != Deck.NCARDS)
-            {
-                throw new NotEnoughPlayersException("Cards must be dealt from a proper deck (standard 52-card deck containing no jokers)");
-            }
             if (this.CurrentHand != null && this.CurrentHand.Active)
             {
                 throw new NotEnoughPlayersException("The previous hand hasnt ended");
             }
-            deck.ShuffleCards();
+
             Player dealer = ActivePlayers.ElementAt(dealerIndex);
-            CurrentHand = new Hand(dealer, deck, ActivePlayers, config);
+            CurrentHand = new Hand(dealer, ActivePlayers, config);
             CurrentHand.PrepareHand();
+            CurrentHand.PlayHand();
         }
         public void EndCurrentHand()
         {
-            CurrentHand.endHand();
+            CurrentHand.EndHand();
             dealerIndex++;
             //TODO: implementation
         }
@@ -265,7 +260,6 @@ namespace Poker.BE.Domain.Game
                 throw new NotEnoughPlayersException("Its should be at least 2 active players to play move");
             }
             CurrentHand.CurrentRound.PlayMove(move, amountToBet);
-            
         }
 
         public bool TakeChair(Player player, int index)

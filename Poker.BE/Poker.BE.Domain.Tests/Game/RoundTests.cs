@@ -33,7 +33,8 @@ namespace Poker.BE.Domain.Game.Tests
             activeUnfoldedPlayers.Add(player2);
             activeUnfoldedPlayers.Add(player3);
             var pot = new Pot(null);
-            var round = new Round(player1, activeUnfoldedPlayers, pot, true);
+            var gameConfig = new GameConfig();
+            var round = new Round(player1, activeUnfoldedPlayers, pot, true, gameConfig);
             Exception expectedException1 = new Exception();
             Exception expectedException2 = new Exception();
 
@@ -79,7 +80,7 @@ namespace Poker.BE.Domain.Game.Tests
                 expectedException2 = e;
             }
 
-            //round.PlayMove(Round.Move.fold, 0);
+            round.PlayMove(Round.Move.fold, 0);
             var res6 = !round.CurrentPot.PlayersClaimPot.Contains(player3) && !round.CurrentPot.PartialPot.PlayersClaimPot.Contains(player3)
                         && round.LiveBets[player3] == 120 && round.CurrentPot.AmountToClaim == 350 && round.CurrentPot.Value == 820
                         && round.CurrentPot.PartialPot.Value == 150 && round.CurrentPot.PartialPot.AmountToClaim == 150;
