@@ -46,6 +46,7 @@
     <Compile Include="IServices\IMessageService.cs" />
     <Compile Include="IServices\INotificationService.cs" />
     <Compile Include="IServices\IPokerGamePlayService.cs" />
+    <Compile Include="IServices\IPokerService.cs" />
     <Compile Include="IServices\IProfileService.cs" />
     <Compile Include="Modules\Requests\EnterRoomRequest.cs" />
     <Compile Include="Modules\Requests\IRequest.cs" />

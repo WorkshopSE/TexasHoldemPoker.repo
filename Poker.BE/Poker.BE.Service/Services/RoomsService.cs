@@ -8,6 +8,7 @@ using Poker.BE.Service.Modules.Results;
 using Poker.BE.Domain.Game;
 using Poker.BE.Domain.Utility.Exceptions;
 using Poker.BE.Domain.Core;
+using Poker.BE.Domain.Utility.Logger;
 
 namespace Poker.BE.Service.Services
 {
@@ -33,9 +34,20 @@ namespace Poker.BE.Service.Services
         public IDictionary<int, Player> Players { get; set; }
         public IDictionary<int, Room> Rooms { get; set; }
         public IDictionary<int, User> Users { get; set; }
+        public ILogger Logger { get; }
         #endregion
 
+        #region Constructors
+        public RoomsService()
+        {
+            Players = new Dictionary<int, Player>();
+            Rooms = new Dictionary<int, Room>();
+            Users = new Dictionary<int, User>();
+            Logger = Domain.Utility.Logger.Logger.Instance;
+        }
+        #endregion
 
+        #region Methods
         public CreateNewRoomResult CreateNewRoom(CreateNewRoomRequest request)
         {
             // TODO
@@ -44,22 +56,38 @@ namespace Poker.BE.Service.Services
 
         public EnterRoomResult EnterRoom(EnterRoomRequest request)
         {
-            var result = default(EnterRoomResult);
+            var result = new EnterRoomResult();
 
-            if (!Rooms.TryGetValue(request.Room, out Room room))
+            try
             {
-                throw new RoomNotFoundException(string.Format("Requested room ID {0} not found", request.Room));
+                if (!Rooms.TryGetValue(request.Room, out Room room))
+                {
+                    throw new RoomNotFoundException(string.Format("Requested room ID {0} not found", request.Room));
+                }
+
+                if (!Users.TryGetValue(request.User, out User user))
+                {
+                    throw new UserNotFoundException(string.Format("User ID {0} not found", request.User));
+                }
+
+                result.Player = user.EnterRoom(room).GetHashCode();
             }
-
-            if(!Users.TryGetValue(request.User, out User user))
+            catch (RoomNotFoundException e)
             {
-                throw new UserNotFoundException(string.Format("User ID {0} not found", request.User));
+                // TODO
+                throw e;
             }
-
-            result = new EnterRoomResult()
+            catch (UserNotFoundException e)
             {
-                player = user.EnterRoom(room).GetHashCode(),
-            };
+                // TODO
+                throw e;
+            }
+            catch (PokerException e)
+            {
+                result.Success = false;
+                result.ErrorMessage = e.Message;
+                Logger.Error(e, "At " + GetType().Name, e.Source);
+            }
 
             return result;
         }
@@ -75,5 +103,7 @@ namespace Poker.BE.Service.Services
             // TODO
             throw new NotImplementedException();
         }
-    }
+        #endregion
+
+    }// class
 }
