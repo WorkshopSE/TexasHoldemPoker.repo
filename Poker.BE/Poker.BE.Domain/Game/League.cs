@@ -57,6 +57,7 @@ namespace Poker.BE.Domain.Game
 			// TODO
 			throw new NotImplementedException();
 		}
+
 		#endregion
 
 	}

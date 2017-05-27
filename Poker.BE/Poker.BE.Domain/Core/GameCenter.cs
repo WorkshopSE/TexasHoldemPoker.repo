@@ -396,7 +396,21 @@ namespace Poker.BE.Domain.Core
             room.LeaveChair(player);
             return player.StandUp();
         }
+		/// <summary>
+		/// once a week the users are divided to new leagues according to their current level.
+		/// </summary>
+		/// <returns>void?</returns>
+		/// <remarks>UC040: update users leagues</remarks>
+		/// <param name="Users"></param>
+		/// <see cref="https://docs.google.com/document/d/1OTee6BGDWK2usL53jdoeBOI-1Jh8wyNejbQ0ZroUhcA/edit#heading=h.q38pe5gu8du4"/>
+		public void UpdateUsersLeagues()
+		{
+			// לספור במנגר חלוקה של יוזרים לרמות מאוזנות
+			// או לשלוח יוזר ובאופן דינאמי לעדכן רמה
+			// או לשלוח רק מספר של רמה ולעדכן את חישוב הרמות
+		}
         #endregion
+
 
     }
 }
