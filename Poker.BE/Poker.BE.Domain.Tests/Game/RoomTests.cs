@@ -325,7 +325,7 @@ namespace Poker.BE.Domain.Game.Tests
             //Act
             try
             {
-                room.ChoosePlayMove(Round.Move.call, 0);
+                room.ChoosePlayMove(Round.Move.Call, 0);
             }
             catch (NotEnoughPlayersException ex)
             {
@@ -337,7 +337,7 @@ namespace Poker.BE.Domain.Game.Tests
             Player player2 = center.EnterRoom(room);
             try
             {
-                room.ChoosePlayMove(Round.Move.call, 0);
+                room.ChoosePlayMove(Round.Move.Call, 0);
             }
             catch (NotEnoughPlayersException ex)
             {

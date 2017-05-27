@@ -13,12 +13,13 @@ namespace Poker.BE.Domain.Game
         #region Enums
         public enum Move
         {
-            check,
-            call,
-            bet,
-            fold,
-            raise,
-            allin
+            Null,
+            Check,
+            Call,
+            Bet,
+            Fold,
+            Raise,
+            Allin
         }
         #endregion
 
@@ -56,31 +57,49 @@ namespace Poker.BE.Domain.Game
             //Set up players info
             this.dealer = dealer;
             this.activeUnfoldedPlayers = activeUnfoldedPlayers;
-            this.liveBets = new Dictionary<Player, double>();
+            liveBets = new Dictionary<Player, double>();
             foreach (Player player in activeUnfoldedPlayers)
             {
                 LiveBets.Add(player, 0);
             }
-            this.currentPlayer = this.activeUnfoldedPlayers.ElementAt((this.activeUnfoldedPlayers.ToList().IndexOf(dealer) + 1) % this.activeUnfoldedPlayers.Count);
-            this.lastPlayerToRaise = dealer;
+            currentPlayer = this.activeUnfoldedPlayers.ElementAt((this.activeUnfoldedPlayers.ToList().IndexOf(dealer) + 1) % this.activeUnfoldedPlayers.Count);
+            lastPlayerToRaise = dealer;
 
             //Set up raise info
-            this.totalRaise = 0;
-            this.lastRaise = 0;
-            
+            totalRaise = 0;
+            lastRaise = 0;
+
 
             //Others
             this.currentPot = currentPot;
-            this.currentTurn = new Turn(currentPlayer, currentPot);
+            currentTurn = new Turn(currentPlayer);
             this.config = config;
         }
         #endregion
 
         #region Methods
-        public ICollection<Player> StartRound()
+        /// <summary>
+        /// A standart betting round - Starts from the player sitting at the small blind.
+        /// Each player decides his play move(call, fold, raise, etc) in his turn.
+        /// </summary>
+        /// <remarks>UC024: Play a Betting Round</remarks>
+        /// <see cref="https://docs.google.com/document/d/1OTee6BGDWK2usL53jdoeBOI-1Jh8wyNejbQ0ZroUhcA/edit#heading=h.kdfvqg7xrjgw"/>
+        /// <returns>The remaining active unfolded players at the end of this round</returns>
+        public ICollection<Player> PlayBettingRound()
         {
-            lastPlayerToRaise = CurrentPlayer;
-            //TODO
+            //Check Preconditions
+            if (activeUnfoldedPlayers.Count < Hand.MINIMAL_NUMBER_OF_ACTIVE_PLAYERS_TO_START)
+            {
+                throw new NotEnoughPlayersException("Not enough players to start round!");
+            }
+
+            //Play round until everyone is called or folded
+            while (LastPlayerToRaise != CurrentPlayer)
+            {
+                while (CurrentPlayer.PlayMove == default(Move)) ;
+                PlayMove(CurrentPlayer.PlayMove, CurrentPlayer.AmountToBetOrCall);
+            }
+
             return activeUnfoldedPlayers;
         }
 
@@ -88,60 +107,30 @@ namespace Poker.BE.Domain.Game
         {
             switch (playMove)
             {
-                case Move.check:
+                case Move.Check:
                     {
-                        //if no one had raised
-                        if ((isPreflop && TotalRaise == config.AntesValue) || (!isPreflop && TotalRaise == 0) ||
-                            (isPreflop &&
-                                currentPlayer == this.activeUnfoldedPlayers.ElementAt((this.activeUnfoldedPlayers.ToList().IndexOf(dealer) + 2) % this.activeUnfoldedPlayers.Count) &&
-                                liveBets[CurrentPlayer] == config.MinimumBet + config.AntesValue))
-                        {
-                            CurrentTurn.Check();  // Do nothing??
-                        }
-                        else
-                            throw new GameRulesException("Can't check if someone had raised before");
-                        
+                        Check();
                         break;
                     }
-                case Move.call:
+                case Move.Call:
                     {
                         Call(amountToBetOrCall);
                         break;
                     }
-                case Move.fold:
+                case Move.Fold:
                     {
-                        CurrentTurn.Fold();
-                        Player playerToRemove = this.CurrentPlayer;
+                        Fold();
 
-                        //Remover player from all pots
-                        Pot partialPotIterator = CurrentPot;
-                        while (partialPotIterator != null)
-                        {
-                            partialPotIterator.PlayersClaimPot.Remove(playerToRemove);
-                            partialPotIterator = partialPotIterator.PartialPot;
-                        }
-
-                        //Remove player from round
-                        this.currentPlayer = this.ActiveUnfoldedPlayers.ElementAt((ActiveUnfoldedPlayers.ToList().IndexOf(this.CurrentPlayer) - 1) % ActiveUnfoldedPlayers.Count);
-                        ActiveUnfoldedPlayers.Remove(playerToRemove);
+                        //Note: need to be changed:
                         return TotalRaise;
                         //break;
                     }
-                case Move.bet:
+                case Move.Bet:
                     {
-                        //Check preconditions
-                        if (LastRaise > 0 || TotalRaise > 0)
-                            throw new GameRulesException("Can't bet if someone had bet before... use raise move");
-                        if (TotalRaise + amountToBetOrCall == CurrentPlayer.Wallet.AmountOfMoney + LiveBets[CurrentPlayer])
-                            throw new WrongIOException("Can't use bet move for all of your money... use all-in move");
-                        RaisePreconditions(amountToBetOrCall);
-
-                        //Make bet
-                        Raise(amountToBetOrCall);
-
+                        Bet(amountToBetOrCall);
                         break;
                     }
-                case Move.raise:
+                case Move.Raise:
                     {
                         //Check preconditions
                         if (LastRaise == 0)
@@ -152,39 +141,12 @@ namespace Poker.BE.Domain.Game
 
                         //Make Raise
                         Call(0);                  //First call whatever you need to call
-                        Raise(amountToBetOrCall); //Than raise
+                        Raise(amountToBetOrCall); //Then raise
                         break;
                     }
-                case Move.allin:
+                case Move.Allin:
                     {
-                        //Check preconditions
-                        double highestOtherAllIn = 0;
-                        foreach (Player player in ActiveUnfoldedPlayers)    //find highest all-in of the other players at the table
-                        {
-                            if (player != this.CurrentPlayer && player.Wallet.AmountOfMoney + LiveBets[player] > highestOtherAllIn)
-                                highestOtherAllIn = player.Wallet.AmountOfMoney;
-                        }
-                        if (this.CurrentPlayer.Wallet.AmountOfMoney > highestOtherAllIn)
-                            throw new GameRulesException("all-in is bigger than the highest other player's all-in... use bet\raise move");
-                        if (CurrentPlayer.Wallet.AmountOfMoney == 0)
-                            throw new WrongIOException("You're already all-in!!");
-
-                        //Make all-in
-                        if (this.CurrentPlayer.Wallet.AmountOfMoney + LiveBets[currentPlayer] <= TotalRaise)
-                            Call(this.CurrentPlayer.Wallet.AmountOfMoney);
-                        else
-                        {
-                            Call(0);
-                            if (LiveBets[currentPlayer] != totalRaise)
-                                throw new WrongIOException("Didn't call right!");
-                            RaisePreconditions(this.CurrentPlayer.Wallet.AmountOfMoney + LiveBets[CurrentPlayer] - TotalRaise);
-                            Raise(this.CurrentPlayer.Wallet.AmountOfMoney + LiveBets[CurrentPlayer] - TotalRaise);
-
-                        }
-                        CurrentTurn.AllIn();
-
-
-
+                        Allin();
                         break;
                     }
                 default:
@@ -193,9 +155,8 @@ namespace Poker.BE.Domain.Game
                         throw new GameRulesException("Invalid Move");
                     }
             }
-            //Change Player
+            //Change to next player
             CalculateNextPlayer();
-            CurrentTurn.CurrentPlayer = this.CurrentPlayer;
 
             return TotalRaise;
         }
@@ -205,9 +166,26 @@ namespace Poker.BE.Domain.Game
         private void CalculateNextPlayer()
         {
             do
-                this.currentPlayer = this.ActiveUnfoldedPlayers.ElementAt((ActiveUnfoldedPlayers.ToList().IndexOf(this.CurrentPlayer) + 1) % ActiveUnfoldedPlayers.Count);
-            while (this.CurrentPlayer.CurrentState == Player.State.ActiveAllIn);
+            {
+                currentPlayer = ActiveUnfoldedPlayers.ElementAt((ActiveUnfoldedPlayers.ToList().IndexOf(CurrentPlayer) + 1) % ActiveUnfoldedPlayers.Count);
+            }
+            while (CurrentPlayer.CurrentState == Player.State.ActiveAllIn);
 
+            CurrentTurn.CurrentPlayer = this.CurrentPlayer;
+        }
+
+        private void Check()
+        {
+            //if no one had raised
+            if ((isPreflop && TotalRaise == config.AntesValue) || (!isPreflop && TotalRaise == 0) ||
+                (isPreflop &&
+                    currentPlayer == activeUnfoldedPlayers.ElementAt((activeUnfoldedPlayers.ToList().IndexOf(dealer) + 2) % activeUnfoldedPlayers.Count) &&
+                    liveBets[CurrentPlayer] == config.MinimumBet + config.AntesValue))
+            {
+                CurrentPlayer.Check();  // Do nothing??
+            }
+            else
+                throw new GameRulesException("Can't check if someone had raised before");
         }
 
         private void Call(double amountToBetOrCall)
@@ -229,7 +207,7 @@ namespace Poker.BE.Domain.Game
                         amountToAdd = partialPotIterator.AmountToClaim - playerCurrentBet;
                     else    //if call all-in
                         amountToAdd = amountToBetOrCall;
-                    CurrentTurn.Call(amountToAdd);
+                    CurrentPlayer.Call(amountToAdd);
                     LiveBets[CurrentPlayer] += amountToAdd;
                     partialPotIterator.Value += amountToAdd;
                     amountToBetOrCall -= amountToAdd;
@@ -249,11 +227,13 @@ namespace Poker.BE.Domain.Game
                 lastPartialPot = partialPotIterator;
                 partialPotIterator = partialPotIterator.PartialPot;
             }
+            //CurrentTurn.Call(amountToBetOrCall);
 
             if (amountToBetOrCall + playerCurrentBet > lastPartialPot.AmountToClaim)
                 throw new WrongIOException("Not enough partial pots were created! Something isn't right!");
 
-            if (CurrentPlayer.Wallet.AmountOfMoney == 0) //if call all-in move
+            //if this is a Call All-In move then make new partial pot
+            if (CurrentPlayer.Wallet.AmountOfMoney == 0) 
             {
                 //Add new partial pot in the middle
                 Pot newPartialPot = new Pot(lastPartialPot.BasePot)
@@ -286,6 +266,89 @@ namespace Poker.BE.Domain.Game
             }
         }
 
+        private void Fold()
+        {
+            CurrentPlayer.Fold();
+            Player playerToRemove = CurrentPlayer;
+
+            //Remover player from all pots
+            Pot partialPotIterator = CurrentPot;
+            while (partialPotIterator != null)
+            {
+                partialPotIterator.PlayersClaimPot.Remove(playerToRemove);
+                partialPotIterator = partialPotIterator.PartialPot;
+            }
+
+            //Remove player from round
+            currentPlayer = ActiveUnfoldedPlayers.ElementAt((ActiveUnfoldedPlayers.ToList().IndexOf(CurrentPlayer) - 1) % ActiveUnfoldedPlayers.Count);
+            ActiveUnfoldedPlayers.Remove(playerToRemove);
+        }
+
+        private void Bet(double amountToBetOrCall)
+        {
+            //Check preconditions
+            if (LastRaise > 0 || TotalRaise > 0)
+                throw new GameRulesException("Can't bet if someone had bet before... use raise move");
+            if (TotalRaise + amountToBetOrCall == CurrentPlayer.Wallet.AmountOfMoney + LiveBets[CurrentPlayer])
+                throw new WrongIOException("Can't use bet move for all of your money... use all-in move");
+            RaisePreconditions(amountToBetOrCall);
+
+            //Make bet
+            Raise(amountToBetOrCall);
+        }
+
+        private void Raise(double amountToRaise)
+        {
+            Pot lastPartialPot = currentPot;
+            while (lastPartialPot.PartialPot != null)
+                lastPartialPot = lastPartialPot.PartialPot;
+
+            lastPartialPot.Value += amountToRaise;
+            lastPartialPot.AmountToClaim += amountToRaise;
+            CurrentPlayer.Bet(amountToRaise);
+            LiveBets[CurrentPlayer] += amountToRaise;
+            lastRaise = amountToRaise;
+            totalRaise += LastRaise;
+
+            //reset the players claiming this pot
+            lastPartialPot.PlayersClaimPot = new List<Player>
+            {
+                CurrentPlayer
+            };
+            if (currentPlayer.Wallet.AmountOfMoney == 0)
+                lastPartialPot.PartialPot = new Pot(lastPartialPot);
+
+            lastPlayerToRaise = CurrentPlayer;
+        }
+
+        private void Allin()
+        {
+            //Check preconditions
+            double highestOtherAllIn = 0;
+            foreach (Player player in ActiveUnfoldedPlayers)    //find highest all-in of the other players at the table
+            {
+                if (player != CurrentPlayer && player.Wallet.AmountOfMoney + LiveBets[player] > highestOtherAllIn)
+                    highestOtherAllIn = player.Wallet.AmountOfMoney;
+            }
+            if (CurrentPlayer.Wallet.AmountOfMoney > highestOtherAllIn)
+                throw new GameRulesException("all-in is bigger than the highest other player's all-in... use bet\raise move");
+            if (CurrentPlayer.Wallet.AmountOfMoney == 0)
+                throw new WrongIOException("You're already all-in!!");
+
+            //Make all-in
+            if (CurrentPlayer.Wallet.AmountOfMoney + LiveBets[currentPlayer] <= TotalRaise)
+                Call(CurrentPlayer.Wallet.AmountOfMoney);
+            else
+            {
+                Call(0);
+                if (LiveBets[currentPlayer] != totalRaise)
+                    throw new WrongIOException("Didn't call right!");
+                RaisePreconditions(CurrentPlayer.Wallet.AmountOfMoney + LiveBets[CurrentPlayer] - TotalRaise);
+                Raise(CurrentPlayer.Wallet.AmountOfMoney + LiveBets[CurrentPlayer] - TotalRaise);
+            }
+            CurrentPlayer.AllIn();
+        }
+
         private void RaisePreconditions(double amountToRaise)
         {
             if (LastRaise > amountToRaise)
@@ -308,29 +371,6 @@ namespace Poker.BE.Domain.Game
             {
                 throw new GameRulesException("Raise is bigger than the highest player's all-in");
             }
-        }
-
-        private void Raise(double amountToRaise)
-        {
-            Pot lastPartialPot = currentPot;
-            while (lastPartialPot.PartialPot != null)
-                lastPartialPot = lastPartialPot.PartialPot;
-
-            lastPartialPot.Value += amountToRaise;
-            lastPartialPot.AmountToClaim += amountToRaise;
-            CurrentTurn.Bet(amountToRaise);
-            LiveBets[CurrentPlayer] += amountToRaise;
-            lastRaise = amountToRaise;
-            totalRaise += LastRaise;
-
-            //reset the players claiming this pot
-            lastPartialPot.PlayersClaimPot = new List<Player>();
-            lastPartialPot.PlayersClaimPot.Add(CurrentPlayer);
-
-            if (currentPlayer.Wallet.AmountOfMoney == 0)
-                lastPartialPot.PartialPot = new Pot(lastPartialPot);
-
-            lastPlayerToRaise = CurrentPlayer;
         }
         #endregion
     }

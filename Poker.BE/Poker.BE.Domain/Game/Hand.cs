@@ -16,7 +16,7 @@ namespace Poker.BE.Domain.Game
     {
 
         #region Constants
-        public static readonly int MINIMAL_NUMBER_OF_ACTIVE_PLAYERS_TO_START;
+        public const int MINIMAL_NUMBER_OF_ACTIVE_PLAYERS_TO_START = 2;
         public const int NUM_OF_COMMUNITY_CARDS = 5;
         #endregion
 
@@ -72,7 +72,7 @@ namespace Poker.BE.Domain.Game
         {
             //PRE FLOP
             Round round = CurrentRound;
-            round.StartRound();
+            round.PlayBettingRound();
 
             //FLOP
             deck.PullCard(Card.State.FaceDown); //burn card
@@ -85,7 +85,7 @@ namespace Poker.BE.Domain.Game
 
             //SECOND BETTING ROUND
             round = new Round(dealer, activePlayers, pot, false, gameConfig);
-            activePlayers = round.StartRound();
+            activePlayers = round.PlayBettingRound();
 
             //TURN
             deck.PullCard(Card.State.FaceDown); //burn card
@@ -94,7 +94,7 @@ namespace Poker.BE.Domain.Game
 
             //THIRD BETTING ROUND
             round = new Round(dealer, activePlayers, pot, false, gameConfig);
-            activePlayers = round.StartRound();
+            activePlayers = round.PlayBettingRound();
 
             //RIVER
             deck.PullCard(Card.State.FaceDown); //burn card
@@ -102,7 +102,7 @@ namespace Poker.BE.Domain.Game
 
             //FORTH BETTING ROUND
             round = new Round(dealer, activePlayers, pot, false, gameConfig);
-            activePlayers = round.StartRound();
+            activePlayers = round.PlayBettingRound();
         }
 
         public void EndHand()
@@ -149,34 +149,34 @@ namespace Poker.BE.Domain.Game
 
             //first player has to "bet" the ante
             if (CurrentRound.CurrentPlayer.Wallet.AmountOfMoney < gameConfig.AntesValue)
-                CurrentRound.PlayMove(Round.Move.allin, gameConfig.AntesValue);
+                CurrentRound.PlayMove(Round.Move.Allin, gameConfig.AntesValue);
             else
-                CurrentRound.PlayMove(Round.Move.bet, gameConfig.AntesValue);
+                CurrentRound.PlayMove(Round.Move.Bet, gameConfig.AntesValue);
 
             //other players "call" the ante
             for (int i = 1; i < CurrentRound.ActiveUnfoldedPlayers.Count; i++)
             {
                 if (CurrentRound.CurrentPlayer.Wallet.AmountOfMoney < gameConfig.AntesValue)
-                    CurrentRound.PlayMove(Round.Move.allin, gameConfig.AntesValue);
+                    CurrentRound.PlayMove(Round.Move.Allin, gameConfig.AntesValue);
                 else
-                    CurrentRound.PlayMove(Round.Move.call, gameConfig.AntesValue);
+                    CurrentRound.PlayMove(Round.Move.Call, gameConfig.AntesValue);
             }
         }
 
         private void PlaceSmallBlind()
         {
             if (CurrentRound.CurrentPlayer.Wallet.AmountOfMoney < gameConfig.MinimumBet / 2)
-                CurrentRound.PlayMove(Round.Move.allin, gameConfig.MinimumBet / 2);
+                CurrentRound.PlayMove(Round.Move.Allin, gameConfig.MinimumBet / 2);
             else
-                CurrentRound.PlayMove(Round.Move.raise, gameConfig.MinimumBet / 2);
+                CurrentRound.PlayMove(Round.Move.Raise, gameConfig.MinimumBet / 2);
         }
 
         private void PlaceBigBlind()
         {
             if (CurrentRound.CurrentPlayer.Wallet.AmountOfMoney < gameConfig.MinimumBet)
-                CurrentRound.PlayMove(Round.Move.allin, gameConfig.MinimumBet);
+                CurrentRound.PlayMove(Round.Move.Allin, gameConfig.MinimumBet);
             else
-                CurrentRound.PlayMove(Round.Move.raise, gameConfig.MinimumBet);
+                CurrentRound.PlayMove(Round.Move.Raise, gameConfig.MinimumBet);
         }
 
         private void Showdown()

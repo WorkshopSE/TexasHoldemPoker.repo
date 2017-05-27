@@ -100,9 +100,23 @@ namespace Poker.BE.Domain.Core
             logger.Log(string.Format("User {0} has player {1}", UserName, freshPlayer.GetHashCode()),
                 this, "Medium");
 
+            //registering to an event: the player got the turn
+            freshPlayer.TurnChanged += ChoosePlayMove;
+
+            //Adding the player to players collection
             Players.Add(freshPlayer);
 
             return freshPlayer;
+        }
+
+        public void ChoosePlayMove(object sender, EventArgs e)
+        {
+            //Note: systactic suger for checking if sender is a player type
+            if (sender is Player player)
+            {
+                //this is the current player's turn
+            }
+            //UNDONE
         }
 
         public Room CreateNewRoom(int level, GameConfig config, out Player creator)
