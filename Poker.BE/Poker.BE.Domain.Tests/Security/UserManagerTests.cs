@@ -51,9 +51,9 @@ namespace Poker.BE.Domain.Security.Tests
 			}
 
 			//Assert
-			Assert.IsTrue(userManager.CheckExistingUser(res1.UserName));
+			Assert.IsTrue(userManager.IsUserExists(res1.UserName));
 			Assert.IsNotNull(res2);
-			Assert.IsTrue(userManager.CheckExistingUser(res3.UserName));
+			Assert.IsTrue(userManager.IsUserExists(res3.UserName));
 			Assert.IsNotNull(res4);
 			Assert.IsNotNull(res5);
 		}

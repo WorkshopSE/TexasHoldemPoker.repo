@@ -14,7 +14,7 @@ namespace Poker.BE.Service.Services
 {
 	public class AuthenticationService : IServices.IAuthenticationService
 	{
-		#region fields
+		#region Fields
 		public UserManager Manager;
 		#endregion
 
@@ -41,6 +41,7 @@ namespace Poker.BE.Service.Services
 			}
 			return result;
 		}
+
 		public LogoutResult Logout(LogoutRequest request)
 		{
 			var result = default(LogoutResult);
@@ -48,7 +49,7 @@ namespace Poker.BE.Service.Services
 			if (!Users.TryGetValue(request.User, out user))
 			{
 				result.Success = false;
-				result.ErrorMessage = "User ID {0} not found";
+				result.ErrorMessage = "User ID not found";
 			}
 			try
 			{
@@ -61,6 +62,7 @@ namespace Poker.BE.Service.Services
 			}
 			return result;
 		}
+
 		public SignUpResult SignUp(SignUpRequest request)
 		{
 			var result = new SignUpResult();

@@ -36,6 +36,7 @@ namespace Poker.BE.API.Controllers
 			}
 			catch (Exception e)
 			{
+				//TODO @idan check if the setter is an accumulator setter
 				result.ErrorMessage += " " + e.Message;
 				return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, e);
 			}
@@ -52,6 +53,7 @@ namespace Poker.BE.API.Controllers
 			}
 			catch (Exception e)
 			{
+				//TODO @idan check if the setter is an accumulator setter
 				result.ErrorMessage += " " + e.Message;
 				return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, e);
 			}
@@ -68,6 +70,7 @@ namespace Poker.BE.API.Controllers
 			}
 			catch (Exception e)
 			{
+				//TODO @idan check if the setter is an accumulator setter
 				result.ErrorMessage += " " + e.Message;
 				return Request.CreateResponse(HttpStatusCode.InternalServerError, result);
 			}
