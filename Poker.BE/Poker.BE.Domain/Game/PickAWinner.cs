@@ -31,7 +31,7 @@ namespace Poker.BE.Domain.Game
             this.FifthHandCard = FifthHandCard;
             Winners = new List<Player>();
             InitializeDictionnary();
-            GetWinner();
+            //GetWinner();
         }
         #endregion
 
@@ -44,7 +44,7 @@ namespace Poker.BE.Domain.Game
         /// Then check for several winners.
         /// </summary>
         /// <returns>The winning player\s</returns>
-        private ICollection<Player> GetWinner()
+        public ICollection<Player> GetWinner()
         {
             bool winnerFound = false;
             int numberOfPlayers = PlayerSevenCards.Count, k = 0, ans = 0;
@@ -103,7 +103,7 @@ namespace Poker.BE.Domain.Game
                     case 7: return IsFullHouse(playerCardArray);
                     case 8: return IsFourOfAKind(playerCardArray);
                     case 9: return IsStraightFlush(playerCardArray);
-                    case 10: return IsRoyalFlush(playerCardArray);
+                    //case 10: return IsRoyalFlush(playerCardArray);
                     default: return 0;
                 }
             }
@@ -169,8 +169,12 @@ namespace Poker.BE.Domain.Game
             return CardArray;
         }
 
+        /// <summary>
+        /// For all of the following methods:
+        /// We calculate the sum in this way - BestCard * POWER^4 + SecondBestCard * POWER^3...
+        /// </summary>
+        /// <returns>sum = The hand's strength (calculated by our way)</returns>
 
-        //We calculate the sum in this way - BestCard * POWER^ 4 + SecondBestCard * POWER^3..
         // NumberOrderIndex = 1
         private int IsHighCard(Card[] Player7Cards)
         {
@@ -331,47 +335,31 @@ namespace Poker.BE.Domain.Game
         // NumberOrderIndex = 5
         private int IsStraight(Card[] Player7Cards)
         {
-            if (IsAsStraight(Player7Cards) > 0) return IsAsStraight(Player7Cards);
-            else return IsNormalStraight(Player7Cards);
-        }
-
-        private int IsNormalStraight(Card[] Player7Cards)
-        {
-            int i, MinimumStraightValueIndex = 0;
-            int Straight = 1;
-            for (i = 0; i < Player7Cards.Length - 1 && Straight < 5; i++)
+            int straightHighCard = 0;
+            int straight = 0;
+            int i;
+            for (i = 0; i < Player7Cards.Length - 1 && straight < 4; i++)   //we have only 4 comparations
             {
-                if (Player7Cards[i].CompareTo(Player7Cards[i + 1]) == FALSERESULT)
+                if (Player7Cards[i].CardValueStrength() == Player7Cards[i + 1].CardValueStrength() + 1)
                 {
-                    Straight = Straight + 1;
+                    straight++;
+
+                    //if A 2 3 4 5 straight
+                    if (straight == 3 && Player7Cards[i + 1].Number == 2 && Player7Cards[0].Number == 1)
+                    {
+                        //jump each variable once for the Ace we're missing at the end of this straight
+                        straight++;
+                        i++;      
+                    }
                 }
                 else
                 {
-                    MinimumStraightValueIndex = i;
+                    straight = 0;
                 }
             }
-            if (Straight < 5) return FALSERESULT;
-            else return MinimumStraightValueIndex;
-        }
+            straightHighCard = Player7Cards[i - 5].CardValueStrength();
 
-        private int IsAsStraight(Card[] Player7Cards)
-        {
-            int[] asStraightIndex = new int[FIVEBESTCARDS];
-            for (int i = 0; i < Player7Cards.Length; i++)
-            {
-                int CardValue = Player7Cards[i].CardValueStrength() - 10;
-                if (CardValue >= 0)
-                {
-                    asStraightIndex[CardValue] = asStraightIndex[CardValue] + 1;
-                }
-            }
-            bool ans = true;
-            for (int k = 0; k < asStraightIndex.Length && ans; k++)
-            {
-                if (asStraightIndex[k] == 0) ans = false;
-            }
-            if (ans) return 10;
-            else return FALSERESULT;
+            return straight < 4 ? FALSERESULT : straightHighCard;
         }
 
         // NumberOrderIndex = 6
@@ -460,6 +448,7 @@ namespace Poker.BE.Domain.Game
             return FALSERESULT;
         }
 
+        /*
         // NumberOrderIndex = 10
         private int IsRoyalFlush(Card[] Player7Cards)
         {
@@ -469,7 +458,8 @@ namespace Poker.BE.Domain.Game
             }
             return FALSERESULT;
         }
+        */
         #endregion
-
+        
     }
 }
