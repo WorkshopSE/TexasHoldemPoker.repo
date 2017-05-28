@@ -89,15 +89,15 @@ namespace Poker.BE.Domain.Game
         private int CheckPlayerByOrder(Player player, int numberRound)
         {
             bool isThereACorrectCardArray = PlayerSevenCards.TryGetValue(player, out Card[] playerCardArray);
-
+            
             if (isThereACorrectCardArray)
             {
                 switch (numberRound)
                 {
                     case 1: return IsHighCard(playerCardArray);
-                    case 2: return IsPair(playerCardArray);
+                    case 2: return IsPair(playerCardArray, out int pairValue);
                     case 3: return IsTwoPair(playerCardArray);
-                    case 4: return IsThreeOfAKind(playerCardArray);
+                    case 4: return IsThreeOfAKind(playerCardArray, out int threeOfAKindValue);
                     case 5: return IsStraight(playerCardArray);
                     case 6: return IsFlush(playerCardArray);
                     case 7: return IsFullHouse(playerCardArray);
@@ -394,13 +394,14 @@ namespace Poker.BE.Domain.Game
         }
 
         // NumberOrderIndex = 7
+        //TODO - Fix It!
         private int IsFullHouse(Card[] Player7Cards)
         {
             int sum = FALSERESULT;
-            if (IsTwoPair(Player7Cards) > 0 && IsThreeOfAKind(Player7Cards) > 0)
+            if (IsTwoPair(Player7Cards) > 0 && IsThreeOfAKind(Player7Cards, out int threeOfAKindValue) > 0)
             {
                 int PairValue = IsTwoPair(Player7Cards);
-                int ThreeOfAKindValue = IsThreeOfAKind(Player7Cards);
+                int ThreeOfAKindValue = IsThreeOfAKind(Player7Cards, out int threeOfAKindValue2);
                 sum = PairValue + POWER * ThreeOfAKindValue;
             }
             return sum;
