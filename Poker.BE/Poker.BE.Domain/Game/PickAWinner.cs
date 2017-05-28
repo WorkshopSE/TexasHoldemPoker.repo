@@ -89,7 +89,7 @@ namespace Poker.BE.Domain.Game
         private int CheckPlayerByOrder(Player player, int numberRound)
         {
             bool isThereACorrectCardArray = PlayerSevenCards.TryGetValue(player, out Card[] playerCardArray);
-            
+
             if (isThereACorrectCardArray)
             {
                 switch (numberRound)
@@ -290,7 +290,7 @@ namespace Poker.BE.Domain.Game
                         sum += highCardValue;
                     }
                 }
-                
+
             }
             return (firstPairValue == FALSERESULT || secondPairValue == FALSERESULT) ? FALSERESULT : sum;
         }
@@ -349,7 +349,7 @@ namespace Poker.BE.Domain.Game
                     {
                         //jump each variable once for the Ace we're missing at the end of this straight
                         straight++;
-                        i++;      
+                        i++;
                     }
                 }
                 else
@@ -365,17 +365,29 @@ namespace Poker.BE.Domain.Game
         // NumberOrderIndex = 6
         private int IsFlush(Card[] Player7Cards)
         {
-            int i;
             int[] FlushColor = new int[4];
-            for (i = 0; i < Player7Cards.Length; i++)
+            int suitNumber = -1;
+
+            //count all appearances for each suit
+            for (int i = 0; i < Player7Cards.Length; i++)
             {
                 FlushColor[Player7Cards[i].GetSuitNumber()] = FlushColor[Player7Cards[i].GetSuitNumber()] + 1;
             }
-            for (i = 0; i < FlushColor.Length; i++)
+            //find the flush color
+            for (int i = 0; i < FlushColor.Length; i++)
             {
                 if (FlushColor[i] >= 5)
                 {
-                    return 1;
+                    suitNumber = i;
+
+                    //find the highest flush value
+                    for (int j = 0; j < Player7Cards.Length; j++)
+                    {
+                        if (Player7Cards[j].GetSuitNumber() == suitNumber)
+                        {
+                            return Player7Cards[j].CardValueStrength();
+                        }
+                    }
                 }
             }
             return FALSERESULT;
@@ -460,6 +472,6 @@ namespace Poker.BE.Domain.Game
         }
         */
         #endregion
-        
+
     }
 }
