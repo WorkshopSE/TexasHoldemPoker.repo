@@ -84,8 +84,9 @@ namespace Poker.BE.Domain.Game
             }
             return null;
         }
+        #endregion
 
-
+        #region Private Functions
         private int CheckPlayerByOrder(Player player, int numberRound)
         {
             bool isThereACorrectCardArray = PlayerSevenCards.TryGetValue(player, out Card[] playerCardArray);
@@ -98,12 +99,11 @@ namespace Poker.BE.Domain.Game
                     case 2: return IsPair(playerCardArray, out int pairValue);
                     case 3: return IsTwoPair(playerCardArray);
                     case 4: return IsThreeOfAKind(playerCardArray, out int threeOfAKindValue);
-                    case 5: return IsStraight(playerCardArray);
+                    case 5: return IsStraight(playerCardArray, out int highCardIndex);
                     case 6: return IsFlush(playerCardArray);
                     case 7: return IsFullHouse(playerCardArray);
                     case 8: return IsFourOfAKind(playerCardArray);
                     case 9: return IsStraightFlush(playerCardArray);
-                    //case 10: return IsRoyalFlush(playerCardArray);
                     default: return 0;
                 }
             }
@@ -301,25 +301,26 @@ namespace Poker.BE.Domain.Game
             threeOfAKindValue = FALSERESULT;
             int exponant = 1;
             int sum = 0;
-            for (int i = 1; i < Player7Cards.Length - 1 && (exponant >= 0 || threeOfAKindValue == FALSERESULT); i++)
+            for (int i = 0; i < Player7Cards.Length - 2 && (exponant >= 0 || threeOfAKindValue == FALSERESULT); i++)
             {
                 if (threeOfAKindValue == FALSERESULT)
                 {
-                    if (Player7Cards[i - 1].CompareTo(Player7Cards[i]) == 0
-                        && Player7Cards[i].CompareTo(Player7Cards[i + 1]) == 0) // Three of a Kind
+                    if (Player7Cards[i].CompareTo(Player7Cards[i + 1]) == 0
+                        && Player7Cards[i].CompareTo(Player7Cards[i + 2]) == 0) // Three of a Kind
                     {
                         threeOfAKindValue = Player7Cards[i].CardValueStrength();
                         sum += threeOfAKindValue * (int)Math.Pow(POWER, 2);
+                        i = i + 2;
                     }
                     else if (exponant >= 0)
                     {
-                        sum += Player7Cards[i - 1].CardValueStrength() * (int)Math.Pow(POWER, exponant);
+                        sum += Player7Cards[i].CardValueStrength() * (int)Math.Pow(POWER, exponant);
                         exponant--;
                     }
                 }
                 else
                 {
-                    //Can't have another number equals to the pair
+                    //Can't have another number equals to the three of a kind
                     if (threeOfAKindValue == Player7Cards[i].CardValueStrength())
                     {
                         return FALSERESULT;
@@ -333,8 +334,9 @@ namespace Poker.BE.Domain.Game
         }
 
         // NumberOrderIndex = 5
-        private int IsStraight(Card[] Player7Cards)
+        private int IsStraight(Card[] Player7Cards, out int highCardIndex)  //the out highCardValue parameter is for StraightFlush checking
         {
+            highCardIndex = FALSERESULT;
             int straightHighCard = 0;
             int straight = 0;
             int i;
@@ -358,6 +360,7 @@ namespace Poker.BE.Domain.Game
                 }
             }
             straightHighCard = Player7Cards[i - 5].CardValueStrength();
+            highCardIndex = i - 5;
 
             return straight < 4 ? FALSERESULT : straightHighCard;
         }
@@ -394,83 +397,63 @@ namespace Poker.BE.Domain.Game
         }
 
         // NumberOrderIndex = 7
-        //TODO - Fix It!
         private int IsFullHouse(Card[] Player7Cards)
         {
-            int sum = FALSERESULT;
-            if (IsTwoPair(Player7Cards) > 0 && IsThreeOfAKind(Player7Cards, out int threeOfAKindValue) > 0)
+            int fullHouseValue = FALSERESULT;
+            if (IsPair(Player7Cards, out int pairValue) > 0 && IsThreeOfAKind(Player7Cards, out int threeOfAKindValue) > 0)
             {
-                int PairValue = IsTwoPair(Player7Cards);
-                int ThreeOfAKindValue = IsThreeOfAKind(Player7Cards, out int threeOfAKindValue2);
-                sum = PairValue + POWER * ThreeOfAKindValue;
+                fullHouseValue = pairValue + POWER * threeOfAKindValue;
             }
-            return sum;
+            return fullHouseValue;
         }
 
         // NumberOrderIndex = 8
         private int IsFourOfAKind(Card[] Player7Cards)
         {
-            int i;
-            int Count = 1;
-            for (i = 0; i < Player7Cards.Length - 1 && Count < FIVEBESTCARDS - 1; i++)
+            int foureOfAKindValue = FALSERESULT;
+            int highCardValue = FALSERESULT;
+            int sum = 0;
+            for (int i = 0; i < Player7Cards.Length - 3 && (foureOfAKindValue == FALSERESULT || highCardValue == FALSERESULT); i++)
             {
-                if (Player7Cards[i].CompareTo(Player7Cards[i + 1]) == 0)
+                if (Player7Cards[i].CompareTo(Player7Cards[i + 1]) == 0
+                    && Player7Cards[i].CompareTo(Player7Cards[i + 2]) == 0
+                    && Player7Cards[i].CompareTo(Player7Cards[i + 3]) == 0)
                 {
-                    Count = Count + 1;
+                    foureOfAKindValue = Player7Cards[i].CardValueStrength();
+                    sum += foureOfAKindValue * POWER;
+                    i = i + 3;
                 }
-                else
+                else if (highCardValue == FALSERESULT)
                 {
-                    Count = 1;
+                    highCardValue = Player7Cards[i].CardValueStrength();
+                    sum += highCardValue;
                 }
 
+                //Note: no need to check for another numbur equality to the four of a kind
             }
-            if (Count < 4) return FALSERESULT;
-            else return Player7Cards[i - 1].CardValueStrength();
+            return foureOfAKindValue == FALSERESULT ? FALSERESULT : sum;
         }
 
         // NumberOrderIndex = 9
         private int IsStraightFlush(Card[] Player7Cards)
         {
-            if (IsStraight(Player7Cards) > 0)
-            {
-                int smallStraightCardValue = IsStraight(Player7Cards);
-                int startStraightIndex = FALSERESULT;
+            int straightFlushValue = FALSERESULT;
+            straightFlushValue = IsStraight(Player7Cards, out int highCardIndex); //get the straight High Card
 
-                // we are looking for the last minimum straight value occurence in our array
-                for (int i = 2; i > 0 && startStraightIndex == FALSERESULT; i--)
+            if (straightFlushValue > 0)
+            {
+                // check if the straight we got is also a flush
+                for (int i = 0; i < 4; i++)
                 {
-                    if (Player7Cards[i].Number == smallStraightCardValue)
+                    if (Player7Cards[highCardIndex + i].CardSuit != Player7Cards[highCardIndex + i + 1].CardSuit)
                     {
-                        startStraightIndex = i;
+                        straightFlushValue = FALSERESULT;
+                        break;
                     }
                 }
-
-                // we check if the straight have the same suit
-                bool ans = true;
-                for (int k = 0; k < 4 && ans; k++)
-                {
-                    if (Player7Cards[startStraightIndex + k].GetSuitNumber() != Player7Cards[startStraightIndex + k].GetSuitNumber() + 1)
-                    {
-                        ans = false;
-                    }
-                }
-                if (ans) return smallStraightCardValue;
-                else return FALSERESULT;
             }
-            return FALSERESULT;
+                return straightFlushValue;
         }
-
-        /*
-        // NumberOrderIndex = 10
-        private int IsRoyalFlush(Card[] Player7Cards)
-        {
-            if (IsStraightFlush(Player7Cards) > 0 && IsAsStraight(Player7Cards) > 0)
-            {
-                return 1;
-            }
-            return FALSERESULT;
-        }
-        */
         #endregion
 
     }
