@@ -85,7 +85,7 @@ namespace Poker.BE.Domain.Game.Tests
             }
 
             round.PlayMove(Round.Move.Fold, 0);
-            var res6 = !round.CurrentPot.PlayersClaimPot.Contains(player3) && !round.CurrentPot.PartialPot.PlayersClaimPot.Contains(player3)
+            var res6 = round.CurrentPlayer == player1 && !round.CurrentPot.PlayersClaimPot.Contains(player3) && !round.CurrentPot.PartialPot.PlayersClaimPot.Contains(player3)
                         && round.LiveBets[player3] == 120 && round.CurrentPot.AmountToClaim == 350 && round.CurrentPot.Value == 820
                         && round.CurrentPot.PartialPot.Value == 150 && round.CurrentPot.PartialPot.AmountToClaim == 150;
 

@@ -96,6 +96,7 @@ namespace Poker.BE.Domain.Game
             //Play round until everyone is called or folded
             while (LastPlayerToRaise != CurrentPlayer)
             {
+                //Waiting for the player to choose play move
                 while (CurrentPlayer.PlayMove == default(Move)) ;
                 PlayMove(CurrentPlayer.PlayMove, CurrentPlayer.AmountToBetOrCall);
             }
@@ -103,7 +104,10 @@ namespace Poker.BE.Domain.Game
             return activeUnfoldedPlayers;
         }
 
-        public double PlayMove(Move playMove, double amountToBetOrCall)
+        /// <summary>
+        /// Make the move the current player decided to do.
+        /// </summary>
+        public void PlayMove(Move playMove, double amountToBetOrCall)
         {
             switch (playMove)
             {
@@ -120,10 +124,7 @@ namespace Poker.BE.Domain.Game
                 case Move.Fold:
                     {
                         Fold();
-
-                        //Note: need to be changed:
-                        return TotalRaise;
-                        //break;
+                        break;
                     }
                 case Move.Bet:
                     {
@@ -155,10 +156,9 @@ namespace Poker.BE.Domain.Game
                         throw new GameRulesException("Invalid Move");
                     }
             }
+
             //Change to next player
             CalculateNextPlayer();
-
-            return TotalRaise;
         }
         #endregion
 
@@ -169,7 +169,7 @@ namespace Poker.BE.Domain.Game
             {
                 currentPlayer = ActiveUnfoldedPlayers.ElementAt((ActiveUnfoldedPlayers.ToList().IndexOf(CurrentPlayer) + 1) % ActiveUnfoldedPlayers.Count);
             }
-            while (CurrentPlayer.CurrentState == Player.State.ActiveAllIn);
+            while (CurrentPlayer.CurrentState == Player.State.ActiveAllIn && LastPlayerToRaise != CurrentPlayer);
 
             CurrentTurn.CurrentPlayer = this.CurrentPlayer;
         }

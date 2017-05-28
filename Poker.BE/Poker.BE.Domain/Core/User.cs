@@ -1,4 +1,5 @@
 ﻿using Poker.BE.Domain.Game;
+using Poker.BE.Domain.Utility;
 using Poker.BE.Domain.Utility.Exceptions;
 using Poker.BE.Domain.Utility.Logger;
 using System;
@@ -112,11 +113,13 @@ namespace Poker.BE.Domain.Core
         public void ChoosePlayMove(object sender, EventArgs e)
         {
             //Note: systactic suger for checking if sender is a player type
-            if (sender is Player player)
+            if (sender is Player player && e is PlayMoveEventArgs playMoveEvent)
             {
-                //this is the current player's turn
+                if (!Players.Contains(player))
+                    throw new PlayerNotFoundException("This player doesn't belong to this user");
+
+                player.ChoosePlayMove(playMoveEvent.PlayMove, playMoveEvent.AmountToBetOrCall);
             }
-            //UNDONE
         }
 
         public Room CreateNewRoom(int level, GameConfig config, out Player creator)
@@ -132,11 +135,11 @@ namespace Poker.BE.Domain.Core
 
         public void JoinNextHand(Player player, int seatIndex, double buyIn)
         {
-            if(!Players.Contains(player, new Utility.AddressComparer<Player>()))
+            if (!Players.Contains(player, new Utility.AddressComparer<Player>()))
             {
                 throw new PlayerNotFoundException("the user doesn't have this player");
             }
-            
+
             gameCenter.JoinNextHand(player, seatIndex, buyIn);
         }
 
@@ -148,7 +151,7 @@ namespace Poker.BE.Domain.Core
             }
 
             UserBank.Money = gameCenter.StandUpToSpactate(player);
-            
+
             return UserBank.Money;
         }
         #endregion
