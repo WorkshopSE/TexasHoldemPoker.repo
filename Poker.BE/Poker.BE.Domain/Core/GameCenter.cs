@@ -398,12 +398,11 @@ namespace Poker.BE.Domain.Core
 			return player.StandUp();
 		}
 		/// <summary>
-		/// once a week the users are divided to new leagues according to their current level.
+		/// update leagues levels
 		/// </summary>
-		/// <returns>void?</returns>
-		/// <remarks>UC040: update users leagues</remarks>
+		/// <returns>void?</returns> \\TODO change return type to fit service layer @gal
 		/// <param name="number of users, levels ->pairs of level and number of users in this level"></param>
-		/// <see cref="https://docs.google.com/document/d/1OTee6BGDWK2usL53jdoeBOI-1Jh8wyNejbQ0ZroUhcA/edit#heading=h.q38pe5gu8du4"/>
+		/// <see cref=""/>
 		public void UpdateLeaguesLevels(int numOfUsers, ICollection<int> levels)
 		{
 			int LeaguesCount = CalculateNumberOfLeagues(numOfUsers);
@@ -415,27 +414,27 @@ namespace Poker.BE.Domain.Core
 			}
 			int NumOfUsersInLeague = numOfUsers / LeaguesCount;
 			int NumOfUsersInHighestLeague = NumOfUsersInLeague + numOfUsers % LeaguesCount;
-			Dictionary<int, League> LeaguesDictionary = leagues.ToDictionary(i=> (int)i.Type,i=>i);
+			Dictionary<int, League> LeaguesDictionary = leagues.ToDictionary(i => (int)i.Type, i => i);
 			//List<League>SortedLeagues=leagues.ToList();
 			//SortedLeagues.Sort();
 			int nextLevelIndex = 0;
 			//set leagues levels
-			for (int leagueIndex=6; leagueIndex>=6-LeaguesCount; leagueIndex--)
+			for (int leagueIndex = 6; leagueIndex >= 6 - LeaguesCount; leagueIndex--)
 			{
 				//set max level by highest level remining
 				LeaguesDictionary[leagueIndex].MaxLevel = SortedLevels[nextLevelIndex];
 				nextLevelIndex += NumOfUsersInLeague;
 				//index out of bound check
-				if(nextLevelIndex>=SortedLevels.Count)
+				if (nextLevelIndex >= SortedLevels.Count)
 				{
 					break;
 				}
 				//set max level by lowest level remining
 				LeaguesDictionary[leagueIndex].MinLevel = SortedLevels[nextLevelIndex - 1];
 				//check for duplicates (2 users or more with the same level need to be at the same league
-				for(int i=nextLevelIndex;i<SortedLevels.Count;i++)
+				for (int i = nextLevelIndex; i < SortedLevels.Count; i++)
 				{
-					if(SortedLevels[i]==LeaguesDictionary[leagueIndex].MinLevel)
+					if (SortedLevels[i] == LeaguesDictionary[leagueIndex].MinLevel)
 					{
 						nextLevelIndex++;
 					}
@@ -445,7 +444,7 @@ namespace Poker.BE.Domain.Core
 					}
 				}
 				//first and last leagues should have min and max levels set to defult
-				if(leagueIndex==MAX_NUM_OF_LEAGUES)
+				if (leagueIndex == MAX_NUM_OF_LEAGUES)
 				{
 					LeaguesDictionary[leagueIndex].MaxLevel = League.MAX_LEVEL;
 				}
@@ -458,10 +457,10 @@ namespace Poker.BE.Domain.Core
 				{
 					break;
 				}
-				
+
 			}
 			//set unused leagues levels
-			for(int leagueIndex= 6 - LeaguesCount; leagueIndex>0;leagueIndex--)
+			for (int leagueIndex = 6 - LeaguesCount; leagueIndex > 0; leagueIndex--)
 			{
 				LeaguesDictionary[leagueIndex].MaxLevel = 0;
 				LeaguesDictionary[leagueIndex].MinLevel = 0;

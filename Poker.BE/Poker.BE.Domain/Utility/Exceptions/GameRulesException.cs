@@ -3,23 +3,23 @@ using System.Runtime.Serialization;
 
 namespace Poker.BE.Domain.Utility.Exceptions
 {
-    [Serializable]
-    public class GameRulesException : Exception
-    {
-        public GameRulesException()
-        {
-        }
+	[Serializable]
+	public class GameRulesException : Exception
+	{
+		public GameRulesException()
+		{
+		}
 
-        public GameRulesException(string message) : base(message)
-        {
-        }
+		public GameRulesException(string message) : base(message)
+		{
+		}
 
-        public GameRulesException(string message, Exception innerException) : base(message, innerException)
-        {
-        }
+		public GameRulesException(string message, Exception innerException) : base(message, innerException)
+		{
+		}
 
-        protected GameRulesException(SerializationInfo info, StreamingContext context) : base(info, context)
-        {
-        }
-    }
+		protected GameRulesException(SerializationInfo info, StreamingContext context) : base(info, context)
+		{
+		}
+	}
 }

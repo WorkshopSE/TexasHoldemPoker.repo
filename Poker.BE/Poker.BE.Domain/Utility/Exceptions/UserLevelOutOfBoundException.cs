@@ -15,15 +15,15 @@ namespace Poker.BE.Domain.Utility.Exceptions
 		}
 
 		public UserLevelOutOfBoundException(string message) : base(message)
-        {
+		{
 		}
 
 		public UserLevelOutOfBoundException(string message, Exception innerException) : base(message, innerException)
-        {
+		{
 		}
 
 		protected UserLevelOutOfBoundException(SerializationInfo info, StreamingContext context) : base(info, context)
-        {
+		{
 		}
 	}
 }

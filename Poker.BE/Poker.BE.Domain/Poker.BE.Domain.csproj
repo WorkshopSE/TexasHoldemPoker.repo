@@ -76,6 +76,7 @@
     <Compile Include="Utility\Exceptions\PlayerNotFoundException.cs" />
     <Compile Include="Utility\Exceptions\PokerException.cs" />
     <Compile Include="Utility\Exceptions\RoomNotFoundException.cs" />
+    <Compile Include="Utility\Exceptions\UserLevelOutOfBoundException.cs" />
     <Compile Include="Utility\Exceptions\WrongIOException.cs" />
     <Compile Include="Utility\Exceptions\RoomRulesException.cs" />
     <Compile Include="Utility\Exceptions\UserNotFoundException.cs" />
