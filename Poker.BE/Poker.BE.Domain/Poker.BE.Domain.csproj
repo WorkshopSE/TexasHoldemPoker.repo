@@ -71,6 +71,10 @@
     <Compile Include="Game\Wallet.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Security\UserManager.cs" />
+    <Compile Include="Utility\Exceptions\HandNotOverException.cs" />
+    <Compile Include="Utility\Exceptions\IncorrectPasswordException.cs" />
+    <Compile Include="Utility\Exceptions\InvalidDepositException.cs" />
+    <Compile Include="Utility\Exceptions\InvalidPasswordException.cs" />
     <Compile Include="Utility\Exceptions\NotPlayersTurnException.cs" />
     <Compile Include="Utility\Exceptions\PlayerModeException.cs" />
     <Compile Include="Utility\Exceptions\PlayerNotFoundException.cs" />
@@ -78,6 +82,7 @@
     <Compile Include="Utility\Exceptions\RoomNotFoundException.cs" />
     <Compile Include="Utility\Exceptions\WrongIOException.cs" />
     <Compile Include="Utility\Exceptions\RoomRulesException.cs" />
+    <Compile Include="Utility\Exceptions\UserNameTakenException.cs" />
     <Compile Include="Utility\Exceptions\UserNotFoundException.cs" />
     <Compile Include="Utility\Logger\ILogger.cs" />
     <Compile Include="Utility\Logger\Logger.cs" />
