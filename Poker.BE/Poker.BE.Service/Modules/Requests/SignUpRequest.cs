@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace Poker.BE.Service.Modules.Requests
 {
+	/// <summary>
+	/// sign up UC inputs
+	/// </summary>
 	public class SignUpRequest : IRequest
 	{
 		public string UserName { get; set; }
