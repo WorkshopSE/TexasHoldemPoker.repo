@@ -125,6 +125,7 @@ namespace Poker.BE.Domain.Game
             return winner;
         }
 
+        //Initialize the PlayerSevenCards field by a sorted array of the player's 7 cards.
         private void InitializeDictionnary()
         {
             PlayerSevenCards = new Dictionary<Player, Card[]>();
@@ -144,13 +145,14 @@ namespace Poker.BE.Domain.Game
             }
         }
 
+        //Sort all Player's 7 cards by decreasing order
         private void SortSevenCardsByValue(Card[] CardArray)
         {
             for (int i = 0; i < CardArray.Length; i++)
             {
-                for (int k = i + 1; k < FIVEBESTCARDS + 1; k++)
+                for (int k = i + 1; k < CardArray.Length; k++)
                 {
-                    if (CardArray[i].Number > CardArray[k].Number)
+                    if (CardArray[i].Number < CardArray[k].Number)
                     {
                         CardArray = Swap(CardArray, i, k);
                     }
@@ -158,6 +160,7 @@ namespace Poker.BE.Domain.Game
             }
         }
 
+        //Swap two cards in the card array
         private Card[] Swap(Card[] CardArray, int i, int k)
         {
             Card tmp = CardArray[i];
@@ -190,55 +193,139 @@ namespace Poker.BE.Domain.Game
         }
 
         // NumberOrderIndex = 2
-        private int IsPair(Card[] Player7Cards)
+        private int IsPair(Card[] Player7Cards, out int pairValue)  //the out pairValue parameter is for FullHouse checking
         {
-            int PairValue = FALSERESULT;
-            for (int i = 0; i < Player7Cards.Length - 1 && PairValue == FALSERESULT; i++)
+            pairValue = FALSERESULT;
+            int exponant = 2;
+            int sum = 0;
+
+            for (int i = 1; i < Player7Cards.Length && (exponant >= 0 || pairValue == FALSERESULT); i++)
             {
-                if (Player7Cards[i].CompareTo(Player7Cards[i + 1]) == 0)
+                if (pairValue == FALSERESULT)
                 {
-                    PairValue = Player7Cards[i].CardValueStrength();
+                    if (Player7Cards[i - 1].CompareTo(Player7Cards[i]) == 0)
+                    {
+                        pairValue = Player7Cards[i].CardValueStrength();
+                        sum += pairValue * (int)Math.Pow(POWER, 3);
+                    }
+                    else if (exponant >= 0)
+                    {
+                        sum += Player7Cards[i - 1].CardValueStrength() * (int)Math.Pow(POWER, exponant);
+                        exponant--;
+                    }
+                }
+                else
+                {
+                    //Can't have another number equals to the pair
+                    if (pairValue == Player7Cards[i].CardValueStrength())
+                    {
+                        return FALSERESULT;
+                    }
+
+                    sum += Player7Cards[i].CardValueStrength() * (int)Math.Pow(POWER, exponant);
+                    exponant--;
                 }
             }
-            return PairValue;
+            return pairValue == FALSERESULT ? FALSERESULT : sum;
         }
 
         // NumberOrderIndex = 3
         private int IsTwoPair(Card[] Player7Cards)
         {
-            int TwoPairValue = FALSERESULT;
-            for (int i = 0; i < Player7Cards.Length - 1 && TwoPairValue < (POWER + 1); i++)
+            int firstPairValue = FALSERESULT;
+            int secondPairValue = FALSERESULT;
+            int highCardValue = FALSERESULT;
+            int sum = 0;
+
+            for (int i = 1; i < Player7Cards.Length && (secondPairValue == FALSERESULT || highCardValue == FALSERESULT); i++)
             {
-                if (Player7Cards[i].CompareTo(Player7Cards[i + 1]) == 0)
+                if (firstPairValue == FALSERESULT)
                 {
-                    if (TwoPairValue == FALSERESULT)
-                    { // the value of the first pair x * POWER^0
-                        TwoPairValue = Player7Cards[i].CardValueStrength();
+                    if (Player7Cards[i - 1].CompareTo(Player7Cards[i]) == 0)
+                    {
+                        firstPairValue = Player7Cards[i].CardValueStrength() * (int)Math.Pow(POWER, 2);
+                        sum += firstPairValue;
+                        i++;
                     }
-                    else
-                    { // the value of the second pair - TwoPairValue + (x * POWER^1)
-                        TwoPairValue = TwoPairValue + (POWER * Player7Cards[i].CardValueStrength());
+                    else if (highCardValue == FALSERESULT)
+                    {
+                        highCardValue = Player7Cards[i - 1].CardValueStrength();
+                        sum += highCardValue;
                     }
                 }
-            }
-            if (TwoPairValue < (POWER + 1)) TwoPairValue = FALSERESULT;
-            return TwoPairValue;
+                else
+                {
+                    //Can't have another number equals to the pair
+                    if (firstPairValue == Player7Cards[i].CardValueStrength())
+                    {
+                        return FALSERESULT;
+                    }
 
+                    if (secondPairValue == FALSERESULT)
+                    {
+                        if (Player7Cards[i - 1].CompareTo(Player7Cards[i]) == 0)
+                        {
+                            secondPairValue = Player7Cards[i].CardValueStrength() * (int)Math.Pow(POWER, 2);
+                            sum += secondPairValue;
+                        }
+                        else if (highCardValue == FALSERESULT)
+                        {
+                            highCardValue = Player7Cards[i - 1].CardValueStrength();
+                            sum += highCardValue;
+                        }
+                    }
+                    else
+                    {
+                        //Can't have another number equals to the pair
+                        if (firstPairValue == Player7Cards[i].CardValueStrength() || secondPairValue == Player7Cards[i].CardValueStrength())
+                        {
+                            return FALSERESULT;
+                        }
+
+                        highCardValue = Player7Cards[i].CardValueStrength();
+                        sum += highCardValue;
+                    }
+                }
+                
+            }
+            return (firstPairValue == FALSERESULT || secondPairValue == FALSERESULT) ? FALSERESULT : sum;
         }
 
         // NumberOrderIndex = 4
-        private int IsThreeOfAKind(Card[] Player7Cards)
+        private int IsThreeOfAKind(Card[] Player7Cards, out int threeOfAKindValue)  //the out threeOfAKindValue parameter is for FullHouse checking
         {
-            int ThreeOfAKindValue = FALSERESULT;
-            for (int i = 0; i < Player7Cards.Length - 2 && ThreeOfAKindValue == FALSERESULT; i++)
+            threeOfAKindValue = FALSERESULT;
+            int exponant = 1;
+            int sum = 0;
+            for (int i = 1; i < Player7Cards.Length - 1 && (exponant >= 0 || threeOfAKindValue == FALSERESULT); i++)
             {
-                if (Player7Cards[i].CompareTo(Player7Cards[i + 1]) == 0
-                    && Player7Cards[i + 1].CompareTo(Player7Cards[i + 2]) == 0) // Three of a Kind
+                if (threeOfAKindValue == FALSERESULT)
                 {
-                    ThreeOfAKindValue = Player7Cards[i].CardValueStrength();
+                    if (Player7Cards[i - 1].CompareTo(Player7Cards[i]) == 0
+                        && Player7Cards[i].CompareTo(Player7Cards[i + 1]) == 0) // Three of a Kind
+                    {
+                        threeOfAKindValue = Player7Cards[i].CardValueStrength();
+                        sum += threeOfAKindValue * (int)Math.Pow(POWER, 2);
+                    }
+                    else if (exponant >= 0)
+                    {
+                        sum += Player7Cards[i - 1].CardValueStrength() * (int)Math.Pow(POWER, exponant);
+                        exponant--;
+                    }
+                }
+                else
+                {
+                    //Can't have another number equals to the pair
+                    if (threeOfAKindValue == Player7Cards[i].CardValueStrength())
+                    {
+                        return FALSERESULT;
+                    }
+
+                    sum += Player7Cards[i].CardValueStrength() * (int)Math.Pow(POWER, exponant);
+                    exponant--;
                 }
             }
-            return ThreeOfAKindValue;
+            return threeOfAKindValue == FALSERESULT ? FALSERESULT : sum;
         }
 
         // NumberOrderIndex = 5
