@@ -210,7 +210,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 160, y: 161.2}
+  m_AnchoredPosition: {x: 160, y: 161.20001}
   m_SizeDelta: {x: 180, y: 40}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &92786728
@@ -252,7 +252,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 539069872}
+      - m_Target: {fileID: 0}
         m_MethodName: ChangeScene
         m_Mode: 5
         m_Arguments:
@@ -440,7 +440,6 @@ GameObject:
   - component: {fileID: 539069870}
   - component: {fileID: 539069869}
   - component: {fileID: 539069868}
-  - component: {fileID: 539069872}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -532,19 +531,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
---- !u!114 &539069872
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 539069867}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d5d777e9f6b1a604bb93ace0b4fbc6cd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  loadingText: {fileID: 1982934279}
-  loadingImage: {fileID: 1580427605}
 --- !u!1 &596474534
 GameObject:
   m_ObjectHideFlags: 0
@@ -653,7 +639,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 160, y: 111.2}
+  m_AnchoredPosition: {x: 160, y: 111.20001}
   m_SizeDelta: {x: 180, y: 40}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &642703415
@@ -695,7 +681,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 539069872}
+      - m_Target: {fileID: 0}
         m_MethodName: ChangeScene
         m_Mode: 5
         m_Arguments:
@@ -750,7 +736,6 @@ GameObject:
   m_Component:
   - component: {fileID: 764573893}
   - component: {fileID: 764573892}
-  - component: {fileID: 764573894}
   m_Layer: 0
   m_Name: BackgroundMusic
   m_TagString: Untagged
@@ -767,7 +752,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: 70b1cdb5ec3703f418944075d85a00a0, type: 3}
+  m_audioClip: {fileID: 8300000, guid: 11b70341440d86642a510b77c9b9e3ea, type: 3}
   m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1
@@ -851,17 +836,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &764573894
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 764573891}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 61fab369adb5c79489a1a8055ad2f189, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1074890573
 GameObject:
   m_ObjectHideFlags: 0
@@ -1012,7 +986,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 539069872}
+      - m_Target: {fileID: 0}
         m_MethodName: DoExitGame
         m_Mode: 1
         m_Arguments:
@@ -1275,7 +1249,7 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 21300000, guid: 6a1280f95a0ebc04492ec57e8809f78c, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 2e950472b1cdfb24d92ba2c30c84b363, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -1322,7 +1296,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 399.99997, y: 229.8837}
+  m_AnchoredPosition: {x: 399.99997, y: 229.88367}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!95 &1580427607
@@ -1483,7 +1457,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 160, y: 211.2}
+  m_AnchoredPosition: {x: 160, y: 211.20001}
   m_SizeDelta: {x: 180, y: 40}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1913874860
@@ -1525,7 +1499,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 539069872}
+      - m_Target: {fileID: 0}
         m_MethodName: ChangeScene
         m_Mode: 5
         m_Arguments:
@@ -1603,7 +1577,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 399.99997, y: 229.8837}
+  m_AnchoredPosition: {x: 399.99997, y: 229.88367}
   m_SizeDelta: {x: 100, y: 99.75845}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1982934281
@@ -1820,6 +1794,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 2140057542}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: df8fbb216eae8664d84d56d2e7dc4f8e, type: 3}
+  m_Script: {fileID: 11500000, guid: 6fad34f5a5a54ac40829096ce3b8a5c2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
