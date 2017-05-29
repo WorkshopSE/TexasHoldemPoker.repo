@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Poker.BE.Domain.Game
 {
@@ -9,7 +10,7 @@ namespace Poker.BE.Domain.Game
         #region Constants
         public const int POWER = 14;
         public const int FIVEBESTCARDS = 5;
-        public const int NUMBERORDER = 10;
+        public const int HANDSTRENGTH = 9;
         public const int FALSERESULT = -1;
 
         #endregion
@@ -21,7 +22,7 @@ namespace Poker.BE.Domain.Game
         #endregion
 
         #region Properties
-        public ICollection<Player> Winners { get; private set; }
+        public List<Player> Winners { get; private set; }
         #endregion
 
         #region Constructors
@@ -31,7 +32,6 @@ namespace Poker.BE.Domain.Game
             this.FifthHandCard = FifthHandCard;
             Winners = new List<Player>();
             InitializeDictionnary();
-            //GetWinner();
         }
         #endregion
 
@@ -44,87 +44,52 @@ namespace Poker.BE.Domain.Game
         /// Then check for several winners.
         /// </summary>
         /// <returns>The winning player\s</returns>
-        public ICollection<Player> GetWinner()
+        public List<Player> GetWinner()
         {
             bool winnerFound = false;
-            int numberOfPlayers = PlayerSevenCards.Count, k = 0, ans = 0;
-            int[] arrayWinners = new int[numberOfPlayers];
+            int ans = 0;
+            int[] winnersArray = new int[PlayerSevenCards.Count];
 
-            for (int i = NUMBERORDER; i > 0 && !winnerFound; i--)
+            for (int i = HANDSTRENGTH; i > 0; i--)
             {
+                int k = 0;
                 foreach (Player player in Players)
                 {
                     ans = CheckPlayerByOrder(player, i);
-                    arrayWinners[k] = ans;
+                    winnersArray[k] = ans;
+                    if (ans != FALSERESULT)
+                    {
+                        winnerFound = true;
+                    }
                     k++;
-                    if (ans != FALSERESULT) winnerFound = true;
                 }
                 if (winnerFound)
                 {
-                    for (int j = 0; j < arrayWinners.Length; j++)
+                    int maxResult = 0;
+                    for (int j = 0; j < winnersArray.Length; j++)
                     {
-                        int maxResult = 0;
-                        if (arrayWinners[i] > maxResult)
+                        if (winnersArray[j] > maxResult)
                         {
                             Winners = new List<Player>
                             {
-                                GetPlayerByDictionnaryAndIndex(i)
+                                GetPlayerByIndex(j)
                             };
-
-                            maxResult = arrayWinners[i];
+                            maxResult = winnersArray[j];
                         }
-                        else if (arrayWinners[i] == maxResult)
+                        else if (winnersArray[j] == maxResult)
                         {
-                            Winners.Add(GetPlayerByDictionnaryAndIndex(i));
+
+                            Winners.Add(GetPlayerByIndex(j));
                         }
                     }
                     return Winners;
                 }
-                k = 0;
             }
             return null;
         }
         #endregion
 
         #region Private Functions
-        private int CheckPlayerByOrder(Player player, int numberRound)
-        {
-            bool isThereACorrectCardArray = PlayerSevenCards.TryGetValue(player, out Card[] playerCardArray);
-
-            if (isThereACorrectCardArray)
-            {
-                switch (numberRound)
-                {
-                    case 1: return IsHighCard(playerCardArray);
-                    case 2: return IsPair(playerCardArray, out int pairValue);
-                    case 3: return IsTwoPair(playerCardArray);
-                    case 4: return IsThreeOfAKind(playerCardArray, out int threeOfAKindValue);
-                    case 5: return IsStraight(playerCardArray, out int highCardIndex);
-                    case 6: return IsFlush(playerCardArray);
-                    case 7: return IsFullHouse(playerCardArray);
-                    case 8: return IsFourOfAKind(playerCardArray);
-                    case 9: return IsStraightFlush(playerCardArray);
-                    default: return 0;
-                }
-            }
-            return FALSERESULT;
-        }
-
-        private Player GetPlayerByDictionnaryAndIndex(int playerIndex)
-        {
-            Player winner = null;
-            int currentIndex = 0;
-            foreach (Player player in Players)
-            {
-                if (currentIndex == playerIndex)
-                {
-                    winner = player;
-                }
-                currentIndex = currentIndex + 1;
-            }
-            return winner;
-        }
-
         //Initialize the PlayerSevenCards field by a sorted array of the player's 7 cards.
         private void InitializeDictionnary()
         {
@@ -145,6 +110,44 @@ namespace Poker.BE.Domain.Game
             }
         }
 
+        private int CheckPlayerByOrder(Player player, int numberRound)
+        {
+            bool isThereACorrectCardArray = PlayerSevenCards.TryGetValue(player, out Card[] player7CardsArray);
+
+            if (isThereACorrectCardArray)
+            {
+                switch (numberRound)
+                {
+                    case 1: return IsHighCard(player7CardsArray);
+                    case 2: return IsPair(player7CardsArray, out int pairValue);
+                    case 3: return IsTwoPair(player7CardsArray);
+                    case 4: return IsThreeOfAKind(player7CardsArray, out int threeOfAKindValue);
+                    case 5: return IsStraight(player7CardsArray, out int highCardIndex);
+                    case 6: return IsFlush(player7CardsArray);
+                    case 7: return IsFullHouse(player7CardsArray);
+                    case 8: return IsFourOfAKind(player7CardsArray);
+                    case 9: return IsStraightFlush(player7CardsArray);
+                    default: return 0;
+                }
+            }
+            return FALSERESULT;
+        }
+
+        private Player GetPlayerByIndex(int playerIndex)
+        {
+            Player winner = null;
+            int currentIndex = 0;
+            foreach (Player player in Players)
+            {
+                if (currentIndex == playerIndex)
+                {
+                    winner = player;
+                }
+                currentIndex = currentIndex + 1;
+            }
+            return winner;
+        }
+
         //Sort all Player's 7 cards by decreasing order
         private void SortSevenCardsByValue(Card[] CardArray)
         {
@@ -152,7 +155,7 @@ namespace Poker.BE.Domain.Game
             {
                 for (int k = i + 1; k < CardArray.Length; k++)
                 {
-                    if (CardArray[i].Number < CardArray[k].Number)
+                    if (CardArray[i].CardValueStrength() < CardArray[k].CardValueStrength())
                     {
                         CardArray = Swap(CardArray, i, k);
                     }
@@ -203,31 +206,33 @@ namespace Poker.BE.Domain.Game
             int exponant = 2;
             int sum = 0;
 
-            for (int i = 1; i < Player7Cards.Length && (exponant >= 0 || pairValue == FALSERESULT); i++)
+            for (int i = 0; i < Player7Cards.Length - 1 && (exponant >= 0 || pairValue == FALSERESULT); i++)
             {
                 if (pairValue == FALSERESULT)
                 {
-                    if (Player7Cards[i - 1].CompareTo(Player7Cards[i]) == 0)
+                    if (Player7Cards[i].CompareTo(Player7Cards[i + 1]) == 0)
                     {
-                        pairValue = Player7Cards[i].CardValueStrength();
+                        pairValue = Player7Cards[i + 1].CardValueStrength();
                         sum += pairValue * (int)Math.Pow(POWER, 3);
                     }
                     else if (exponant >= 0)
                     {
-                        sum += Player7Cards[i - 1].CardValueStrength() * (int)Math.Pow(POWER, exponant);
+                        sum += Player7Cards[i].CardValueStrength() * (int)Math.Pow(POWER, exponant);
                         exponant--;
                     }
                 }
                 else
                 {
                     //Can't have another number equals to the pair
-                    if (pairValue == Player7Cards[i].CardValueStrength())
+                    if (pairValue == Player7Cards[i + 1].CardValueStrength())
                     {
-                        return FALSERESULT;
+                        pairValue = FALSERESULT;
                     }
-
-                    sum += Player7Cards[i].CardValueStrength() * (int)Math.Pow(POWER, exponant);
-                    exponant--;
+                    else
+                    {
+                        sum += Player7Cards[i + 1].CardValueStrength() * (int)Math.Pow(POWER, exponant);
+                        exponant--;
+                    }
                 }
             }
             return pairValue == FALSERESULT ? FALSERESULT : sum;
@@ -262,14 +267,13 @@ namespace Poker.BE.Domain.Game
                     //Can't have another number equals to the pair
                     if (firstPairValue == Player7Cards[i].CardValueStrength())
                     {
-                        return FALSERESULT;
+                        firstPairValue = FALSERESULT;
                     }
-
-                    if (secondPairValue == FALSERESULT)
+                    else if (secondPairValue == FALSERESULT)
                     {
                         if (Player7Cards[i - 1].CompareTo(Player7Cards[i]) == 0)
                         {
-                            secondPairValue = Player7Cards[i].CardValueStrength() * (int)Math.Pow(POWER, 2);
+                            secondPairValue = Player7Cards[i].CardValueStrength() * (int)Math.Pow(POWER, 1);
                             sum += secondPairValue;
                         }
                         else if (highCardValue == FALSERESULT)
@@ -283,7 +287,7 @@ namespace Poker.BE.Domain.Game
                         //Can't have another number equals to the pair
                         if (firstPairValue == Player7Cards[i].CardValueStrength() || secondPairValue == Player7Cards[i].CardValueStrength())
                         {
-                            return FALSERESULT;
+                            secondPairValue = FALSERESULT;
                         }
 
                         highCardValue = Player7Cards[i].CardValueStrength();
@@ -323,11 +327,13 @@ namespace Poker.BE.Domain.Game
                     //Can't have another number equals to the three of a kind
                     if (threeOfAKindValue == Player7Cards[i].CardValueStrength())
                     {
-                        return FALSERESULT;
+                        threeOfAKindValue = FALSERESULT;
                     }
-
-                    sum += Player7Cards[i].CardValueStrength() * (int)Math.Pow(POWER, exponant);
-                    exponant--;
+                    else
+                    {
+                        sum += Player7Cards[i].CardValueStrength() * (int)Math.Pow(POWER, exponant);
+                        exponant--;
+                    }
                 }
             }
             return threeOfAKindValue == FALSERESULT ? FALSERESULT : sum;
@@ -339,6 +345,7 @@ namespace Poker.BE.Domain.Game
             highCardIndex = FALSERESULT;
             int straightHighCard = 0;
             int straight = 0;
+            int duplicateNumbers = 0;
             int i;
             for (i = 0; i < Player7Cards.Length - 1 && straight < 4; i++)   //we have only 4 comparations
             {
@@ -354,15 +361,23 @@ namespace Poker.BE.Domain.Game
                         i++;
                     }
                 }
-                else
+                else if (Player7Cards[i].CompareTo(Player7Cards[i + 1]) != 0)
                 {
                     straight = 0;
                 }
+                else
+                {
+                    duplicateNumbers++;
+                }
             }
-            straightHighCard = Player7Cards[i - 5].CardValueStrength();
-            highCardIndex = i - 5;
 
-            return straight < 4 ? FALSERESULT : straightHighCard;
+            if (straight >= 4)
+            {
+                straightHighCard = Player7Cards[i - 4 - duplicateNumbers].CardValueStrength();
+                highCardIndex = i - 4 - duplicateNumbers;
+                return straightHighCard;
+            }
+            return FALSERESULT;
         }
 
         // NumberOrderIndex = 6
@@ -438,21 +453,24 @@ namespace Poker.BE.Domain.Game
         private int IsStraightFlush(Card[] Player7Cards)
         {
             int straightFlushValue = FALSERESULT;
-            straightFlushValue = IsStraight(Player7Cards, out int highCardIndex); //get the straight High Card
+            int straightHighCard = IsStraight(Player7Cards, out int highCardIndex); //get the straight High Card
 
-            if (straightFlushValue > 0)
+            if (straightHighCard > 0)
             {
+                int[] flushColor = new int[4];
+
                 // check if the straight we got is also a flush
-                for (int i = 0; i < 4; i++)
+                for (int i = highCardIndex; i < Player7Cards.Length && Player7Cards[i].Number > straightFlushValue - 5; i++)
                 {
-                    if (Player7Cards[highCardIndex + i].CardSuit != Player7Cards[highCardIndex + i + 1].CardSuit)
+                    flushColor[Player7Cards[i].GetSuitNumber()]++;
+
+                    if (flushColor[Player7Cards[i].GetSuitNumber()] == 5)
                     {
-                        straightFlushValue = FALSERESULT;
-                        break;
+                        straightFlushValue = straightHighCard;
                     }
                 }
             }
-                return straightFlushValue;
+            return straightFlushValue;
         }
         #endregion
 

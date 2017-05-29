@@ -42,10 +42,13 @@ namespace Poker.BE.Domain.Game
             CurrentState = State.Passive;
             _wallet = new Wallet();
             WalletValue = 0.0;
-            Nickname = "";
             PlayMove = default(Round.Move);
         }
 
+        public Player(string nickname) : this()
+        {
+            Nickname = nickname;
+        }
         #endregion
 
         #region Methods
