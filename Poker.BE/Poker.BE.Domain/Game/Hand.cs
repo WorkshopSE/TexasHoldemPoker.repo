@@ -105,13 +105,15 @@ namespace Poker.BE.Domain.Game
             activePlayers = round.PlayBettingRound();
         }
 
-        public void EndHand()
+        public Player EndHand()
         {
             //TODO: implement
             Showdown();
             PickAWinner();
 
             this.Active = false;    //is it necessary? the hand will be killed anyway
+
+
         }
         #endregion
 
@@ -184,7 +186,7 @@ namespace Poker.BE.Domain.Game
             throw new NotImplementedException();
         }
 
-        private void PickAWinner()
+        private List<Player> PickAWinner()
         {
             throw new NotImplementedException();
         }

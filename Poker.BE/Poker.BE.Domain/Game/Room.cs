@@ -242,24 +242,12 @@ namespace Poker.BE.Domain.Game
             CurrentHand.PrepareHand();
             CurrentHand.PlayHand();
         }
+
         public void EndCurrentHand()
         {
             CurrentHand.EndHand();
             dealerIndex++;
             //TODO: implementation
-        }
-
-        /// <summary>
-        /// UC027 Choose Play Move
-        /// </summary>
-        /// <see cref="https://docs.google.com/document/d/1OTee6BGDWK2usL53jdoeBOI-1Jh8wyNejbQ0ZroUhcA/edit#heading=h.8f3okxza6g2d"/>
-        public void ChoosePlayMove(Round.Move move, int amountToBet)
-        {
-            if (ActivePlayers.Where(player => player.CurrentState == Player.State.ActiveUnfolded).ToList().Count < 2)
-            {
-                throw new NotEnoughPlayersException("Its should be at least 2 active players to play move");
-            }
-            CurrentHand.CurrentRound.PlayMove(move, amountToBet);
         }
 
         public bool TakeChair(Player player, int index)
@@ -305,5 +293,5 @@ namespace Poker.BE.Domain.Game
         }
         #endregion
 
-    }//class
+    }
 }

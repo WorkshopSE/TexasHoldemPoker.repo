@@ -312,41 +312,5 @@ namespace Poker.BE.Domain.Game.Tests
             //More Test when UC020: Join Next Hand completed, needed for make players Active
 
         }
-
-        [TestMethod()]
-        public void ChoosePlayMoveTest()
-        {
-            //Arrange
-            Player player1 = new Player();
-            GamePreferences preferences = new GamePreferences();
-            GameCenter center = GameCenter.Instance;
-            Room room = new Room(player1, preferences);
-            Exception expectedExcetpion = null;
-            //Act
-            try
-            {
-                room.ChoosePlayMove(Round.Move.Call, 0);
-            }
-            catch (NotEnoughPlayersException ex)
-            {
-                expectedExcetpion = ex;
-            }
-            // Assert - precondition lower than 2 players
-            Assert.AreEqual(expectedExcetpion.Message, "Its should be at least 2 active players to play move");
-
-            Player player2 = center.EnterRoom(room);
-            try
-            {
-                room.ChoosePlayMove(Round.Move.Call, 0);
-            }
-            catch (NotEnoughPlayersException ex)
-            {
-                expectedExcetpion = ex;
-            }
-            // Assert - precondition no active players
-            Assert.AreEqual(expectedExcetpion.Message, "Its should be at least 2 active players to play move");
-
-            //More Test when UC020: Join Next Hand completed, needed for make players Active
-        }
     }
 }
