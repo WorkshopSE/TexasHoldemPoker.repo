@@ -39,6 +39,7 @@ namespace Poker.BE.Domain.Game
         public Player()
         {
             PrivateCards = new Card[NPRIVATE_CARDS];
+            Nickname = "";
             CurrentState = State.Passive;
             _wallet = new Wallet();
             WalletValue = 0.0;

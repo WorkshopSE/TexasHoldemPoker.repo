@@ -40,7 +40,7 @@ namespace Poker.BE.Domain.Game.Tests
 
             //Act
             round.PlayMove(Round.Move.Check, 0);
-            var res0 = round.CurrentPlayer == player1 && round.LiveBets[player1] == 0
+            var res0 = round.CurrentPlayer == player1 && round.LiveBets[player3] == 0
                         && pot.AmountToClaim == 0 && pot.Value == 0 && round.LastRaise == 0 && round.TotalRaise == 0;
 
             round.PlayMove(Round.Move.Bet, 50);
