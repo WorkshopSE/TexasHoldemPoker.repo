@@ -205,7 +205,7 @@ namespace Poker.BE.Domain.Game
                         amountToAdd = partialPotIterator.AmountToClaim - playerCurrentBet;
                     else    //if call all-in
                         amountToAdd = amountToBetOrCall;
-                    CurrentPlayer.AddMoney(amountToAdd);
+                    CurrentPlayer.SubstractMoney(amountToAdd);
                     LiveBets[CurrentPlayer] += amountToAdd;
                     partialPotIterator.Value += amountToAdd;
                     amountToBetOrCall -= amountToAdd;
@@ -303,7 +303,7 @@ namespace Poker.BE.Domain.Game
 
             lastPartialPot.Value += amountToRaise;
             lastPartialPot.AmountToClaim += amountToRaise;
-            CurrentPlayer.AddMoney(amountToRaise);
+            CurrentPlayer.SubstractMoney(amountToRaise);
             LiveBets[CurrentPlayer] += amountToRaise;
             lastRaise = amountToRaise;
             totalRaise += LastRaise;
