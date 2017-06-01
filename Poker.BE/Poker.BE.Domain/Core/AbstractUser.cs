@@ -6,18 +6,15 @@ using System.Threading.Tasks;
 
 namespace Poker.BE.Domain.Core
 {
-    public abstract class AbstractUser
-    {
+	public abstract class AbstractUser
+	{
 
-        #region Properties
-        public string UserName { get; set;}
-        public string Password { get; set; }
-        public string Avatar { get; set; }
-        protected Bank UserBank { get; set; }
-        protected bool IsConnected { get; set; }
-        #endregion
-
-
-
-    }
+		#region Properties
+		public string UserName { get; set; }
+		public string Password { get; set; }
+		public Bank UserBank { get; set; }
+		public bool IsConnected { get; set; }
+		public string Avatar { get; set; }
+		#endregion
+	}
 }
