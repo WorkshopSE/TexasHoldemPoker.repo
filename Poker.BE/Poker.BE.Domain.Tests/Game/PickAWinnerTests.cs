@@ -64,44 +64,44 @@ namespace Poker.BE.Domain.Game.Tests
 
             //Act
             pickAWinner = new PickAWinner(players, tableCards);
-            winners = pickAWinner.GetWinner();
+            winners = pickAWinner.GetWinners();
             var res1 = winners.ElementAt(0).Nickname == "b" && winners.Count == 1;
 
             player1.PrivateCards = new Card[2] { new Card(Card.Suit.Spades, Card.Value.Ace), new Card(Card.Suit.Hearts, Card.Value.Two) };
             player2.PrivateCards = new Card[2] { new Card(Card.Suit.Clubs, Card.Value.Ace), new Card(Card.Suit.Clubs, Card.Value.Seven) };
             player3.PrivateCards = new Card[2] { new Card(Card.Suit.Spades, Card.Value.Queen), new Card(Card.Suit.Diamonds, Card.Value.Six) };
             pickAWinner = new PickAWinner(players, tableCards);
-            winners = pickAWinner.GetWinner();
+            winners = pickAWinner.GetWinners();
             var res2 = winners.Count == 2 && winners.ElementAt(0).Nickname == "a" && winners.ElementAt(1).Nickname == "b";
 
             player3.PrivateCards = new Card[2] { new Card(Card.Suit.Spades, Card.Value.Ten), new Card(Card.Suit.Diamonds, Card.Value.Six) };
             pickAWinner = new PickAWinner(players, tableCards);
-            winners = pickAWinner.GetWinner();
+            winners = pickAWinner.GetWinners();
             var res3 = winners.Count == 1 && winners.ElementAt(0).Nickname == "c";
 
             player2.PrivateCards = new Card[2] { new Card(Card.Suit.Spades, Card.Value.Nine), new Card(Card.Suit.Spades, Card.Value.Six) };
             pickAWinner = new PickAWinner(players, tableCards);
-            winners = pickAWinner.GetWinner();
+            winners = pickAWinner.GetWinners();
             var res4 = winners.Count == 1 && winners.ElementAt(0).Nickname == "b";
 
             player1.PrivateCards = new Card[2] { new Card(Card.Suit.Spades, Card.Value.Seven), new Card(Card.Suit.Clubs, Card.Value.Six) };
             pickAWinner = new PickAWinner(players, tableCards);
-            winners = pickAWinner.GetWinner();
+            winners = pickAWinner.GetWinners();
             var res5 = winners.Count == 1 && winners.ElementAt(0).Nickname == "a";
 
             player3.PrivateCards = new Card[2] { new Card(Card.Suit.Hearts, Card.Value.Ace), new Card(Card.Suit.Hearts, Card.Value.Jack) };
             pickAWinner = new PickAWinner(players, tableCards);
-            winners = pickAWinner.GetWinner();
+            winners = pickAWinner.GetWinners();
             var res6 = winners.Count == 1 && winners.ElementAt(0).Nickname == "c";
 
             player2.PrivateCards = new Card[2] { new Card(Card.Suit.Spades, Card.Value.Nine), new Card(Card.Suit.Clubs, Card.Value.Nine) };
             pickAWinner = new PickAWinner(players, tableCards);
-            winners = pickAWinner.GetWinner();
+            winners = pickAWinner.GetWinners();
             var res7 = winners.Count == 1 && winners.ElementAt(0).Nickname == "b";
 
             player1.PrivateCards = new Card[2] { new Card(Card.Suit.Hearts, Card.Value.Queen), new Card(Card.Suit.Hearts, Card.Value.Jack) };
             pickAWinner = new PickAWinner(players, tableCards);
-            winners = pickAWinner.GetWinner();
+            winners = pickAWinner.GetWinners();
             var res8 = winners.Count == 1 && winners.ElementAt(0).Nickname == "a";
 
             //Assert

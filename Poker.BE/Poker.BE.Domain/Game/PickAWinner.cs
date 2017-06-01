@@ -44,7 +44,7 @@ namespace Poker.BE.Domain.Game
         /// Then check for several winners.
         /// </summary>
         /// <returns>The winning player\s</returns>
-        public List<Player> GetWinner()
+        public List<Player> GetWinners()
         {
             bool winnerFound = false;
             int ans = 0;

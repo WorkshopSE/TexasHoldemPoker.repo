@@ -27,12 +27,14 @@ namespace Poker.BE.Domain.Game
         private Pot pot;
         private Player dealer;
         private GameConfig gameConfig;
+        
         #endregion
 
         #region Properties
         public bool Active { get; set; }
-        public Round CurrentRound { get; }
+        public Round CurrentRound { get; private set; }
         public Card[] CommunityCards { get { return communityCards; } }
+        public Dictionary<Player, double> WinnersProfits { get; private set; }
         #endregion
 
         #region Constructors
@@ -50,7 +52,7 @@ namespace Poker.BE.Domain.Game
             this.CurrentRound = new Round(dealer, activePlayers, this.pot, true, this.gameConfig);
             this.Active = true;
             this.gameConfig = gameConfig;
-            
+            WinnersProfits = new Dictionary<Player, double>();
         }
 
         #endregion
@@ -71,8 +73,7 @@ namespace Poker.BE.Domain.Game
         public void PlayHand()
         {
             //PRE FLOP
-            Round round = CurrentRound;
-            round.PlayBettingRound();
+            CurrentRound.PlayBettingRound();
 
             //FLOP
             deck.PullCard(Card.State.FaceDown); //burn card
@@ -84,8 +85,8 @@ namespace Poker.BE.Domain.Game
             }
 
             //SECOND BETTING ROUND
-            round = new Round(dealer, activePlayers, pot, false, gameConfig);
-            activePlayers = round.PlayBettingRound();
+            CurrentRound = new Round(dealer, activePlayers, pot, false, gameConfig);
+            activePlayers = CurrentRound.PlayBettingRound();
 
             //TURN
             deck.PullCard(Card.State.FaceDown); //burn card
@@ -93,27 +94,25 @@ namespace Poker.BE.Domain.Game
             i++;
 
             //THIRD BETTING ROUND
-            round = new Round(dealer, activePlayers, pot, false, gameConfig);
-            activePlayers = round.PlayBettingRound();
+            CurrentRound = new Round(dealer, activePlayers, pot, false, gameConfig);
+            activePlayers = CurrentRound.PlayBettingRound();
 
             //RIVER
             deck.PullCard(Card.State.FaceDown); //burn card
             communityCards[i] = deck.PullCard(Card.State.FaceUp);
 
             //FORTH BETTING ROUND
-            round = new Round(dealer, activePlayers, pot, false, gameConfig);
-            activePlayers = round.PlayBettingRound();
+            CurrentRound = new Round(dealer, activePlayers, pot, false, gameConfig);
+            activePlayers = CurrentRound.PlayBettingRound();
         }
 
-        public Player EndHand()
+        public void EndHand()
         {
-            //TODO: implement
+            //TODO: implement Showdown
             Showdown();
             PickAWinner();
 
             this.Active = false;    //is it necessary? the hand will be killed anyway
-
-
         }
         #endregion
 
@@ -186,9 +185,29 @@ namespace Poker.BE.Domain.Game
             throw new NotImplementedException();
         }
 
-        private List<Player> PickAWinner()
+        private void PickAWinner()
         {
-            throw new NotImplementedException();
+            Pot lastPot = CurrentRound.CurrentPot;
+            List<Player> potWinners;
+            //pick winner for each pot separately
+            while (lastPot.PartialPot != null)
+            {
+                PickAWinner pickPotWinner = new PickAWinner(lastPot.PlayersClaimPot, communityCards);
+                potWinners = pickPotWinner.GetWinners();
+
+                //divide pot money to winning players
+                foreach (Player player in potWinners)
+                {
+                    if (!WinnersProfits.ContainsKey(player))
+                    {
+                        WinnersProfits.Add(player, 0);
+                    }
+                    WinnersProfits[player] += lastPot.Value / potWinners.Count;
+                    player.AddMoney(WinnersProfits[player]);
+                }
+
+                lastPot = lastPot.PartialPot;
+            }
         }
         #endregion
     }

@@ -95,35 +95,9 @@ namespace Poker.BE.Domain.Game
             return WalletValue;
         }
 
-        public void Check()
-        {
-            ///  Do noting?
-        }
-
-        public void Call(double amount)
-        {
-            if (amount <= 0)
-                throw new WrongIOException("negative call :(  Somthing isn't right...");
-            SubstractMoney(amount);
-        }
-
         public void Fold()
         {
             CurrentState = State.ActiveFolded;
-        }
-
-        public void Bet(double amount)
-        {
-            if (amount <= 0)
-                throw new WrongIOException("Can't bet a negetive amount");
-            SubstractMoney(amount);
-        }
-
-        public void Raise(double amount)
-        {
-            if (amount <= 0)
-                throw new WrongIOException("Can't bet a negetive amount");
-            SubstractMoney(amount);
         }
 
         public void AllIn()
@@ -133,6 +107,8 @@ namespace Poker.BE.Domain.Game
 
         public void AddMoney(double amount)
         {
+            if (amount < 0)
+                throw new WrongIOException("Can't add a negative amount of money");
             _wallet.AmountOfMoney += amount;
         }
 

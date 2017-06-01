@@ -177,15 +177,13 @@ namespace Poker.BE.Domain.Game
         private void Check()
         {
             //if no one had raised
-            if ((isPreflop && TotalRaise == config.AntesValue) || (!isPreflop && TotalRaise == 0) ||
-                (isPreflop &&
+            if (!(isPreflop && TotalRaise == config.AntesValue) && !(!isPreflop && TotalRaise == 0) &&
+                !(isPreflop &&
                     currentPlayer == activeUnfoldedPlayers.ElementAt((activeUnfoldedPlayers.ToList().IndexOf(dealer) + 2) % activeUnfoldedPlayers.Count) &&
                     liveBets[CurrentPlayer] == config.MinimumBet + config.AntesValue))
             {
-                CurrentPlayer.Check();  // Do nothing??
-            }
-            else
                 throw new GameRulesException("Can't check if someone had raised before");
+            }
         }
 
         private void Call(double amountToBetOrCall)
@@ -207,7 +205,7 @@ namespace Poker.BE.Domain.Game
                         amountToAdd = partialPotIterator.AmountToClaim - playerCurrentBet;
                     else    //if call all-in
                         amountToAdd = amountToBetOrCall;
-                    CurrentPlayer.Call(amountToAdd);
+                    CurrentPlayer.AddMoney(amountToAdd);
                     LiveBets[CurrentPlayer] += amountToAdd;
                     partialPotIterator.Value += amountToAdd;
                     amountToBetOrCall -= amountToAdd;
@@ -305,7 +303,7 @@ namespace Poker.BE.Domain.Game
 
             lastPartialPot.Value += amountToRaise;
             lastPartialPot.AmountToClaim += amountToRaise;
-            CurrentPlayer.Bet(amountToRaise);
+            CurrentPlayer.AddMoney(amountToRaise);
             LiveBets[CurrentPlayer] += amountToRaise;
             lastRaise = amountToRaise;
             totalRaise += LastRaise;
