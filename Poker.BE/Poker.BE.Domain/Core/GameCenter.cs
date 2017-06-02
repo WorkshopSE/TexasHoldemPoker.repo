@@ -1,4 +1,5 @@
 ﻿using Poker.BE.Domain.Game;
+using Poker.BE.Domain.Utility;
 using Poker.BE.Domain.Utility.Exceptions;
 using System;
 using System.Collections.Generic;
@@ -41,6 +42,7 @@ namespace Poker.BE.Domain.Core
 		#region Fields
 		private IDictionary<Player, Room> playersManager;
 		private IDictionary<Room, League> roomsManager;
+        private StatisticsManager statisticsManager;
 		private ICollection<League> leagues;
 		#endregion
 
@@ -63,8 +65,10 @@ namespace Poker.BE.Domain.Core
 		private GameCenter()
 		{
 			playersManager = new Dictionary<Player, Room>();
-			roomsManager = new Dictionary<Room, League>();
+			roomsManager = new Dictionary<Room, League>();           
 			leagues = new List<League>();
+
+            //TODO - get/create StatisticsManager... how?
 		}
 
 
@@ -297,7 +301,7 @@ namespace Poker.BE.Domain.Core
 			creator = new Player();
 
 			// creating the room and adding the creator as a passive player to it.
-			var room = new Room(creator, config);
+			var room = new Room(creator, config, statisticsManager);
 			BindPlayerToRoom(creator, room);
 
 			League league = FindLeagueToFill(GetAllLeaguesAtLevel(level));

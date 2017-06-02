@@ -35,6 +35,7 @@ namespace Poker.BE.Domain.Game
         public Round CurrentRound { get; private set; }
         public Card[] CommunityCards { get { return communityCards; } }
         public Dictionary<Player, double> WinnersProfits { get; private set; }
+        public Dictionary<Player, double> PlayersBets { get; private set; }
         #endregion
 
         #region Constructors
@@ -46,6 +47,10 @@ namespace Poker.BE.Domain.Game
             }
             this.deck = new Deck();
             this.activePlayers = players;
+            foreach (Player player in activePlayers)
+            {
+                PlayersBets.Add(player, 0);
+            }
             this.communityCards = new CommunityCard[NUM_OF_COMMUNITY_CARDS];
             this.pot = new Pot();
             this.dealer = dealer;
@@ -74,6 +79,7 @@ namespace Poker.BE.Domain.Game
         {
             //PRE FLOP
             CurrentRound.PlayBettingRound();
+            UpdatePlayersBets();
 
             //FLOP
             deck.PullCard(Card.State.FaceDown); //burn card
@@ -87,6 +93,7 @@ namespace Poker.BE.Domain.Game
             //SECOND BETTING ROUND
             CurrentRound = new Round(dealer, activePlayers, pot, false, gameConfig);
             activePlayers = CurrentRound.PlayBettingRound();
+            UpdatePlayersBets();
 
             //TURN
             deck.PullCard(Card.State.FaceDown); //burn card
@@ -96,6 +103,7 @@ namespace Poker.BE.Domain.Game
             //THIRD BETTING ROUND
             CurrentRound = new Round(dealer, activePlayers, pot, false, gameConfig);
             activePlayers = CurrentRound.PlayBettingRound();
+            UpdatePlayersBets();
 
             //RIVER
             deck.PullCard(Card.State.FaceDown); //burn card
@@ -104,6 +112,7 @@ namespace Poker.BE.Domain.Game
             //FORTH BETTING ROUND
             CurrentRound = new Round(dealer, activePlayers, pot, false, gameConfig);
             activePlayers = CurrentRound.PlayBettingRound();
+            UpdatePlayersBets();
         }
 
         public void EndHand()
@@ -180,6 +189,14 @@ namespace Poker.BE.Domain.Game
                 CurrentRound.PlayMove(Round.Move.Raise, gameConfig.MinimumBet);
         }
 
+        private void UpdatePlayersBets()
+        {
+            foreach (Player player in CurrentRound.ActiveUnfoldedPlayers)
+            {
+                PlayersBets[player] += CurrentRound.LiveBets[player];
+            }
+        }
+
         private void Showdown()
         {
             throw new NotImplementedException();
@@ -195,15 +212,16 @@ namespace Poker.BE.Domain.Game
                 PickAWinner pickPotWinner = new PickAWinner(lastPot.PlayersClaimPot, communityCards);
                 potWinners = pickPotWinner.GetWinners();
 
+                double playerWinningMoney = lastPot.Value / potWinners.Count;
                 //divide pot money to winning players
                 foreach (Player player in potWinners)
                 {
-                    if (!WinnersProfits.ContainsKey(player))
+                    if (!PlayersBets.ContainsKey(player))
                     {
-                        WinnersProfits.Add(player, 0);
+                        throw new PlayerNotFoundException("Can't find the winning player... not possible");
                     }
-                    WinnersProfits[player] += lastPot.Value / potWinners.Count;
-                    player.AddMoney(WinnersProfits[player]);
+                    PlayersBets[player] += playerWinningMoney;
+                    player.AddMoney(playerWinningMoney);
                 }
 
                 lastPot = lastPot.PartialPot;
