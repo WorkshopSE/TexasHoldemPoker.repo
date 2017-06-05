@@ -56,7 +56,8 @@ namespace Poker.BE.Domain.Game
 
         public void ChoosePlayMove(string playMove, double amountToBetOrCall)
         {
-            Enum.TryParse(playMove, out Round.Move parsedMove);
+            Round.Move parsedMove;
+            Enum.TryParse(playMove, out parsedMove);
             PlayMove = parsedMove;
             AmountToBetOrCall = amountToBetOrCall;
         }

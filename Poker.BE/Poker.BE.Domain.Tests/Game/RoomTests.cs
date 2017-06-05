@@ -1,6 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Poker.BE.Domain.Core;
 using Poker.BE.Domain.Game;
+using Poker.BE.Domain.Utility;
 using Poker.BE.Domain.Utility.Exceptions;
 
 using System;
@@ -19,12 +20,14 @@ namespace Poker.BE.Domain.Game.Tests
         public TestContext TestContext { get; set; }
         private Room room;
         private Player roomCreator;
+        private StatisticsManager statisticManager;
 
         [TestInitialize]
         public void Before()
         {
+            statisticManager = new StatisticsManager();
             roomCreator = new Player();
-            room = new Room(roomCreator);
+            room = new Room(roomCreator, statisticManager);
         }
 
         [TestCleanup]
@@ -43,7 +46,7 @@ namespace Poker.BE.Domain.Game.Tests
             var expConfig = new GameConfig();
 
             //Act
-            var actual = new Room(expPlayer, preferences);
+            var actual = new Room(expPlayer, preferences, statisticManager);
 
             //Assert
             Assert.AreEqual(1, actual.Players.Count, "one player in new room");
@@ -76,7 +79,7 @@ namespace Poker.BE.Domain.Game.Tests
             var expConfig = new GameConfig();
 
             //Act
-            var actual = new Room(player);
+            var actual = new Room(player, statisticManager);
 
             //Assert
             Assert.AreEqual(1, actual.Players.Count, "one player in new room");
@@ -137,7 +140,7 @@ namespace Poker.BE.Domain.Game.Tests
             #endregion
 
             //Act
-            var actual = new Room(expPlayer, expConfig);
+            var actual = new Room(expPlayer, expConfig, statisticManager);
 
             //Assert
             #region Default asserts
@@ -276,14 +279,13 @@ namespace Poker.BE.Domain.Game.Tests
         }
 
         [TestMethod()]
-        //[ExpectedException(typeof(NotEnoughPlayersException))]
         public void StartNewHandTest()
         {
             //Arrange
             Player player1 = new Player();
             GamePreferences preferences = new GamePreferences();
             GameCenter center = GameCenter.Instance;
-            Room room = new Room(player1, preferences);
+            Room room = new Room(player1, preferences, statisticManager);
             Exception expectedExcetpion = null;
             //Act
             try

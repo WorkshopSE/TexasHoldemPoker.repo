@@ -12,11 +12,6 @@ namespace Poker.BE.Domain.Game.Tests
     [TestClass()]
     public class RoundTests
     {
-        [TestMethod()]
-        public void RoundTest()
-        {
-            //Is this count as simple constructor??
-        }
 
         [TestMethod()]
         public void PlayMoveTest()
@@ -46,7 +41,7 @@ namespace Poker.BE.Domain.Game.Tests
             round.PlayMove(Round.Move.Bet, 50);
             var res1 = round.CurrentPlayer == player2 && pot.PlayersClaimPot.Contains(player1) && round.LiveBets[player1] == 50
                         && pot.AmountToClaim == 50 && pot.Value == 50 && round.LastRaise == 50 && round.TotalRaise == 50;
-            
+
             round.PlayMove(Round.Move.Call, 0);
             var res2 = round.CurrentPlayer == player3 && pot.PlayersClaimPot.Contains(player2) && round.LiveBets[player2] == 50
                         && pot.AmountToClaim == 50 && pot.Value == 100 && round.LastRaise == 50 && round.TotalRaise == 50;
@@ -101,6 +96,24 @@ namespace Poker.BE.Domain.Game.Tests
             Assert.IsTrue(res6);
 
 
+        }
+
+        [TestMethod()]
+        public void PlayBettingRoundTest()
+        {
+            
+        }
+
+        public class AutoRound : Round
+        {
+            public AutoRound(Player dealer, ICollection<Player> activeUnfoldedPlayers, Pot currentPot, bool isPreflop, GameConfig config) : base(dealer, activeUnfoldedPlayers, currentPot, isPreflop, config)
+            {
+            }
+
+            public override void GetPlayMove()
+            {
+                
+            }
         }
     }
 }

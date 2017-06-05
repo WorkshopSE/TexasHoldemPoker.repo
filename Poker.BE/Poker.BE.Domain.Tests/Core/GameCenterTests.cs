@@ -1,6 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Poker.BE.Domain.Core;
 using Poker.BE.Domain.Game;
+using Poker.BE.Domain.Utility;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -145,7 +146,8 @@ namespace Poker.BE.Domain.Core.Tests
             //Arrange
             var expected = new Player() { Nickname = "test player" };
             var actual = default(Player);
-            Room room = new Room(new Player() { Nickname = "test player" });
+            var statisticsManager = new StatisticsManager();
+            Room room = new Room(new Player() { Nickname = "test player" }, statisticsManager);
 
             //Act
             actual = gameCenter.EnterRoom(room);
@@ -162,7 +164,8 @@ namespace Poker.BE.Domain.Core.Tests
         {
             //Arrange
             var expPlayer = new Player() { Nickname = "test player" };
-            var expRoom = new Room(expPlayer);
+            var statisticsManager = new StatisticsManager();
+            var expRoom = new Room(expPlayer, statisticsManager);
 
             GameConfig inConfig = new GameConfig();
             int inLevel = 3;
