@@ -113,7 +113,7 @@ namespace Poker.BE.Domain.Core
         public void ChoosePlayMove(object sender, EventArgs e)
         {
             //Note: systactic suger for checking if sender is a player type
-            if (sender is Player player && e is PlayMoveEventArgs playMoveEvent)
+            if ((sender is Player player) && (e is PlayMoveEventArgs playMoveEvent))
             {
                 if (!Players.Contains(player))
                     throw new PlayerNotFoundException("This player doesn't belong to this user");
