@@ -112,7 +112,8 @@ namespace Poker.BE.Domain.Game
 
         private int CheckPlayerByOrder(Player player, int numberRound)
         {
-            bool isThereACorrectCardArray = PlayerSevenCards.TryGetValue(player, out Card[] player7CardsArray);
+            Card[] player7CardsArray;
+            bool isThereACorrectCardArray = PlayerSevenCards.TryGetValue(player, out player7CardsArray);
 
             if (isThereACorrectCardArray)
             {
