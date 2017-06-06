@@ -27,5 +27,11 @@ namespace Poker.BE.Service.Modules.Results
             }
         }
         public bool? Success { get; set; }
+
+        public IResult()
+        {
+            ErrorMessage = "";
+            Success = false;
+        }
     }
 }
