@@ -33,7 +33,8 @@ namespace Poker.BE.Domain.Game
         #region Properties
         public bool Active { get; set; }
         public Round CurrentRound { get; private set; }
-        public Card[] CommunityCards { get { return communityCards; } }
+        public Pot Pot { get { return pot; } set { pot = value; } }
+        public Card[] CommunityCards { get { return communityCards; } set { communityCards = value; } }
         public Dictionary<Player, double> WinnersProfits { get; private set; }
         public Dictionary<Player, double> PlayersBets { get; private set; }
         #endregion
@@ -47,6 +48,7 @@ namespace Poker.BE.Domain.Game
             }
             this.deck = new Deck();
             this.activePlayers = players;
+            PlayersBets = new Dictionary<Player, double>();
             foreach (Player player in activePlayers)
             {
                 PlayersBets.Add(player, 0);
@@ -80,6 +82,7 @@ namespace Poker.BE.Domain.Game
             //PRE FLOP
             CurrentRound.PlayBettingRound();
             UpdatePlayersBets();
+            pot = CurrentRound.CurrentPot;
 
             //FLOP
             deck.PullCard(Card.State.FaceDown); //burn card
@@ -94,6 +97,7 @@ namespace Poker.BE.Domain.Game
             CurrentRound = new Round(dealer, activePlayers, pot, false, gameConfig);
             activePlayers = CurrentRound.PlayBettingRound();
             UpdatePlayersBets();
+            pot = CurrentRound.CurrentPot;
 
             //TURN
             deck.PullCard(Card.State.FaceDown); //burn card
@@ -104,6 +108,7 @@ namespace Poker.BE.Domain.Game
             CurrentRound = new Round(dealer, activePlayers, pot, false, gameConfig);
             activePlayers = CurrentRound.PlayBettingRound();
             UpdatePlayersBets();
+            pot = CurrentRound.CurrentPot;
 
             //RIVER
             deck.PullCard(Card.State.FaceDown); //burn card
@@ -113,6 +118,7 @@ namespace Poker.BE.Domain.Game
             CurrentRound = new Round(dealer, activePlayers, pot, false, gameConfig);
             activePlayers = CurrentRound.PlayBettingRound();
             UpdatePlayersBets();
+            pot = CurrentRound.CurrentPot;
         }
 
         public void EndHand()
@@ -145,6 +151,8 @@ namespace Poker.BE.Domain.Game
             PlaceAntes();
             PlaceSmallBlind();
             PlaceBigBlind();
+
+            UpdatePlayersBets();
         }
 
         /// <summary>
@@ -176,7 +184,7 @@ namespace Poker.BE.Domain.Game
         private void PlaceSmallBlind()
         {
             if (CurrentRound.CurrentPlayer.Wallet.AmountOfMoney < gameConfig.MinimumBet / 2)
-                CurrentRound.PlayMove(Round.Move.Allin, gameConfig.MinimumBet / 2);
+                CurrentRound.PlayMove(Round.Move.Allin, 0);
             else
                 CurrentRound.PlayMove(Round.Move.Raise, gameConfig.MinimumBet / 2);
         }
@@ -184,9 +192,10 @@ namespace Poker.BE.Domain.Game
         private void PlaceBigBlind()
         {
             if (CurrentRound.CurrentPlayer.Wallet.AmountOfMoney < gameConfig.MinimumBet)
-                CurrentRound.PlayMove(Round.Move.Allin, gameConfig.MinimumBet);
+                CurrentRound.PlayMove(Round.Move.Allin, 0);
             else
-                CurrentRound.PlayMove(Round.Move.Raise, gameConfig.MinimumBet);
+                //the raise amount is another small blind
+                CurrentRound.PlayMove(Round.Move.Raise, gameConfig.MinimumBet / 2);
         }
 
         private void UpdatePlayersBets()
@@ -199,7 +208,7 @@ namespace Poker.BE.Domain.Game
 
         private void Showdown()
         {
-            throw new NotImplementedException();
+            //TODO
         }
 
         private void PickAWinner()
@@ -207,7 +216,7 @@ namespace Poker.BE.Domain.Game
             Pot lastPot = CurrentRound.CurrentPot;
             List<Player> potWinners;
             //pick winner for each pot separately
-            while (lastPot.PartialPot != null)
+            while (lastPot != null)
             {
                 PickAWinner pickPotWinner = new PickAWinner(lastPot.PlayersClaimPot, communityCards);
                 potWinners = pickPotWinner.GetWinners();

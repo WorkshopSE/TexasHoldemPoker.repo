@@ -96,19 +96,14 @@ namespace Poker.BE.Domain.Game
             //Play round until everyone is called or folded
             while (LastPlayerToRaise != CurrentPlayer)
             {
-                GetPlayMove();
+                //Waiting for the player to choose play move
+                while (CurrentPlayer.PlayMove == default(Move)) ;
+
                 //Make the move
                 PlayMove(CurrentPlayer.PlayMove, CurrentPlayer.AmountToBetOrCall);
             }
 
             return activeUnfoldedPlayers;
-        }
-
-        //this methos is to help testing PlayBettingRound
-        public virtual void GetPlayMove()
-        {
-            //Waiting for the player to choose play move
-            while (CurrentPlayer.PlayMove == default(Move)) ;
         }
 
         /// <summary>

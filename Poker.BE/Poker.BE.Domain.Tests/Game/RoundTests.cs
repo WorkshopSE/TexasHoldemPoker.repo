@@ -97,23 +97,5 @@ namespace Poker.BE.Domain.Game.Tests
 
 
         }
-
-        [TestMethod()]
-        public void PlayBettingRoundTest()
-        {
-            
-        }
-
-        public class AutoRound : Round
-        {
-            public AutoRound(Player dealer, ICollection<Player> activeUnfoldedPlayers, Pot currentPot, bool isPreflop, GameConfig config) : base(dealer, activeUnfoldedPlayers, currentPot, isPreflop, config)
-            {
-            }
-
-            public override void GetPlayMove()
-            {
-                
-            }
-        }
     }
 }

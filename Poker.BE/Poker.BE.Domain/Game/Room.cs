@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Threading;
 using Poker.BE.Domain.Utility;
+using Poker.BE.Domain.Security;
 
 namespace Poker.BE.Domain.Game
 {
