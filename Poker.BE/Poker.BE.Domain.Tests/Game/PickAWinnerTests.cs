@@ -12,34 +12,6 @@ namespace Poker.BE.Domain.Game.Tests
     public class PickAWinnerTests
     {
         [TestMethod()]
-        public void PickAWinnerTest()
-        {
-            //Arrange
-            Player player1 = new Player("a");
-            Player player2 = new Player("b");
-            Player player3 = new Player("c");
-            player1.PrivateCards = new Card[2] { new Card(Card.Suit.Hearts, Card.Value.Queen), new Card(Card.Suit.Hearts, Card.Value.Three) };
-            player2.PrivateCards = new Card[2] { new Card(Card.Suit.Hearts, Card.Value.Eight), new Card(Card.Suit.Spades, Card.Value.King) };
-            player3.PrivateCards = new Card[2] { new Card(Card.Suit.Spades, Card.Value.Seven), new Card(Card.Suit.Diamonds, Card.Value.Six) };
-            List<Player> players = new List<Player>();
-            players.Add(player1);
-            players.Add(player2);
-            players.Add(player3);
-            Card card1 = new Card(Card.Suit.Clubs, Card.Value.Eight);
-            Card card2 = new Card(Card.Suit.Hearts, Card.Value.King);
-            Card card3 = new Card(Card.Suit.Hearts, Card.Value.Ten);
-            Card card4 = new Card(Card.Suit.Diamonds, Card.Value.Nine);
-            Card card5 = new Card(Card.Suit.Hearts, Card.Value.Nine);
-            Card[] tableCards = new Card[5] { card1, card2, card3, card4, card5 };
-
-            //Act
-            PickAWinner pickAWinner = new PickAWinner(players, tableCards);
-
-            //Assert
-            
-        }
-
-        [TestMethod()]
         public void GetWinnerTest()
         {
             //Arrange
