@@ -116,13 +116,14 @@ namespace Poker.BE.Domain.Game
 
             if (isThereACorrectCardArray)
             {
+                int pairValue, threeOfAKindValue, highCardIndex;
                 switch (numberRound)
                 {
                     case 1: return IsHighCard(player7CardsArray);
-                    case 2: return IsPair(player7CardsArray, out int pairValue);
+                    case 2: return IsPair(player7CardsArray, out pairValue);
                     case 3: return IsTwoPair(player7CardsArray);
-                    case 4: return IsThreeOfAKind(player7CardsArray, out int threeOfAKindValue);
-                    case 5: return IsStraight(player7CardsArray, out int highCardIndex);
+                    case 4: return IsThreeOfAKind(player7CardsArray, out threeOfAKindValue);
+                    case 5: return IsStraight(player7CardsArray, out highCardIndex);
                     case 6: return IsFlush(player7CardsArray);
                     case 7: return IsFullHouse(player7CardsArray);
                     case 8: return IsFourOfAKind(player7CardsArray);
@@ -415,7 +416,8 @@ namespace Poker.BE.Domain.Game
         private int IsFullHouse(Card[] Player7Cards)
         {
             int fullHouseValue = FALSERESULT;
-            if (IsPair(Player7Cards, out int pairValue) > 0 && IsThreeOfAKind(Player7Cards, out int threeOfAKindValue) > 0)
+            int pairValue, threeOfAKindValue;
+            if (IsPair(Player7Cards, out pairValue) > 0 && IsThreeOfAKind(Player7Cards, out threeOfAKindValue) > 0)
             {
                 fullHouseValue = pairValue + POWER * threeOfAKindValue;
             }
@@ -453,7 +455,8 @@ namespace Poker.BE.Domain.Game
         private int IsStraightFlush(Card[] Player7Cards)
         {
             int straightFlushValue = FALSERESULT;
-            int straightHighCard = IsStraight(Player7Cards, out int highCardIndex); //get the straight High Card
+            int highCardIndex;
+            int straightHighCard = IsStraight(Player7Cards, out highCardIndex); //get the straight High Card
 
             if (straightHighCard > 0)
             {
