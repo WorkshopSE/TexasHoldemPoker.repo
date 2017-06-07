@@ -38,7 +38,7 @@ public class HttpCallFactory
             if (www.isError)
             {
                 Debug.Log(www.error);
-                onFail("Invalid Server");
+                onFail(www.error);
             }
             else if (www.responseCode != 200)
             {
