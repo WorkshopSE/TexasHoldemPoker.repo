@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Poker.BE.Service.Modules.Requests;
+using Poker.BE.Service.Modules.Results;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,6 +10,10 @@ namespace Poker.BE.Service.Services
 {
     public class PokerGamePlayService : IServices.IPokerGamePlayService
     {
-        // TODO
-    }
+		public CheckResult Check(CheckRequest request)
+		{
+			var result = new CheckResult();
+			return result;
+		}
+	}
 }
