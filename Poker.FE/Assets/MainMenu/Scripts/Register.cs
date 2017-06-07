@@ -28,6 +28,7 @@ public class Register : MonoBehaviour {
                 string userJson = JsonUtility.ToJson(current);
                 StartCoroutine(http.POST(URL.SignUp, userJson, SignUpSuccess, SignUpFail));
                 username.GetComponent<InputField>().text = "";
+                deposit.GetComponent<InputField>().text = "";
             }
             else
             {
