@@ -25,4 +25,13 @@ public class UIControl : MonoBehaviour {
         loadingText.SetActive(true);
         loadingImage.SetActive(true);
     }
+    public void HideLoading()
+    {
+        if (!loadingText.activeSelf && !loadingImage.activeSelf)
+        {
+            return;
+        }
+        loadingText.SetActive(false);
+        loadingImage.SetActive(false);
+    }
 }

@@ -11,18 +11,17 @@ public class Login : MonoBehaviour {
     public GameObject UIControl;
     public float messageDelay = 3f;
 
-    private User current = new User();
-
+    private LoginRequest current = new LoginRequest();
+    private HttpCallFactory http = new HttpCallFactory();
+    private LoginResult result;
 
     public void LoginAction()
     {
-        if (current.password != "" && current.username != "")
+        if (current.Password != "" && current.UserName != "")
         {
             string userJson = JsonUtility.ToJson(current);
-            //TODO : HTTP REQ USING FORM (?)
-            loginFeedback.GetComponent<Text>().text = "Login Sucessful!";
+            StartCoroutine(http.POST(URL.Login, userJson, new Action<string>(LoginSuccess), new Action<string>(LoginFail)));
             UIControl.GetComponent<UIControl>().ShowLoading();
-            Debug.Log(userJson);
             username.GetComponent<InputField>().text = "";
             password.GetComponent<InputField>().text = "";
         }
@@ -30,16 +29,34 @@ public class Login : MonoBehaviour {
         {
             loginFeedback.GetComponent<Text>().text = "Please Fill all Fields";
         }
-        StartCoroutine(LateFlushFeedback());
+            
+    }
+
+    private void LoginFail(string failMessage)
+    {
+        loginFeedback.GetComponent<Text>().text = "Login Failed!\n" + failMessage;
+        UIControl.GetComponent<UIControl>().HideLoading();
+    }
+
+    private void LoginSuccess(string successMessage)
+    {
+        result = JsonUtility.FromJson<LoginResult>(successMessage);
+        if (result.Success)
+            loginFeedback.GetComponent<Text>().text = "Login Sucessful!";
+        else
+        {
+            loginFeedback.GetComponent<Text>().text = "Login Failed!\n" + result.ErrorMessage;
+        }
     }
 
     private IEnumerator LateFlushFeedback()
     {
         yield return new WaitForSeconds(messageDelay);
-        if (loginFeedback.GetComponent<Text>().text.Equals("Login Sucessful!"))
+        if (loginFeedback.GetComponent<Text>().text.Contains("Login Sucessful!"))
         {
             UIControl.GetComponent<UIControl>().ChangeScene("MainMenu");
         }
+        UIControl.GetComponent<UIControl>().HideLoading();
         loginFeedback.GetComponent<Text>().text = "";
     }
 
@@ -58,7 +75,7 @@ public class Login : MonoBehaviour {
         {
             LoginAction();
         }
-        current.username = username.GetComponent<InputField>().text;
-        current.password = password.GetComponent<InputField>().text;
+        current.UserName = username.GetComponent<InputField>().text;
+        current.Password = password.GetComponent<InputField>().text;
     }
 }
