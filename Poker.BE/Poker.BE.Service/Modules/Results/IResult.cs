@@ -8,21 +8,23 @@ namespace Poker.BE.Service.Modules.Results
 {
     public abstract class IResult
     {
+        private string errorMessage = "";
+
         /// <summary>
         /// error message log with accumulate set (= is +=)
         /// </summary>
         public string ErrorMessage
         {
-            get { return ErrorMessage; }
+            get { return errorMessage; }
             set
             {
-                if(!ErrorMessage.Equals("") & ErrorMessage != null)
+                if(!errorMessage.Equals("") & errorMessage != null)
                 {
-                    ErrorMessage += "\n" + value;
+                    errorMessage += "\n" + value;
                 }
                 else
                 {
-                    ErrorMessage = value;
+                    errorMessage = value;
                 }
             }
         }
@@ -30,7 +32,7 @@ namespace Poker.BE.Service.Modules.Results
 
         public IResult()
         {
-            ErrorMessage = "";
+            //errorMessage = "";
             Success = false;
         }
     }

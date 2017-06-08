@@ -1,8 +1,12 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Poker.BE.API.Controllers;
+using Poker.BE.Service.Modules.Requests;
+using Poker.BE.Service.Modules.Results;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -11,18 +15,58 @@ namespace Poker.BE.API.Controllers.Tests
     [TestClass()]
     public class AuthenticationControllerTests
     {
-        [TestMethod()]
-        public void AuthenticationControllerTest()
+        #region Setup
+        private AuthenticationController ctrl;
+
+        public TestContext TestContext { get; set; }
+
+        [TestInitialize]
+        public void Before()
         {
-            // TODO
-            throw new NotImplementedException();
+            ctrl = new AuthenticationController()
+            {
+                Request = new HttpRequestMessage(),
+                Configuration = new System.Web.Http.HttpConfiguration()
+            };
         }
+
+        [TestCleanup]
+        public void After()
+        {
+            ctrl = null;
+        }
+        #endregion
 
         [TestMethod()]
         public void LoginTest()
         {
-            // TODO
-            throw new NotImplementedException();
+            //Arrange
+            var request = new LoginRequest()
+            {
+                Password = "1234",
+                UserName = "johnny"
+            };
+
+            var exStatus = HttpStatusCode.OK;
+            var exResult = new LoginResult()
+            {
+                ErrorMessage = "",
+                Success = true,
+                User = 1
+            };
+
+            //Act
+            var act = ctrl.Login(request);
+            LoginResult actContent;
+            var hasContent = act.TryGetContentValue(out actContent);
+
+            //Assert
+            Assert.AreEqual(exStatus, act.StatusCode);
+            Assert.IsTrue(hasContent);
+            Assert.AreEqual(exResult.ErrorMessage, actContent.ErrorMessage);
+            Assert.AreEqual(exResult.Success, actContent.Success);
+            Assert.AreNotEqual(default(int?), actContent.User);
+            Assert.IsNotNull(actContent.User);
         }
 
         [TestMethod()]
@@ -35,8 +79,26 @@ namespace Poker.BE.API.Controllers.Tests
         [TestMethod()]
         public void SignUpTest()
         {
-            // TODO
-            throw new NotImplementedException();
+            //Arrange
+
+            SignUpRequest request = new SignUpRequest()
+            {
+                Deposit = 100,
+                Password = "1234",
+                UserName = "johnny"
+            };
+
+            //Act
+            var act = ctrl.SignUp(request);
+            var actValue = default(SignUpResult);
+            var actHasContent = act.TryGetContentValue(out actValue);
+
+            //Assert
+            Assert.AreEqual(HttpStatusCode.OK, act.StatusCode);
+            Assert.IsTrue(actHasContent);
+            Assert.AreEqual("", actValue.ErrorMessage);
+            Assert.AreEqual(true , actValue.Success);
+            Assert.IsNotNull(actValue.User);
         }
     }
 }

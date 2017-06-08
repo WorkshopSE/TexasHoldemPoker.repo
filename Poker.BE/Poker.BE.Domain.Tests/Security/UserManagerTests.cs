@@ -12,11 +12,29 @@ namespace Poker.BE.Domain.Security.Tests
 	public class UserManagerTests
 	{
 
-		[TestMethod()]
+        #region Setup
+        private UserManager userManager;
+
+        public TestContext TestContext { get; set; }
+
+        [TestInitialize]
+        public void Before()
+        {
+            userManager = UserManager.Instance;
+        }
+
+        [TestCleanup]
+        public void After()
+        {
+            userManager.Clear();
+        }
+        #endregion
+
+        [TestMethod()]
 		public void AddUserTest()
 		{
-			//Arrange
-			var userManager = new UserManager();
+            //Arrange
+            var userManager = UserManager.Instance;
 
 			//Act
 			var res1 = userManager.AddUser("yossi", "password", 100);
@@ -61,8 +79,8 @@ namespace Poker.BE.Domain.Security.Tests
 		[TestMethod()]
 		public void RemoveUserTest()
 		{
-			//Arrange
-			var userManager = new UserManager();
+            //Arrange
+            var userManager = UserManager.Instance;
 
 			//Act
 			userManager.AddUser("yossi", "password", 100);
@@ -77,8 +95,8 @@ namespace Poker.BE.Domain.Security.Tests
 		[TestMethod()]
 		public void LogInTest()
 		{
-			//Arrange
-			var userManager = new UserManager();
+            //Arrange
+            var userManager = UserManager.Instance;
 
 			//Act
 			Exception res1 = null;
@@ -111,8 +129,8 @@ namespace Poker.BE.Domain.Security.Tests
 		[TestMethod()]
 		public void EditProfileTest()
 		{
-			//Arrange
-			var userManager = new UserManager();
+            //Arrange
+            var userManager = UserManager.Instance;
 
 			//Act
 			var res1 = userManager.EditProfile("yossi", "yossi", "password", "hat");
