@@ -19,6 +19,7 @@ public class Login : MonoBehaviour {
     {
         if (current.Password != "" && current.UserName != "")
         {
+            loginFeedback.GetComponent<Text>().text = "";
             string userJson = JsonUtility.ToJson(current);
             StartCoroutine(http.POST(URL.Login, userJson, new Action<string>(LoginSuccess), new Action<string>(LoginFail)));
             UIControl.GetComponent<UIControl>().ShowLoading();
@@ -29,7 +30,7 @@ public class Login : MonoBehaviour {
         {
             loginFeedback.GetComponent<Text>().text = "Please Fill all Fields";
         }
-            
+        StartCoroutine(LateFlushFeedback());
     }
 
     private void LoginFail(string failMessage)
@@ -56,8 +57,6 @@ public class Login : MonoBehaviour {
         {
             UIControl.GetComponent<UIControl>().ChangeScene("MainMenu");
         }
-        UIControl.GetComponent<UIControl>().HideLoading();
-        loginFeedback.GetComponent<Text>().text = "";
     }
 
 
@@ -70,6 +69,10 @@ public class Login : MonoBehaviour {
             {
                 password.GetComponent<InputField>().Select();
             }
+        }
+        if (username.GetComponent<InputField>().isFocused || password.GetComponent<InputField>().isFocused)
+        {
+            loginFeedback.GetComponent<Text>().text = "";
         }
         if (Input.GetKeyDown(KeyCode.Return))
         {

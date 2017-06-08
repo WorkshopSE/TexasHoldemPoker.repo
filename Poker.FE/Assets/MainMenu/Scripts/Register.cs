@@ -22,6 +22,7 @@ public class Register : MonoBehaviour {
     {
         if (current.Password != "" && current.UserName != "" && ConfirmPassword != "" && current.Deposit > 0)
         {
+            registerFeedback.GetComponent<Text>().text = "";
             if (ValidatePassword(ConfirmPassword))
             {
                 UIControl.GetComponent<UIControl>().ShowLoading();
@@ -47,7 +48,10 @@ public class Register : MonoBehaviour {
     private IEnumerator LateFlushFeedback()
     {
         yield return new WaitForSeconds(messageDelay);
-        registerFeedback.GetComponent<Text>().text = "";
+        if (registerFeedback.GetComponent<Text>().text.Contains("SignUp Sucessful!"))
+        {
+            UIControl.GetComponent<UIControl>().ChangeScene("MainMenu");
+        }
         UIControl.GetComponent<UIControl>().HideLoading();
     }
 
@@ -85,6 +89,11 @@ public class Register : MonoBehaviour {
                 confirmPassword.GetComponent<InputField>().Select();
             }
             
+        }
+        if (username.GetComponent<InputField>().isFocused || deposit.GetComponent<InputField>().isFocused ||
+            password.GetComponent<InputField>().isFocused || confirmPassword.GetComponent<InputField>().isFocused)
+        {
+            registerFeedback.GetComponent<Text>().text = "";
         }
         if (Input.GetKeyDown(KeyCode.Return))
         {
