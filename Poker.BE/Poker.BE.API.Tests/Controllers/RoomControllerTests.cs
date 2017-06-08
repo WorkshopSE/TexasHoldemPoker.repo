@@ -11,18 +11,34 @@ namespace Poker.BE.API.Controllers.Tests
     [TestClass()]
     public class RoomControllerTests
     {
-        [TestMethod()]
-        public void RoomControllerTest()
+
+        #region Setup
+        private RoomController ctrl;
+
+        public TestContext TestContext { get; set; }
+
+        [TestInitialize]
+        public void Before()
         {
-            // TODO
-            throw new NotImplementedException();
+            ctrl = new RoomController() {
+                Request = new System.Net.Http.HttpRequestMessage(),
+                Configuration = new System.Web.Http.HttpConfiguration()
+            };
         }
 
-        [TestMethod()]
-        public void EnterRoomTest()
+        [TestCleanup]
+        public void After()
         {
-            // TODO
-            throw new NotImplementedException();
+            ctrl = null;
         }
+        #endregion
+
+        // UNDONE: @gwainer - gal, please continue my work from here
+        //[TestMethod()]
+        //public void EnterRoomTest()
+        //{
+        //    // TODO
+        //    throw new NotImplementedException();
+        //}
     }
 }

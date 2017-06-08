@@ -32,8 +32,7 @@ namespace Poker.BE.Service.Modules.Results
 
         public IResult()
         {
-            //errorMessage = "";
-            Success = false;
+            Success = null;
         }
     }
 }

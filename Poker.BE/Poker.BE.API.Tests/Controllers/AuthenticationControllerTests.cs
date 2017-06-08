@@ -41,10 +41,20 @@ namespace Poker.BE.API.Controllers.Tests
         public void LoginTest()
         {
             //Arrange
+            var pw = "123456";
+            var username = "johnny";
+            var deposit = 100.0;
+            ctrl.SignUp(new SignUpRequest()
+            {
+                Password = pw,
+                UserName = username,
+                Deposit = deposit
+            });
+
             var request = new LoginRequest()
             {
-                Password = "1234",
-                UserName = "johnny"
+                Password = pw,
+                UserName = username
             };
 
             var exStatus = HttpStatusCode.OK;
@@ -61,12 +71,12 @@ namespace Poker.BE.API.Controllers.Tests
             var hasContent = act.TryGetContentValue(out actContent);
 
             //Assert
-            Assert.AreEqual(exStatus, act.StatusCode);
-            Assert.IsTrue(hasContent);
-            Assert.AreEqual(exResult.ErrorMessage, actContent.ErrorMessage);
-            Assert.AreEqual(exResult.Success, actContent.Success);
-            Assert.AreNotEqual(default(int?), actContent.User);
-            Assert.IsNotNull(actContent.User);
+            Assert.AreEqual(exStatus, act.StatusCode, "status code");
+            Assert.IsTrue(hasContent, "has content");
+            Assert.AreEqual(exResult.ErrorMessage, actContent.ErrorMessage, "error message");
+            Assert.AreEqual(exResult.Success, actContent.Success, "success bool");
+            Assert.AreNotEqual(default(int?), actContent.User, "user not default");
+            Assert.IsNotNull(actContent.User, "user not null");
         }
 
         [TestMethod()]
@@ -80,11 +90,10 @@ namespace Poker.BE.API.Controllers.Tests
         public void SignUpTest()
         {
             //Arrange
-
             SignUpRequest request = new SignUpRequest()
             {
                 Deposit = 100,
-                Password = "1234",
+                Password = "123456",
                 UserName = "johnny"
             };
 
@@ -97,7 +106,7 @@ namespace Poker.BE.API.Controllers.Tests
             Assert.AreEqual(HttpStatusCode.OK, act.StatusCode);
             Assert.IsTrue(actHasContent);
             Assert.AreEqual("", actValue.ErrorMessage);
-            Assert.AreEqual(true , actValue.Success);
+            Assert.AreEqual(true, actValue.Success);
             Assert.IsNotNull(actValue.User);
         }
     }

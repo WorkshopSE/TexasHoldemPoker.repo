@@ -49,13 +49,14 @@ namespace Poker.BE.Domain.Security
             {
                 throw new UserNameTakenException();
             }
-            if (!IsPasswordValid(password))
+            string reason;
+            if (!IsPasswordValid(password, out reason))
             {
-                throw new InvalidPasswordException();
+                throw new InvalidPasswordException(reason);
             }
             if (sumToDeposit < 0)
             {
-                throw new InvalidDepositException();
+                throw new InvalidDepositException("deposit amount is negative");
             }
             User UserToAdd = new User(userName, password, sumToDeposit);
             usersDictionary.Add(userName, UserToAdd);
@@ -69,7 +70,7 @@ namespace Poker.BE.Domain.Security
         /// <returns>true if found and deleted</returns>
         public bool RemoveUser(string userName)
         {
-            return usersDictionary.Remove(userName);    
+            return usersDictionary.Remove(userName);
         }
 
         public bool IsUserExists(string userName)
@@ -81,10 +82,16 @@ namespace Poker.BE.Domain.Security
             return false;
         }
 
-        private bool IsPasswordValid(string password)
+        private bool IsPasswordValid(string password, out string reason)
         {
-            if (password.Length >= MINIMUM_PASSWORD_LENGTH) { return true; }
-            return false;
+            reason = "";
+            if (password.Length < MINIMUM_PASSWORD_LENGTH)
+            {
+                reason = "password length must be over " + MINIMUM_PASSWORD_LENGTH;
+                return false;
+            }
+
+            return true;
         }
 
         public User LogIn(string userName, string password)
@@ -132,7 +139,8 @@ namespace Poker.BE.Domain.Security
             User userToUpdate = usersDictionary[oldUserName];
             RemoveUser(oldUserName);
 
-            if (IsUserExists(newUserName) || !IsPasswordValid(newPassword))  //Check new username and password validation
+            string notValidReason;
+            if (IsUserExists(newUserName) || !IsPasswordValid(newPassword, out notValidReason))  //Check new username and password validation
             {
                 usersDictionary.Add(oldUserName, userToUpdate);
                 return false;

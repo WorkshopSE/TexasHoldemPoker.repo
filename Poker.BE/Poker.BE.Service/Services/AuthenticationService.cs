@@ -12,20 +12,21 @@ using Poker.BE.Domain.Utility.Logger;
 
 namespace Poker.BE.Service.Services
 {
-	public class AuthenticationService : IServices.IAuthenticationService
-	{
-		#region Fields
-		public UserManager userManager;
-		#endregion
+    public class AuthenticationService : IServices.IAuthenticationService
+    {
+        #region Fields
+        public UserManager userManager;
+        #endregion
 
-		#region properties
-		public IDictionary<int, User> Users { get; set; }
+        #region properties
+        public IDictionary<int, User> Users { get; set; }
         #endregion
 
         #region Constructors
         public AuthenticationService()
         {
             userManager = UserManager.Instance;
+            Users = new Dictionary<int, User>();
         }
         #endregion
 
@@ -36,6 +37,7 @@ namespace Poker.BE.Service.Services
             try
             {
                 result.User = userManager.LogIn(request.UserName, request.Password).GetHashCode();
+                result.Success = true;
             }
             catch (UserNotFoundException e)
             {
@@ -62,23 +64,27 @@ namespace Poker.BE.Service.Services
             try
             {
                 result.User = userManager.LogOut(user).GetHashCode();
+                result.Success = true;
             }
             catch (UserNotFoundException e)
             {
                 result.Success = false;
                 result.ErrorMessage = e.Message;
             }
+
             return result;
         }
 
         public SignUpResult SignUp(SignUpRequest request)
         {
             var result = new SignUpResult();
+
             try
             {
                 User user = userManager.AddUser(request.UserName, request.Password, request.Deposit);
                 result.User = user.GetHashCode();
                 Users.Add(user.GetHashCode(), user);
+                result.Success = true;
             }
             catch (UserNameTakenException e)
             {
@@ -90,13 +96,18 @@ namespace Poker.BE.Service.Services
                 result.Success = false;
                 result.ErrorMessage = e.Message;
             }
+            catch (InvalidPasswordException e)
+            {
+                result.Success = false;
+                result.ErrorMessage = e.Message;
+            }
             catch (InvalidDepositException e)
             {
                 result.Success = false;
                 result.ErrorMessage = e.Message;
             }
             return result;
-        } 
+        }
         #endregion
     }
 }

@@ -15,17 +15,18 @@ namespace Poker.BE.API.Controllers
 	{
 		#region Fields
 		private IAuthenticationService service;
-		#endregion
+        #endregion
 
-		#region Constructors
-		public AuthenticationController()
+        #region Constructors
+        public AuthenticationController()
 		{
 			service = new Service.Services.AuthenticationService();
 		}
-		#endregion
 
-		#region Methods
-		[HttpPost]
+        #endregion
+
+        #region Methods
+        [HttpPost]
 		public HttpResponseMessage Login(LoginRequest request)
 		{
 			var result = new LoginResult();
