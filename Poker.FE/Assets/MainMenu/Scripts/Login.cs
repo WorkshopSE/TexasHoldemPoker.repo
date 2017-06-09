@@ -30,7 +30,6 @@ public class Login : MonoBehaviour {
         {
             loginFeedback.GetComponent<Text>().text = "Please Fill all Fields";
         }
-        StartCoroutine(LateFlushFeedback());
     }
 
     private void LoginFail(string failMessage)
@@ -48,21 +47,18 @@ public class Login : MonoBehaviour {
         {
             loginFeedback.GetComponent<Text>().text = "Login Failed!\n" + result.ErrorMessage;
         }
-    }
-
-    private IEnumerator LateFlushFeedback()
-    {
-        yield return new WaitForSeconds(messageDelay);
-        if (loginFeedback.GetComponent<Text>().text.Contains("Login Sucessful!"))
-        {
-            UIControl.GetComponent<UIControl>().ChangeScene("MainMenu");
-        }
+        UIControl.GetComponent<UIControl>().HideLoading();
     }
 
 
     // Update is called once per frame
     void Update()
-    {
+    { 
+        if (loginFeedback.GetComponent<Text>().text.Contains("Login Sucessful!"))
+        {
+            new WaitForSeconds(messageDelay);
+            UIControl.GetComponent<UIControl>().ChangeScene("MainMenu");
+        }
         if (Input.GetKeyDown(KeyCode.Tab))
         {
             if (username.GetComponent<InputField>().isFocused)

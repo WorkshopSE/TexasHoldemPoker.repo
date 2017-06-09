@@ -16,6 +16,7 @@ public class Register : MonoBehaviour {
 
     private SignUpRequest current = new SignUpRequest();
     private HttpCallFactory http = new HttpCallFactory();
+    private SignUpResult result;
 
 
     public void RegisterAction()
@@ -63,7 +64,14 @@ public class Register : MonoBehaviour {
 
     private void SignUpSuccess(string successMessage)
     {
-        registerFeedback.GetComponent<Text>().text = "SignUp Sucessful!\n" + successMessage;
+        result = JsonUtility.FromJson<SignUpResult>(successMessage);
+        if (result.Success)
+            registerFeedback.GetComponent<Text>().text = "Login Sucessful!";
+        else
+        {
+            registerFeedback.GetComponent<Text>().text = "Login Failed!\n" + result.ErrorMessage;
+        }
+        UIControl.GetComponent<UIControl>().HideLoading();
     }
 
     private bool ValidatePassword(string otherPassword)
