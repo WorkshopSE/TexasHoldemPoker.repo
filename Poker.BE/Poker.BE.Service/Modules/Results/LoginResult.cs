@@ -11,6 +11,6 @@ namespace Poker.BE.Service.Modules.Results
 		/// <summary>
 		/// user hash code 
 		/// </summary>
-		public int User { get; set; }
+		public int? User { get; set; }
 	}
 }
