@@ -237,8 +237,8 @@ namespace Poker.BE.Domain.Game
 
             Player dealer = ActivePlayers.ElementAt(dealerIndex);
             CurrentHand = new Hand(dealer, ActivePlayers, config);
-            CurrentHand.PrepareHand();
             CurrentHand.PlayHand();
+            EndCurrentHand();
         }
 
         public void EndCurrentHand()

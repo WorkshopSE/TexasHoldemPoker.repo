@@ -12,38 +12,6 @@ namespace Poker.BE.Domain.Game.Tests
     public class HandTests
     {
         [TestMethod()]
-        public void PrepareHandTest()
-        {
-            //Assert
-            var player1 = new Player() { Nickname = "test player 1" };
-            var player2 = new Player() { Nickname = "test player 2" };
-            var player3 = new Player() { Nickname = "test player 3" };
-            player1.AddMoney(500);
-            player2.AddMoney(500);
-            player3.AddMoney(500);
-            var players = new List<Player>();
-            players.Add(player1);
-            players.Add(player2);
-            players.Add(player3);
-            GameConfig config = new GameConfig();
-            config.AntesValue = 5;
-            Hand hand = new Hand(player3, players, config);
-
-            //Act
-            hand.PrepareHand();
-
-            var res1 = hand.PlayersBets[player1] == 10 && hand.PlayersBets[player2] == 15 && hand.PlayersBets[player3] == 5;
-
-            var res2 = player1.PrivateCards[0] != null && player1.PrivateCards[1] != null
-                        && player2.PrivateCards[0] != null && player2.PrivateCards[1] != null
-                        && player3.PrivateCards[0] != null && player3.PrivateCards[1] != null;
-
-            //Assert
-            Assert.IsTrue(res1);
-            Assert.IsTrue(res2);
-        }
-
-        [TestMethod()]
         public void EndHandTest()
         {
             //Assert

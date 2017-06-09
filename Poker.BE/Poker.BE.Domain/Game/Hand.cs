@@ -65,20 +65,10 @@ namespace Poker.BE.Domain.Game
         #endregion
 
         #region Methods
-        public void PrepareHand()
-        {
-            if (deck.Cards.Count != Deck.NCARDS)
-            {
-                throw new NotEnoughPlayersException("Cards must be dealt from a proper deck (standard 52-card deck containing no jokers)");
-            }
-
-            deck.ShuffleCards();
-            PlaceBlinds();
-            DealCards();
-        }
-
         public void PlayHand()
         {
+            PrepareHand();
+
             //PRE FLOP
             CurrentRound.PlayBettingRound();
             UpdatePlayersBets();
@@ -132,6 +122,22 @@ namespace Poker.BE.Domain.Game
         #endregion
 
         #region Private Functions
+        /// <summary>
+        /// Prepare the hand for playing:
+        /// Shuffle cards, place blinds and antes, and deal cards
+        /// </summary>
+        private void PrepareHand()
+        {
+            if (deck.Cards.Count != Deck.NCARDS)
+            {
+                throw new NotEnoughPlayersException("Cards must be dealt from a proper deck (standard 52-card deck containing no jokers)");
+            }
+
+            deck.ShuffleCards();
+            PlaceBlinds();
+            DealCards();
+        }
+
         /// <summary>
         /// Each player receive 2 face-down cards
         /// </summary>
