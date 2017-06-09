@@ -22,10 +22,11 @@ namespace Poker.BE.Domain.Core
 		#region Properties
 
 		public ICollection<Player> Players { get; set; }
-		#endregion
+        public Bank UserBank { get; set; }
+        #endregion
 
-		#region Constructors
-		public User()
+        #region Constructors
+        public User()
 		{
 			IsConnected = false;
 			Password = "";
