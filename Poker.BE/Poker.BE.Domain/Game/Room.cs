@@ -31,13 +31,14 @@ namespace Poker.BE.Domain.Game
         #region Properties
         // TODO: do we need ID for the Room? if so, what type should it be? 'long?' means nullable long.
         //public long? ID { get; }
+		//id will be the room's name
 
         /* UNDONE: Tomer - 
             we'll just return the totalRaise field that holds the highest raise so far at the table.
             that will let the next player know what's the amount of money he needs to invest in order to keep playing.
             that's enough, right?
          */
-
+		public String RoomName { get; }
         public ICollection<Chair> Chairs { get { return chairs; } }
         public Hand CurrentHand { get; private set; }
         public ICollection<Player> ActivePlayers
@@ -133,7 +134,7 @@ namespace Poker.BE.Domain.Game
         #endregion
 
         #region Constructors
-        private Room()
+        private Room(String name)
         {
             activeAndPassivePlayers = new List<Player>();
 
@@ -150,6 +151,7 @@ namespace Poker.BE.Domain.Game
 
             // Note: default configuration
             config = new GameConfig();
+			RoomName = name;
         }
 
         /// <summary>
@@ -157,7 +159,7 @@ namespace Poker.BE.Domain.Game
         /// </summary>
         /// <param name="creator">enter the room as a passive player.</param>
         /// <see cref="https://docs.google.com/document/d/1ob4bSynssE3UOfehUAFNv_VDpPbybhS4dW_O-v-QDiw/edit#heading=h.tzy1eb1jifgr"/>
-        public Room(Player creator) : this()
+        public Room(Player creator, String name) : this(name)
         {
             activeAndPassivePlayers.Add(creator);
         }
@@ -168,12 +170,12 @@ namespace Poker.BE.Domain.Game
         /// <param name="creator">enter the room as a passive player.</param>
         /// <param name="preferences">limit / no limit / pot limit </param>
         /// <see cref="https://docs.google.com/document/d/1ob4bSynssE3UOfehUAFNv_VDpPbybhS4dW_O-v-QDiw/edit#heading=h.tzy1eb1jifgr"/>
-        public Room(Player creator, GamePreferences preferences) : this(creator)
+        public Room(Player creator, GamePreferences preferences, String name) : this(creator, name)
         {
             Preferences = preferences;
         }
 
-        public Room(Player creator, GameConfig config) : this(creator, config.Preferences)
+        public Room(Player creator, GameConfig config, String name) : this(creator, config.Preferences, name)
         {
             /*Note: 8 configurations */
             this.config = config;
