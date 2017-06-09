@@ -28,16 +28,18 @@ namespace Poker.BE.Domain.Core
             AllIn
         }
 
-        /// <summary>
-        /// clears all game-center resources
-        /// </summary>
-        public void ClearAll()
-        {
-            playersManager.Clear();
-            roomsManager.Clear();
-            leagues.Clear();
-        }
-        #endregion
+		/// <summary>
+		/// clears all game-center resources
+		/// </summary>
+		public void ClearAll()
+		{
+			playersManager.Clear();
+			roomsManager.Clear();
+			leagues.Clear();
+		}
+		bool ROOM_NAME_UNAVAILABLE = false;
+		bool ROOM_NAME_AVAILABLE = true;
+		#endregion
 
         #region Fields
         private IDictionary<Player, Room> playersManager;
@@ -196,7 +198,18 @@ namespace Poker.BE.Domain.Core
                  select league).First();
         }
 
-        #endregion
+		private bool IsRoomNameAvailable(String name)
+		{
+			foreach(KeyValuePair<Room,League> roomPair in roomsManager)
+			{
+				if (name == roomPair.Key.Name)
+				{
+					return ROOM_NAME_UNAVAILABLE;
+				}
+			}
+			return ROOM_NAME_AVAILABLE;
+		}
+		#endregion
 
         #region Methods
 

@@ -6,11 +6,7 @@ using System.Threading.Tasks;
 
 namespace Poker.BE.Service.Modules.Results
 {
-	public class LoginResult : IResult
+	public class CheckResult : IResult
 	{
-		/// <summary>
-		/// user hash code 
-		/// </summary>
-		public int? User { get; set; }
 	}
 }

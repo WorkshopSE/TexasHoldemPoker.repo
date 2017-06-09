@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace Poker.BE.Domain.Utility.Exceptions
 {
 	[Serializable]
-	class InvalidPasswordException : PokerException
+	public class InvalidPasswordException : PokerException
 	{
 		
 		public InvalidPasswordException()

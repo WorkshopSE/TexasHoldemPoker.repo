@@ -48,6 +48,7 @@
     <Compile Include="IServices\IPokerGamePlayService.cs" />
     <Compile Include="IServices\IPokerService.cs" />
     <Compile Include="IServices\IProfileService.cs" />
+    <Compile Include="Modules\Requests\CheckRequest.cs" />
     <Compile Include="Modules\Requests\EnterRoomRequest.cs" />
     <Compile Include="Modules\Requests\IRequest.cs" />
     <Compile Include="Modules\Requests\JoinNextHandRequest.cs" />
@@ -57,6 +58,7 @@
     <Compile Include="Modules\Requests\SignUpRequest.cs" />
     <Compile Include="Modules\Requests\StandUpToSpactateRequest.cs" />
     <Compile Include="Modules\Responses\IResponse.cs" />
+    <Compile Include="Modules\Results\CheckResult.cs" />
     <Compile Include="Modules\Results\EnterRoomResult.cs" />
     <Compile Include="Modules\Results\IResult.cs" />
     <Compile Include="Modules\Results\JoinNextHandResult.cs" />

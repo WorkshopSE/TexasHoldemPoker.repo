@@ -93,6 +93,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controllers\AuthenticationControllerTests.cs" />
+    <Compile Include="Controllers\RoomControllerTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -106,10 +108,12 @@
       <Project>{A205D12B-A808-427D-9A86-DBA2EEEA3D49}</Project>
       <Name>Poker.BE.API</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Poker.BE.Service\Poker.BE.Service.csproj">
+      <Project>{fe55ce81-34e4-49dd-b43d-b62b2490dc34}</Project>
+      <Name>Poker.BE.Service</Name>
+    </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Controllers\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.

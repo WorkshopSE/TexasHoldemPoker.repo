@@ -7,7 +7,7 @@
         /// </summary>
         public int? Player { get; set; }
 
-        public EnterRoomResult()
+        public EnterRoomResult() : base()
         {
             Player = null;
             ErrorMessage = "";
