@@ -305,16 +305,12 @@ namespace Poker.BE.Domain.Core
 		/// <see cref="https://docs.google.com/document/d/1OTee6BGDWK2usL53jdoeBOI-1Jh8wyNejbQ0ZroUhcA/edit#heading=h.eqjp0wvvpmjg"/>
 		/// <param name="level">user level</param>
 		/// <returns>the new created room</returns>
-		public Room CreateNewRoom(int level, GameConfig config, out Player creator, String name)
+		public Room CreateNewRoom(int level, GameConfig config, out Player creator)
 		{
 			creator = new Player();
 
 			// creating the room and adding the creator as a passive player to it.
-			if (!IsRoomNameAvailable(name))
-			{
-				throw new Exception();
-			}
-			var room = new Room(creator, config, name);
+			var room = new Room(creator, config);
 			BindPlayerToRoom(creator, room);
 
 			League league = FindLeagueToFill(GetAllLeaguesAtLevel(level));
