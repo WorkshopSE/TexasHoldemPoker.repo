@@ -9,5 +9,7 @@ namespace Poker.BE.API.Controllers
 {
     public class ProfileController : ApiController
     {
+        // TODO - set a team member to do this
+
     }
 }

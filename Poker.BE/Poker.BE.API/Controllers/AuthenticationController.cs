@@ -15,20 +15,25 @@ namespace Poker.BE.API.Controllers
 	{
 		#region Fields
 		private IAuthenticationService service;
-		#endregion
+        #endregion
 
-		#region Constructors
-		public AuthenticationController()
+        #region Properties
+        public IAuthenticationService Service { get { return service; } }
+        #endregion
+
+        #region Constructors
+        public AuthenticationController()
 		{
 			service = new Service.Services.AuthenticationService();
 		}
-		#endregion
 
-		#region Methods
-		[HttpPost]
+        #endregion
+
+        #region Methods
+        [HttpPost]
 		public HttpResponseMessage Login(LoginRequest request)
 		{
-			var result = default(LoginResult);
+			var result = new LoginResult();
 
 			try
 			{
@@ -36,8 +41,7 @@ namespace Poker.BE.API.Controllers
 			}
 			catch (Exception e)
 			{
-				//TODO @idan check if the setter is an accumulator setter
-				result.ErrorMessage += " " + e.Message;
+				result.ErrorMessage = e.Message;
 				return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, e);
 			}
 
@@ -45,7 +49,7 @@ namespace Poker.BE.API.Controllers
 		}
 		public HttpResponseMessage Logout(LogoutRequest request)
 		{
-			var result = default(LogoutResult);
+			var result = new LogoutResult();
 
 			try
 			{
@@ -53,8 +57,7 @@ namespace Poker.BE.API.Controllers
 			}
 			catch (Exception e)
 			{
-				//TODO @idan check if the setter is an accumulator setter
-				result.ErrorMessage += " " + e.Message;
+				result.ErrorMessage = e.Message;
 				return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, e);
 			}
 
@@ -62,7 +65,7 @@ namespace Poker.BE.API.Controllers
 		}
 		public HttpResponseMessage SignUp(SignUpRequest request)
 		{
-			var result = default(SignUpResult);
+            var result = new SignUpResult();
 
 			try
 			{
@@ -70,8 +73,7 @@ namespace Poker.BE.API.Controllers
 			}
 			catch (Exception e)
 			{
-				//TODO @idan check if the setter is an accumulator setter
-				result.ErrorMessage += " " + e.Message;
+				result.ErrorMessage = e.Message;
 				return Request.CreateResponse(HttpStatusCode.InternalServerError, result);
 			}
 
