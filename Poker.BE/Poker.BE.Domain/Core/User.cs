@@ -105,9 +105,9 @@ namespace Poker.BE.Domain.Core
 			return freshPlayer;
 		}
 
-		public Room CreateNewRoom(int level, GameConfig config, out Player creator)
+		public Room CreateNewRoom(int level, GameConfig config, out Player creator, String name)
 		{
-			var result = gameCenter.CreateNewRoom(level, config, out creator);
+			var result = gameCenter.CreateNewRoom(level, config, out creator, name);
 			Players.Add(creator);
 
 			// log info
