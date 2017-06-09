@@ -85,18 +85,18 @@ namespace Poker.BE.Domain.Security
         {
             if (IsUserExists(userName))
             {
-                throw new UserNameTakenException();
+                throw new UserNameTakenException(string.Format("the user name: {0} is taken, please choose a different user name",
+						userName));
             }
-
-            string reason;
+			String reason;
             if (!IsPasswordValid(password, out reason))
             {
-                throw new InvalidPasswordException(reason);
+                throw new InvalidPasswordException(reason + " please choose a different password");
             }
 
             if (sumToDeposit < 0)
             {
-                throw new InvalidDepositException("deposit amount is negative");
+                throw new InvalidDepositException("deposit amount must be positive. please deposit a positive amount in order to start playing");
             }
 
             User userToAdd = new User(userName, password, sumToDeposit);
@@ -139,7 +139,7 @@ namespace Poker.BE.Domain.Security
         {
             if (!IsUserExists(userName))
             {
-                throw new UserNotFoundException();
+                throw new UserNotFoundException("User not found. Please check if the user name you entered is correct. if you are not yet signed up please sign up before logging in");
             }
 
             User UserToCheck;
@@ -156,7 +156,7 @@ namespace Poker.BE.Domain.Security
                 bool arePasswordMatching = GoodPassword.Equals(password, StringComparison.Ordinal); 
                 if (!arePasswordMatching)
                 {
-                    throw new IncorrectPasswordException();
+                    throw new IncorrectPasswordException("Incorrect password entered. Please try again");
                 }
 
                 UserToCheck.Connect();
@@ -169,7 +169,7 @@ namespace Poker.BE.Domain.Security
         {
             if (!IsUserExists(userToLogout.UserName))
             {
-                throw new UserNotFoundException("user name " + userToLogout.UserName + " not found.");
+                throw new UserNotFoundException("user " + userToLogout.UserName + " not found. Can't log out");
             }
 
             userToLogout.Disconnect();
