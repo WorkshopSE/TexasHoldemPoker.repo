@@ -36,6 +36,8 @@ namespace Poker.BE.Domain.Core
 			roomsManager.Clear();
 			leagues.Clear();
 		}
+		bool ROOM_NAME_UNAVAILABLE = false;
+		bool ROOM_NAME_AVAILABLE = true;
 		#endregion
 
 		#region Fields
@@ -192,6 +194,17 @@ namespace Poker.BE.Domain.Core
 				 select league).First();
 		}
 
+		private bool IsRoomNameAvailable(String name)
+		{
+			foreach(KeyValuePair<Room,League> roomPair in roomsManager)
+			{
+				if (name == roomPair.Key.Name)
+				{
+					return ROOM_NAME_UNAVAILABLE;
+				}
+			}
+			return ROOM_NAME_AVAILABLE;
+		}
 		#endregion
 
 		#region Methods
