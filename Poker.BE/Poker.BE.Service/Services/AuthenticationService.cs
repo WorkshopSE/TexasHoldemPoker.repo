@@ -52,18 +52,23 @@ namespace Poker.BE.Service.Services
             return result;
         }
 
+        
+
         public LogoutResult Logout(LogoutRequest request)
         {
-            var result = default(LogoutResult);
+            var result = new LogoutResult();
+
             User user;
             if (!Users.TryGetValue(request.User, out user))
             {
                 result.Success = false;
                 result.ErrorMessage = "User ID not found";
             }
+
             try
             {
-                result.User = userManager.LogOut(user).GetHashCode();
+                result.Output = userManager.LogOut(user);
+                result.User = user.GetHashCode();
                 result.Success = true;
             }
             catch (UserNotFoundException e)
@@ -107,6 +112,11 @@ namespace Poker.BE.Service.Services
                 result.ErrorMessage = e.Message;
             }
             return result;
+        }
+
+        public void Clear()
+        {
+            userManager.Clear();
         }
         #endregion
     }

@@ -2,6 +2,7 @@
 using Poker.BE.API.Controllers;
 using Poker.BE.Service.Modules.Requests;
 using Poker.BE.Service.Modules.Results;
+using Poker.BE.Service.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -33,6 +34,7 @@ namespace Poker.BE.API.Controllers.Tests
         [TestCleanup]
         public void After()
         {
+            ((AuthenticationService)ctrl.Service).Clear();
             ctrl = null;
         }
         #endregion
@@ -82,8 +84,30 @@ namespace Poker.BE.API.Controllers.Tests
         [TestMethod()]
         public void LogoutTest()
         {
-            // TODO
-            throw new NotImplementedException();
+            //Arrange
+            SignUpResult signup;
+            ctrl.SignUp(new SignUpRequest() { Deposit = 100.0, Password = "123456", UserName = "johnny" })
+                .TryGetContentValue(out signup);
+
+            LoginResult login;
+            ctrl.Login(new LoginRequest() { Password = "123456", UserName = "johnny" })
+                .TryGetContentValue(out login);
+
+            LogoutRequest request = new LogoutRequest()
+            {
+                User = login.User.Value
+            };
+
+            //Act
+            var act = ctrl.Logout(request);
+            LogoutResult actContent;
+
+            //Assert
+            Assert.IsTrue(act.TryGetContentValue(out actContent));
+            Assert.AreEqual("", actContent.ErrorMessage, "error message");
+            Assert.AreEqual(true, actContent.Success, "success");
+            Assert.AreEqual(login.User.Value, actContent.User, "user hash code");
+            Assert.AreEqual(true, actContent.Output, "output");
         }
 
         [TestMethod()]

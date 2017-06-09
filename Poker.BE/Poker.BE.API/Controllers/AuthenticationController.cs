@@ -17,6 +17,10 @@ namespace Poker.BE.API.Controllers
 		private IAuthenticationService service;
         #endregion
 
+        #region Properties
+        public IAuthenticationService Service { get { return service; } }
+        #endregion
+
         #region Constructors
         public AuthenticationController()
 		{
