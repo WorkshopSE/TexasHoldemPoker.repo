@@ -14,6 +14,7 @@ namespace Poker.BE.Domain.Game
         private int _minNumberOfPlayers;
         private double _buyInCost;
         private double _minimumBet;
+        private double _antes;
         private string _name;
         private GamePreferences _preferences;
         #endregion
@@ -136,6 +137,15 @@ namespace Poker.BE.Domain.Game
         }
 
         /// <summary>
+        /// The creator sets the antes of the room’s table.
+        /// </summary>
+        public double AntesValue
+        {
+            get { return _antes; }
+            set { _antes = value; }
+        }
+
+        /// <summary>
         /// the room name - set by the user.
         /// </summary>
         public string Name
@@ -152,13 +162,14 @@ namespace Poker.BE.Domain.Game
         /// </summary>
         public GameConfig()
         {
-            BuyInCost = 60.0;
+            BuyInCost = 100.0;
             Preferences = new GamePreferences();
             IsSpactatorsAllowed = true;
             MaxNumberOfActivePlayers = 10;
             MaxNumberOfPlayers = 15;
             MinNumberOfPlayers = 2;
-            MinimumBet = 5.0;
+            MinimumBet = 10.0;
+            AntesValue = 0;
             Name = "Unknown Room";
         }
         #endregion
@@ -190,6 +201,7 @@ namespace Poker.BE.Domain.Game
                 this.MaxNumberOfActivePlayers == other.MaxNumberOfActivePlayers &&
                 this.MaxNumberOfPlayers == other.MaxNumberOfPlayers &&
                 this.MinimumBet == other.MinimumBet &&
+                this._antes == other._antes &&
                 this.Name.Equals(other.Name) &&
                 this.MinNumberOfPlayers == other.MinNumberOfPlayers;
         }

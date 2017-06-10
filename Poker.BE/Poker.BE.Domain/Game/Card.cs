@@ -46,13 +46,10 @@ namespace Poker.BE.Domain.Game
         public const int NSUIT = 4;
         #endregion
 
-        #region Fields
-        private int number;
-        #endregion
-
         #region Properties
         public Suit CardSuit { get; }
         public Value CardValue { get; }
+        public int Number { get; private set; }
         public State CardState { get; set; }
 
         protected int ShuffledIndex { get; private set; }
@@ -63,15 +60,15 @@ namespace Poker.BE.Domain.Game
         {
             CardSuit = suit;
             CardValue = val;
-            number = ValueToNumber(val);
+            Number = ValueToNumber(val);
             CardState = State.FaceUp;
         }
 
         public Card(Suit suit, int num)
         {
             CardSuit = suit;
-            number = num;
-            CardValue = NumberToValue(number);
+            Number = num;
+            CardValue = NumberToValue(Number);
             CardState = State.FaceUp;
         }
         #endregion
@@ -97,6 +94,7 @@ namespace Poker.BE.Domain.Game
                 default: return -1;
             }
         }
+
         private Value NumberToValue(int num)
         {
             switch (num)
@@ -118,16 +116,39 @@ namespace Poker.BE.Domain.Game
                     return default(Value);
             }
         }
+
+        private int SuitToNumber(Suit suit)
+        {
+            switch (suit)
+            {
+                case Suit.Hearts: return 0;
+                case Suit.Clubs: return 1;
+                case Suit.Spades: return 2;
+                case Suit.Diamonds: return 3;
+                default: return -1;
+            }
+        }
         #endregion
 
         #region Methods
+        public int CardValueStrength()
+        {
+            if (Number == 1) return 14; // in case of an Ace
+            else return this.Number;
+        }
+
+        public int GetSuitNumber()
+        {
+            return SuitToNumber(this.CardSuit);
+        }
+
         public int CompareTo(object obj)
         {
             var other = obj as Card;
             var result = 0;
             if (other != null)
             {
-                result = (this.number > other.number) ? 1 : (this.number < other.number) ? -1 : 0;
+                result = (Number > other.Number) ? 1 : (Number < other.Number) ? -1 : 0;
             }
             return result;
         }
@@ -149,7 +170,7 @@ namespace Poker.BE.Domain.Game
                 return false;
             }
             
-            if(other.number == number & other.CardSuit == CardSuit)
+            if(other.Number == Number & other.CardSuit == CardSuit)
             {
                 return true;
             }
@@ -159,7 +180,7 @@ namespace Poker.BE.Domain.Game
 
         public override string ToString()
         {
-            return string.Format("{0} {1} :{2}", CardSuit, CardValue, number);
+            return string.Format("{0} {1} :{2}", CardSuit, CardValue, Number);
         }
 
         // override object.GetHashCode

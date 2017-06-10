@@ -11,8 +11,8 @@ namespace Poker.BE.Domain.Game
         #region Properties
         public Pot PartialPot { get; set; }
         public Pot BasePot { get; set; }
-        public int Value { get; set; }
-        public int AmountToClaim { get; set; }
+        public double Value { get; set; }
+        public double AmountToClaim { get; set; }
         public List<Player> PlayersClaimPot { get; set; }
         #endregion
 
@@ -32,7 +32,7 @@ namespace Poker.BE.Domain.Game
         #endregion
 
         #region Methods
-        public void AddToPot(int amount)
+        public void AddToPot(double amount)
         {
             Value += amount;
         }
