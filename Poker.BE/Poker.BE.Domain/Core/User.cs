@@ -21,7 +21,7 @@ namespace Poker.BE.Domain.Core
         #endregion
 
         #region Properties
-
+        public Bank UserBank { get; set; }
         public ICollection<Player> Players { get; set; }
         #endregion
 
