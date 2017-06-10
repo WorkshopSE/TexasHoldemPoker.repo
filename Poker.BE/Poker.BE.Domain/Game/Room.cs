@@ -230,7 +230,7 @@ namespace Poker.BE.Domain.Game
             {
                 throw new NotEnoughPlayersException("Its should be at least 2 active players to start new hand!");
             }
-            if (this.CurrentHand != null && this.CurrentHand.Active)
+            if (this.CurrentHand != null && this.CurrentHand.IsActive)
             {
                 throw new NotEnoughPlayersException("The previous hand hasnt ended");
             }

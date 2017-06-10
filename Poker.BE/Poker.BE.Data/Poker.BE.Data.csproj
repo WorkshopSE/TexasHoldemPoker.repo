@@ -48,6 +48,16 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Access.cs" />
+    <Compile Include="Entities\Card.cs" />
+    <Compile Include="Entities\Hand.cs" />
+    <Compile Include="Entities\League.cs" />
+    <Compile Include="Entities\Player.cs" />
+    <Compile Include="Entities\Pot.cs" />
+    <Compile Include="Entities\Room.cs" />
+    <Compile Include="Entities\Round.cs" />
+    <Compile Include="Entities\Statistics.cs" />
+    <Compile Include="Entities\Turn.cs" />
+    <Compile Include="Entities\User.cs" />
     <Compile Include="MainContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\IRepository.cs" />
@@ -56,8 +66,6 @@
     <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Entities\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

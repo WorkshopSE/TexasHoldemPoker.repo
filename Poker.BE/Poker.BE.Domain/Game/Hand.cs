@@ -31,7 +31,7 @@ namespace Poker.BE.Domain.Game
         #endregion
 
         #region Properties
-        public bool Active { get; set; }
+        public bool IsActive { get; set; }
         public Round CurrentRound { get; private set; }
         public Pot Pot { get { return pot; } set { pot = value; } }
         public Card[] CommunityCards { get { return communityCards; } set { communityCards = value; } }
@@ -57,7 +57,7 @@ namespace Poker.BE.Domain.Game
             this.pot = new Pot();
             this.dealer = dealer;
             this.CurrentRound = new Round(dealer, activePlayers, this.pot, true, this.gameConfig);
-            this.Active = true;
+            this.IsActive = true;
             this.gameConfig = gameConfig;
             WinnersProfits = new Dictionary<Player, double>();
         }
@@ -117,7 +117,7 @@ namespace Poker.BE.Domain.Game
             Showdown();
             PickAWinner();
 
-            this.Active = false;    //is it necessary? the hand will be killed anyway
+            this.IsActive = false;    //is it necessary? the hand will be killed anyway
         }
         #endregion
 
