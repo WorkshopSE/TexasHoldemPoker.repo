@@ -56,7 +56,7 @@ namespace Poker.BE.API.Controllers.Tests
 
 			//Arrange
 			int lvl = 20;
-			
+
 			CreateNewRoomRequest request = new CreateNewRoomRequest()
 			{
 				Level = lvl,
@@ -87,7 +87,7 @@ namespace Poker.BE.API.Controllers.Tests
 			Assert.AreNotEqual(default(int?), actContent.Player, "player not default");
 			Assert.IsNotNull(actContent.Room, "room not null");
 			Assert.IsNotNull(actContent.Player, "player not null");
-			
+
 		}
 		// UNDONE: @gwainer - gal, please continue my work from here
 		//[TestMethod()]

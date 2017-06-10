@@ -9,9 +9,9 @@ namespace Poker.BE.Service.Modules.Results
 	public class LogoutResult : IResult
 	{
 		/// <summary>
-		///  user hash code
+		///  username
 		/// </summary>
-		public int User { get;  set; }
-        public bool Output { get; set; }
-    }
+		public string User { get; set; }
+		public bool Output { get; set; }
+	}
 }
