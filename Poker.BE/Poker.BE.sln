@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Poker.BE.API.Tests", "Poker
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Poker.BE.Service", "Poker.BE.Service\Poker.BE.Service.csproj", "{FE55CE81-34E4-49DD-B43D-B62B2490DC34}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Poker.BE.Data", "Poker.BE.Data\Poker.BE.Data.csproj", "{05A87513-F353-43B7-B51D-98430ED29FBB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -105,6 +107,22 @@ Global
 		{FE55CE81-34E4-49DD-B43D-B62B2490DC34}.Release|x64.Build.0 = Release|Any CPU
 		{FE55CE81-34E4-49DD-B43D-B62B2490DC34}.Release|x86.ActiveCfg = Release|Any CPU
 		{FE55CE81-34E4-49DD-B43D-B62B2490DC34}.Release|x86.Build.0 = Release|Any CPU
+		{05A87513-F353-43B7-B51D-98430ED29FBB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{05A87513-F353-43B7-B51D-98430ED29FBB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{05A87513-F353-43B7-B51D-98430ED29FBB}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{05A87513-F353-43B7-B51D-98430ED29FBB}.Debug|ARM.Build.0 = Debug|Any CPU
+		{05A87513-F353-43B7-B51D-98430ED29FBB}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{05A87513-F353-43B7-B51D-98430ED29FBB}.Debug|x64.Build.0 = Debug|Any CPU
+		{05A87513-F353-43B7-B51D-98430ED29FBB}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{05A87513-F353-43B7-B51D-98430ED29FBB}.Debug|x86.Build.0 = Debug|Any CPU
+		{05A87513-F353-43B7-B51D-98430ED29FBB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{05A87513-F353-43B7-B51D-98430ED29FBB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{05A87513-F353-43B7-B51D-98430ED29FBB}.Release|ARM.ActiveCfg = Release|Any CPU
+		{05A87513-F353-43B7-B51D-98430ED29FBB}.Release|ARM.Build.0 = Release|Any CPU
+		{05A87513-F353-43B7-B51D-98430ED29FBB}.Release|x64.ActiveCfg = Release|Any CPU
+		{05A87513-F353-43B7-B51D-98430ED29FBB}.Release|x64.Build.0 = Release|Any CPU
+		{05A87513-F353-43B7-B51D-98430ED29FBB}.Release|x86.ActiveCfg = Release|Any CPU
+		{05A87513-F353-43B7-B51D-98430ED29FBB}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
