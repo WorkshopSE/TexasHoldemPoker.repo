@@ -12,5 +12,9 @@ namespace Poker.BE.Service.Modules.Results
         /// room hash code
         /// </summary>
         public int Room { get; set; }
-    }
+		/// <summary>
+		/// player hash code 
+		/// </summary>
+		public int Player { get; set; }
+	}
 }
