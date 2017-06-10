@@ -2,15 +2,17 @@
 using Poker.BE.Domain.Utility;
 using Poker.BE.Domain.Utility.Exceptions;
 using Poker.BE.Domain.Utility.Logger;
+using Poker.BE.Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Poker.BE.Data.Entities;
 
 namespace Poker.BE.Domain.Core
 {
-    public class User : AbstractUser
+    public class User : AbstractUser, IAccessible<Poker.BE.Data.Entities.User>
     {
         #region Fields
         /* singletons */
@@ -18,6 +20,8 @@ namespace Poker.BE.Domain.Core
         private ILogger logger = Logger.Instance;
         /* ---------- */
 
+        // db entity
+        private Data.Entities.User _entity;
         #endregion
 
         #region Properties
@@ -156,6 +160,11 @@ namespace Poker.BE.Domain.Core
             UserBank.Money = gameCenter.StandUpToSpactate(player);
 
             return UserBank.Money;
+        }
+
+        public int Update(out Data.Entities.User entity)
+        {
+            throw new NotImplementedException();
         }
         #endregion
 
