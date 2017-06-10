@@ -38,7 +38,7 @@ namespace Poker.BE.Service.Services
 		/// </remarks>
 		public IDictionary<int, Player> Players { get; set; }
 		public IDictionary<int, Room> Rooms { get; set; }
-		public IDictionary<int, User> Users { get; set; }
+		public IDictionary<string, User> Users { get; set; }
 		public ILogger Logger { get; }
 		#endregion
 
@@ -48,7 +48,7 @@ namespace Poker.BE.Service.Services
 			userManager = UserManager.Instance;
 			Players = new Dictionary<int, Player>();
 			Rooms = new Dictionary<int, Room>();
-			Users = new Dictionary<int, User>();
+			Users = new Dictionary<string, User>();
 			Logger = Domain.Utility.Logger.Logger.Instance;
 		}
 		#endregion
@@ -63,7 +63,7 @@ namespace Poker.BE.Service.Services
 				try
 				{
 					var userMatchingHash = from existingUser in userManager.Users
-										   where existingUser.Value.GetHashCode() == request.User
+										   where existingUser.Value.UserName == request.User
 										   select existingUser;
 					if (userMatchingHash.ToList().Count != 1)
 					{

@@ -6,8 +6,8 @@ namespace Poker.BE.Service.Modules.Requests
 	{
 		public int Level { get; set; }
 		/// <summary>
-		/// user hash code 
+		/// user Name
 		/// </summary>
-		public int User { get; set; }
+		public string User { get; set; }
 	}
 }

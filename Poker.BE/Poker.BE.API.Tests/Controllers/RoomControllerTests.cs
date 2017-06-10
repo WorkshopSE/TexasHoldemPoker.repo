@@ -10,6 +10,10 @@ using System.Threading.Tasks;
 using Poker.BE.Service.Modules.Results;
 using System.Net.Http;
 using System.Net;
+using FakeItEasy;
+using Poker.BE.Service.IServices;
+using Poker.BE.Domain.Security;
+using Poker.BE.Domain.Core;
 
 namespace Poker.BE.API.Controllers.Tests
 {
@@ -19,21 +23,20 @@ namespace Poker.BE.API.Controllers.Tests
 
 		#region Setup
 		private RoomController ctrl;
-		private AuthenticationController Usersctrl;
+		private UserManager userManager;
+		private User user;
 
 		public TestContext TestContext { get; set; }
 
 		[TestInitialize]
 		public void Before()
 		{
+			userManager = UserManager.Instance;
+			user = new User();
+			userManager.Users.Add(user.UserName, user);
 			ctrl = new RoomController()
 			{
 				Request = new System.Net.Http.HttpRequestMessage(),
-				Configuration = new System.Web.Http.HttpConfiguration()
-			};
-			Usersctrl = new AuthenticationController()
-			{
-				Request = new HttpRequestMessage(),
 				Configuration = new System.Web.Http.HttpConfiguration()
 			};
 		}
@@ -43,8 +46,7 @@ namespace Poker.BE.API.Controllers.Tests
 		{
 			((RoomsService)ctrl.Service).Clear();
 			ctrl = null;
-			((AuthenticationService)Usersctrl.Service).Clear();
-			Usersctrl = null;
+			userManager.Users.Remove(user.UserName);
 		}
 		#endregion
 
@@ -53,26 +55,13 @@ namespace Poker.BE.API.Controllers.Tests
 		{
 
 			//Arrange
-			var pw = "678901";
-			var username = "gal";
-			var deposit = 90.0;
 			int lvl = 20;
-
-			SignUpRequest UserRequest = new SignUpRequest()
-			{
-				Deposit = deposit,
-				Password = pw,
-				UserName = username
-			};
-
-			var arrange = Usersctrl.SignUp(UserRequest);
-			var arrangeValue = default(SignUpResult);
-			var arrangeHasContent = arrange.TryGetContentValue(out arrangeValue);
-
+			
 			CreateNewRoomRequest request = new CreateNewRoomRequest()
 			{
 				Level = lvl,
-				User = arrangeValue.User
+				User = user.UserName
+
 			};
 
 			var exStatus = HttpStatusCode.OK;
@@ -98,6 +87,7 @@ namespace Poker.BE.API.Controllers.Tests
 			Assert.AreNotEqual(default(int?), actContent.Player, "player not default");
 			Assert.IsNotNull(actContent.Room, "room not null");
 			Assert.IsNotNull(actContent.Player, "player not null");
+			
 		}
 		// UNDONE: @gwainer - gal, please continue my work from here
 		//[TestMethod()]
