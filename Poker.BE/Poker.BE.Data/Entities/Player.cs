@@ -12,6 +12,6 @@ namespace Poker.BE.Data.Entities
         public int ID { get; set; }
         public string NickName { get; set; }
         public string State { get; set; }
-        public MoneyStorage Wallet { get; set; }
+        public virtual MoneyStorage Wallet { get; set; }
     }
 }

@@ -9,8 +9,10 @@ namespace Poker.BE.Data.Entities
 {
     public class User
     {
-        [Key]
-        public int ID { get; set; }
+        // UNDONE: validate with Gal that User.ID is not needed.
+        //[Key]
+        //public int ID { get; set; }
+
         [Key]
         public string UserName { get; set; }
 
