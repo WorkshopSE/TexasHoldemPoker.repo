@@ -6,8 +6,9 @@ using System.Threading.Tasks;
 
 namespace Poker.BE.Data.Entities
 {
-    public class Card
+    public class Avatar
     {
-
+        public int ID { get; set; }
+        public byte[] Image { get; set; }
     }
 }
