@@ -49,6 +49,7 @@
   <ItemGroup>
     <Compile Include="Access.cs" />
     <Compile Include="Entities\Avatar.cs" />
+    <Compile Include="Entities\GamePreferences.cs" />
     <Compile Include="Entities\MoneyStorage.cs" />
     <Compile Include="Entities\Card.cs" />
     <Compile Include="Entities\Hand.cs" />
@@ -60,9 +61,11 @@
     <Compile Include="Entities\Statistics.cs" />
     <Compile Include="Entities\Turn.cs" />
     <Compile Include="Entities\User.cs" />
+    <Compile Include="IAccessible.cs" />
     <Compile Include="MainContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\IRepository.cs" />
+    <Compile Include="Repositories\UserRepository.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Poker.BE.Data.Repositories;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -16,12 +17,31 @@ namespace Poker.BE.Data
         public Access(MainContext context)
         {
             _context = context;
+
             // TODO: initiate repositories (= new...)
+            UserRepository = new UserRepository(context);
         }
 
         #region Repositories Exposure
-        // TODO public repositoryclass name {get; private set;}
+        // TODO public repositoryClass name {get; private set;}
+        public UserRepository UserRepository { get; private set; }
         #endregion
+
+        public int Save()
+        {
+            int result = 0;
+            try
+            {
+                result = _context.SaveChanges();
+            }
+            catch (Exception)
+            {
+                // TODO: log this data-base exception
+                result = -1;
+            }
+
+            return result;
+        }
 
         public void Dispose()
         {

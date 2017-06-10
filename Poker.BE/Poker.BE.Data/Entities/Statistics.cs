@@ -8,5 +8,8 @@ namespace Poker.BE.Data.Entities
 {
     public class Statistics
     {
+        public int GamesPlayed { get; set; }
+        public double GrossProfits { get; set; }
+        public double GrossLosses { get; set; }
     }
 }

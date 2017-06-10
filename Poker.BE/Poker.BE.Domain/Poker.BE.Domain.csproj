@@ -95,6 +95,11 @@
     <Compile Include="Utility\Statistics.cs" />
     <Compile Include="Utility\StatisticsManager.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\Poker.BE.Data\Poker.BE.Data.csproj">
+      <Project>{05a87513-f353-43b7-b51d-98430ed29fbb}</Project>
+      <Name>Poker.BE.Data</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
