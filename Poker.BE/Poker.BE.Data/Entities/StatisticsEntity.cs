@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Poker.BE.Data.Entities
 {
-    public class Statistics
+    public class StatisticsEntity
     {
         public int GamesPlayed { get; set; }
         public double GrossProfits { get; set; }

@@ -6,10 +6,7 @@ using System.Threading.Tasks;
 
 namespace Poker.BE.Data.Entities
 {
-    public class League
+    public class RoundEntity
     {
-        public int ID { get; set; }
-        public int MinLevel { get; set; }
-        public int MaxLevel { get; set; }
     }
 }

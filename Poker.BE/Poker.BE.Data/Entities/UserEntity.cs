@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Poker.BE.Data.Entities
 {
-    public class User
+    public class UserEntity
     {
         // UNDONE: validate with Gal that User.ID is not needed.
         //[Key]
@@ -17,9 +17,9 @@ namespace Poker.BE.Data.Entities
         public string UserName { get; set; }
 
         public string Password { get; set; }
-        public virtual MoneyStorage Bank { get; set; }
-        public virtual Avatar Avatar { get; set; }
-        public virtual Statistics Statistics { get; set; }
-        public virtual ICollection<Player> Players { get; set; }
+        public virtual MoneyStorageEntity Bank { get; set; }
+        public virtual AvatarEntity Avatar { get; set; }
+        public virtual StatisticsEntity Statistics { get; set; }
+        public virtual ICollection<PlayerEntity> Players { get; set; }
     }
 }

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Poker.BE.Data.Entities
 {
-    public class MoneyStorage
+    public class MoneyStorageEntity
     {
         public string Currency { get; set; }
         public double Amount { get; set; }

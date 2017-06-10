@@ -6,8 +6,7 @@ using System.Threading.Tasks;
 
 namespace Poker.BE.Data.Entities
 {
-    public class Card
+    public class HandEntity
     {
-
     }
 }

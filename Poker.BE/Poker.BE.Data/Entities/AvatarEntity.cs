@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Poker.BE.Data.Entities
 {
-    public class Avatar
+    public class AvatarEntity
     {
         public int ID { get; set; }
         public byte[] Image { get; set; }

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Poker.BE.Data.Entities
 {
-    public class Round
+    public class TurnEntity
     {
     }
 }

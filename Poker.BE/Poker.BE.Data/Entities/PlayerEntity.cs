@@ -7,11 +7,11 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Poker.BE.Data.Entities
 {
-    public class Player
+    public class PlayerEntity
     {
         public int ID { get; set; }
         public string NickName { get; set; }
         public string State { get; set; }
-        public virtual MoneyStorage Wallet { get; set; }
+        public virtual MoneyStorageEntity Wallet { get; set; }
     }
 }

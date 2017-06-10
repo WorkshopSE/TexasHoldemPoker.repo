@@ -6,9 +6,7 @@ using System.Threading.Tasks;
 
 namespace Poker.BE.Data.Entities
 {
-    public class GamePreferences
+    public class PotEntity
     {
-        public string Type { get; set; }
-        public double Amount { get; set; }
     }
 }
