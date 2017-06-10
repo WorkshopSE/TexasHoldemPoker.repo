@@ -56,6 +56,7 @@
     <Compile Include="Game\League.cs" />
     <Compile Include="Game\LimitHoldem.cs" />
     <Compile Include="Game\NoLimitHoldem.cs" />
+    <Compile Include="Game\PickAWinner.cs" />
     <Compile Include="Utility\AddressComparer.cs" />
     <Compile Include="Utility\Exceptions\GameRulesException.cs" />
     <Compile Include="Utility\Exceptions\LevelNotFoundException.cs" />
@@ -88,6 +89,7 @@
     <Compile Include="Utility\Logger\Logger.cs" />
     <Compile Include="Utility\MoneyStorage.cs" />
     <Compile Include="Utility\Notification.cs" />
+    <Compile Include="Utility\PlayMoveEventArgs.cs" />
     <Compile Include="Utility\Record.cs" />
     <Compile Include="Utility\RecordManager.cs" />
     <Compile Include="Utility\Statistics.cs" />

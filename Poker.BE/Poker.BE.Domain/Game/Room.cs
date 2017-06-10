@@ -5,6 +5,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Threading;
+using Poker.BE.Domain.Utility;
+using Poker.BE.Domain.Security;
 
 namespace Poker.BE.Domain.Game
 {
@@ -22,7 +24,6 @@ namespace Poker.BE.Domain.Game
 
         #region Fields
         private ICollection<Player> activeAndPassivePlayers;
-        private Deck deck;
         private Chair[] chairs;
         private GameConfig config;
 		private int dealerIndex = 0;
@@ -31,13 +32,7 @@ namespace Poker.BE.Domain.Game
         #region Properties
         // TODO: do we need ID for the Room? if so, what type should it be? 'long?' means nullable long.
         //public long? ID { get; }
-		//id will be the room's name
 
-        /* UNDONE: Tomer - 
-            we'll just return the totalRaise field that holds the highest raise so far at the table.
-            that will let the next player know what's the amount of money he needs to invest in order to keep playing.
-            that's enough, right?
-         */
         public ICollection<Chair> Chairs { get { return chairs; } }
         public Hand CurrentHand { get; private set; }
         public ICollection<Player> ActivePlayers
@@ -70,6 +65,7 @@ namespace Poker.BE.Domain.Game
         }
         public ICollection<Player> Players { get { return activeAndPassivePlayers; } }
         public IDictionary<Chair, Player> TableLocationOfActivePlayers { get; private set; }
+        public StatisticsManager statisticsManager;
 
         #region GameConfig Properties (8)
         public GamePreferences Preferences
@@ -137,7 +133,6 @@ namespace Poker.BE.Domain.Game
         {
             activeAndPassivePlayers = new List<Player>();
 
-            deck = new Deck();
             chairs = new Chair[NCHAIRS_IN_ROOM];
 
             for (int i = 0; i < NCHAIRS_IN_ROOM; i++)
@@ -157,9 +152,10 @@ namespace Poker.BE.Domain.Game
         /// </summary>
         /// <param name="creator">enter the room as a passive player.</param>
         /// <see cref="https://docs.google.com/document/d/1ob4bSynssE3UOfehUAFNv_VDpPbybhS4dW_O-v-QDiw/edit#heading=h.tzy1eb1jifgr"/>
-        public Room(Player creator) : this()
+        public Room(Player creator, StatisticsManager statisticsManager) : this()
         {
             activeAndPassivePlayers.Add(creator);
+            this.statisticsManager = statisticsManager;
         }
 
         /// <summary>
@@ -168,12 +164,12 @@ namespace Poker.BE.Domain.Game
         /// <param name="creator">enter the room as a passive player.</param>
         /// <param name="preferences">limit / no limit / pot limit </param>
         /// <see cref="https://docs.google.com/document/d/1ob4bSynssE3UOfehUAFNv_VDpPbybhS4dW_O-v-QDiw/edit#heading=h.tzy1eb1jifgr"/>
-        public Room(Player creator, GamePreferences preferences) : this(creator)
+        public Room(Player creator, GamePreferences preferences, StatisticsManager statisticsManager) : this(creator, statisticsManager)
         {
             Preferences = preferences;
         }
 
-        public Room(Player creator, GameConfig config) : this(creator, config.Preferences)
+        public Room(Player creator, GameConfig config, StatisticsManager statisticsManager) : this(creator, config.Preferences, statisticsManager)
         {
             /*Note: 8 configurations */
             this.config = config;
@@ -234,41 +230,24 @@ namespace Poker.BE.Domain.Game
             {
                 throw new NotEnoughPlayersException("Its should be at least 2 active players to start new hand!");
             }
-            if (deck.Cards.Count != Deck.NCARDS)
-            {
-                throw new NotEnoughPlayersException("Cards must be dealt from a proper deck (standard 52-card deck containing no jokers)");
-            }
             if (this.CurrentHand != null && this.CurrentHand.Active)
             {
                 throw new NotEnoughPlayersException("The previous hand hasnt ended");
             }
-            deck.ShuffleCards();
-            Player dealer = ActivePlayers.ElementAt(dealerIndex);
-            CurrentHand = new Hand(dealer, deck, ActivePlayers);
-            CurrentHand.DealCards();
-            CurrentHand.PlaceBlinds(Preferences);
-            //TODO: Check If HEAD-TO-HEAD / HEADS UP alternative flow workds here.
 
+            Player dealer = ActivePlayers.ElementAt(dealerIndex);
+            CurrentHand = new Hand(dealer, ActivePlayers, config);
+            CurrentHand.PlayHand();
+            EndCurrentHand();
         }
+
         public void EndCurrentHand()
         {
-            CurrentHand.endHand();
+            CurrentHand.EndHand();
+            //TODO - add players money to their statistics
+
             dealerIndex++;
             //TODO: implementation
-        }
-
-        /// <summary>
-        /// UC027 Choose Play Move
-        /// </summary>
-        /// <see cref="https://docs.google.com/document/d/1OTee6BGDWK2usL53jdoeBOI-1Jh8wyNejbQ0ZroUhcA/edit#heading=h.8f3okxza6g2d"/>
-        public void ChoosePlayMove(Round.Move move, int amountToBet)
-        {
-            if (ActivePlayers.Where(player => player.CurrentState == Player.State.ActiveUnfolded).ToList().Count < 2)
-            {
-                throw new NotEnoughPlayersException("Its should be at least 2 active players to play move");
-            }
-            CurrentHand.CurrentRound.PlayMove(move, amountToBet);
-            
         }
 
         public bool TakeChair(Player player, int index)
@@ -314,5 +293,5 @@ namespace Poker.BE.Domain.Game
         }
         #endregion
 
-    }//class
+    }
 }

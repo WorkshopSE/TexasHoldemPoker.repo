@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Poker.BE.Domain.Core;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,7 +9,27 @@ namespace Poker.BE.Domain.Utility
 {
     public class StatisticsManager
     {
-        // TODO: complete - set team member to do this
+        #region Fields
+        private Dictionary<int, Statistics> usersStatistics;
+        #endregion
 
+        #region Constructors
+        public StatisticsManager ()
+        {
+            usersStatistics = new Dictionary<int, Statistics>();
+        }
+        #endregion
+
+        #region Methods
+        public void AddUser(int userID)
+        {
+            usersStatistics.Add(userID, new Statistics());
+        }
+
+        public Statistics GetUserStatistics(int userID)
+        {
+            return usersStatistics[userID];
+        }
+        #endregion
     }
 }

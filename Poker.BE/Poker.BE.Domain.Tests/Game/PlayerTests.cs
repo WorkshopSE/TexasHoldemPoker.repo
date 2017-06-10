@@ -55,19 +55,11 @@ namespace Poker.BE.Domain.Game.Tests
             Assert.AreEqual(expected3, actual3);
         }
 
-        private class PlayerStub : Player
-        {
-            public void Fold()
-            {
-                CurrentState = State.ActiveFolded;
-            }
-        }
-
         [TestMethod()]
         [ExpectedException(typeof(Utility.Exceptions.PlayerModeException))]
         public void StandUpTest() // already a spectator
         {
-            player = new PlayerStub();
+            player = new Player("a");
             
             //Arrange
             var expected1 = 10.3;
@@ -89,7 +81,7 @@ namespace Poker.BE.Domain.Game.Tests
         [ExpectedException(typeof(Utility.Exceptions.PlayerModeException))]
         public void StandUpTest1() // need to fold first
         {
-            player = new PlayerStub();
+            player = new Player("a");
 
             //Arrange
             var expected1 = 10.3;
@@ -112,7 +104,7 @@ namespace Poker.BE.Domain.Game.Tests
         public void StandUpTest2() // good
         {
             // shadowing
-            var player = new PlayerStub();
+            var player = new Player("a");
 
             //Arrange
             var expected1 = 10.3;
