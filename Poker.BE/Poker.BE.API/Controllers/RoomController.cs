@@ -32,7 +32,7 @@ namespace Poker.BE.API.Controllers
 		[HttpPost]
 		public HttpResponseMessage EnterRoom(EnterRoomRequest request)
 		{
-			var result = default(EnterRoomResult);
+			var result = new EnterRoomResult();
 
 			try
 			{
@@ -41,6 +41,7 @@ namespace Poker.BE.API.Controllers
 			catch (Exception e)
 			{
 				result.ErrorMessage = e.Message;
+				return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, e);
 			}
 
 			return Request.CreateResponse(HttpStatusCode.OK, result);

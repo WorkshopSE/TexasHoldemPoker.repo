@@ -78,12 +78,12 @@ namespace Poker.BE.Service.Services
 					result.ErrorMessage = e.Message;
 					return result;
 				}
-		
+
 			}
 			try
 			{
 				Player creator;
-				Room room = user.CreateNewRoom(request.Level,  new GameConfig(), out creator);
+				Room room = user.CreateNewRoom(request.Level, new GameConfig(), out creator);
 				Rooms.Add(room.GetHashCode(), room);
 				Players.Add(creator.GetHashCode(), creator);
 				result.Player = creator.GetHashCode();

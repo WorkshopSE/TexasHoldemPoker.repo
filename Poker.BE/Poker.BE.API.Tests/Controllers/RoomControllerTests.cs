@@ -13,23 +13,24 @@ using System.Net;
 
 namespace Poker.BE.API.Controllers.Tests
 {
-    [TestClass()]
-    public class RoomControllerTests
-    {
+	[TestClass()]
+	public class RoomControllerTests
+	{
 
-        #region Setup
-        private RoomController ctrl;
+		#region Setup
+		private RoomController ctrl;
 		private AuthenticationController Usersctrl;
 
-        public TestContext TestContext { get; set; }
+		public TestContext TestContext { get; set; }
 
-        [TestInitialize]
-        public void Before()
-        {
-            ctrl = new RoomController() {
-                Request = new System.Net.Http.HttpRequestMessage(),
-                Configuration = new System.Web.Http.HttpConfiguration()
-            };
+		[TestInitialize]
+		public void Before()
+		{
+			ctrl = new RoomController()
+			{
+				Request = new System.Net.Http.HttpRequestMessage(),
+				Configuration = new System.Web.Http.HttpConfiguration()
+			};
 			Usersctrl = new AuthenticationController()
 			{
 				Request = new HttpRequestMessage(),
@@ -37,9 +38,9 @@ namespace Poker.BE.API.Controllers.Tests
 			};
 		}
 
-        [TestCleanup]
-        public void After()
-        {
+		[TestCleanup]
+		public void After()
+		{
 			((RoomsService)ctrl.Service).Clear();
 			ctrl = null;
 			((AuthenticationService)Usersctrl.Service).Clear();
@@ -71,7 +72,7 @@ namespace Poker.BE.API.Controllers.Tests
 			CreateNewRoomRequest request = new CreateNewRoomRequest()
 			{
 				Level = lvl,
-				User=arrangeValue.User
+				User = arrangeValue.User
 			};
 
 			var exStatus = HttpStatusCode.OK;
@@ -79,8 +80,8 @@ namespace Poker.BE.API.Controllers.Tests
 			{
 				ErrorMessage = "",
 				Success = true,
-				Room=0,
-				Player=0
+				Room = 0,
+				Player = 0
 			};
 
 			//Act
