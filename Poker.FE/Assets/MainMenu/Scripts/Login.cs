@@ -15,6 +15,12 @@ public class Login : MonoBehaviour {
     private HttpCallFactory http = new HttpCallFactory();
     private LoginResult result;
 
+    public IEnumerator GotoGame()
+    {
+        yield return new WaitForSeconds(messageDelay);
+        UIControl.GetComponent<UIControl>().ChangeScene("UserMenu");
+    }
+
     public void LoginAction()
     {
         if (current.Password != "" && current.UserName != "")
@@ -42,12 +48,15 @@ public class Login : MonoBehaviour {
     {
         result = JsonUtility.FromJson<LoginResult>(successMessage);
         if (result.Success)
+        {
+            CurrentUser.user.id = result.User;
             loginFeedback.GetComponent<Text>().text = "Login Sucessful!";
+        }
         else
         {
             loginFeedback.GetComponent<Text>().text = "Login Failed!\n" + result.ErrorMessage;
+            UIControl.GetComponent<UIControl>().HideLoading();
         }
-        UIControl.GetComponent<UIControl>().HideLoading();
     }
 
 
@@ -56,8 +65,7 @@ public class Login : MonoBehaviour {
     { 
         if (loginFeedback.GetComponent<Text>().text.Contains("Login Sucessful!"))
         {
-            new WaitForSeconds(messageDelay);
-            UIControl.GetComponent<UIControl>().ChangeScene("MainMenu");
+            StartCoroutine(GotoGame());
         }
         if (Input.GetKeyDown(KeyCode.Tab))
         {
