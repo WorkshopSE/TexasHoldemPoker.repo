@@ -198,7 +198,7 @@ namespace Poker.BE.Domain.Security
 
 			userToUpdate.UserName = newUserName;
 			userToUpdate.Password = newPassword;
-			userToUpdate.Avatar = newAvatar;
+			userToUpdate.AvatarImage = newAvatar;
 
 			_usersCache.Add(newUserName, userToUpdate);
 			return true;

@@ -12,16 +12,13 @@ using Poker.BE.Data.Entities;
 
 namespace Poker.BE.Domain.Core
 {
-    public class User : AbstractUser, IAccessible<Poker.BE.Data.Entities.User>
+    public class User : AbstractUser, IAccessible<UserEntity>
     {
         #region Fields
         /* singletons */
         private GameCenter gameCenter = GameCenter.Instance;
         private ILogger logger = Logger.Instance;
         /* ---------- */
-
-        // db entity
-        private Data.Entities.User _entity;
         #endregion
 
         #region Properties
@@ -37,6 +34,9 @@ namespace Poker.BE.Domain.Core
             Players = new List<Player>();
             UserBank = new Bank();
             UserName = GetHashCode().ToString();
+
+            // db
+            CreateAccess();
         }
 
         public User(string userName, string password, double sumToDeposit) : this()
@@ -45,6 +45,9 @@ namespace Poker.BE.Domain.Core
             Password = password;
             UserBank = new Bank(sumToDeposit);
             IsConnected = true;
+
+            // db
+            UpdateAccess();
         }
         #endregion
 
@@ -111,6 +114,10 @@ namespace Poker.BE.Domain.Core
             //Adding the player to players collection
             Players.Add(freshPlayer);
 
+            // db
+            Entity.Players.Add(freshPlayer.Entity);
+            Save();
+
             return freshPlayer;
         }
 
@@ -133,6 +140,9 @@ namespace Poker.BE.Domain.Core
         {
             var result = gameCenter.CreateNewRoom(level, config, out creator);
             Players.Add(creator);
+
+            // db
+            Entity.Players.Add(creator.Entity); Save();
 
             // log info
             logger.Info(string.Format("user {0} has created an new room {1}", GetHashCode(), result.GetHashCode()), this);
@@ -159,16 +169,110 @@ namespace Poker.BE.Domain.Core
 
             UserBank.Money = gameCenter.StandUpToSpactate(player);
 
+            // db
+            Entity.Bank.Amount = UserBank.Money;
+            Save();
+
             return UserBank.Money;
         }
 
-        public int Update(out Data.Entities.User entity)
-        {
-            throw new NotImplementedException();
-        }
+
+
         #endregion
 
+        #endregion
 
+        #region Data Access
+        public int UpdateAccess()
+        {
+            int result = 0;
+            using (var db = new Access(new MainContext()))
+            {
+                // fields update
+                Entity.Avatar.ID = AvatarID;
+                Entity.Avatar.Image = AvatarImage;
+
+                // UNDONE: make sure this is the money value we need to store
+                Entity.Bank.Amount = UserBank.Money;
+                Entity.Bank.Currency = null;
+
+                Entity.Password = Password;
+
+                Entity.Players.Clear();
+                Entity.Players.Concat(Players.Select(x => x.Entity));
+
+                // TODO: clean this alternative code
+                //foreach (var item in Players)
+                //{
+                //    Entity.Players.Add(item.Entity);
+                //}
+
+                // TODO user.statistics storage
+                //entity.Statistics; 
+
+                Entity.UserName = UserName;
+
+                // save changes
+                result = db.Save();
+            }
+
+            return result;
+        }
+
+        public int CreateAccess()
+        {
+            Entity = new UserEntity()
+            {
+                Avatar = new AvatarEntity()
+                {
+                    ID = AvatarID,
+                    Image = AvatarImage
+                },
+                Bank = new MoneyStorageEntity()
+                {
+                    Amount = UserBank.Money,
+                    Currency = null,
+                },
+                Password = Password,
+                Players = new List<PlayerEntity>(Players.Select(x => x.Entity)),
+                //TODO //Statistics,
+                UserName = UserName
+            };
+
+            int result = 0;
+            using (var db = new Access(new MainContext()))
+            {
+                db.UserRepository.Add(Entity);
+                result = db.Save();
+            }
+
+            return result;
+        }
+
+        public int UpdateEntity<T>(ref T entityField, T value)
+        {
+            int result = 0;
+            using (var db = new Access(new MainContext()))
+            {
+                entityField = value;
+                result = db.Save();
+            }
+
+            return result;
+        }
+
+        public int Save()
+        {
+            int result = 0;
+            using (var db = new Access(new MainContext()))
+            {
+                result = db.Save();
+            }
+
+            return result;
+        }
+
+        public UserEntity Entity { get; private set; }
         #endregion
 
     }

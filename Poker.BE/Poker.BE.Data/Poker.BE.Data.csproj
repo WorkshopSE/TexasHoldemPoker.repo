@@ -48,19 +48,19 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Access.cs" />
-    <Compile Include="Entities\Avatar.cs" />
-    <Compile Include="Entities\GamePreferences.cs" />
-    <Compile Include="Entities\MoneyStorage.cs" />
-    <Compile Include="Entities\Card.cs" />
-    <Compile Include="Entities\Hand.cs" />
-    <Compile Include="Entities\League.cs" />
-    <Compile Include="Entities\Player.cs" />
-    <Compile Include="Entities\Pot.cs" />
-    <Compile Include="Entities\Room.cs" />
-    <Compile Include="Entities\Round.cs" />
-    <Compile Include="Entities\Statistics.cs" />
-    <Compile Include="Entities\Turn.cs" />
-    <Compile Include="Entities\User.cs" />
+    <Compile Include="Entities\AvatarEntity.cs" />
+    <Compile Include="Entities\GamePreferencesEntity.cs" />
+    <Compile Include="Entities\MoneyStorageEntity.cs" />
+    <Compile Include="Entities\CardEntity.cs" />
+    <Compile Include="Entities\HandEntity.cs" />
+    <Compile Include="Entities\LeagueEntity.cs" />
+    <Compile Include="Entities\PlayerEntity.cs" />
+    <Compile Include="Entities\PotEntity.cs" />
+    <Compile Include="Entities\RoomEntity.cs" />
+    <Compile Include="Entities\RoundEntity.cs" />
+    <Compile Include="Entities\StatisticsEntity.cs" />
+    <Compile Include="Entities\TurnEntity.cs" />
+    <Compile Include="Entities\UserEntity.cs" />
     <Compile Include="IAccessible.cs" />
     <Compile Include="MainContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

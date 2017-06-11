@@ -1,13 +1,15 @@
-﻿using Poker.BE.Domain.Utility.Exceptions;
+﻿using Poker.BE.Data;
+using Poker.BE.Domain.Utility.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Poker.BE.Data.Entities;
 
 namespace Poker.BE.Domain.Game
 {
-    public class Player
+    public class Player : IAccessible<Data.Entities.PlayerEntity>
     {
         #region Constants
         public enum State
@@ -33,6 +35,7 @@ namespace Poker.BE.Domain.Game
         public string Nickname { get; set; }
         public Round.Move PlayMove { get; private set; }
         public double AmountToBetOrCall { get; private set; }
+
         #endregion
 
         #region Constructors
@@ -163,6 +166,25 @@ namespace Poker.BE.Domain.Game
         {
             return base.GetHashCode();
         }
+
+
+        #endregion
+
+        #region Data Access
+        public PlayerEntity CreateAccess()
+        {
+            // TODO
+            throw new NotImplementedException();
+        }
+
+        public int UpdateAccess(ref PlayerEntity entity)
+        {
+            // TODO
+            throw new NotImplementedException();
+        }
+
+        public PlayerEntity Entity { get; private set; }
+
         #endregion
     }
 }

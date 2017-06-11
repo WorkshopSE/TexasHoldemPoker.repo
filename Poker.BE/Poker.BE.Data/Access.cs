@@ -10,7 +10,7 @@ namespace Poker.BE.Data
     /// <summary>
     /// Unit Of Work for Repository pattern, disposable.
     /// </summary>
-    class Access : IDisposable
+    public class Access : IDisposable
     {
         private MainContext _context;
 
