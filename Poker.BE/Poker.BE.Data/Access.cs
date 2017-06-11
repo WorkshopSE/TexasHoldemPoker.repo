@@ -20,11 +20,13 @@ namespace Poker.BE.Data
 
             // TODO: initiate repositories (= new...)
             UserRepository = new UserRepository(context);
+            PlayerRepository = new PlayerRepository(context);
         }
 
         #region Repositories Exposure
         // TODO public repositoryClass name {get; private set;}
         public UserRepository UserRepository { get; private set; }
+        public PlayerRepository PlayerRepository { get; private set; }
         #endregion
 
         public int Save()

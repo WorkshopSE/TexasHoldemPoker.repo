@@ -8,9 +8,9 @@ using System.Data.Entity;
 
 namespace Poker.BE.Data.Repositories
 {
-    public class UserRepository : IRepository<UserEntity>
+    public class PlayerRepository : IRepository<PlayerEntity>
     {
-        public UserRepository(MainContext context) : base(context)
+        public PlayerRepository(MainContext context) : base(context)
         {
         }
 

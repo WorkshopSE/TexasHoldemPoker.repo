@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Poker.BE.Data.Entities;
+using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
@@ -16,5 +17,8 @@ namespace Poker.BE.Data
         /*
          * DbSet<..> for all entities
          * */
+
+        public virtual DbSet<PlayerEntity> Players { get; set; }
+        public virtual DbSet<UserEntity> Users { get; set; }
     }
 }
