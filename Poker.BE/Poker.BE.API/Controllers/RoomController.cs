@@ -33,7 +33,6 @@ namespace Poker.BE.API.Controllers
 		public HttpResponseMessage EnterRoom(EnterRoomRequest request)
 		{
 			var result = new EnterRoomResult();
-
 			try
 			{
 				result = service.EnterRoom(request);
