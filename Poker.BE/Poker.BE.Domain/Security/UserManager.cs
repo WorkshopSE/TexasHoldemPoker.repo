@@ -178,7 +178,7 @@ namespace Poker.BE.Domain.Security
 			return true;
 		}
 
-		public bool EditProfile(string oldUserName, string newUserName, string newPassword, string newAvatar)
+		public bool EditProfile(string oldUserName, string newUserName, string newPassword, byte[] newAvatar)
 		{
 			//Check user's existence
 			if (!IsUserExists(oldUserName))

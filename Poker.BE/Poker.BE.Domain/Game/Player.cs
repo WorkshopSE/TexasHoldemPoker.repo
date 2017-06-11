@@ -9,7 +9,7 @@ using Poker.BE.Data.Entities;
 
 namespace Poker.BE.Domain.Game
 {
-    public class Player : IAccessible<Data.Entities.PlayerEntity>
+    public class Player : IAccessible<PlayerEntity>
     {
         #region Constants
         public enum State
@@ -168,16 +168,31 @@ namespace Poker.BE.Domain.Game
         }
 
 
+
+
         #endregion
 
         #region Data Access
-        public PlayerEntity CreateAccess()
+
+        public int CreateAccess()
         {
             // TODO
             throw new NotImplementedException();
         }
 
-        public int UpdateAccess(ref PlayerEntity entity)
+        public int UpdateAccess()
+        {
+            // TODO
+            throw new NotImplementedException();
+        }
+
+        public int UpdateEntity<T>(ref T entityField, T value)
+        {
+            // TODO
+            throw new NotImplementedException();
+        }
+
+        public int Save()
         {
             // TODO
             throw new NotImplementedException();
