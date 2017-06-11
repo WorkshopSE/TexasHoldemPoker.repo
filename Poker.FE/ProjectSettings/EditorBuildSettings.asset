@@ -23,3 +23,6 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/MainMenu/UserMenu.unity
     guid: 02d99557a1f239649a474d4f66bd3a03
+  - enabled: 1
+    path: Assets/MainMenu/Play.unity
+    guid: 1ec5155600366f04b83e53bb76ab1a1a

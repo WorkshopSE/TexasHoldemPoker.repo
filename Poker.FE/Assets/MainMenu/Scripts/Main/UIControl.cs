@@ -8,13 +8,13 @@ using UnityEngine.UI;
 public class UIControl : MonoBehaviour {
     private Dictionary<string,bool> implementedScenes = new Dictionary<string, bool>
     {
-        { "ContactUs", true }, { "LoadingGame", true },{ "MainMenu", true }, { "SignIn", true }, { "SignUp", true }, { "UserMenu", true }
+        { "ContactUs", true }, { "LoadingGame", true },{ "MainMenu", true }, { "SignIn", true }, { "SignUp", true }, { "UserMenu", true }, { "Play", true }
     };
     public GameObject loadingText;
     public GameObject loadingImage;
     public GameObject NotImplementedTextObjet;
     public HttpCallFactory http = new HttpCallFactory();
-    bool isMute;
+    public bool isMute = true;
     public void ChangeScene(string sceneName)
     {
         if (implementedScenes.ContainsKey(sceneName) && implementedScenes[sceneName])
