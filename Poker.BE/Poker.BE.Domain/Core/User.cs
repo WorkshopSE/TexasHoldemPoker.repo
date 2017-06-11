@@ -183,6 +183,56 @@ namespace Poker.BE.Domain.Core
         #endregion
 
         #region Data Access
+
+        public int CreateAccess()
+        {
+            Entity = new UserEntity()
+            {
+                Avatar = new AvatarEntity()
+                {
+                    ID = AvatarID,
+                    Image = AvatarImage
+                },
+                Bank = new MoneyStorageEntity()
+                {
+                    Amount = UserBank.Money,
+                    Currency = null,
+                },
+                Password = Password,
+                Players = new List<PlayerEntity>(Players.Select(x => x.Entity)),
+                //TODO //Statistics,
+                UserName = UserName
+            };
+
+            int result = 0;
+            using (var db = new Access(new MainContext()))
+            {
+                db.UserRepository.Add(Entity);
+                result = db.Save();
+            }
+
+            return result;
+        }
+
+        public int Save()
+        {
+            int result = 0;
+            using (var db = new Access(new MainContext()))
+            {
+                result = db.Save();
+            }
+
+            return result;
+        }
+
+        public int Clear()
+        {
+            // TODO
+            throw new NotImplementedException();
+        }
+
+        public UserEntity Entity { get; private set; }
+
         public int UpdateAccess()
         {
             int result = 0;
@@ -219,36 +269,6 @@ namespace Poker.BE.Domain.Core
             return result;
         }
 
-        public int CreateAccess()
-        {
-            Entity = new UserEntity()
-            {
-                Avatar = new AvatarEntity()
-                {
-                    ID = AvatarID,
-                    Image = AvatarImage
-                },
-                Bank = new MoneyStorageEntity()
-                {
-                    Amount = UserBank.Money,
-                    Currency = null,
-                },
-                Password = Password,
-                Players = new List<PlayerEntity>(Players.Select(x => x.Entity)),
-                //TODO //Statistics,
-                UserName = UserName
-            };
-
-            int result = 0;
-            using (var db = new Access(new MainContext()))
-            {
-                db.UserRepository.Add(Entity);
-                result = db.Save();
-            }
-
-            return result;
-        }
-
         public int UpdateEntity<T>(ref T entityField, T value)
         {
             int result = 0;
@@ -261,18 +281,9 @@ namespace Poker.BE.Domain.Core
             return result;
         }
 
-        public int Save()
-        {
-            int result = 0;
-            using (var db = new Access(new MainContext()))
-            {
-                result = db.Save();
-            }
+       
 
-            return result;
-        }
 
-        public UserEntity Entity { get; private set; }
         #endregion
 
     }

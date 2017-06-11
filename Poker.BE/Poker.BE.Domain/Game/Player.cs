@@ -180,21 +180,26 @@ namespace Poker.BE.Domain.Game
             throw new NotImplementedException();
         }
 
-        public int UpdateAccess()
-        {
-            // TODO
-            throw new NotImplementedException();
-        }
+        //public int UpdateAccess()
+        //{
+        //    // TODO
+        //    throw new NotImplementedException();
+        //}
 
-        public int UpdateEntity<T>(ref T entityField, T value)
-        {
-            // TODO
-            throw new NotImplementedException();
-        }
+        //public int UpdateEntity<T>(ref T entityField, T value)
+        //{
+        //    // TODO
+        //    throw new NotImplementedException();
+        //}
 
         public int Save()
         {
             // TODO
+            throw new NotImplementedException();
+        }
+
+        public int Clear()
+        {
             throw new NotImplementedException();
         }
 
