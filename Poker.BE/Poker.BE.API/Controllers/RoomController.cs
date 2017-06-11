@@ -41,7 +41,7 @@ namespace Poker.BE.API.Controllers
 			catch (Exception e)
 			{
 				result.ErrorMessage = e.Message;
-				return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, e.Message);
+				return Request.CreateResponse(HttpStatusCode.InternalServerError, result);
 			}
 
 			return Request.CreateResponse(HttpStatusCode.OK, result);
@@ -57,7 +57,7 @@ namespace Poker.BE.API.Controllers
 			catch (Exception e)
 			{
 				result.ErrorMessage = e.Message;
-				return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, e.Message);
+				return Request.CreateResponse(HttpStatusCode.InternalServerError, result);
 			}
 			return Request.CreateResponse(HttpStatusCode.OK, result);
 		}

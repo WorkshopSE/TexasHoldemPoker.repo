@@ -15,22 +15,22 @@ namespace Poker.BE.API.Controllers
 	{
 		#region Fields
 		private IAuthenticationService service;
-        #endregion
+		#endregion
 
-        #region Properties
-        public IAuthenticationService Service { get { return service; } }
-        #endregion
+		#region Properties
+		public IAuthenticationService Service { get { return service; } }
+		#endregion
 
-        #region Constructors
-        public AuthenticationController()
+		#region Constructors
+		public AuthenticationController()
 		{
 			service = new Service.Services.AuthenticationService();
 		}
 
-        #endregion
+		#endregion
 
-        #region Methods
-        [HttpPost]
+		#region Methods
+		[HttpPost]
 		public HttpResponseMessage Login(LoginRequest request)
 		{
 			var result = new LoginResult();
@@ -42,7 +42,7 @@ namespace Poker.BE.API.Controllers
 			catch (Exception e)
 			{
 				result.ErrorMessage = e.Message;
-				return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, e);
+				return Request.CreateResponse(HttpStatusCode.InternalServerError, result);
 			}
 
 			return Request.CreateResponse(HttpStatusCode.OK, result);
@@ -58,14 +58,14 @@ namespace Poker.BE.API.Controllers
 			catch (Exception e)
 			{
 				result.ErrorMessage = e.Message;
-				return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, e);
+				return Request.CreateResponse(HttpStatusCode.InternalServerError, result);
 			}
 
 			return Request.CreateResponse(HttpStatusCode.OK, result);
 		}
 		public HttpResponseMessage SignUp(SignUpRequest request)
 		{
-            var result = new SignUpResult();
+			var result = new SignUpResult();
 
 			try
 			{
