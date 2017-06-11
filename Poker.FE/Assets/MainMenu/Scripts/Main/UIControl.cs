@@ -14,7 +14,6 @@ public class UIControl : MonoBehaviour {
     public GameObject loadingImage;
     public GameObject NotImplementedTextObjet;
     public HttpCallFactory http = new HttpCallFactory();
-    public bool isMute = true;
     public void ChangeScene(string sceneName)
     {
         if (implementedScenes.ContainsKey(sceneName) && implementedScenes[sceneName])
@@ -101,4 +100,5 @@ public class UIControl : MonoBehaviour {
         yield return new WaitForSeconds(3);
         Destroy(NotImplementedTextObjet);
     }
+
 }
