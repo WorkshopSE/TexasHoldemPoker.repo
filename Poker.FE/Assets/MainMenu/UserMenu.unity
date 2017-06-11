@@ -635,6 +635,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   loadingText: {fileID: 1982934279}
   loadingImage: {fileID: 1580427605}
+  NotImplementedTextObjet: {fileID: 0}
 --- !u!1 &596474534
 GameObject:
   m_ObjectHideFlags: 0
@@ -1071,7 +1072,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 539069872}
-        m_MethodName: DoExitGame
+        m_MethodName: DoLogout
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1176,7 +1177,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 149.09386
+  orthographic size: 406.36676
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2

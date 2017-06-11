@@ -6,6 +6,7 @@ using UnityEngine.Networking;
 public static class URL
 {
     public static string Login = "Authentication/Login";
+    public static string Logout = "Authentication/Logout";
     internal static string SignUp = "Authentication/SignUp";
 }
 
@@ -29,7 +30,7 @@ public class HttpCallFactory
         }
     }
 
-    public IEnumerator GET(string url, System.Action<string> onComplete, System.Action<string> onFail)
+    public IEnumerator GET(string url, System.Action<string> onComplete = null, System.Action<string> onFail = null)
     {
         using (UnityWebRequest www = UnityWebRequest.Get(baseUrl+url))
         {
@@ -38,22 +39,25 @@ public class HttpCallFactory
             if (www.isError)
             {
                 Debug.Log(www.error);
-                onFail(www.error);
+                if (onFail != null)
+                    onFail(www.error);
             }
             else if (www.responseCode != 200)
             {
                 Debug.Log(www.downloadHandler.text);
-                onFail("Server Error");
+                if (onFail != null)
+                    onFail("Server Error");
             }
             else
             {
                 results = www.downloadHandler.text;
-                onComplete(www.downloadHandler.text);
+                if (onComplete != null)
+                    onComplete(www.downloadHandler.text);
             }
         }
     }
 
-    public IEnumerator POST(string url, string jsonString, System.Action<string> onComplete, System.Action<string> onFail)
+    public IEnumerator POST(string url, string jsonString, System.Action<string> onComplete = null, System.Action<string> onFail = null)
     {
         var www = new UnityWebRequest(baseUrl+url, "POST");
         byte[] bodyRaw = GetBytes(jsonString);
@@ -64,17 +68,20 @@ public class HttpCallFactory
         if (www.isError)
         {
             Debug.Log(www.error);
-            onFail(www.error);
+            if (onFail != null)
+                onFail(www.error);
         }
         else if (www.responseCode != 200)
         {
             Debug.Log(www.downloadHandler.text);
-            onFail("Server Error");
+            if (onFail != null)
+                onFail("Server Error");
         }
         else
         {
             results = www.downloadHandler.text;
-            onComplete(www.downloadHandler.text);
+            if (onComplete != null)
+                onComplete(www.downloadHandler.text);
         }
     }
     protected static byte[] GetBytes(string str)

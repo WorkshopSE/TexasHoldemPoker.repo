@@ -13,6 +13,7 @@ public class UIControl : MonoBehaviour {
     public GameObject loadingText;
     public GameObject loadingImage;
     public GameObject NotImplementedTextObjet;
+    public HttpCallFactory http = new HttpCallFactory();
     bool isMute;
     public void ChangeScene(string sceneName)
     {
@@ -28,6 +29,25 @@ public class UIControl : MonoBehaviour {
     {
         Application.Quit();
     }
+    public void DoLogout()
+    {
+        LogoutRequest logout = new LogoutRequest();
+        logout.User = CurrentUser.user.id;
+        string userJson = JsonUtility.ToJson(logout);
+        StartCoroutine(http.POST(URL.Logout, userJson, LogoutCompleted,LogoutFaild));
+    }
+
+    private void LogoutFaild(string obj)
+    {
+        //Fake It
+        ChangeScene("MainMenu");
+    }
+
+    private void LogoutCompleted(string result)
+    {
+        ChangeScene("MainMenu");
+    }
+
     public void ShowLoading()
     {
         if (loadingText.activeSelf || loadingImage.activeSelf)
