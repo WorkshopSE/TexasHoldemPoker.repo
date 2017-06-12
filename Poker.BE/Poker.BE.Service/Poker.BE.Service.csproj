@@ -48,6 +48,8 @@
     <Compile Include="IServices\IPokerGamePlayService.cs" />
     <Compile Include="IServices\IPokerService.cs" />
     <Compile Include="IServices\IProfileService.cs" />
+    <Compile Include="Modules\Caches\CommonCache.cs" />
+    <Compile Include="Modules\Caches\ICache.cs" />
     <Compile Include="Modules\Requests\CheckRequest.cs" />
     <Compile Include="Modules\Requests\EnterRoomRequest.cs" />
     <Compile Include="Modules\Requests\IRequest.cs" />
