@@ -48,6 +48,8 @@ namespace Poker.BE.API.Controllers
 
             return Request.CreateResponse(HttpStatusCode.OK, result);
         }
+
+        [HttpPost]
         public HttpResponseMessage Logout(LogoutRequest request)
         {
             var result = new LogoutResult();
@@ -65,6 +67,8 @@ namespace Poker.BE.API.Controllers
 
             return Request.CreateResponse(HttpStatusCode.OK, result);
         }
+
+        [HttpPost]
         public HttpResponseMessage SignUp(SignUpRequest request)
         {
             var result = new SignUpResult();
