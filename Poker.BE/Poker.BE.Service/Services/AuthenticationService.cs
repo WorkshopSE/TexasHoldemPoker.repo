@@ -19,14 +19,14 @@ namespace Poker.BE.Service.Services
         #endregion
 
         #region properties
-        public IDictionary<int, User> Users { get; set; }
+        public IDictionary<string, User> Users { get; set; }
         #endregion
 
         #region Constructors
         public AuthenticationService()
         {
             userManager = UserManager.Instance;
-            Users = new Dictionary<int, User>();
+            Users = new Dictionary<string, User>();
         }
         #endregion
 
@@ -36,7 +36,7 @@ namespace Poker.BE.Service.Services
             var result = new LoginResult();
             try
             {
-                result.User = userManager.LogIn(request.UserName, request.Password).GetHashCode();
+                result.User = userManager.LogIn(request.UserName, request.Password).UserName;
                 result.Success = true;
             }
             catch (UserNotFoundException e)
@@ -52,7 +52,7 @@ namespace Poker.BE.Service.Services
             return result;
         }
 
-        
+
 
         public LogoutResult Logout(LogoutRequest request)
         {
@@ -63,12 +63,13 @@ namespace Poker.BE.Service.Services
             {
                 result.Success = false;
                 result.ErrorMessage = "User ID not found";
+                return result;
             }
 
             try
             {
                 result.Output = userManager.LogOut(user);
-                result.User = user.GetHashCode();
+                result.User = user.UserName;
                 result.Success = true;
             }
             catch (UserNotFoundException e)
@@ -87,8 +88,8 @@ namespace Poker.BE.Service.Services
             try
             {
                 User user = userManager.AddUser(request.UserName, request.Password, request.Deposit);
-                result.User = user.GetHashCode();
-                Users.Add(user.GetHashCode(), user);
+                result.User = user.UserName;
+                Users.Add(user.UserName, user);
                 result.Success = true;
             }
             catch (UserNameTakenException e)

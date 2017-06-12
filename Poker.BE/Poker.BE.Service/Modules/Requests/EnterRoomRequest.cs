@@ -8,8 +8,8 @@
         public int Room { get; set; }
 
         /// <summary>
-        /// requesting user hash code
+        /// requesting username
         /// </summary>
-        public int User { get; set; }
+        public string User { get; set; }
     }
 }
