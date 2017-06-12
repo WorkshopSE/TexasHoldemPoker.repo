@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 
-namespace Poker.BE.Domain.Utility.Logger
+namespace Poker.BE.CrossUtility.Loggers
 {
     /// <summary>
     /// static eager creation of singleton for Logger.

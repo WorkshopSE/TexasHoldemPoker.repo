@@ -1,12 +1,12 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Poker.BE.Domain.Utility.Logger;
+using Poker.BE.CrossUtility.Loggers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Poker.BE.Domain.Utility.Logger.Tests
+namespace Poker.BE.CrossUtility.Loggers.Tests
 {
     [TestClass]
     public class LoggerTests

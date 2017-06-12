@@ -1,23 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Poker.BE.Domain.Core;
-using Poker.BE.Domain.Utility.Exceptions;
+using Poker.BE.CrossUtility.Exceptions;
 
 namespace Poker.BE.Domain.Security
 {
-	/// <summary>
-	/// Singleton class responsible for managing all the users
-	/// </summary>
-	/// <remarks>
-	/// change-log for 2017-06-08_08-57-24 by Idan:
-	///     - converting this class to singleton
-	///     - not allowing 'protected' functions, only private
-	///     - moving constructor to be private, at 'constructor' region
-	/// </remarks>
-	public sealed class UserManager
+    /// <summary>
+    /// Singleton class responsible for managing all the users
+    /// </summary>
+    /// <remarks>
+    /// change-log for 2017-06-08_08-57-24 by Idan:
+    ///     - converting this class to singleton
+    ///     - not allowing 'protected' functions, only private
+    ///     - moving constructor to be private, at 'constructor' region
+    /// </remarks>
+    public sealed class UserManager
 	{
 		#region Constants
 		public const int MINIMUM_PASSWORD_LENGTH = 6;

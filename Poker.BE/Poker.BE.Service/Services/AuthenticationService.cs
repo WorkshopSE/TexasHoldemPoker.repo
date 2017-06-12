@@ -1,14 +1,9 @@
 ﻿using Poker.BE.Service.Modules.Results;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Poker.BE.Service.Modules.Requests;
 using Poker.BE.Domain.Core;
-using Poker.BE.Domain.Utility.Exceptions;
 using Poker.BE.Domain.Security;
-using Poker.BE.Domain.Utility.Logger;
+using Poker.BE.CrossUtility.Exceptions;
 
 namespace Poker.BE.Service.Services
 {
