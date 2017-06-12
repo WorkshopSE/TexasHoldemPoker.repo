@@ -63,7 +63,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Agents\" />
-    <Folder Include="Caches\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
