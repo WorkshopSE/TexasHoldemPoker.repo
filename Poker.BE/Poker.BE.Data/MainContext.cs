@@ -13,12 +13,12 @@ namespace Poker.BE.Data
     /// </summary>
     public class MainContext : DbContext
     {
+        public virtual DbSet<PlayerEntity> Players { get; set; }
+        public virtual DbSet<UserEntity> Users { get; set; }
+
         // TODO
         /*
          * DbSet<..> for all entities
          * */
-
-        public virtual DbSet<PlayerEntity> Players { get; set; }
-        public virtual DbSet<UserEntity> Users { get; set; }
     }
 }
