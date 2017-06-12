@@ -133,5 +133,29 @@ namespace Poker.BE.API.Controllers.Tests
 			Assert.AreEqual(true, actValue.Success);
 			Assert.IsNotNull(actValue.User);
 		}
+
+        [TestMethod]
+        public void SignUpTest2()
+        {
+            //Arrange
+            SignUpRequest request = new SignUpRequest()
+            {
+                UserName = "idan",
+                Password = "123456",
+                Deposit = 20.5,
+            };
+
+            //Act
+            var act = ctrl.SignUp(request);
+            var actValue = default(SignUpResult);
+            var actHasContent = act.TryGetContentValue(out actValue);
+
+            //Assert
+            Assert.AreEqual(HttpStatusCode.OK, act.StatusCode);
+            Assert.IsTrue(actHasContent);
+            Assert.AreEqual("", actValue.ErrorMessage);
+            Assert.AreEqual(true, actValue.Success);
+            Assert.IsNotNull(actValue.User);
+        }
 	}
 }

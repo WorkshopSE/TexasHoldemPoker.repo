@@ -63,6 +63,7 @@ namespace Poker.BE.Service.Services
             {
                 result.Success = false;
                 result.ErrorMessage = "User ID not found";
+                return result;
             }
 
             try
