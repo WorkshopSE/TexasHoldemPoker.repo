@@ -103,10 +103,9 @@ namespace Poker.BE.Service.Services
 		public EnterRoomResult EnterRoom(EnterRoomRequest request)
 		{
 			var result = new EnterRoomResult();
-
+			Room room;
 			try
 			{
-				Room room;
 				if (!Rooms.TryGetValue(request.Room, out room))
 				{
 					try
@@ -116,7 +115,7 @@ namespace Poker.BE.Service.Services
 											   select existingRoom;
 						if (roomMatchingHash.ToList().Count != 1)
 						{
-							throw new UserNotFoundException("Room was not found, can't create room");
+							throw new RoomNotFoundException("Room was not found, can't create room");
 						}
 						room = roomMatchingHash.First();
 					}
@@ -165,8 +164,58 @@ namespace Poker.BE.Service.Services
 
 		public JoinNextHandResult JoinNextHand(JoinNextHandRequest request)
 		{
-			// TODO
-			throw new NotImplementedException();
+			var result = new JoinNextHandResult();
+			Player player;
+			if (!Players.TryGetValue(request.Player, out player))
+			{
+				try
+				{
+					var playerMatchingHash = from existingPlayer in gameCenter.Players
+											 where existingPlayer.GetHashCode() == request.Player
+											 select existingPlayer;
+					if (playerMatchingHash.ToList().Count != 1)
+					{
+						throw new PlayerNotFoundException("Player was not found, can't join next hand");
+					}
+					player = playerMatchingHash.First();
+				}
+				catch (PlayerNotFoundException e)
+				{
+					result.Success = false;
+					result.ErrorMessage = e.Message;
+					Logger.Error(e, "At " + GetType().Name, e.Source);
+				}
+			}
+			try
+			{
+				gameCenter.JoinNextHand(player, request.seatIndex, request.buyIn);
+				result.Success = true;
+			}
+			catch (RoomNotFoundException e)
+			{
+				result.Success = false;
+				result.ErrorMessage = e.Message;
+				Logger.Error(e, "At " + GetType().Name, e.Source);
+			}
+			catch (PlayerModeException e)
+			{
+				result.Success = false;
+				result.ErrorMessage = e.Message;
+				Logger.Error(e, "At " + GetType().Name, e.Source);
+			}
+			catch (RoomRulesException e)
+			{
+				result.Success = false;
+				result.ErrorMessage = e.Message;
+				Logger.Error(e, "At " + GetType().Name, e.Source);
+			}
+			catch (NotEnoughMoneyException e)
+			{
+				result.Success = false;
+				result.ErrorMessage = e.Message;
+				Logger.Error(e, "At " + GetType().Name, e.Source);
+			}
+			return result;
 		}
 
 		public StandUpToSpactateResult StandUpToSpactate(StandUpToSpactateRequest request)
