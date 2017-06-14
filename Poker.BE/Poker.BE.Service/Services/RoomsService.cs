@@ -19,6 +19,7 @@ namespace Poker.BE.Service.Services
 	{
 		#region Fields
 		public UserManager userManager;
+		public GameCenter gameCenter;
 		#endregion
 
 		#region Properties
@@ -44,6 +45,7 @@ namespace Poker.BE.Service.Services
 		public RoomsService()
 		{
 			userManager = UserManager.Instance;
+			gameCenter = GameCenter.Instance;
 			Players = new Dictionary<int, Player>();
 			Rooms = new Dictionary<int, Room>();
 			Users = new Dictionary<string, User>();
@@ -107,7 +109,23 @@ namespace Poker.BE.Service.Services
 				Room room;
 				if (!Rooms.TryGetValue(request.Room, out room))
 				{
-					throw new RoomNotFoundException(string.Format("Requested room ID {0} not found", request.Room));
+					try
+					{
+						var roomMatchingHash = from existingRoom in gameCenter.Rooms
+											   where existingRoom.GetHashCode() == request.Room
+											   select existingRoom;
+						if (roomMatchingHash.ToList().Count != 1)
+						{
+							throw new UserNotFoundException("Room was not found, can't create room");
+						}
+						room = roomMatchingHash.First();
+					}
+					catch (RoomNotFoundException e)
+					{
+						result.Success = false;
+						result.ErrorMessage = e.Message;
+						Logger.Error(e, "At " + GetType().Name, e.Source);
+					}
 				}
 
 				User user;
@@ -120,7 +138,7 @@ namespace Poker.BE.Service.Services
 											   select existingUser;
 						if (userMatchingHash.ToList().Count != 1)
 						{
-							throw new UserNotFoundException("User was not found, can't create room");
+							throw new UserNotFoundException("User was not found, can't Enter room");
 						}
 						user = userMatchingHash.First().Value;
 					}
@@ -130,16 +148,9 @@ namespace Poker.BE.Service.Services
 						result.ErrorMessage = e.Message;
 						Logger.Error(e, "At " + GetType().Name, e.Source);
 					}
-
 				}
 
 				result.Player = user.EnterRoom(room).GetHashCode();
-			}
-			catch (RoomNotFoundException e)
-			{
-				result.Success = false;
-				result.ErrorMessage = e.Message;
-				Logger.Error(e, "At " + GetType().Name, e.Source);
 			}
 
 			catch (PokerException e)
