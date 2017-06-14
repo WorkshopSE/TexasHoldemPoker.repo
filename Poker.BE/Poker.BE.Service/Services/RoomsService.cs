@@ -11,11 +11,11 @@ using Poker.BE.CrossUtility.Exceptions;
 
 namespace Poker.BE.Service.Services
 {
-    /// <summary>
-    /// UCC03 Rooms Management
-    /// </summary>
-    /// <see cref="https://docs.google.com/document/d/1OTee6BGDWK2usL53jdoeBOI-1Jh8wyNejbQ0ZroUhcA/edit#heading=h.286w5j2ewu5c"/>
-    public class RoomsService : IServices.IRoomsService
+	/// <summary>
+	/// UCC03 Rooms Management
+	/// </summary>
+	/// <see cref="https://docs.google.com/document/d/1OTee6BGDWK2usL53jdoeBOI-1Jh8wyNejbQ0ZroUhcA/edit#heading=h.286w5j2ewu5c"/>
+	public class RoomsService : IServices.IRoomsService
 	{
 		#region Fields
 		public UserManager userManager;
@@ -74,6 +74,7 @@ namespace Poker.BE.Service.Services
 				{
 					result.Success = false;
 					result.ErrorMessage = e.Message;
+					Logger.Error(e, "At " + GetType().Name, e.Source);
 					return result;
 				}
 
@@ -92,6 +93,7 @@ namespace Poker.BE.Service.Services
 			{
 				result.Success = false;
 				result.ErrorMessage = e.Message;
+				Logger.Error(e, "At " + GetType().Name, e.Source);
 			}
 			return result;
 		}
@@ -111,21 +113,35 @@ namespace Poker.BE.Service.Services
 				User user;
 				if (!Users.TryGetValue(request.User, out user))
 				{
-					throw new UserNotFoundException(string.Format("User ID {0} not found", request.User));
+					try
+					{
+						var userMatchingHash = from existingUser in userManager.Users
+											   where existingUser.Value.UserName == request.User
+											   select existingUser;
+						if (userMatchingHash.ToList().Count != 1)
+						{
+							throw new UserNotFoundException("User was not found, can't create room");
+						}
+						user = userMatchingHash.First().Value;
+					}
+					catch (UserNotFoundException e)
+					{
+						result.Success = false;
+						result.ErrorMessage = e.Message;
+						Logger.Error(e, "At " + GetType().Name, e.Source);
+					}
+
 				}
 
 				result.Player = user.EnterRoom(room).GetHashCode();
 			}
 			catch (RoomNotFoundException e)
 			{
-				// TODO
-				throw e;
+				result.Success = false;
+				result.ErrorMessage = e.Message;
+				Logger.Error(e, "At " + GetType().Name, e.Source);
 			}
-			catch (UserNotFoundException e)
-			{
-				// TODO
-				throw e;
-			}
+
 			catch (PokerException e)
 			{
 				result.Success = false;
