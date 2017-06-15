@@ -14,6 +14,7 @@ using FakeItEasy;
 using Poker.BE.Service.IServices;
 using Poker.BE.Domain.Security;
 using Poker.BE.Domain.Core;
+using Poker.BE.Domain.Game;
 
 namespace Poker.BE.API.Controllers.Tests
 {
@@ -136,6 +137,87 @@ namespace Poker.BE.API.Controllers.Tests
 			Assert.AreNotEqual(default(int?), actContent.Player, "player not default");
 			Assert.IsNotNull(actContent.Player, "player not null");
 
+		}
+		[TestMethod()]
+		public void JoinNextHandTestSuccess()
+		{
+
+			//Arrange
+			int lvl = 25;
+			double defaultBuyIn = 100;
+			CreateNewRoomResult roomResultContent;
+
+			ctrl.CreateNewRoom(new CreateNewRoomRequest()
+			{
+				Level = lvl,
+				User = user1.UserName
+			}).TryGetContentValue(out roomResultContent);
+
+			JoinNextHandRequest request = new JoinNextHandRequest()
+			{
+				Player = roomResultContent.Player,
+				buyIn = defaultBuyIn,
+				seatIndex = 2
+			};
+
+			var exStatus = HttpStatusCode.OK;
+			var exResult = new JoinNextHandResult()
+			{
+				ErrorMessage = "",
+				Success = true,
+			};
+
+			//Act
+			var act = ctrl.JoinNextHand(request);
+			JoinNextHandResult actContent;
+			var hasContent = act.TryGetContentValue(out actContent);
+
+			//Assert
+			Assert.AreEqual(exStatus, act.StatusCode, "status code");
+			Assert.IsTrue(hasContent, "has content");
+			Assert.AreEqual(exResult.ErrorMessage, actContent.ErrorMessage, "error message");
+			Assert.AreEqual(exResult.Success, actContent.Success, "success bool");
+
+		}
+		[TestMethod()]
+		public void JoinNextHandTestFail()
+		{
+
+			//Arrange
+			int lvl = 25;
+			double defaultBuyIn = 100;
+			CreateNewRoomResult roomResultContent;
+
+			ctrl.CreateNewRoom(new CreateNewRoomRequest()
+			{
+				Level = lvl,
+				User = user1.UserName
+			}).TryGetContentValue(out roomResultContent);
+
+			JoinNextHandRequest request1 = new JoinNextHandRequest()
+			{
+				Player = roomResultContent.Player,
+				buyIn = defaultBuyIn,
+				seatIndex = 15
+			};
+
+
+			var exStatus = HttpStatusCode.OK;
+			var exResult = new JoinNextHandResult()
+			{
+				ErrorMessage = "",
+				Success = false,
+			};
+
+			//Act
+			var act1 = ctrl.JoinNextHand(request1);
+			JoinNextHandResult actContent1;
+			var hasContent1 = act1.TryGetContentValue(out actContent1);
+
+			//Assert
+			Assert.AreEqual(exStatus, act1.StatusCode, "status code");
+			Assert.IsTrue(hasContent1, "has content");
+			Assert.AreEqual(exResult.Success, actContent1.Success, "success bool");
 		}
 	}
 }
