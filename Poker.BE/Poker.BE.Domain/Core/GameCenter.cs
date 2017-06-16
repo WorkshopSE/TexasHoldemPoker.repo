@@ -44,7 +44,6 @@ namespace Poker.BE.Domain.Core
         #region Fields
         private IDictionary<Player, Room> playersManager;
         private IDictionary<Room, League> roomsManager;
-        private StatisticsManager statisticsManager;
         private ICollection<League> leagues;
         #endregion
 
@@ -314,7 +313,7 @@ namespace Poker.BE.Domain.Core
             creator = new Player();
 
             // creating the room and adding the creator as a passive player to it.
-            var room = new Room(creator, config, statisticsManager);
+            var room = new Room(creator, config);
             BindPlayerToRoom(creator, room);
 
             League league = FindLeagueToFill(GetAllLeaguesAtLevel(level));
@@ -412,6 +411,20 @@ namespace Poker.BE.Domain.Core
 
             room.LeaveChair(player);
             return player.StandUp();
+        }
+        
+        public void ExitRoom(Player player)
+        {
+            if (!playersManager.ContainsKey(player))
+            {
+                throw new PlayerNotFoundException("Player doesn't exists in GameCenter players list");
+            }
+            if (player.CurrentState != Player.State.Passive)
+            {
+                throw new PlayerModeException("Can't remove an active player from the room!");
+            }
+
+            RemovePlayer(player);
         }
         #endregion
 

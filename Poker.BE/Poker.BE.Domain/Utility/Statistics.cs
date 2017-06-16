@@ -8,44 +8,53 @@ namespace Poker.BE.Domain.Utility
 {
     public class Statistics
     {
-        #region Fields
-        private int gamesPlayed;
-        private double grossProfits;
-        private double grossLosses;
+        #region Properties
+        public int GamesPlayed { get; private set; }
+        public double GrossProfits { get; private set; }
+        public double GrossLosses { get; private set; }
         #endregion
 
         #region Constructors
         public Statistics()
         {
-            gamesPlayed = 0;
-            grossProfits = 0;
-            grossLosses = 0;
+            GamesPlayed = 0;
+            GrossProfits = 0;
+            GrossLosses = 0;
         }
         #endregion
 
         #region Methods
-        public void AddHandStatistic(int amountOfMoney)
+        public void AddHandStatistic(double amountOfMoney)
         {
             if (amountOfMoney > 0)
             {
-                grossProfits += amountOfMoney;
+                GrossProfits += amountOfMoney;
             }
             else
             {
-                grossLosses -= amountOfMoney;
+                GrossLosses -= amountOfMoney;
             }
 
-            gamesPlayed++;
+            GamesPlayed++;
         }
 
+        public void CombineStatistics(Statistics otherStatistics)
+        {
+            GamesPlayed += otherStatistics.GamesPlayed;
+            GrossProfits += otherStatistics.GrossProfits;
+            GrossLosses += otherStatistics.GrossLosses;
+        }
+
+
+        //Unnecessary function?
         public double GetWinRate()
         {
-            return (grossProfits - grossLosses) / gamesPlayed;
+            return (GrossProfits - GrossLosses) / GamesPlayed;
         }
-
+        //Unnecessary function?
         public double GetGrossProfitWinRate()
         {
-            return grossProfits / gamesPlayed;
+            return GrossProfits / GamesPlayed;
         }
         #endregion
     }

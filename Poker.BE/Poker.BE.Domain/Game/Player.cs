@@ -1,4 +1,5 @@
-﻿using Poker.BE.Domain.Utility.Exceptions;
+﻿using Poker.BE.Domain.Utility;
+using Poker.BE.Domain.Utility.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -33,6 +34,7 @@ namespace Poker.BE.Domain.Game
         public string Nickname { get; set; }
         public Round.Move PlayMove { get; private set; }
         public double AmountToBetOrCall { get; private set; }
+        public Statistics PlayerStatistics { get; set; }
         #endregion
 
         #region Constructors
@@ -43,6 +45,7 @@ namespace Poker.BE.Domain.Game
             CurrentState = State.Passive;
             _wallet = new Wallet();
             WalletValue = 0.0;
+            PlayerStatistics = new Statistics();
             PlayMove = default(Round.Move);
         }
 
@@ -94,6 +97,11 @@ namespace Poker.BE.Domain.Game
 
             CurrentState = State.Passive;
             return WalletValue;
+        }
+
+        public void AddStatistics(double amountOfMoney)
+        {
+            PlayerStatistics.AddHandStatistic(amountOfMoney);
         }
 
         public void Fold()

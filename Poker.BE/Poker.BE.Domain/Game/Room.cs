@@ -65,7 +65,6 @@ namespace Poker.BE.Domain.Game
         }
         public ICollection<Player> Players { get { return activeAndPassivePlayers; } }
         public IDictionary<Chair, Player> TableLocationOfActivePlayers { get; private set; }
-        public StatisticsManager statisticsManager;
 
         #region GameConfig Properties (8)
         public GamePreferences Preferences
@@ -125,7 +124,6 @@ namespace Poker.BE.Domain.Game
             }
         }
 
-
         #endregion
 
         #region Constructors
@@ -152,10 +150,9 @@ namespace Poker.BE.Domain.Game
         /// </summary>
         /// <param name="creator">enter the room as a passive player.</param>
         /// <see cref="https://docs.google.com/document/d/1ob4bSynssE3UOfehUAFNv_VDpPbybhS4dW_O-v-QDiw/edit#heading=h.tzy1eb1jifgr"/>
-        public Room(Player creator, StatisticsManager statisticsManager) : this()
+        public Room(Player creator) : this()
         {
             activeAndPassivePlayers.Add(creator);
-            this.statisticsManager = statisticsManager;
         }
 
         /// <summary>
@@ -164,12 +161,12 @@ namespace Poker.BE.Domain.Game
         /// <param name="creator">enter the room as a passive player.</param>
         /// <param name="preferences">limit / no limit / pot limit </param>
         /// <see cref="https://docs.google.com/document/d/1ob4bSynssE3UOfehUAFNv_VDpPbybhS4dW_O-v-QDiw/edit#heading=h.tzy1eb1jifgr"/>
-        public Room(Player creator, GamePreferences preferences, StatisticsManager statisticsManager) : this(creator, statisticsManager)
+        public Room(Player creator, GamePreferences preferences) : this(creator)
         {
             Preferences = preferences;
         }
 
-        public Room(Player creator, GameConfig config, StatisticsManager statisticsManager) : this(creator, config.Preferences, statisticsManager)
+        public Room(Player creator, GameConfig config) : this(creator, config.Preferences)
         {
             /*Note: 8 configurations */
             this.config = config;
@@ -244,10 +241,12 @@ namespace Poker.BE.Domain.Game
         public void EndCurrentHand()
         {
             CurrentHand.EndHand();
-            //TODO - add players money to their statistics
+            foreach(Player player in ActivePlayers)
+            {
+                player.AddStatistics(CurrentHand.PlayersBets[player]);
+            }
 
             dealerIndex++;
-            //TODO: implementation
         }
 
         public bool TakeChair(Player player, int index)

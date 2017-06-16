@@ -219,7 +219,19 @@ namespace Poker.BE.Domain.Game
 
         private void PickAWinner()
         {
+            //Change all player's bets to negative numbers (for statistics)
+            foreach (Player player in activePlayers)
+            {
+                PlayersBets[player] *= -1;
+            }
+
+            //Go to the last pot
             Pot lastPot = CurrentRound.CurrentPot;
+            while (lastPot.BasePot != null)
+            {
+                lastPot = lastPot.BasePot;
+            }
+
             List<Player> potWinners;
             //pick winner for each pot separately
             while (lastPot != null)
@@ -233,7 +245,7 @@ namespace Poker.BE.Domain.Game
                 {
                     if (!PlayersBets.ContainsKey(player))
                     {
-                        throw new PlayerNotFoundException("Can't find the winning player... not possible");
+                        throw new PlayerNotFoundException("Can't find the winning player in the acitveUnfoldedPlayers... not possible");
                     }
                     PlayersBets[player] += playerWinningMoney;
                     player.AddMoney(playerWinningMoney);

@@ -93,7 +93,6 @@
     <Compile Include="Utility\Record.cs" />
     <Compile Include="Utility\RecordManager.cs" />
     <Compile Include="Utility\Statistics.cs" />
-    <Compile Include="Utility\StatisticsManager.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

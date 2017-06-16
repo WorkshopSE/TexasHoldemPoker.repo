@@ -20,14 +20,12 @@ namespace Poker.BE.Domain.Game.Tests
         public TestContext TestContext { get; set; }
         private Room room;
         private Player roomCreator;
-        private StatisticsManager statisticManager;
 
         [TestInitialize]
         public void Before()
         {
-            statisticManager = new StatisticsManager();
             roomCreator = new Player();
-            room = new Room(roomCreator, statisticManager);
+            room = new Room(roomCreator);
         }
 
         [TestCleanup]
@@ -46,7 +44,7 @@ namespace Poker.BE.Domain.Game.Tests
             var expConfig = new GameConfig();
 
             //Act
-            var actual = new Room(expPlayer, preferences, statisticManager);
+            var actual = new Room(expPlayer, preferences);
 
             //Assert
             Assert.AreEqual(1, actual.Players.Count, "one player in new room");
@@ -79,7 +77,7 @@ namespace Poker.BE.Domain.Game.Tests
             var expConfig = new GameConfig();
 
             //Act
-            var actual = new Room(player, statisticManager);
+            var actual = new Room(player);
 
             //Assert
             Assert.AreEqual(1, actual.Players.Count, "one player in new room");
@@ -140,7 +138,7 @@ namespace Poker.BE.Domain.Game.Tests
             #endregion
 
             //Act
-            var actual = new Room(expPlayer, expConfig, statisticManager);
+            var actual = new Room(expPlayer, expConfig);
 
             //Assert
             #region Default asserts
@@ -285,7 +283,7 @@ namespace Poker.BE.Domain.Game.Tests
             Player player1 = new Player();
             GamePreferences preferences = new GamePreferences();
             GameCenter center = GameCenter.Instance;
-            Room room = new Room(player1, preferences, statisticManager);
+            Room room = new Room(player1, preferences);
             Exception expectedExcetpion = null;
             //Act
             try

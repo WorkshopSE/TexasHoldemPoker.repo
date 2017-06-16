@@ -146,8 +146,7 @@ namespace Poker.BE.Domain.Core.Tests
             //Arrange
             var expected = new Player() { Nickname = "test player" };
             var actual = default(Player);
-            var statisticsManager = new StatisticsManager();
-            Room room = new Room(new Player() { Nickname = "test player" }, statisticsManager);
+            Room room = new Room(new Player() { Nickname = "test player" });
 
             //Act
             actual = gameCenter.EnterRoom(room);
@@ -164,8 +163,7 @@ namespace Poker.BE.Domain.Core.Tests
         {
             //Arrange
             var expPlayer = new Player() { Nickname = "test player" };
-            var statisticsManager = new StatisticsManager();
-            var expRoom = new Room(expPlayer, statisticsManager);
+            var expRoom = new Room(expPlayer);
 
             GameConfig inConfig = new GameConfig();
             int inLevel = 3;

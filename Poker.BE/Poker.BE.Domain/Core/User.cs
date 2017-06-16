@@ -21,7 +21,7 @@ namespace Poker.BE.Domain.Core
         #endregion
 
         #region Properties
-
+        public Statistics UserStatistics { get; private set; }
         public ICollection<Player> Players { get; set; }
         #endregion
 
@@ -33,6 +33,7 @@ namespace Poker.BE.Domain.Core
             Players = new List<Player>();
             UserBank = new Bank();
             UserName = GetHashCode().ToString();
+            UserStatistics = new Statistics();
         }
 
         public User(string userName, string password, double sumToDeposit) : this()
@@ -156,6 +157,47 @@ namespace Poker.BE.Domain.Core
             UserBank.Money = gameCenter.StandUpToSpactate(player);
 
             return UserBank.Money;
+        }
+
+        public void ExitRoom(Player player)
+        {
+            //Remove player from the room
+            gameCenter.ExitRoom(player);
+
+            //Add dead player's statistics to user's statistics
+            UserStatistics.CombineStatistics(player.PlayerStatistics);
+
+            Players.Remove(player);
+        }
+
+        public double GetWinRateStatistics()
+        {
+            int gamesPlayed = UserStatistics.GamesPlayed;
+            double grossProfits = UserStatistics.GrossProfits;
+            double grossLosses = UserStatistics.GrossLosses;
+
+            foreach (Player player in Players)
+            {
+                gamesPlayed += player.PlayerStatistics.GamesPlayed;
+                grossProfits += player.PlayerStatistics.GrossProfits;
+                grossLosses += player.PlayerStatistics.GrossLosses;
+            }
+
+            return (grossProfits - grossLosses) / gamesPlayed;
+        }
+
+        public double GetGrossProfitWinRateStatistics()
+        {
+            int gamesPlayed = UserStatistics.GamesPlayed;
+            double grossProfits = UserStatistics.GrossProfits;
+
+            foreach (Player player in Players)
+            {
+                gamesPlayed += player.PlayerStatistics.GamesPlayed;
+                grossProfits += player.PlayerStatistics.GrossProfits;
+            }
+
+            return grossProfits / gamesPlayed;
         }
         #endregion
 
