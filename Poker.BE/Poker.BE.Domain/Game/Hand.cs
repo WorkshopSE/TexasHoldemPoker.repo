@@ -35,7 +35,6 @@ namespace Poker.BE.Domain.Game
         public Round CurrentRound { get; private set; }
         public Pot Pot { get { return pot; } set { pot = value; } }
         public Card[] CommunityCards { get { return communityCards; } set { communityCards = value; } }
-        public Dictionary<Player, double> WinnersProfits { get; private set; }
         public Dictionary<Player, double> PlayersBets { get; private set; }
         #endregion
 
@@ -59,7 +58,6 @@ namespace Poker.BE.Domain.Game
             this.CurrentRound = new Round(dealer, activePlayers, this.pot, true, this.gameConfig);
             this.Active = true;
             this.gameConfig = gameConfig;
-            WinnersProfits = new Dictionary<Player, double>();
         }
 
         #endregion

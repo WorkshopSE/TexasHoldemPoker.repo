@@ -297,5 +297,19 @@ namespace Poker.BE.Domain.Core.Tests
             Assert.AreEqual(Player.State.Passive, actPlayer.CurrentState);
             Assert.AreEqual(0, expRoom.ActivePlayers.Count);
         }
+
+        [TestMethod()]
+        public void ExitRoomTest()
+        {
+            //Arrange
+            Player player;
+            gameCenter.CreateNewRoom(1, new GameConfig(), out player);
+
+            //Act
+            gameCenter.ExitRoom(player);
+
+            //Assert
+            Assert.IsTrue(!gameCenter.Players.Contains(player));
+        }
     }
 }

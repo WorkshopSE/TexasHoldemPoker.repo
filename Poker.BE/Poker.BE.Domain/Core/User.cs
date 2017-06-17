@@ -169,7 +169,9 @@ namespace Poker.BE.Domain.Core
 
             Players.Remove(player);
         }
+        #endregion
 
+        #region UCC05 Statistics
         public double GetWinRateStatistics()
         {
             int gamesPlayed = UserStatistics.GamesPlayed;
