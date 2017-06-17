@@ -78,7 +78,7 @@ namespace Poker.BE.Domain.Core.Tests
                 user.EnterRoom(expRoom);
                 Assert.Fail("expected exception");
             }
-            catch (Utility.Exceptions.RoomRulesException e)
+            catch (CrossUtility.Exceptions.RoomRulesException e)
             {
                 TestContext.WriteLine(e.Message);
             }
@@ -103,7 +103,7 @@ namespace Poker.BE.Domain.Core.Tests
                 user.JoinNextHand(new Player(), 0, room.BuyInCost);
                 Assert.Fail("expected exception");
             }
-            catch (Utility.Exceptions.PlayerNotFoundException)
+            catch (CrossUtility.Exceptions.PlayerNotFoundException)
             {
             }
 
@@ -128,7 +128,7 @@ namespace Poker.BE.Domain.Core.Tests
                 user.StandUpToSpactate(new Player());
                 Assert.Fail("expected exception");
             }
-            catch (Utility.Exceptions.PlayerNotFoundException)
+            catch (CrossUtility.Exceptions.PlayerNotFoundException)
             {
             }
 

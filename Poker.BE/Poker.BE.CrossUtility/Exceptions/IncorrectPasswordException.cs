@@ -5,7 +5,7 @@ using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Poker.BE.Domain.Utility.Exceptions
+namespace Poker.BE.CrossUtility.Exceptions
 {
 	[Serializable]
 	public class IncorrectPasswordException : PokerException

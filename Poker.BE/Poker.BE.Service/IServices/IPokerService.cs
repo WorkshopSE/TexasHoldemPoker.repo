@@ -1,4 +1,4 @@
-﻿using Poker.BE.Domain.Utility.Logger;
+﻿using Poker.BE.CrossUtility.Loggers;
 
 namespace Poker.BE.Service.IServices
 {

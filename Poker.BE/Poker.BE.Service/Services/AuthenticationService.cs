@@ -1,32 +1,31 @@
 ﻿using Poker.BE.Service.Modules.Results;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Poker.BE.Service.Modules.Requests;
 using Poker.BE.Domain.Core;
-using Poker.BE.Domain.Utility.Exceptions;
 using Poker.BE.Domain.Security;
-using Poker.BE.Domain.Utility.Logger;
+using Poker.BE.CrossUtility.Exceptions;
+using Poker.BE.Service.Modules.Caches;
 
 namespace Poker.BE.Service.Services
 {
     public class AuthenticationService : IServices.IAuthenticationService
     {
         #region Fields
-        public UserManager userManager;
+        private CommonCache _cache;
         #endregion
 
         #region properties
-        public IDictionary<string, User> Users { get; set; }
+        public IDictionary<string, User> Users { get { return _cache.Users; } }
+        public UserManager UserManager { get { return _cache.UserManager; } }
+
         #endregion
 
         #region Constructors
         public AuthenticationService()
         {
-            userManager = UserManager.Instance;
-            Users = new Dictionary<string, User>();
+            _cache = CommonCache.Instance;
+            //UserManager = UserManager.Instance;
+            //Users = new Dictionary<string, User>();
         }
         #endregion
 
@@ -36,7 +35,7 @@ namespace Poker.BE.Service.Services
             var result = new LoginResult();
             try
             {
-                result.User = userManager.LogIn(request.UserName, request.Password).UserName;
+                result.User = UserManager.LogIn(request.UserName, request.Password).UserName;
                 result.Success = true;
             }
             catch (UserNotFoundException e)
@@ -68,7 +67,7 @@ namespace Poker.BE.Service.Services
 
             try
             {
-                result.Output = userManager.LogOut(user);
+                result.Output = UserManager.LogOut(user);
                 result.User = user.UserName;
                 result.Success = true;
             }
@@ -87,7 +86,7 @@ namespace Poker.BE.Service.Services
 
             try
             {
-                User user = userManager.AddUser(request.UserName, request.Password, request.Deposit);
+                User user = UserManager.AddUser(request.UserName, request.Password, request.Deposit);
                 result.User = user.UserName;
                 Users.Add(user.UserName, user);
                 result.Success = true;
@@ -117,7 +116,8 @@ namespace Poker.BE.Service.Services
 
         public void Clear()
         {
-            userManager.Clear();
+            Users.Clear();
+            UserManager.Clear();
         }
         #endregion
     }

@@ -108,6 +108,10 @@
       <Project>{A205D12B-A808-427D-9A86-DBA2EEEA3D49}</Project>
       <Name>Poker.BE.API</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Poker.BE.CrossUtility\Poker.BE.CrossUtility.csproj">
+      <Project>{787c3f41-54c2-4e91-a4a9-fad409b64ae3}</Project>
+      <Name>Poker.BE.CrossUtility</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Poker.BE.Domain\Poker.BE.Domain.csproj">
       <Project>{FE034180-E60E-416E-8D0F-0D9155AC52CC}</Project>
       <Name>Poker.BE.Domain</Name>

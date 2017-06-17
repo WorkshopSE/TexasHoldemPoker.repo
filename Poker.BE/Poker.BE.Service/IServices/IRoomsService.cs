@@ -1,7 +1,7 @@
 ﻿using Poker.BE.Domain.Game;
 using Poker.BE.Service.Modules.Results;
 using Poker.BE.Service.Modules.Requests;
-using Poker.BE.Domain.Utility.Logger;
+using Poker.BE.CrossUtility.Loggers;
 
 namespace Poker.BE.Service.IServices
 {

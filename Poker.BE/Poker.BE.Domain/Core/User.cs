@@ -1,12 +1,10 @@
 ﻿using Poker.BE.Domain.Game;
 using Poker.BE.Domain.Utility;
-using Poker.BE.Domain.Utility.Exceptions;
-using Poker.BE.Domain.Utility.Logger;
+using Poker.BE.CrossUtility.Loggers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Poker.BE.CrossUtility.Exceptions;
 
 namespace Poker.BE.Domain.Core
 {
