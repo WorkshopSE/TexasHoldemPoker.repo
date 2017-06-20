@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Poker.BE.Domain.Game
 {
-    /// <summary> Defined the hand that the active players are playing poker at the room </summary>
+    /// <summary> Defined the cards deck that the poker game is played with </summary>
     /// 
     /// <remarks>
     /// <author>Gal Wainer</author>
@@ -26,6 +26,7 @@ namespace Poker.BE.Domain.Game
         private Card[] cards;
         private int shuffleTimes;
         private Random random;
+        private int cardIndex;
         #endregion
 
         #region Properties
@@ -44,6 +45,7 @@ namespace Poker.BE.Domain.Game
             cards = GetFullDeck();
             shuffleTimes = 10;
             random = new Random();
+            cardIndex = 0;
         }
 
         public Deck(int shuffleTimes) : this()
@@ -181,19 +183,27 @@ namespace Poker.BE.Domain.Game
         /// pulling one card from the deck
         /// </summary>
         /// <returns>a card</returns>
-        public Card PullCard()
+        public Card PullCard(Card.State cardState)
         {
-            throw new NotImplementedException();
+            cardIndex++;
+            cards[cardIndex - 1].CardState = cardState;
+            return cards[cardIndex - 1];
         }
 
         /// <summary>
-        /// pulling v cards from the deck
+        /// pulling a number of cards from the deck
         /// </summary>
-        /// <param name="v">number of cards to pull</param>
+        /// <param name="numOfCards">number of cards to pull</param>
         /// <returns>collection of cards</returns>
-        public ICollection<Card> PullCards(int v)
+        public ICollection<Card> PullCards(int numOfCards)
         {
-            throw new NotImplementedException();
+            List<Card> cards = new List<Card>();
+            for (int i = 0; i < numOfCards; i++)
+            {
+                cards.Add(PullCard(Card.State.FaceUp));
+            }
+
+            return cards;
         }
         #endregion
     }

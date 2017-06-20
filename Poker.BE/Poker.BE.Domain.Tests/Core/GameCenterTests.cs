@@ -1,6 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Poker.BE.Domain.Core;
 using Poker.BE.Domain.Game;
+using Poker.BE.Domain.Utility;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -55,7 +56,7 @@ namespace Poker.BE.Domain.Core.Tests
 
                 Assert.Fail("exception missing");
             }
-            catch (Utility.Exceptions.RoomNotFoundException e)
+            catch (CrossUtility.Exceptions.RoomNotFoundException e)
             {
                 expE = e;
             }
@@ -98,7 +99,7 @@ namespace Poker.BE.Domain.Core.Tests
                 gameCenter.FindRoomsByCriteria(-1, new Player());
                 Assert.Fail("room not found exception");
             }
-            catch (Utility.Exceptions.RoomNotFoundException e)
+            catch (CrossUtility.Exceptions.RoomNotFoundException e)
             {
                 TestContext.WriteLine("exception message " + e.Message);
             }
@@ -145,7 +146,8 @@ namespace Poker.BE.Domain.Core.Tests
             //Arrange
             var expected = new Player() { Nickname = "test player" };
             var actual = default(Player);
-            Room room = new Room(new Player() { Nickname = "test player" });
+            var statisticsManager = new StatisticsManager();
+            Room room = new Room(new Player() { Nickname = "test player" }, statisticsManager);
 
             //Act
             actual = gameCenter.EnterRoom(room);
@@ -162,7 +164,8 @@ namespace Poker.BE.Domain.Core.Tests
         {
             //Arrange
             var expPlayer = new Player() { Nickname = "test player" };
-            var expRoom = new Room(expPlayer);
+            var statisticsManager = new StatisticsManager();
+            var expRoom = new Room(expPlayer, statisticsManager);
 
             GameConfig inConfig = new GameConfig();
             int inLevel = 3;
@@ -183,7 +186,7 @@ namespace Poker.BE.Domain.Core.Tests
         }
 
         [TestMethod()]
-        [ExpectedException(typeof(Utility.Exceptions.NotEnoughMoneyException))]
+        [ExpectedException(typeof(CrossUtility.Exceptions.NotEnoughMoneyException))]
         public void JoinNextHandTest()
         {
             //Arrange
@@ -202,7 +205,7 @@ namespace Poker.BE.Domain.Core.Tests
         }
 
         [TestMethod]
-        [ExpectedException(typeof(Utility.Exceptions.RoomNotFoundException))]
+        [ExpectedException(typeof(CrossUtility.Exceptions.RoomNotFoundException))]
         public void JoinNextHandTest1()
         {
             //Arrange
@@ -222,7 +225,7 @@ namespace Poker.BE.Domain.Core.Tests
         }
 
         [TestMethod]
-        [ExpectedException(typeof(Utility.Exceptions.RoomRulesException))]
+        [ExpectedException(typeof(CrossUtility.Exceptions.RoomRulesException))]
         public void JoinNextHandTest2()
         {
             //Arrange
@@ -259,7 +262,7 @@ namespace Poker.BE.Domain.Core.Tests
         }
 
         [TestMethod()]
-        [ExpectedException(typeof(Utility.Exceptions.PlayerModeException))]
+        [ExpectedException(typeof(CrossUtility.Exceptions.PlayerModeException))]
         public void StandUpToSpactateTest()
         {
             //Arrange

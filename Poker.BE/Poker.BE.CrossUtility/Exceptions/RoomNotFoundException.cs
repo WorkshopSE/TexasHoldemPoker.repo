@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.Serialization;
 
-namespace Poker.BE.Domain.Utility.Exceptions
+namespace Poker.BE.CrossUtility.Exceptions
 {
     [Serializable]
     public class RoomNotFoundException : PokerException

@@ -1,9 +1,5 @@
-﻿using Poker.BE.Domain.Utility.Exceptions;
+﻿using Poker.BE.CrossUtility.Exceptions;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Poker.BE.Domain.Game
 {
@@ -22,6 +18,7 @@ namespace Poker.BE.Domain.Game
 
         #region Fields
         private Wallet _wallet = default(Wallet);
+        public event EventHandler TurnChanged;
         #endregion
 
         #region Properties
@@ -30,21 +27,36 @@ namespace Poker.BE.Domain.Game
         public double WalletValue { get { return _wallet.Value; } private set { _wallet.Value = value; } }
         public Card[] PrivateCards { get; set; }
         public string Nickname { get; set; }
+        public Round.Move PlayMove { get; private set; }
+        public double AmountToBetOrCall { get; private set; }
         #endregion
 
         #region Constructors
         public Player()
         {
             PrivateCards = new Card[NPRIVATE_CARDS];
+            Nickname = "";
             CurrentState = State.Passive;
             _wallet = new Wallet();
             WalletValue = 0.0;
-            Nickname = "";
+            PlayMove = default(Round.Move);
         }
 
+        public Player(string nickname) : this()
+        {
+            Nickname = nickname;
+        }
         #endregion
 
         #region Methods
+
+        public void ChoosePlayMove(string playMove, double amountToBetOrCall)
+        {
+            Round.Move parsedMove;
+            Enum.TryParse(playMove, out parsedMove);
+            PlayMove = parsedMove;
+            AmountToBetOrCall = amountToBetOrCall;
+        }
 
         public bool JoinToTable(double buyIn)
         {
@@ -80,6 +92,36 @@ namespace Poker.BE.Domain.Game
             return WalletValue;
         }
 
+        public void Fold()
+        {
+            CurrentState = State.ActiveFolded;
+        }
+
+        public void AllIn()
+        {
+            CurrentState = Player.State.ActiveAllIn;
+        }
+
+        public void AddMoney(double amount)
+        {
+            if (amount < 0)
+                throw new WrongIOException("Can't add a negative amount of money");
+            _wallet.AmountOfMoney += amount;
+        }
+
+        public void SubstractMoney(double amount)
+        {
+            if (_wallet.AmountOfMoney < amount)
+                throw new NotEnoughMoneyException("Player doesn't have enough money!");
+            _wallet.AmountOfMoney -= amount;
+        }
+
+        public virtual void OnTurnChanged(EventArgs e)
+        {
+            //Note: syntactic sugar for checking if handler is null
+            TurnChanged?.Invoke(this, e);
+        }
+
         // override object.Equals
         public override bool Equals(object obj)
         {
@@ -103,8 +145,8 @@ namespace Poker.BE.Domain.Game
                 return this == other;
             }
 
-            return 
-                other != null 
+            return
+                other != null
                 && CurrentState == other.CurrentState
                 && Nickname.Equals(other.Nickname)
                 //&& this.PrivateCards.Equals(other.PrivateCards) //TODO override card.equals
@@ -116,19 +158,6 @@ namespace Poker.BE.Domain.Game
         public override int GetHashCode()
         {
             return base.GetHashCode();
-        }
-
-
-        public void AddMoney(int amount)
-        {
-            _wallet.AmountOfMoney += amount;
-        }
-
-        public void SubstractMoney(int amount)
-        {
-            if (_wallet.AmountOfMoney < amount)
-                throw new NotEnoughMoneyException("Player doesn't have enough money!");
-            _wallet.AmountOfMoney -= amount;
         }
         #endregion
     }

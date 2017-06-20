@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{FE034180-E60E-416E-8D0F-0D9155AC52CC}</ProjectGuid>
+    <ProjectGuid>{787C3F41-54C2-4E91-A4A9-FAD409B64AE3}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Poker.BE.Domain</RootNamespace>
-    <AssemblyName>Poker.BE.Domain</AssemblyName>
+    <RootNamespace>Poker.BE.CrossUtility</RootNamespace>
+    <AssemblyName>Poker.BE.CrossUtility</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -40,47 +40,29 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Core\AbstractUser.cs" />
-    <Compile Include="Core\Administrator.cs" />
-    <Compile Include="Core\Bank.cs" />
-    <Compile Include="Core\GameCenter.cs" />
-    <Compile Include="Game\GameConfig.cs" />
-    <Compile Include="Core\User.cs" />
-    <Compile Include="Game\Card.cs" />
-    <Compile Include="Game\Chair.cs" />
-    <Compile Include="Game\CommunityCard.cs" />
-    <Compile Include="Game\Deck.cs" />
-    <Compile Include="Game\GamePreferences.cs" />
-    <Compile Include="Game\GamePreferencesDecorator.cs" />
-    <Compile Include="Game\Hand.cs" />
-    <Compile Include="Game\League.cs" />
-    <Compile Include="Game\LimitHoldem.cs" />
-    <Compile Include="Game\NoLimitHoldem.cs" />
-    <Compile Include="Game\PickAWinner.cs" />
-    <Compile Include="Utility\AddressComparer.cs" />
-    <Compile Include="Game\Player.cs" />
-    <Compile Include="Game\Pot.cs" />
-    <Compile Include="Game\PotLimitHoldem.cs" />
-    <Compile Include="Game\PrivateCard.cs" />
-    <Compile Include="Game\Room.cs" />
-    <Compile Include="Game\Round.cs" />
-    <Compile Include="Game\Turn.cs" />
-    <Compile Include="Game\Wallet.cs" />
+    <Compile Include="Exceptions\GameRulesException.cs" />
+    <Compile Include="Exceptions\HandNotOverException.cs" />
+    <Compile Include="Exceptions\IncorrectPasswordException.cs" />
+    <Compile Include="Exceptions\InvalidDepositException.cs" />
+    <Compile Include="Exceptions\InvalidPasswordException.cs" />
+    <Compile Include="Exceptions\LevelNotFoundException.cs" />
+    <Compile Include="Exceptions\NotEnoughMoneyException.cs" />
+    <Compile Include="Exceptions\NotEnoughPlayersException.cs" />
+    <Compile Include="Exceptions\NotPlayersTurnException.cs" />
+    <Compile Include="Exceptions\PlayerModeException.cs" />
+    <Compile Include="Exceptions\PlayerNotFoundException.cs" />
+    <Compile Include="Exceptions\PokerException.cs" />
+    <Compile Include="Exceptions\RoomNotFoundException.cs" />
+    <Compile Include="Exceptions\RoomRulesException.cs" />
+    <Compile Include="Exceptions\userNameTakenException.cs" />
+    <Compile Include="Exceptions\UserNotFoundException.cs" />
+    <Compile Include="Exceptions\WrongIOException.cs" />
+    <Compile Include="Loggers\ILogger.cs" />
+    <Compile Include="Loggers\Logger.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Security\UserManager.cs" />
-    <Compile Include="Utility\MoneyStorage.cs" />
-    <Compile Include="Utility\Notification.cs" />
-    <Compile Include="Utility\PlayMoveEventArgs.cs" />
-    <Compile Include="Utility\Record.cs" />
-    <Compile Include="Utility\RecordManager.cs" />
-    <Compile Include="Utility\Statistics.cs" />
-    <Compile Include="Utility\StatisticsManager.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Poker.BE.CrossUtility\Poker.BE.CrossUtility.csproj">
-      <Project>{787c3f41-54c2-4e91-a4a9-fad409b64ae3}</Project>
-      <Name>Poker.BE.CrossUtility</Name>
-    </ProjectReference>
+    <Folder Include="Agents\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

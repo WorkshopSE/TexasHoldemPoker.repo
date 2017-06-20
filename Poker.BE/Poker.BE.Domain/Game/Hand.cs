@@ -1,106 +1,243 @@
-﻿using System;
+﻿using Poker.BE.CrossUtility.Exceptions;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Poker.BE.Domain.Game
 {
-	/// <summary> Defined the hand that the active players are playing poker at the room </summary>
-	/// <remarks>
-	/// <author>Idan Izicovich</author>
-	/// <lastModified>2017-04-25</lastModified>
-	/// </remarks>
-	public class Hand
-	{
+    /// <summary> Defined the hand that the active players are playing poker at the room </summary>
+    /// <remarks>
+    /// <author>Idan Izicovich</author>
+    /// <lastModified>2017-04-25</lastModified>
+    /// </remarks>
+    public class Hand
+    {
 
-		#region Constants
-		public static readonly int MINIMAL_NUMBER_OF_ACTIVE_PLAYERS_TO_START;
-		#endregion
+        #region Constants
+        public const int MINIMAL_NUMBER_OF_ACTIVE_PLAYERS_TO_START = 2;
+        public const int NUM_OF_COMMUNITY_CARDS = 5;
+        #endregion
 
-		#region Fields
-		private Deck deck;
-		private ICollection<Player> activePlayers;
-		private Pot pot;
-		private Player dealer;
-		#endregion
+        #region Fields
+        private Deck deck;
+        private ICollection<Player> activePlayers;
+        private Card[] communityCards;
+        private Pot pot;
+        private Player dealer;
+        private GameConfig gameConfig;
+        
+        #endregion
 
-		#region Properties
-		public bool Active { get; set; }
-		public bool handEnded { get; set; }
-		public Round CurrentRound { get; }
-		#endregion
+        #region Properties
+        public bool Active { get; set; }
+        public Round CurrentRound { get; private set; }
+        public Pot Pot { get { return pot; } set { pot = value; } }
+        public Card[] CommunityCards { get { return communityCards; } set { communityCards = value; } }
+        public Dictionary<Player, double> WinnersProfits { get; private set; }
+        public Dictionary<Player, double> PlayersBets { get; private set; }
+        #endregion
 
-		#region Constructors
-		public Hand(Player dealer, Deck deck, ICollection<Player> players)
-		{
-			if (players.Count < MINIMAL_NUMBER_OF_ACTIVE_PLAYERS_TO_START)
-			{
-				throw new Utility.Exceptions.NotEnoughPlayersException();
-			}
-			this.deck = deck;
-			this.activePlayers = players;
-			this.pot = new Pot(null);
-			this.dealer = dealer;
-			this.CurrentRound = new Round(dealer, activePlayers, this.pot);
-			this.Active = true;
-			handEnded = false;
+        #region Constructors
+        public Hand(Player dealer, ICollection<Player> players, GameConfig gameConfig)
+        {
+            if(players.Count < MINIMAL_NUMBER_OF_ACTIVE_PLAYERS_TO_START)
+            {
+                throw new CrossUtility.Exceptions.NotEnoughPlayersException();
+            }
+            this.deck = new Deck();
+            this.activePlayers = players;
+            PlayersBets = new Dictionary<Player, double>();
+            foreach (Player player in activePlayers)
+            {
+                PlayersBets.Add(player, 0);
+            }
+            this.communityCards = new CommunityCard[NUM_OF_COMMUNITY_CARDS];
+            this.pot = new Pot();
+            this.dealer = dealer;
+            this.CurrentRound = new Round(dealer, activePlayers, this.pot, true, this.gameConfig);
+            this.Active = true;
+            this.gameConfig = gameConfig;
+            WinnersProfits = new Dictionary<Player, double>();
+        }
 
-		}
+        #endregion
 
-		#endregion
+        #region Methods
+        public void PlayHand()
+        {
+            PrepareHand();
 
-		#region Methods
-		/// <summary>
-		/// Each player receive 2 face-down cards
-		/// </summary>
-		public void DealCards()
-		{
-			foreach (Player player in activePlayers)
-			{
-				for (int i = 0; i < player.PrivateCards.Length; i++)
-				{
-					player.PrivateCards[i] = deck.PullCard();
-					player.PrivateCards[i].CardState = Card.State.FaceDown;
-				}
-			}
-		}
+            //PRE FLOP
+            CurrentRound.PlayBettingRound();
+            UpdatePlayersBets();
+            pot = CurrentRound.CurrentPot;
 
-		public void PlaceBlinds(GamePreferences preferences)
-		{
-			PlaceSmallBlind(preferences);
-			PlaceBigBlind(preferences);
-			PlaceAnts(preferences);
-		}
+            //FLOP
+            deck.PullCard(Card.State.FaceDown); //burn card
+            int i = 0;
+            foreach (Card card in deck.PullCards(3))
+            {
+                communityCards[i] = card;
+                i++;
+            }
 
-		public void endHand()
-		{
-			//TODO: implement
-			this.Active = false;
-		}
+            //SECOND BETTING ROUND
+            CurrentRound = new Round(dealer, activePlayers, pot, false, gameConfig);
+            activePlayers = CurrentRound.PlayBettingRound();
+            UpdatePlayersBets();
+            pot = CurrentRound.CurrentPot;
 
-		/// <summary>
-		/// If needed:
-		/// All of the active players are forced to pay some blind
-		/// payment to the pot, regardless to the regular blinds.
-		/// </summary>
-		private void PlaceAnts(GamePreferences preferences)
-		{
-			//TODO: WAIT FOR GamePreferences
-			throw new NotImplementedException();
-		}
+            //TURN
+            deck.PullCard(Card.State.FaceDown); //burn card
+            communityCards[i] = deck.PullCard(Card.State.FaceUp);
+            i++;
 
-		private void PlaceBigBlind(GamePreferences preferences)
-		{
-			//TODO: WAIT FOR GamePreferences
-			throw new NotImplementedException();
-		}
+            //THIRD BETTING ROUND
+            CurrentRound = new Round(dealer, activePlayers, pot, false, gameConfig);
+            activePlayers = CurrentRound.PlayBettingRound();
+            UpdatePlayersBets();
+            pot = CurrentRound.CurrentPot;
 
-		private void PlaceSmallBlind(GamePreferences preferences)
-		{
-			//TODO: WAIT FOR GamePreferences
-			throw new NotImplementedException();
-		}
-		#endregion
-	}
+            //RIVER
+            deck.PullCard(Card.State.FaceDown); //burn card
+            communityCards[i] = deck.PullCard(Card.State.FaceUp);
+
+            //FORTH BETTING ROUND
+            CurrentRound = new Round(dealer, activePlayers, pot, false, gameConfig);
+            activePlayers = CurrentRound.PlayBettingRound();
+            UpdatePlayersBets();
+            pot = CurrentRound.CurrentPot;
+        }
+
+        public void EndHand()
+        {
+            //TODO: implement Showdown
+            Showdown();
+            PickAWinner();
+
+            this.Active = false;    //is it necessary? the hand will be killed anyway
+        }
+        #endregion
+
+        #region Private Functions
+        /// <summary>
+        /// Prepare the hand for playing:
+        /// Shuffle cards, place blinds and antes, and deal cards
+        /// </summary>
+        private void PrepareHand()
+        {
+            if (deck.Cards.Count != Deck.NCARDS)
+            {
+                throw new NotEnoughPlayersException("Cards must be dealt from a proper deck (standard 52-card deck containing no jokers)");
+            }
+
+            deck.ShuffleCards();
+            PlaceBlinds();
+            DealCards();
+        }
+
+        /// <summary>
+        /// Each player receive 2 face-down cards
+        /// </summary>
+        private void DealCards()
+        {
+            foreach (Player player in activePlayers)
+            {
+                for (int i = 0; i < player.PrivateCards.Length; i++)
+                {
+                    player.PrivateCards[i] = deck.PullCard(Card.State.FaceDown);
+                }
+            }
+        }
+
+        private void PlaceBlinds()
+        {
+            PlaceAntes();
+            PlaceSmallBlind();
+            PlaceBigBlind();
+
+            UpdatePlayersBets();
+        }
+
+        /// <summary>
+        /// If needed:
+        /// All of the active players are forced to pay some blind
+        /// payment to the pot, regardless to the regular blinds.
+        /// </summary>
+        private void PlaceAntes()
+        {
+            if (gameConfig.AntesValue == 0)
+                return;
+
+            //first player has to "bet" the ante
+            if (CurrentRound.CurrentPlayer.Wallet.AmountOfMoney < gameConfig.AntesValue)
+                CurrentRound.PlayMove(Round.Move.Allin, gameConfig.AntesValue);
+            else
+                CurrentRound.PlayMove(Round.Move.Bet, gameConfig.AntesValue);
+
+            //other players "call" the ante
+            for (int i = 1; i < CurrentRound.ActiveUnfoldedPlayers.Count; i++)
+            {
+                if (CurrentRound.CurrentPlayer.Wallet.AmountOfMoney < gameConfig.AntesValue)
+                    CurrentRound.PlayMove(Round.Move.Allin, gameConfig.AntesValue);
+                else
+                    CurrentRound.PlayMove(Round.Move.Call, gameConfig.AntesValue);
+            }
+        }
+
+        private void PlaceSmallBlind()
+        {
+            if (CurrentRound.CurrentPlayer.Wallet.AmountOfMoney < gameConfig.MinimumBet / 2)
+                CurrentRound.PlayMove(Round.Move.Allin, 0);
+            else
+                CurrentRound.PlayMove(Round.Move.Raise, gameConfig.MinimumBet / 2);
+        }
+
+        private void PlaceBigBlind()
+        {
+            if (CurrentRound.CurrentPlayer.Wallet.AmountOfMoney < gameConfig.MinimumBet)
+                CurrentRound.PlayMove(Round.Move.Allin, 0);
+            else
+                //the raise amount is another small blind
+                CurrentRound.PlayMove(Round.Move.Raise, gameConfig.MinimumBet / 2);
+        }
+
+        private void UpdatePlayersBets()
+        {
+            foreach (Player player in CurrentRound.ActiveUnfoldedPlayers)
+            {
+                PlayersBets[player] += CurrentRound.LiveBets[player];
+            }
+        }
+
+        private void Showdown()
+        {
+            //TODO
+        }
+
+        private void PickAWinner()
+        {
+            Pot lastPot = CurrentRound.CurrentPot;
+            List<Player> potWinners;
+            //pick winner for each pot separately
+            while (lastPot != null)
+            {
+                PickAWinner pickPotWinner = new PickAWinner(lastPot.PlayersClaimPot, communityCards);
+                potWinners = pickPotWinner.GetWinners();
+
+                double playerWinningMoney = lastPot.Value / potWinners.Count;
+                //divide pot money to winning players
+                foreach (Player player in potWinners)
+                {
+                    if (!PlayersBets.ContainsKey(player))
+                    {
+                        throw new PlayerNotFoundException("Can't find the winning player... not possible");
+                    }
+                    PlayersBets[player] += playerWinningMoney;
+                    player.AddMoney(playerWinningMoney);
+                }
+
+                lastPot = lastPot.PartialPot;
+            }
+        }
+        #endregion
+    }
 }

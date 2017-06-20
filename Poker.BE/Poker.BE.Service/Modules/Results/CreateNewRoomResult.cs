@@ -6,11 +6,15 @@ using System.Threading.Tasks;
 
 namespace Poker.BE.Service.Modules.Results
 {
-    public class CreateNewRoomResult : IResult
-    {
-        /// <summary>
-        /// room hash code
-        /// </summary>
-        public int Room { get; set; }
-    }
+	public class CreateNewRoomResult : IResult
+	{
+		/// <summary>
+		/// room hash code
+		/// </summary>
+		public int Room { get; set; }
+		/// <summary>
+		/// player hash code 
+		/// </summary>
+		public int Player { get; set; }
+	}
 }

@@ -9,7 +9,7 @@ namespace Poker.BE.Domain.Game
     public class Wallet : Utility.MoneyStorage
     {
         #region Properties
-        public int AmountOfMoney { get; set; }
+        public double AmountOfMoney { get; set; }
         #endregion
 
         #region Constructors

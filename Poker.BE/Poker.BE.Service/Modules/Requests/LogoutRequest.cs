@@ -9,8 +9,8 @@ namespace Poker.BE.Service.Modules.Requests
 	public class LogoutRequest : IRequest
 	{
 		/// <summary>
-		/// requesting user hash code
+		/// requesting username
 		/// </summary>
-		public int User { get; set; }
+		public string User { get; set; }
 	}
 }

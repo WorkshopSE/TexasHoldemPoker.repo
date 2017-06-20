@@ -89,6 +89,10 @@ UC Compare (Use Cases Changes Tracking) | Doc | 2
   -->
 
   ## Last Updates & Features
+  + `2017-06-12`:
+    + GUI
+    + Data Layer
+    + Web Based Client
   + `2017-05-10`:
     + Communication Layer
   + `2017-04-25`:
