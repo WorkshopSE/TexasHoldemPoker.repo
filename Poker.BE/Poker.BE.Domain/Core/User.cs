@@ -91,7 +91,7 @@ namespace Poker.BE.Domain.Core
                 {
                     throw new RoomRulesException(
                         string.Format("the user already play this room: {0} with player nickname: {1}",
-                        room.Name, result.First().Nickname));
+                        room.Preferences.Name, result.First().Nickname));
                 }
             }
 
@@ -126,7 +126,7 @@ namespace Poker.BE.Domain.Core
             }
         }
 
-        public Room CreateNewRoom(int level, GameConfig config, out Player creator)
+        public Room CreateNewRoom(int level, NoLimitHoldem config, out Player creator)
         {
             var result = gameCenter.CreateNewRoom(level, config, out creator);
             Players.Add(creator);

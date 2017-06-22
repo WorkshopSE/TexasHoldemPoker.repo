@@ -201,7 +201,7 @@ namespace Poker.BE.Domain.Core
 		{
 			foreach(KeyValuePair<Room,League> roomPair in roomsManager)
 			{
-				if (name == roomPair.Key.Name)
+				if (name == roomPair.Key.Preferences.Name)
 				{
 					return ROOM_NAME_UNAVAILABLE;
 				}
@@ -265,7 +265,7 @@ namespace Poker.BE.Domain.Core
             {
                 result.AddRange(
                     from room in Rooms
-                    where room.MinimumBet == betSize
+                    where room.Preferences.MinimumBet == betSize
                     select room
                     );
             }
@@ -308,7 +308,7 @@ namespace Poker.BE.Domain.Core
         /// <see cref="https://docs.google.com/document/d/1OTee6BGDWK2usL53jdoeBOI-1Jh8wyNejbQ0ZroUhcA/edit#heading=h.eqjp0wvvpmjg"/>
         /// <param name="level">user level</param>
         /// <returns>the new created room</returns>
-        public Room CreateNewRoom(int level, GameConfig config, out Player creator)
+        public Room CreateNewRoom(int level, NoLimitHoldem config, out Player creator)
         {
             creator = new Player();
 
@@ -362,8 +362,8 @@ namespace Poker.BE.Domain.Core
                 throw new RoomRulesException("The seat is already taken, please try again.");
             }
 
-            // the user has enough money to buy in
-            if (buyIn < room.BuyInCost)
+            // the user don't have enough money to buy in
+            if (buyIn < room.Preferences.BuyInCost)
             {
                 throw new NotEnoughMoneyException("Buy in amount is less then the minimum to join the table.");
             }

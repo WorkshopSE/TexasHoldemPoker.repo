@@ -6,8 +6,36 @@ using System.Threading.Tasks;
 
 namespace Poker.BE.Domain.Game
 {
-    public class GamePreferencesDecorator : GamePreferences
+    public abstract class GamePreferencesDecorator : GamePreferences
     {
-        // TODO: complete - set team member to do this
+        //Fields
+        protected GamePreferences preferences;
+
+        //Properties
+        public double Limit { get; protected set; }
+
+        #region Constructors
+        public GamePreferencesDecorator(GamePreferences preferences)
+        {
+            this.preferences = preferences;
+        }
+        #endregion
+
+        #region Methods
+        public override void CheckBuyIn(double amountOfMoney)
+        {
+            preferences.CheckBuyIn(amountOfMoney);
+        }
+
+        public override void CheckPlayers(int numOfPlayers)
+        {
+            preferences.CheckPlayers(numOfPlayers);
+        }
+
+        public override void CheckRaise(double raiseAmount)
+        {
+            preferences.CheckRaise(raiseAmount);
+        }
+        #endregion
     }
 }

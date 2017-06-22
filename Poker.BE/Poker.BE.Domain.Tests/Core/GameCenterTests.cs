@@ -38,12 +38,12 @@ namespace Poker.BE.Domain.Core.Tests
         {
             //Arrange
 
-            GameConfig config = new GameConfig();
+            NoLimitHoldem config = new NoLimitHoldem();
             int level = 4;
             Player creator;
             var expRoom = gameCenter.CreateNewRoom(level, config, out creator);
             Exception expE = null;
-            expRoom.Name = "test room";
+            expRoom.Preferences.Name = "test room";
 
 
             TestContext.WriteLine("min level {0} max level {1}", gameCenter.Leagues.Single().MinLevel, gameCenter.Leagues.Single().MaxLevel);
@@ -72,11 +72,11 @@ namespace Poker.BE.Domain.Core.Tests
         public void FindRoomsByCriteriaTest_multiple_rooms()
         {
             //Arrange
-            GameConfig config = new GameConfig();
+            NoLimitHoldem config = new NoLimitHoldem();
             int level = 4;
             Player creator, creator2;
-            var expRoom = gameCenter.CreateNewRoom(level, config, out creator).Name = "test room 1";
-            var expRoom2 = gameCenter.CreateNewRoom(level, config, out creator2).Name = "test room 2";
+            var expRoom = gameCenter.CreateNewRoom(level, config, out creator).Preferences.Name = "test room 1";
+            var expRoom2 = gameCenter.CreateNewRoom(level, config, out creator2).Preferences.Name = "test room 2";
 
             //Act
             var actual = gameCenter.FindRoomsByCriteria(25);
@@ -90,7 +90,7 @@ namespace Poker.BE.Domain.Core.Tests
         {
             //Arrange
             Player expPlayer;
-            var expRoom = gameCenter.CreateNewRoom(6, new GameConfig(), out expPlayer);
+            var expRoom = gameCenter.CreateNewRoom(6, new NoLimitHoldem(), out expPlayer);
 
             //Act
             var actual = gameCenter.FindRoomsByCriteria(-1, expPlayer);
@@ -126,9 +126,9 @@ namespace Poker.BE.Domain.Core.Tests
             //Arrange
             var expPlayers = new Player[3];
             var expRooms = new Room[] {
-                gameCenter.CreateNewRoom(1, new GameConfig(){ Name = "test room 1", MinimumBet = 20.9}, out expPlayers[0]),
-                gameCenter.CreateNewRoom(1, new GameConfig(){ Name = "test room 2", MinimumBet = 20.9}, out expPlayers[1]),
-                gameCenter.CreateNewRoom(1, new GameConfig(){ Name = "test room 3", MinimumBet = 30.2}, out expPlayers[2]),
+                gameCenter.CreateNewRoom(1, new NoLimitHoldem(){ Name = "test room 1", MinimumBet = 20.9}, out expPlayers[0]),
+                gameCenter.CreateNewRoom(1, new NoLimitHoldem(){ Name = "test room 2", MinimumBet = 20.9}, out expPlayers[1]),
+                gameCenter.CreateNewRoom(1, new NoLimitHoldem(){ Name = "test room 3", MinimumBet = 30.2}, out expPlayers[2]),
             };
 
             //Act
@@ -165,7 +165,7 @@ namespace Poker.BE.Domain.Core.Tests
             var expPlayer = new Player() { Nickname = "test player" };
             var expRoom = new Room(expPlayer);
 
-            GameConfig inConfig = new GameConfig();
+            NoLimitHoldem inConfig = new NoLimitHoldem();
             int inLevel = 3;
 
             //Act
@@ -189,8 +189,8 @@ namespace Poker.BE.Domain.Core.Tests
         {
             //Arrange
             Player expPlayer;
-            var expRoom = gameCenter.CreateNewRoom(1, new GameConfig(), out expPlayer);
-            double inBuyin = expRoom.BuyInCost - 20.2;
+            var expRoom = gameCenter.CreateNewRoom(1, new NoLimitHoldem(), out expPlayer);
+            double inBuyin = expRoom.Preferences.BuyInCost - 20.2;
             int inSeatIndex = 2;
 
             //Act
@@ -229,8 +229,8 @@ namespace Poker.BE.Domain.Core.Tests
             //Arrange
             int seatIndex = 200;
             Player expPlayer;
-            var expRoom = gameCenter.CreateNewRoom(1, new GameConfig(), out expPlayer);
-            double buyIn = expRoom.BuyInCost + 2.5;
+            var expRoom = gameCenter.CreateNewRoom(1, new NoLimitHoldem(), out expPlayer);
+            double buyIn = expRoom.Preferences.BuyInCost + 2.5;
 
             //Act
             gameCenter.JoinNextHand(expPlayer, seatIndex, buyIn);
@@ -244,10 +244,10 @@ namespace Poker.BE.Domain.Core.Tests
         {
             //Arrange
             Player expPlayer;
-            var expRoom = gameCenter.CreateNewRoom(1, new GameConfig(), out expPlayer);
+            var expRoom = gameCenter.CreateNewRoom(1, new NoLimitHoldem(), out expPlayer);
             expPlayer.Nickname = "yosi";
             int seatIndex = 4;
-            double buyIn = expRoom.BuyInCost;
+            double buyIn = expRoom.Preferences.BuyInCost;
 
             //Act
             gameCenter.JoinNextHand(expPlayer, seatIndex, buyIn);
@@ -265,9 +265,9 @@ namespace Poker.BE.Domain.Core.Tests
         {
             //Arrange
             Player actPlayer;
-            var expRoom = gameCenter.CreateNewRoom(1, new GameConfig(), out actPlayer);
+            var expRoom = gameCenter.CreateNewRoom(1, new NoLimitHoldem(), out actPlayer);
             actPlayer.Nickname = "yossi";
-            var expMoney = expRoom.BuyInCost;
+            var expMoney = expRoom.Preferences.BuyInCost;
             gameCenter.JoinNextHand(actPlayer, 2, expMoney);
 
             //Act
@@ -282,9 +282,9 @@ namespace Poker.BE.Domain.Core.Tests
         {
             //Arrange
             Player actPlayer;
-            var expRoom = gameCenter.CreateNewRoom(1, new GameConfig(), out actPlayer);
+            var expRoom = gameCenter.CreateNewRoom(1, new NoLimitHoldem(), out actPlayer);
             actPlayer.Nickname = "yossi";
-            var expMoney = expRoom.BuyInCost;
+            var expMoney = expRoom.Preferences.BuyInCost;
             gameCenter.JoinNextHand(actPlayer, 2, expMoney);
 
             actPlayer.CurrentState = Player.State.ActiveFolded;
@@ -303,7 +303,7 @@ namespace Poker.BE.Domain.Core.Tests
         {
             //Arrange
             Player player;
-            gameCenter.CreateNewRoom(1, new GameConfig(), out player);
+            gameCenter.CreateNewRoom(1, new NoLimitHoldem(), out player);
 
             //Act
             gameCenter.ExitRoom(player);

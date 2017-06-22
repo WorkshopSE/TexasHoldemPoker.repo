@@ -28,7 +28,7 @@ namespace Poker.BE.Domain.Game.Tests
             activeUnfoldedPlayers.Add(player2);
             activeUnfoldedPlayers.Add(player3);
             var pot = new Pot(null);
-            var gameConfig = new GameConfig();
+            var gameConfig = new NoLimitHoldem();
             var round = new Round(player2, activeUnfoldedPlayers, pot, true, gameConfig);
             Exception expectedException1 = new Exception();
             Exception expectedException2 = new Exception();

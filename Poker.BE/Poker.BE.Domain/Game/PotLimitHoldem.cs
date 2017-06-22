@@ -8,7 +8,16 @@ namespace Poker.BE.Domain.Game
 {
     public class PotLimitHoldem : GamePreferencesDecorator
     {
-        // TODO: complete - set team member to do this
+        //Constructors
+        public PotLimitHoldem(GamePreferences preferences) : base(preferences)
+        {
+            Limit = 0;
+        }
 
+        //Methods
+        public void ChangePotLimitValue(double potValue)
+        {
+            Limit = potValue;
+        }
     }
 }

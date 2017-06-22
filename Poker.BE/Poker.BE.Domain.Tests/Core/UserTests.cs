@@ -39,7 +39,7 @@ namespace Poker.BE.Domain.Core.Tests
 
             //Act
             Player creator;
-            var actRoom = user.CreateNewRoom(1, new GameConfig(), out creator);
+            var actRoom = user.CreateNewRoom(1, new NoLimitHoldem(), out creator);
 
             //Assert
             Assert.IsTrue(user.Players.Contains(creator, new Utility.AddressComparer<Player>()));
@@ -50,7 +50,7 @@ namespace Poker.BE.Domain.Core.Tests
         {
             //Arrange
             Player creator;
-            var expRoom = user.CreateNewRoom(1, new GameConfig() { Name = "test room" }, out creator);
+            var expRoom = user.CreateNewRoom(1, new NoLimitHoldem() { Name = "test room" }, out creator);
             creator.Nickname = "test player";
 
             //Act
@@ -76,19 +76,19 @@ namespace Poker.BE.Domain.Core.Tests
         {
             //Arrange
             Player creator;
-            var room = user.CreateNewRoom(1, new GameConfig() { Name = "test room" }, out creator);
+            var room = user.CreateNewRoom(1, new NoLimitHoldem() { Name = "test room" }, out creator);
 
             //Act
             try
             {
-                user.JoinNextHand(new Player(), 0, room.BuyInCost);
+                user.JoinNextHand(new Player(), 0, room.Preferences.BuyInCost);
                 Assert.Fail("expected exception");
             }
             catch (Utility.Exceptions.PlayerNotFoundException)
             {
             }
 
-            user.JoinNextHand(creator, 0, room.BuyInCost + 20.2);
+            user.JoinNextHand(creator, 0, room.Preferences.BuyInCost + 20.2);
 
             //Assert
             Assert.AreEqual(Player.State.ActiveUnfolded, user.Players.Single().CurrentState);
@@ -99,8 +99,8 @@ namespace Poker.BE.Domain.Core.Tests
         {
             //Arrange
             Player creator;
-            var room = user.CreateNewRoom(1, new GameConfig() { Name = "test room" }, out creator);
-            user.JoinNextHand(creator, 0, room.BuyInCost + 20.2);
+            var room = user.CreateNewRoom(1, new NoLimitHoldem() { Name = "test room" }, out creator);
+            user.JoinNextHand(creator, 0, room.Preferences.BuyInCost + 20.2);
             user.Players.Single().CurrentState = Player.State.ActiveFolded;
 
             //Act
@@ -117,7 +117,7 @@ namespace Poker.BE.Domain.Core.Tests
 
             //Assert
             Assert.AreEqual(Player.State.Passive, user.Players.Single().CurrentState);
-            Assert.AreEqual(room.BuyInCost + 20.2, act);
+            Assert.AreEqual(room.Preferences.BuyInCost + 20.2, act);
         }
 
         [TestMethod()]
@@ -125,7 +125,7 @@ namespace Poker.BE.Domain.Core.Tests
         {
             //Arrange
             Player player;
-            user.CreateNewRoom(1, new GameConfig(), out player);
+            user.CreateNewRoom(1, new NoLimitHoldem(), out player);
             user.UserStatistics.AddHandStatistic(130);
             player.PlayerStatistics.AddHandStatistic(120);
             player.PlayerStatistics.AddHandStatistic(-120);

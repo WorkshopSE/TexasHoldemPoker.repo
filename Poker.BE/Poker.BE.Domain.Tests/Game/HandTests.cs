@@ -25,7 +25,7 @@ namespace Poker.BE.Domain.Game.Tests
             players.Add(player1);
             players.Add(player2);
             players.Add(player3);
-            Hand hand = new Hand(player3, players, new GameConfig());
+            Hand hand = new Hand(player3, players, new NoLimitHoldem());
 
             player1.PrivateCards = new Card[2] { new Card(Card.Suit.Hearts, Card.Value.Queen), new Card(Card.Suit.Hearts, Card.Value.Three) };
             player2.PrivateCards = new Card[2] { new Card(Card.Suit.Hearts, Card.Value.Eight), new Card(Card.Suit.Spades, Card.Value.Nine) };
