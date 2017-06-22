@@ -8,7 +8,7 @@ using UnityEngine.UI;
 public class UIControl : MonoBehaviour {
     private Dictionary<string,bool> implementedScenes = new Dictionary<string, bool>
     {
-        { "ContactUs", true }, { "LoadingGame", true },{ "MainMenu", true }, { "SignIn", true }, { "SignUp", true }, { "UserMenu", true }, { "Play", true }
+        { "ContactUs", true }, { "LoadingGame", true },{ "MainMenu", true }, { "SignIn", true }, { "SignUp", true }, { "UserMenu", true }, { "RoomManagement", true },{ "Room", true }
     };
     public GameObject loadingText;
     public GameObject loadingImage;
@@ -22,7 +22,7 @@ public class UIControl : MonoBehaviour {
             SceneManager.LoadSceneAsync(sceneName);
         }
         else
-            ShowNotImplementedText();
+            PopMessageToScreen();
     }
     public void DoExitGame()
     {
@@ -30,8 +30,10 @@ public class UIControl : MonoBehaviour {
     }
     public void DoLogout()
     {
-        LogoutRequest logout = new LogoutRequest();
-        logout.User = CurrentUser.user.id;
+        LogoutRequest logout = new LogoutRequest()
+        {
+            User = GameProperties.user.userName
+        };
         string userJson = JsonUtility.ToJson(logout);
         StartCoroutine(http.POST(URL.Logout, userJson, LogoutCompleted,LogoutFaild));
     }
@@ -65,7 +67,7 @@ public class UIControl : MonoBehaviour {
         loadingText.SetActive(false);
         loadingImage.SetActive(false);
     }
-    public void ShowNotImplementedText()
+    public void PopMessageToScreen(string message = "Not Implemented Yet :)")
     {
         GameObject canvas = GameObject.Find("Canvas");
         if (NotImplementedTextObjet == null)
@@ -78,7 +80,7 @@ public class UIControl : MonoBehaviour {
             ol.effectColor = Color.black;
 
             Text NotImplementedText = NotImplementedTextObjet.AddComponent<Text>();
-            NotImplementedText.text = "Not Implemented Yet :)";
+            NotImplementedText.text = message;
 
             Font ArialFont = (Font)Resources.GetBuiltinResource(typeof(Font), "Arial.ttf");
             NotImplementedText.font = ArialFont;

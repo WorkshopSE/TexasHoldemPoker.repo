@@ -2,7 +2,7 @@
 [System.Serializable]
 public class LogoutRequest
 {
-    public int User;
+    public string User;
 
     public LogoutRequest() { }
 }
