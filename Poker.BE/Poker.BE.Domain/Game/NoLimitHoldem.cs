@@ -1,7 +1,4 @@
-﻿using Poker.BE.Domain.Game;
-using Poker.BE.Domain.Utility.Exceptions;
-using System;
-using System.Collections.Generic;
+﻿using Poker.BE.CrossUtility.Exceptions;
 
 namespace Poker.BE.Domain.Game
 {

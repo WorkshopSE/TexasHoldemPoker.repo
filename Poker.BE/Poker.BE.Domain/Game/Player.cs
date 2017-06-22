@@ -1,5 +1,4 @@
 ﻿using Poker.BE.Domain.Utility;
-using Poker.BE.Domain.Utility.Exceptions;
 using Poker.BE.CrossUtility.Exceptions;
 using System;
 

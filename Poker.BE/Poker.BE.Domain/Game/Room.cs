@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Poker.BE.Domain.Utility;
 using Poker.BE.CrossUtility.Exceptions;
 
 namespace Poker.BE.Domain.Game

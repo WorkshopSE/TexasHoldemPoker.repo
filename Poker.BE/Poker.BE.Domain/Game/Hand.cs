@@ -39,7 +39,7 @@ namespace Poker.BE.Domain.Game
         {
             if (players.Count < MINIMAL_NUMBER_OF_ACTIVE_PLAYERS_TO_START)
             {
-                throw new Utility.Exceptions.NotEnoughPlayersException();
+                throw new NotEnoughPlayersException();
             }
             this.preferences = preferences;
             deck = new Deck();

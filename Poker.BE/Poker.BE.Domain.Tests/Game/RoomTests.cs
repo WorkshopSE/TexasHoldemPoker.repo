@@ -1,7 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Poker.BE.CrossUtility.Exceptions;
 using Poker.BE.Domain.Core;
-using Poker.BE.Domain.Utility;
 
 using System;
 using System.Linq;
@@ -107,14 +106,12 @@ namespace Poker.BE.Domain.Game.Tests
 
             // changed parameters
             const double insertBuyinCost = 50.2;
-            const int insertNActive = 8;
             const int insertMaxNumberPlayers = 9;
             const double insertMinBet = 8.6;
 
             // expected results by the parameters
             double expBuyinCost = Math.Max(insertBuyinCost, insertMinBet);
             double expMinBet = Math.Min(insertMinBet, insertBuyinCost);
-            int expNActive = expIsSpecAllowed ? insertNActive : insertMaxNumberPlayers;
             int expMaxNumberPlayers = insertMaxNumberPlayers;
 
 
