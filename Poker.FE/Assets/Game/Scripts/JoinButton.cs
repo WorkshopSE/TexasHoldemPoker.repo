@@ -11,8 +11,6 @@ public class JoinButton : MonoBehaviour {
     public List<GameObject> players;
 
     private bool flash;
-    //private List<GameObject> chairList;
-    //private List<GameObject> playerList;
     private int tick = 0;
 
     public void ChooseFreeChair()
