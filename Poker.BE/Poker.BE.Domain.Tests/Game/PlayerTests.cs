@@ -54,7 +54,7 @@ namespace Poker.BE.Domain.Game.Tests
         public void StandUpTest() // already a spectator
         {
             player = new Player("a");
-            
+
             //Arrange
             var expected1 = 10.3;
             var expected0 = Player.State.ActiveFolded;
@@ -172,6 +172,23 @@ namespace Poker.BE.Domain.Game.Tests
             //Assert
             Assert.IsTrue(atrue);
             Assert.IsFalse(afalse);
+        }
+
+        [TestMethod()]
+        public void AddStatisticsTest()
+        {
+            //Act
+            player.AddStatistics(16.3);
+            var res1 = player.PlayerStatistics.GamesPlayed == 1
+                        && player.PlayerStatistics.GrossProfits == 16.3;
+
+            player.AddStatistics(-32.8);
+            var res2 = player.PlayerStatistics.GamesPlayed == 2
+                        && player.PlayerStatistics.GrossLosses == 32.8;
+
+            //Assert
+            Assert.IsTrue(res1);
+            Assert.IsTrue(res2);
         }
     }
 }

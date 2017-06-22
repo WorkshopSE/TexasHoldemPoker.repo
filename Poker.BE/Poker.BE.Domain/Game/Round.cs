@@ -31,7 +31,7 @@ namespace Poker.BE.Domain.Game
         private double lastRaise;
         private Player lastPlayerToRaise;
         private bool isPreflop;
-        private GameConfig config;
+        private GamePreferences config;
         #endregion
 
         #region Properties
@@ -47,7 +47,7 @@ namespace Poker.BE.Domain.Game
         #endregion
 
         #region Constructors
-        public Round(Player dealer, ICollection<Player> activeUnfoldedPlayers, Pot currentPot, bool isPreflop, GameConfig config)
+        public Round(Player dealer, ICollection<Player> activeUnfoldedPlayers, Pot currentPot, bool isPreflop, GamePreferences config)
         {
             this.isPreflop = isPreflop;
 

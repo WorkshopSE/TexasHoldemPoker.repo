@@ -22,7 +22,7 @@ namespace Poker.BE.Domain.Game
         private Card[] communityCards;
         private Pot pot;
         private Player dealer;
-        private GameConfig gameConfig;
+        private GamePreferences preferences;
         
         #endregion
 
@@ -31,31 +31,30 @@ namespace Poker.BE.Domain.Game
         public Round CurrentRound { get; private set; }
         public Pot Pot { get { return pot; } set { pot = value; } }
         public Card[] CommunityCards { get { return communityCards; } set { communityCards = value; } }
-        public Dictionary<Player, double> WinnersProfits { get; private set; }
         public Dictionary<Player, double> PlayersBets { get; private set; }
         #endregion
 
         #region Constructors
-        public Hand(Player dealer, ICollection<Player> players, GameConfig gameConfig)
+        public Hand(Player dealer, ICollection<Player> players, GamePreferences preferences)
         {
-            if(players.Count < MINIMAL_NUMBER_OF_ACTIVE_PLAYERS_TO_START)
+            if (players.Count < MINIMAL_NUMBER_OF_ACTIVE_PLAYERS_TO_START)
             {
-                throw new CrossUtility.Exceptions.NotEnoughPlayersException();
+                throw new NotEnoughPlayersException();
             }
-            this.deck = new Deck();
-            this.activePlayers = players;
+            this.preferences = preferences;
+            deck = new Deck();
+            activePlayers = players;
             PlayersBets = new Dictionary<Player, double>();
             foreach (Player player in activePlayers)
             {
                 PlayersBets.Add(player, 0);
             }
-            this.communityCards = new CommunityCard[NUM_OF_COMMUNITY_CARDS];
-            this.pot = new Pot();
+            communityCards = new CommunityCard[NUM_OF_COMMUNITY_CARDS];
+            pot = new Pot();
             this.dealer = dealer;
-            this.CurrentRound = new Round(dealer, activePlayers, this.pot, true, this.gameConfig);
-            this.Active = true;
-            this.gameConfig = gameConfig;
-            WinnersProfits = new Dictionary<Player, double>();
+            CurrentRound = new Round(dealer, activePlayers, this.pot, true, this.preferences);
+            Active = true;
+            
         }
 
         #endregion
@@ -80,7 +79,7 @@ namespace Poker.BE.Domain.Game
             }
 
             //SECOND BETTING ROUND
-            CurrentRound = new Round(dealer, activePlayers, pot, false, gameConfig);
+            CurrentRound = new Round(dealer, activePlayers, pot, false, preferences);
             activePlayers = CurrentRound.PlayBettingRound();
             UpdatePlayersBets();
             pot = CurrentRound.CurrentPot;
@@ -91,7 +90,7 @@ namespace Poker.BE.Domain.Game
             i++;
 
             //THIRD BETTING ROUND
-            CurrentRound = new Round(dealer, activePlayers, pot, false, gameConfig);
+            CurrentRound = new Round(dealer, activePlayers, pot, false, preferences);
             activePlayers = CurrentRound.PlayBettingRound();
             UpdatePlayersBets();
             pot = CurrentRound.CurrentPot;
@@ -101,7 +100,7 @@ namespace Poker.BE.Domain.Game
             communityCards[i] = deck.PullCard(Card.State.FaceUp);
 
             //FORTH BETTING ROUND
-            CurrentRound = new Round(dealer, activePlayers, pot, false, gameConfig);
+            CurrentRound = new Round(dealer, activePlayers, pot, false, preferences);
             activePlayers = CurrentRound.PlayBettingRound();
             UpdatePlayersBets();
             pot = CurrentRound.CurrentPot;
@@ -164,40 +163,40 @@ namespace Poker.BE.Domain.Game
         /// </summary>
         private void PlaceAntes()
         {
-            if (gameConfig.AntesValue == 0)
+            if (preferences.AntesValue == 0)
                 return;
 
             //first player has to "bet" the ante
-            if (CurrentRound.CurrentPlayer.Wallet.AmountOfMoney < gameConfig.AntesValue)
-                CurrentRound.PlayMove(Round.Move.Allin, gameConfig.AntesValue);
+            if (CurrentRound.CurrentPlayer.Wallet.AmountOfMoney < preferences.AntesValue)
+                CurrentRound.PlayMove(Round.Move.Allin, preferences.AntesValue);
             else
-                CurrentRound.PlayMove(Round.Move.Bet, gameConfig.AntesValue);
+                CurrentRound.PlayMove(Round.Move.Bet, preferences.AntesValue);
 
             //other players "call" the ante
             for (int i = 1; i < CurrentRound.ActiveUnfoldedPlayers.Count; i++)
             {
-                if (CurrentRound.CurrentPlayer.Wallet.AmountOfMoney < gameConfig.AntesValue)
-                    CurrentRound.PlayMove(Round.Move.Allin, gameConfig.AntesValue);
+                if (CurrentRound.CurrentPlayer.Wallet.AmountOfMoney < preferences.AntesValue)
+                    CurrentRound.PlayMove(Round.Move.Allin, preferences.AntesValue);
                 else
-                    CurrentRound.PlayMove(Round.Move.Call, gameConfig.AntesValue);
+                    CurrentRound.PlayMove(Round.Move.Call, preferences.AntesValue);
             }
         }
 
         private void PlaceSmallBlind()
         {
-            if (CurrentRound.CurrentPlayer.Wallet.AmountOfMoney < gameConfig.MinimumBet / 2)
+            if (CurrentRound.CurrentPlayer.Wallet.AmountOfMoney < preferences.MinimumBet / 2)
                 CurrentRound.PlayMove(Round.Move.Allin, 0);
             else
-                CurrentRound.PlayMove(Round.Move.Raise, gameConfig.MinimumBet / 2);
+                CurrentRound.PlayMove(Round.Move.Raise, preferences.MinimumBet / 2);
         }
 
         private void PlaceBigBlind()
         {
-            if (CurrentRound.CurrentPlayer.Wallet.AmountOfMoney < gameConfig.MinimumBet)
+            if (CurrentRound.CurrentPlayer.Wallet.AmountOfMoney < preferences.MinimumBet)
                 CurrentRound.PlayMove(Round.Move.Allin, 0);
             else
                 //the raise amount is another small blind
-                CurrentRound.PlayMove(Round.Move.Raise, gameConfig.MinimumBet / 2);
+                CurrentRound.PlayMove(Round.Move.Raise, preferences.MinimumBet / 2);
         }
 
         private void UpdatePlayersBets()
@@ -215,7 +214,19 @@ namespace Poker.BE.Domain.Game
 
         private void PickAWinner()
         {
+            //Change all player's bets to negative numbers (for statistics)
+            foreach (Player player in activePlayers)
+            {
+                PlayersBets[player] *= -1;
+            }
+
+            //Go to the last pot
             Pot lastPot = CurrentRound.CurrentPot;
+            while (lastPot.BasePot != null)
+            {
+                lastPot = lastPot.BasePot;
+            }
+
             List<Player> potWinners;
             //pick winner for each pot separately
             while (lastPot != null)
@@ -229,7 +240,7 @@ namespace Poker.BE.Domain.Game
                 {
                     if (!PlayersBets.ContainsKey(player))
                     {
-                        throw new PlayerNotFoundException("Can't find the winning player... not possible");
+                        throw new PlayerNotFoundException("Can't find the winning player in the acitveUnfoldedPlayers... not possible");
                     }
                     PlayersBets[player] += playerWinningMoney;
                     player.AddMoney(playerWinningMoney);

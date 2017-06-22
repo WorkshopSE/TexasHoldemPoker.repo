@@ -32,25 +32,6 @@ namespace Poker.BE.Domain.Core.Tests
         }
         #endregion
 
-        // TODO: Tomer / Ariel: unit testing for user class
-        //[TestMethod()]
-        //public void UserTest()
-        //{
-
-        //}
-
-        //[TestMethod()]
-        //public void ConnectTest()
-        //{
-
-        //}
-
-        //[TestMethod()]
-        //public void DisconnectTest()
-        //{
-
-        //}
-
         [TestMethod()]
         public void CreateNewRoomTest()
         {
@@ -58,7 +39,7 @@ namespace Poker.BE.Domain.Core.Tests
 
             //Act
             Player creator;
-            var actRoom = user.CreateNewRoom(1, new GameConfig(), out creator);
+            var actRoom = user.CreateNewRoom(1, new NoLimitHoldem(), out creator);
 
             //Assert
             Assert.IsTrue(user.Players.Contains(creator, new Utility.AddressComparer<Player>()));
@@ -69,7 +50,7 @@ namespace Poker.BE.Domain.Core.Tests
         {
             //Arrange
             Player creator;
-            var expRoom = user.CreateNewRoom(1, new GameConfig() { Name = "test room" }, out creator);
+            var expRoom = user.CreateNewRoom(1, new NoLimitHoldem() { Name = "test room" }, out creator);
             creator.Nickname = "test player";
 
             //Act
@@ -95,19 +76,19 @@ namespace Poker.BE.Domain.Core.Tests
         {
             //Arrange
             Player creator;
-            var room = user.CreateNewRoom(1, new GameConfig() { Name = "test room" }, out creator);
+            var room = user.CreateNewRoom(1, new NoLimitHoldem() { Name = "test room" }, out creator);
 
             //Act
             try
             {
-                user.JoinNextHand(new Player(), 0, room.BuyInCost);
+                user.JoinNextHand(new Player(), 0, room.Preferences.BuyInCost);
                 Assert.Fail("expected exception");
             }
             catch (CrossUtility.Exceptions.PlayerNotFoundException)
             {
             }
 
-            user.JoinNextHand(creator, 0, room.BuyInCost + 20.2);
+            user.JoinNextHand(creator, 0, room.Preferences.BuyInCost + 20.2);
 
             //Assert
             Assert.AreEqual(Player.State.ActiveUnfolded, user.Players.Single().CurrentState);
@@ -118,8 +99,8 @@ namespace Poker.BE.Domain.Core.Tests
         {
             //Arrange
             Player creator;
-            var room = user.CreateNewRoom(1, new GameConfig() { Name = "test room" }, out creator);
-            user.JoinNextHand(creator, 0, room.BuyInCost + 20.2);
+            var room = user.CreateNewRoom(1, new NoLimitHoldem() { Name = "test room" }, out creator);
+            user.JoinNextHand(creator, 0, room.Preferences.BuyInCost + 20.2);
             user.Players.Single().CurrentState = Player.State.ActiveFolded;
 
             //Act
@@ -136,7 +117,65 @@ namespace Poker.BE.Domain.Core.Tests
 
             //Assert
             Assert.AreEqual(Player.State.Passive, user.Players.Single().CurrentState);
-            Assert.AreEqual(room.BuyInCost + 20.2, act);
+            Assert.AreEqual(room.Preferences.BuyInCost + 20.2, act);
+        }
+
+        [TestMethod()]
+        public void ExitRoomTest()
+        {
+            //Arrange
+            Player player;
+            user.CreateNewRoom(1, new NoLimitHoldem(), out player);
+            user.UserStatistics.AddHandStatistic(130);
+            player.PlayerStatistics.AddHandStatistic(120);
+            player.PlayerStatistics.AddHandStatistic(-120);
+
+            //Act
+            user.ExitRoom(player);
+            var res1 = user.UserStatistics.GamesPlayed == 3 &&
+                        user.UserStatistics.GrossProfits == 250 &&
+                        user.UserStatistics.GrossLosses == 120;
+
+
+            //Assert
+            Assert.IsTrue(res1);
+            Assert.IsTrue(!user.Players.Contains(player));
+        }
+
+        [TestMethod()]
+        public void GetWinRateStatisticsTest()
+        {
+            //Arrange
+            Player player1 = new Player("a");
+            Player player2 = new Player("b");
+            user.Players.Add(player1);
+            user.Players.Add(player2);
+            user.UserStatistics.AddHandStatistic(130);
+            user.UserStatistics.AddHandStatistic(-70);
+            player1.AddStatistics(20);
+            player1.AddStatistics(-10);
+            player2.AddStatistics(-20);
+            
+            //Assert
+            Assert.AreEqual(user.GetWinRateStatistics(), 10);
+        }
+
+        [TestMethod()]
+        public void GetGrossProfitWinRateStatisticsTest()
+        {
+            //Arrange
+            Player player1 = new Player("a");
+            Player player2 = new Player("b");
+            user.Players.Add(player1);
+            user.Players.Add(player2);
+            user.UserStatistics.AddHandStatistic(130);
+            user.UserStatistics.AddHandStatistic(-70);
+            player1.AddStatistics(20);
+            player1.AddStatistics(-10);
+            player2.AddStatistics(-20);
+
+            //Assert
+            Assert.AreEqual(user.GetGrossProfitWinRateStatistics(), 30);
         }
     }
 }
