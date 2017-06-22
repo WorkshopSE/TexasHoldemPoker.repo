@@ -64,6 +64,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Poker.BE.CrossUtility\Poker.BE.CrossUtility.csproj">
+      <Project>{787c3f41-54c2-4e91-a4a9-fad409b64ae3}</Project>
+      <Name>Poker.BE.CrossUtility</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Poker.BE.Domain\Poker.BE.Domain.csproj">
       <Project>{fe034180-e60e-416e-8d0f-0d9155ac52cc}</Project>
       <Name>Poker.BE.Domain</Name>

@@ -1,12 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Poker.BE.Domain.Utility.Exceptions;
-using Poker.BE.Domain.Game;
+using Poker.BE.CrossUtility.Exceptions;
 using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Poker.BE.Domain.Game.Tests
 {
@@ -56,7 +50,7 @@ namespace Poker.BE.Domain.Game.Tests
         }
 
         [TestMethod()]
-        [ExpectedException(typeof(Utility.Exceptions.PlayerModeException))]
+        [ExpectedException(typeof(CrossUtility.Exceptions.PlayerModeException))]
         public void StandUpTest() // already a spectator
         {
             player = new Player("a");
@@ -78,7 +72,7 @@ namespace Poker.BE.Domain.Game.Tests
         }
 
         [TestMethod()]
-        [ExpectedException(typeof(Utility.Exceptions.PlayerModeException))]
+        [ExpectedException(typeof(CrossUtility.Exceptions.PlayerModeException))]
         public void StandUpTest1() // need to fold first
         {
             player = new Player("a");

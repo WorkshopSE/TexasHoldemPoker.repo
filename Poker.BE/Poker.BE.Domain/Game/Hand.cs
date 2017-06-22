@@ -1,9 +1,5 @@
-﻿using Poker.BE.Domain.Utility.Exceptions;
-using System;
+﻿using Poker.BE.CrossUtility.Exceptions;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Poker.BE.Domain.Game
 {
@@ -43,7 +39,7 @@ namespace Poker.BE.Domain.Game
         {
             if (players.Count < MINIMAL_NUMBER_OF_ACTIVE_PLAYERS_TO_START)
             {
-                throw new NotEnoughPlayersException();
+                throw new Utility.Exceptions.NotEnoughPlayersException();
             }
             this.preferences = preferences;
             deck = new Deck();

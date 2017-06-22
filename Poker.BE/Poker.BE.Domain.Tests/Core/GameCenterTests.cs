@@ -56,7 +56,7 @@ namespace Poker.BE.Domain.Core.Tests
 
                 Assert.Fail("exception missing");
             }
-            catch (Utility.Exceptions.RoomNotFoundException e)
+            catch (CrossUtility.Exceptions.RoomNotFoundException e)
             {
                 expE = e;
             }
@@ -99,7 +99,7 @@ namespace Poker.BE.Domain.Core.Tests
                 gameCenter.FindRoomsByCriteria(-1, new Player());
                 Assert.Fail("room not found exception");
             }
-            catch (Utility.Exceptions.RoomNotFoundException e)
+            catch (CrossUtility.Exceptions.RoomNotFoundException e)
             {
                 TestContext.WriteLine("exception message " + e.Message);
             }
@@ -184,7 +184,7 @@ namespace Poker.BE.Domain.Core.Tests
         }
 
         [TestMethod()]
-        [ExpectedException(typeof(Utility.Exceptions.NotEnoughMoneyException))]
+        [ExpectedException(typeof(CrossUtility.Exceptions.NotEnoughMoneyException))]
         public void JoinNextHandTest()
         {
             //Arrange
@@ -203,7 +203,7 @@ namespace Poker.BE.Domain.Core.Tests
         }
 
         [TestMethod]
-        [ExpectedException(typeof(Utility.Exceptions.RoomNotFoundException))]
+        [ExpectedException(typeof(CrossUtility.Exceptions.RoomNotFoundException))]
         public void JoinNextHandTest1()
         {
             //Arrange
@@ -223,7 +223,7 @@ namespace Poker.BE.Domain.Core.Tests
         }
 
         [TestMethod]
-        [ExpectedException(typeof(Utility.Exceptions.RoomRulesException))]
+        [ExpectedException(typeof(CrossUtility.Exceptions.RoomRulesException))]
         public void JoinNextHandTest2()
         {
             //Arrange
@@ -260,7 +260,7 @@ namespace Poker.BE.Domain.Core.Tests
         }
 
         [TestMethod()]
-        [ExpectedException(typeof(Utility.Exceptions.PlayerModeException))]
+        [ExpectedException(typeof(CrossUtility.Exceptions.PlayerModeException))]
         public void StandUpToSpactateTest()
         {
             //Arrange

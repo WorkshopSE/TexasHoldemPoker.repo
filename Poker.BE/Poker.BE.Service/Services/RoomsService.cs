@@ -1,23 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Poker.BE.Service.Modules.Requests;
 using Poker.BE.Service.Modules.Results;
 using Poker.BE.Domain.Game;
-using Poker.BE.Domain.Utility.Exceptions;
 using Poker.BE.Domain.Core;
-using Poker.BE.Domain.Utility.Logger;
+using Poker.BE.CrossUtility.Loggers;
 using Poker.BE.Domain.Security;
+using Poker.BE.CrossUtility.Exceptions;
 
 namespace Poker.BE.Service.Services
 {
-	/// <summary>
-	/// UCC03 Rooms Management
-	/// </summary>
-	/// <see cref="https://docs.google.com/document/d/1OTee6BGDWK2usL53jdoeBOI-1Jh8wyNejbQ0ZroUhcA/edit#heading=h.286w5j2ewu5c"/>
-	public class RoomsService : IServices.IRoomsService
+    /// <summary>
+    /// UCC03 Rooms Management
+    /// </summary>
+    /// <see cref="https://docs.google.com/document/d/1OTee6BGDWK2usL53jdoeBOI-1Jh8wyNejbQ0ZroUhcA/edit#heading=h.286w5j2ewu5c"/>
+    public class RoomsService : IServices.IRoomsService
 	{
 		#region Fields
 		public UserManager userManager;
@@ -49,7 +47,7 @@ namespace Poker.BE.Service.Services
 			Players = new Dictionary<int, Player>();
 			Rooms = new Dictionary<int, Room>();
 			Users = new Dictionary<string, User>();
-			Logger = Domain.Utility.Logger.Logger.Instance;
+			Logger = CrossUtility.Loggers.Logger.Instance;
 		}
 		#endregion
 

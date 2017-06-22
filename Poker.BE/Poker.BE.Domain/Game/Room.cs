@@ -1,12 +1,8 @@
-﻿using Poker.BE.Domain.Utility.Exceptions;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Threading;
 using Poker.BE.Domain.Utility;
-using Poker.BE.Domain.Security;
+using Poker.BE.CrossUtility.Exceptions;
 
 namespace Poker.BE.Domain.Game
 {
