@@ -10,9 +10,9 @@ namespace Poker.BE.Service.Services
 {
     public class PokerGamePlayService : IServices.IPokerGamePlayService
     {
-		public CheckResult Check(CheckRequest request)
+		public PlayMoveResult PlayMove(PlayMoveRequest request)
 		{
-			var result = new CheckResult();
+			var result = new PlayMoveResult();
 			return result;
 		}
 	}

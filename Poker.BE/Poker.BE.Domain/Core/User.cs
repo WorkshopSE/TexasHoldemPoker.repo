@@ -124,7 +124,7 @@ namespace Poker.BE.Domain.Core
             }
         }
 
-        public Room CreateNewRoom(int level, NoLimitHoldem config, out Player creator)
+        public Room CreateNewRoom(int level, GamePreferences config, out Player creator)
         {
             var result = gameCenter.CreateNewRoom(level, config, out creator);
             Players.Add(creator);
