@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Poker.BE.Domain.Utility;
 using Poker.BE.CrossUtility.Exceptions;
 
 namespace Poker.BE.Domain.Game
@@ -21,8 +20,7 @@ namespace Poker.BE.Domain.Game
         #region Fields
         private ICollection<Player> activeAndPassivePlayers;
         private Chair[] chairs;
-        private GameConfig config;
-		private int dealerIndex = 0;
+        private int dealerIndex = 0;
         #endregion
 
         #region Properties
@@ -61,67 +59,14 @@ namespace Poker.BE.Domain.Game
         }
         public ICollection<Player> Players { get { return activeAndPassivePlayers; } }
         public IDictionary<Chair, Player> TableLocationOfActivePlayers { get; private set; }
-        public StatisticsManager statisticsManager;
-
-        #region GameConfig Properties (8)
-        public GamePreferences Preferences
-        {
-            get { return config.Preferences; }
-            set { config.Preferences = value; }
-        }
-
-        public string Name
-        {
-            get { return config.Name; }
-            set { config.Name = value; }
-        }
-
-        public bool IsSpactatorsAllowed
-        {
-            get { return config.IsSpactatorsAllowed; }
-            set { config.IsSpactatorsAllowed = value; }
-        }
-
-        public int MaxNumberOfPlayers
-        {
-            get { return config.MaxNumberOfPlayers; }
-            set { config.MaxNumberOfPlayers = value; }
-        }
-
-        public int MinNumberOfPlayers
-        {
-            get { return config.MinNumberOfPlayers; }
-            set { config.MinNumberOfPlayers = value; }
-        }
-
-        public int MaxNumberOfActivePlayers
-        {
-            get { return config.MaxNumberOfActivePlayers; }
-            set { config.MaxNumberOfActivePlayers = value; }
-        }
-
-        public double MinimumBet
-        {
-            get { return config.MinimumBet; }
-            set { config.MinimumBet = value; }
-        }
-
-        public double BuyInCost
-        {
-            get { return config.BuyInCost; }
-            set { config.BuyInCost = value; }
-        }
-        #endregion
-
+        public GamePreferences Preferences { get; }
         public bool IsTableFull
         {
             get
             {
-                return ActivePlayers.Count == MaxNumberOfActivePlayers;
+                return ActivePlayers.Count == Preferences.MaxNumberOfPlayers;
             }
         }
-
-
         #endregion
 
         #region Constructors
@@ -140,7 +85,7 @@ namespace Poker.BE.Domain.Game
             TableLocationOfActivePlayers = new Dictionary<Chair, Player>();
 
             // Note: default configuration
-            config = new GameConfig();
+            Preferences = new NoLimitHoldem();
         }
 
         /// <summary>
@@ -148,10 +93,9 @@ namespace Poker.BE.Domain.Game
         /// </summary>
         /// <param name="creator">enter the room as a passive player.</param>
         /// <see cref="https://docs.google.com/document/d/1ob4bSynssE3UOfehUAFNv_VDpPbybhS4dW_O-v-QDiw/edit#heading=h.tzy1eb1jifgr"/>
-        public Room(Player creator, StatisticsManager statisticsManager) : this()
+        public Room(Player creator) : this()
         {
             activeAndPassivePlayers.Add(creator);
-            this.statisticsManager = statisticsManager;
         }
 
         /// <summary>
@@ -160,15 +104,9 @@ namespace Poker.BE.Domain.Game
         /// <param name="creator">enter the room as a passive player.</param>
         /// <param name="preferences">limit / no limit / pot limit </param>
         /// <see cref="https://docs.google.com/document/d/1ob4bSynssE3UOfehUAFNv_VDpPbybhS4dW_O-v-QDiw/edit#heading=h.tzy1eb1jifgr"/>
-        public Room(Player creator, GamePreferences preferences, StatisticsManager statisticsManager) : this(creator, statisticsManager)
+        public Room(Player creator, GamePreferences preferences) : this(creator)
         {
             Preferences = preferences;
-        }
-
-        public Room(Player creator, GameConfig config, StatisticsManager statisticsManager) : this(creator, config.Preferences, statisticsManager)
-        {
-            /*Note: 8 configurations */
-            this.config = config;
         }
 
         #endregion
@@ -199,14 +137,13 @@ namespace Poker.BE.Domain.Game
         /// Method as a destructor - delete all players and other resources from the room.
         /// </summary>
         /// <remarks>
-        /// this function used be gameCenter do delete the room.
+        /// this function is used by gameCenter do delete the room.
         /// All players and other resources of room need to be deleted.
         /// </remarks>
         public void ClearAll()
         {
             this.activeAndPassivePlayers.Clear();
             this.CurrentHand = null;
-            this.Name = new GameConfig().Name;
         }
 
         public Player CreatePlayer()
@@ -232,7 +169,7 @@ namespace Poker.BE.Domain.Game
             }
 
             Player dealer = ActivePlayers.ElementAt(dealerIndex);
-            CurrentHand = new Hand(dealer, ActivePlayers, config);
+            CurrentHand = new Hand(dealer, ActivePlayers, Preferences);
             CurrentHand.PlayHand();
             EndCurrentHand();
         }
@@ -240,10 +177,12 @@ namespace Poker.BE.Domain.Game
         public void EndCurrentHand()
         {
             CurrentHand.EndHand();
-            //TODO - add players money to their statistics
+            foreach (Player player in ActivePlayers)
+            {
+                player.AddStatistics(CurrentHand.PlayersBets[player]);
+            }
 
             dealerIndex++;
-            //TODO: implementation
         }
 
         public bool TakeChair(Player player, int index)
@@ -273,7 +212,7 @@ namespace Poker.BE.Domain.Game
             {
                 foreach (var chair in TableLocationOfActivePlayers.Keys)
                 {
-                    if(TableLocationOfActivePlayers[chair] == player)
+                    if (TableLocationOfActivePlayers[chair] == player)
                     {
                         TableLocationOfActivePlayers.Remove(chair);
                         chair.Release();
@@ -291,3 +230,49 @@ namespace Poker.BE.Domain.Game
 
     }
 }
+
+
+
+
+
+//#region GameConfig Properties (8)
+//public string Name
+//{
+//    get { return preferences.Name; }
+//    set { preferences.Name = value; }
+//}
+
+//public bool IsSpactatorsAllowed
+//{
+//    get { return preferences.IsSpactatorsAllowed; }
+//    set { preferences.IsSpactatorsAllowed = value; }
+//}
+
+//public int MaxNumberOfPlayers
+//{
+//    get { return preferences.MaxNumberOfPlayers; }
+//    set { preferences.MaxNumberOfPlayers = value; }
+//}
+
+//public int MinNumberOfPlayers
+//{
+//    get { return preferences.MinNumberOfPlayers; }
+//    set { preferences.MinNumberOfPlayers = value; }
+//}
+
+//public double MinimumBet
+//{
+//    get { return preferences.MinimumBet; }
+//    set { preferences.MinimumBet = value; }
+//}
+
+//public double BuyInCost
+//{
+//    get { return preferences.BuyInCost; }
+//    set { preferences.BuyInCost = value; }
+//}
+//#endregion
+
+//
+
+//#endregion
