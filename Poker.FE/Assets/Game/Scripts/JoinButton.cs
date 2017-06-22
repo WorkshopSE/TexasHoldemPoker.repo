@@ -5,18 +5,19 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class JoinButton : MonoBehaviour {
-    public GameObject chairs;
-    public GameObject players;
     public GameObject spectate;
     public GameObject active;
+    public List<GameObject> chairs;
+    public List<GameObject> players;
 
     private bool flash;
-    private List<GameObject> chairList;
-    private List<GameObject> playerList;
+    //private List<GameObject> chairList;
+    //private List<GameObject> playerList;
+    private int tick = 0;
 
     public void ChooseFreeChair()
     {
-        chairList.ForEach(chair =>
+        chairs.ForEach(chair =>
         {
             if (chair.GetComponent<Image>().enabled)
             {
@@ -27,23 +28,22 @@ public class JoinButton : MonoBehaviour {
     }
     void Start()
     {
-        chairList = new List<GameObject>();
-        foreach (Transform t in chairs.transform)
-            chairList.Add(t.gameObject);
-        playerList = new List<GameObject>();
-        foreach (Transform t in players.transform)
-            playerList.Add(t.gameObject);
+        InvokeRepeating("RequestUpdate", 0, GameProperties.pollingFrequency);
+    }
+    void RequestUpdate()
+    {
+        Debug.Log("tick " + tick++);
     }
 
     void Update()
     {
         if (flash)
         {
-            chairList.ForEach(chair =>
+            chairs.ForEach(chair =>
             {
                 if (chair.GetComponent<Image>().enabled)
                 {
-                    float t = Mathf.PingPong(Time.time, 0.5f) / 0.5f;
+                    float t = Mathf.PingPong(Time.time, 0.3f) / 0.3f;
                     chair.GetComponent<Image>().color = Color.Lerp(Color.yellow, Color.white, t);
                 }
             });
@@ -51,7 +51,7 @@ public class JoinButton : MonoBehaviour {
     }
     public void ChairChoosed(int i)
     {
-        chairList.ForEach(chair =>
+        chairs.ForEach(chair =>
         {
             if (chair.GetComponent<Image>().enabled)
             {
@@ -59,8 +59,8 @@ public class JoinButton : MonoBehaviour {
                 chair.GetComponent<Button>().enabled = false;
             }
         });
-        playerList[i].SetActive(true);
-        chairList[i].GetComponent<Image>().enabled = false;
+        players[i].SetActive(true);
+        chairs[i].GetComponent<Image>().enabled = false;
         spectate.SetActive(false);
         active.SetActive(true);
         flash = false;

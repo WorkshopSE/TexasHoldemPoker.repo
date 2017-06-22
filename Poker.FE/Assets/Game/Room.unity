@@ -4190,10 +4190,30 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1a8be2a9c16988743b23fc6133875304, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  chairs: {fileID: 810708161}
-  players: {fileID: 1353613441}
   spectate: {fileID: 1013687183}
   active: {fileID: 1477653232}
+  chairs:
+  - {fileID: 365270629}
+  - {fileID: 1785600396}
+  - {fileID: 304828516}
+  - {fileID: 60180957}
+  - {fileID: 697670229}
+  - {fileID: 625716955}
+  - {fileID: 730285438}
+  - {fileID: 882104133}
+  - {fileID: 713345733}
+  - {fileID: 568714489}
+  players:
+  - {fileID: 1662723883}
+  - {fileID: 2144845578}
+  - {fileID: 856732045}
+  - {fileID: 2078871012}
+  - {fileID: 2045552540}
+  - {fileID: 1762960374}
+  - {fileID: 1638216342}
+  - {fileID: 114334439}
+  - {fileID: 1034267049}
+  - {fileID: 2107552992}
 --- !u!1 &1982934279
 GameObject:
   m_ObjectHideFlags: 0
