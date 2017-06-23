@@ -8,7 +8,7 @@ using UnityEngine.UI;
 public class UIControl : MonoBehaviour {
     private Dictionary<string,bool> implementedScenes = new Dictionary<string, bool>
     {
-        { "ContactUs", true }, { "LoadingGame", true },{ "MainMenu", true }, { "SignIn", true }, { "SignUp", true }, { "UserMenu", true }, { "RoomManagement", true },{ "Room", true }
+        { "ContactUs", true }, { "LoadingGame", true },{ "MainMenu", true }, { "SignIn", true }, { "SignUp", true }, { "UserMenu", true }, { "RoomManagement", true },{ "Room", true },{"EditProfile", true }
     };
     public GameObject loadingText;
     public GameObject loadingImage;

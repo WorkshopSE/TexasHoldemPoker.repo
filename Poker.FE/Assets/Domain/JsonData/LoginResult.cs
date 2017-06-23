@@ -1,5 +1,5 @@
 ﻿[System.Serializable]
 public class LoginResult : IResult
 {
-    public int User;
+    public string User;
 }

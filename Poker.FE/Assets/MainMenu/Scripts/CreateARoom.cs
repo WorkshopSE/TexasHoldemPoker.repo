@@ -82,19 +82,17 @@ public class CreateARoom : MonoBehaviour {
     {
         result = JsonUtility.FromJson<CreateNewRoomResult>(successMessage);
         if (result.Success)
+        {
+            GameProperties.CurrentRoom.id = result.Room;
+            GameProperties.CurrentRoom.playerid = result.Player;
+            GameProperties.CurrentRoom.roomName = result.RoomName;
             createFeedback.GetComponent<Text>().text = "Creation Sucessful!";
+        }
         else
         {
-            createFeedback.GetComponent<Text>().text = "[FAKE ENABLE] Creation Failed!\n" + result.ErrorMessage;
+            createFeedback.GetComponent<Text>().text = "Creation Failed!\n" + result.ErrorMessage;
         }
         UIControl.GetComponent<UIControl>().HideLoading();
-        //FAKE
-        StartCoroutine(Fake());
-    }
-    private IEnumerator Fake()
-    {
-        yield return new WaitForSeconds(3);
-        UIControl.GetComponent<UIControl>().ChangeScene("Room");
     }
     public void FillLimit(int choose)
     {

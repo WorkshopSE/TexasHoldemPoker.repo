@@ -49,7 +49,7 @@ public class Login : MonoBehaviour {
         result = JsonUtility.FromJson<LoginResult>(successMessage);
         if (result.Success)
         {
-            GameProperties.user.id = result.User;
+            GameProperties.user.userName = result.User;
             loginFeedback.GetComponent<Text>().text = "Login Sucessful!";
         }
         else

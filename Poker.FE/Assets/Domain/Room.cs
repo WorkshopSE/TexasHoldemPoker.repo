@@ -2,7 +2,8 @@
 public class Room {
 
     public int id;
-    public int Player;
+    public int playerid;
+    public string roomName;
 
     public Room()
     {

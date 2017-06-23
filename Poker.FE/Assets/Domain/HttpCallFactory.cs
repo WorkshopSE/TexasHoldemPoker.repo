@@ -7,8 +7,10 @@ public static class URL
 {
     public static string Login = "Authentication/Login";
     public static string Logout = "Authentication/Logout";
-    internal static string SignUp = "Authentication/SignUp";
-    internal static string RoomCreate = "Room/CreateNewRoom";
+    public static string SignUp = "Authentication/SignUp";
+    public static string RoomCreate = "Room/CreateNewRoom";
+    public static string GetProfile = "Profile/GetProfile";
+    public static string EditProfile = "Profile/EditProfile";
 }
 
 public class HttpCallFactory

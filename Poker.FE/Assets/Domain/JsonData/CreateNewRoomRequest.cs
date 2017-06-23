@@ -1,5 +1,5 @@
 ﻿[System.Serializable]
-public class CreateNewRoomRequest : IResult
+public class CreateNewRoomRequest
 {
     public int Level;
     public string User;
