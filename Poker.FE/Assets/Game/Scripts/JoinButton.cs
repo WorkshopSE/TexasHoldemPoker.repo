@@ -49,6 +49,7 @@ public class JoinButton : MonoBehaviour {
     }
     public void ChairChoosed(int i)
     {
+        flash = false;
         chairs.ForEach(chair =>
         {
             if (chair.GetComponent<Image>().enabled)
@@ -61,8 +62,6 @@ public class JoinButton : MonoBehaviour {
         chairs[i].GetComponent<Image>().enabled = false;
         spectate.SetActive(false);
         active.SetActive(true);
-        flash = false;
-
     }
 
 
