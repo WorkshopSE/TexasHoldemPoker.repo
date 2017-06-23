@@ -70,14 +70,14 @@ namespace Poker.BE.Domain.Game
                  return index;
              };
 
-            // Clubs
-            loop(Card.Suit.Clubs, index);
+            // Hearts
+            loop(Card.Suit.Hearts, index);
 
             // Diamonds
             loop(Card.Suit.Diamonds, index);
 
-            // Hearts
-            loop(Card.Suit.Hearts, index);
+            // Clubs
+            loop(Card.Suit.Clubs, index);
 
             // Spades
             loop(Card.Suit.Spades, index);

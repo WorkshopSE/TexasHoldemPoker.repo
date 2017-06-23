@@ -35,56 +35,7 @@ namespace Poker.BE.Service.Services
         }
         #endregion
 
-        public PlayMoveResult PlayMove(PlayMoveRequest request)
-        {
-            var result = new PlayMoveResult();
-            try
-            {
-                User user = UserManager.Users[request.User];
-                //getting the acting player
-                Player player = null;
-                foreach (Player p in user.Players)
-                {
-                    if (p.GetHashCode() == request.Player)
-                    {
-                        player = p;
-                        break;
-                    }
-                }
-                if (player == null)
-                {
-                    throw new PlayerNotFoundException("Player not found in user's players list");
-                }
-
-                user.ChoosePlayMove(player, new PlayMoveEventArgs(request.PlayMove, request.AmountOfMoney));
-
-                while (player == GameCenter.FindRoomsByCriteria(-1, player).ElementAt(0).CurrentHand.CurrentRound.CurrentPlayer) ;
-
-                result.NextPlayer = GameCenter.FindRoomsByCriteria(-1, player).ElementAt(0).CurrentHand.CurrentRound.CurrentPlayer.GetHashCode();
-                result.TotalRaise = GameCenter.FindRoomsByCriteria(-1, player).ElementAt(0).CurrentHand.CurrentRound.TotalRaise;
-                result.LastRaise = GameCenter.FindRoomsByCriteria(-1, player).ElementAt(0).CurrentHand.CurrentRound.LastRaise;
-                result.NextPlayerInvest = GameCenter.FindRoomsByCriteria(-1, player).ElementAt(0).CurrentHand.CurrentRound.LiveBets[player];
-                result.Success = true;
-            }
-            catch (UserNotFoundException e)
-            {
-                result.Success = false;
-                result.ErrorMessage = e.Message;
-            }
-            catch (PlayerNotFoundException e)
-            {
-                result.Success = false;
-                result.ErrorMessage = e.Message;
-            }
-            catch (ArgumentException e)
-            {
-                result.Success = false;
-                result.ErrorMessage = e.Message;
-            }
-
-            return result;
-        }
-
+        #region Methods
         public KeepAliveResult KeepAlive(KeepAliveRequest request)
         {
             throw new NotImplementedException();
@@ -96,5 +47,6 @@ namespace Poker.BE.Service.Services
             UserManager.Clear();
             GameCenter.ClearAll();
         }
+        #endregion
     }
 }

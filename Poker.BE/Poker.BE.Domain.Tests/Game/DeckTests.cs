@@ -47,20 +47,20 @@ namespace Poker.BE.Domain.Game.Tests
         {
             //Arrange
             var expected = new Card[] {
-                // Clubs
-                new Card(0, Card.Suit.Clubs, Card.Value.Ace),
-                new Card(1, Card.Suit.Clubs, Card.Value.Two),
-                new Card(2, Card.Suit.Clubs, Card.Value.Three),
-                new Card(3, Card.Suit.Clubs, Card.Value.Four),
-                new Card(4, Card.Suit.Clubs, Card.Value.Five),
-                new Card(5, Card.Suit.Clubs, Card.Value.Six),
-                new Card(6, Card.Suit.Clubs, Card.Value.Seven),
-                new Card(7, Card.Suit.Clubs, Card.Value.Eight),
-                new Card(8, Card.Suit.Clubs, Card.Value.Nine),
-                new Card(9, Card.Suit.Clubs, Card.Value.Ten),
-                new Card(10, Card.Suit.Clubs, Card.Value.Jack),
-                new Card(11, Card.Suit.Clubs, Card.Value.Queen),
-                new Card(12, Card.Suit.Clubs, Card.Value.King),
+                // Hearts
+                new Card(0, Card.Suit.Hearts, Card.Value.Ace),
+                new Card(1, Card.Suit.Hearts, Card.Value.Two),
+                new Card(2, Card.Suit.Hearts, Card.Value.Three),
+                new Card(3, Card.Suit.Hearts, Card.Value.Four),
+                new Card(4, Card.Suit.Hearts, Card.Value.Five),
+                new Card(5, Card.Suit.Hearts, Card.Value.Six),
+                new Card(6, Card.Suit.Hearts, Card.Value.Seven),
+                new Card(7, Card.Suit.Hearts, Card.Value.Eight),
+                new Card(8, Card.Suit.Hearts, Card.Value.Nine),
+                new Card(9, Card.Suit.Hearts, Card.Value.Ten),
+                new Card(10, Card.Suit.Hearts, Card.Value.Jack),
+                new Card(11, Card.Suit.Hearts, Card.Value.Queen),
+                new Card(12, Card.Suit.Hearts, Card.Value.King),
 
                 // Diamonds
                 new Card(13, Card.Suit.Diamonds, Card.Value.Ace),
@@ -77,20 +77,20 @@ namespace Poker.BE.Domain.Game.Tests
                 new Card(24, Card.Suit.Diamonds, Card.Value.Queen),
                 new Card(25, Card.Suit.Diamonds, Card.Value.King),
 
-                // Hearts
-                new Card(26, Card.Suit.Hearts, Card.Value.Ace),
-                new Card(27, Card.Suit.Hearts, Card.Value.Two),
-                new Card(28, Card.Suit.Hearts, Card.Value.Three),
-                new Card(29, Card.Suit.Hearts, Card.Value.Four),
-                new Card(30, Card.Suit.Hearts, Card.Value.Five),
-                new Card(31, Card.Suit.Hearts, Card.Value.Six),
-                new Card(32, Card.Suit.Hearts, Card.Value.Seven),
-                new Card(33, Card.Suit.Hearts, Card.Value.Eight),
-                new Card(34, Card.Suit.Hearts, Card.Value.Nine),
-                new Card(35, Card.Suit.Hearts, Card.Value.Ten),
-                new Card(36, Card.Suit.Hearts, Card.Value.Jack),
-                new Card(37, Card.Suit.Hearts, Card.Value.Queen),
-                new Card(38, Card.Suit.Hearts, Card.Value.King),
+                // Clubs
+                new Card(26, Card.Suit.Clubs, Card.Value.Ace),
+                new Card(27, Card.Suit.Clubs, Card.Value.Two),
+                new Card(28, Card.Suit.Clubs, Card.Value.Three),
+                new Card(29, Card.Suit.Clubs, Card.Value.Four),
+                new Card(30, Card.Suit.Clubs, Card.Value.Five),
+                new Card(31, Card.Suit.Clubs, Card.Value.Six),
+                new Card(32, Card.Suit.Clubs, Card.Value.Seven),
+                new Card(33, Card.Suit.Clubs, Card.Value.Eight),
+                new Card(34, Card.Suit.Clubs, Card.Value.Nine),
+                new Card(35, Card.Suit.Clubs, Card.Value.Ten),
+                new Card(36, Card.Suit.Clubs, Card.Value.Jack),
+                new Card(37, Card.Suit.Clubs, Card.Value.Queen),
+                new Card(38, Card.Suit.Clubs, Card.Value.King),
 
                 // Spades
                 new Card(39, Card.Suit.Spades, Card.Value.Ace),
