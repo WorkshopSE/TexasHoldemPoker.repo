@@ -176,22 +176,28 @@ namespace Poker.BE.Domain.Security
 			return true;
 		}
 
-		public bool EditProfile(string oldUserName, string newUserName, string newPassword, string newAvatar)
+		public string EditProfile(string oldUserName, string newUserName, string newPassword, byte[] newAvatar)
 		{
 			//Check user's existence
 			if (!IsUserExists(oldUserName))
 			{
-				return false;
+				throw new UserNotFoundException("User not found, please try again");
 			}
 			User userToUpdate = _usersCache[oldUserName];
 			RemoveUser(oldUserName);
 
 			// New user-name and password validation
 			string notValidReason;
-			if (IsUserExists(newUserName) || !IsPasswordValid(newPassword, out notValidReason))
+			if (IsUserExists(newUserName))
 			{
 				_usersCache.Add(oldUserName, userToUpdate);
-				return false;
+				throw new UserNameTakenException("new User name taken, please try again");
+			}
+
+			if (!IsPasswordValid(newPassword, out notValidReason))
+			{
+				_usersCache.Add(oldUserName, userToUpdate);
+				throw new InvalidPasswordException("invalid password , please try again");
 			}
 
 			userToUpdate.UserName = newUserName;
@@ -199,7 +205,23 @@ namespace Poker.BE.Domain.Security
 			userToUpdate.Avatar = newAvatar;
 
 			_usersCache.Add(newUserName, userToUpdate);
-			return true;
+			return newUserName;
+		}
+
+		/// <summary>
+		/// returns all profile details for a user given his user name
+		/// </summary>
+		public string GetProfile(string userName, out string Password, out byte[] Avatar)
+		{
+			//Check user's existence
+			if (!IsUserExists(userName))
+			{
+				throw new UserNotFoundException("User not found, please try again");
+			}
+			User user = _usersCache[userName];
+			Password = user.Password;
+			Avatar = user.Avatar;
+			return userName;
 		}
 
 		/// <summary>
