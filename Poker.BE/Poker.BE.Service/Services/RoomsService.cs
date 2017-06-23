@@ -144,7 +144,7 @@ namespace Poker.BE.Service.Services
         }
         public void Clear()
         {
-
+            _cache.Clear();
         }
         #endregion
 

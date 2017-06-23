@@ -33,21 +33,18 @@ namespace Poker.BE.Service.Services
         public LoginResult Login(LoginRequest request)
         {
             var result = new LoginResult();
+
             try
             {
                 result.User = UserManager.LogIn(request.UserName, request.Password).UserName;
                 result.Success = true;
             }
-            catch (UserNotFoundException e)
+            catch (PokerException e)
             {
                 result.Success = false;
                 result.ErrorMessage = e.Message;
             }
-            catch (IncorrectPasswordException e)
-            {
-                result.Success = false;
-                result.ErrorMessage = e.Message;
-            }
+
             return result;
         }
 
@@ -56,22 +53,24 @@ namespace Poker.BE.Service.Services
         public LogoutResult Logout(LogoutRequest request)
         {
             var result = new LogoutResult();
-
-            User user;
-            if (!Users.TryGetValue(request.User, out user))
-            {
-                result.Success = false;
-                result.ErrorMessage = "User ID not found";
-                return result;
-            }
-
             try
             {
+                User user;
+                while (!Users.TryGetValue(request.User, out user))
+                {
+                    if (_cache.Refresh())
+                    {
+                        continue;
+                    }
+
+                    throw new UserNotFoundException(string.Format("User ID: {0} Name: {1} not found", user.GetHashCode(), user.UserName));
+                }
+
                 result.Output = UserManager.LogOut(user);
                 result.User = user.UserName;
                 result.Success = true;
             }
-            catch (UserNotFoundException e)
+            catch (PokerException e)
             {
                 result.Success = false;
                 result.ErrorMessage = e.Message;
@@ -91,22 +90,7 @@ namespace Poker.BE.Service.Services
                 Users.Add(user.UserName, user);
                 result.Success = true;
             }
-            catch (UserNameTakenException e)
-            {
-                result.Success = false;
-                result.ErrorMessage = e.Message;
-            }
-            catch (IncorrectPasswordException e)
-            {
-                result.Success = false;
-                result.ErrorMessage = e.Message;
-            }
-            catch (InvalidPasswordException e)
-            {
-                result.Success = false;
-                result.ErrorMessage = e.Message;
-            }
-            catch (InvalidDepositException e)
+            catch (PokerException e)
             {
                 result.Success = false;
                 result.ErrorMessage = e.Message;

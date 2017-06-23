@@ -51,7 +51,6 @@ namespace Poker.BE.API.Controllers.Tests
         {
             ((RoomsService)_ctrl.Service).Clear();
             _ctrl = null;
-            _userManager.Users.Remove(_user.UserName);
         }
         #endregion
 
@@ -102,7 +101,8 @@ namespace Poker.BE.API.Controllers.Tests
             Player creator;
             var room = _gameCenter.CreateNewRoom(_level, new NoLimitHoldem(), out creator);
 
-            EnterRoomRequest request = new EnterRoomRequest() {
+            EnterRoomRequest request = new EnterRoomRequest()
+            {
                 Room = room.GetHashCode(),
                 User = _user.UserName
             };
@@ -113,6 +113,7 @@ namespace Poker.BE.API.Controllers.Tests
             var hasContent = act.TryGetContentValue(out actContent);
 
             //Assert
+            TestContext.WriteLine("error message: '{0}'", (actContent != null && actContent.ErrorMessage != "") ? actContent.ErrorMessage : "null");
             Assert.AreEqual(HttpStatusCode.OK, act.StatusCode, "status code");
             Assert.IsTrue(hasContent, "has content");
             Assert.AreEqual("", actContent.ErrorMessage, "error message");

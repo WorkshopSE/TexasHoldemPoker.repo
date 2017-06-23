@@ -64,19 +64,6 @@ namespace Poker.BE.Service.Modules.Caches
 
 		public static CommonCache Instance { get { return _instance; } }
 
-        //private bool AreEquals<T>(ICollection<T> col1, ICollection<T> col2)
-        //{
-        //    var ans = true;
-
-        //    foreach (var item in col1)
-        //    {
-        //        ans &= col2.Contains(item);
-        //        col2.SequenceEqual()
-        //    }
-
-        //    return ans;
-        //}
-
         private bool UpdateEnumerables<S, D>(IEnumerable<S> source, IEnumerable<D> destination)
         {
             var isUpdated = false;
@@ -90,11 +77,11 @@ namespace Poker.BE.Service.Modules.Caches
              * Note: checking if cache has changed after refresh
              *  
              *  Algorithm:
-             *      checking if the sequence had changed (by sequenceEqual
+             *      checking if the sequence had changed (by sequenceEqual).
+             *      if it had changed - an update occur. and isChanged = true;
              *      
              *  Author:
              *      Idan Izicovich.
-             *      TODO: add case the before == after -> check the equality of each element.
              * */
             bool isChanged = false;
 
@@ -132,8 +119,12 @@ namespace Poker.BE.Service.Modules.Caches
 
         public void Clear()
         {
-            // TODO call Clear() of every collection / dictionary
-            throw new NotImplementedException();
+            GameCenter.ClearAll();
+            UserManager.Clear();
+            Leagues.Clear();
+            Players.Clear();
+            Rooms.Clear();
+            Users.Clear();
         }
         #endregion
 
