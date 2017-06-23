@@ -95,7 +95,6 @@ namespace Poker.BE.API.Controllers.Tests
 
         }
 
-        //UNDONE: @idanizi - taking this from gal.
         [TestMethod()]
         public void EnterRoomTest()
         {
@@ -133,7 +132,8 @@ namespace Poker.BE.API.Controllers.Tests
 
             room = _user.CreateNewRoom(_level, _config, out player);
 
-            JoinNextHandRequest request = new JoinNextHandRequest() {
+            JoinNextHandRequest request = new JoinNextHandRequest()
+            {
                 buyIn = room.Preferences.BuyInCost,
                 Player = player.GetHashCode(),
                 seatIndex = 1,
@@ -152,5 +152,19 @@ namespace Poker.BE.API.Controllers.Tests
             Assert.AreEqual("", actContent.ErrorMessage, "error message");
             Assert.AreEqual(true, actContent.Success, "success");
         }
+
+        //[TestMethod()]
+        //public void StandUpToSpactateTest()
+        //{
+        //    // TODO
+        //    throw new NotImplementedException();
+        //}
+
+        //[TestMethod()]
+        //public void LeaveRoomTest()
+        //{
+        //    // TODO
+        //    throw new NotImplementedException();
+        //}
     }
 }

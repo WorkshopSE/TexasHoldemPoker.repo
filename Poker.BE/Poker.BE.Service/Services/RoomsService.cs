@@ -49,6 +49,10 @@ namespace Poker.BE.Service.Services
         }
         #endregion
 
+        #region Private Functions
+
+        #endregion
+
         #region Methods
         public CreateNewRoomResult CreateNewRoom(CreateNewRoomRequest request)
         {
@@ -150,6 +154,8 @@ namespace Poker.BE.Service.Services
                 }
 
                 user.JoinNextHand(player, request.seatIndex, request.buyIn);
+                result.UserBank = user.UserBank.Money;
+                
                 result.Success = true;
             }
             catch (PokerException e)
@@ -163,9 +169,49 @@ namespace Poker.BE.Service.Services
 
         public StandUpToSpactateResult StandUpToSpactate(StandUpToSpactateRequest request)
         {
+            var result = new StandUpToSpactateResult();
+
+            try
+            {
+                var user = default(User);
+                while (!Users.TryGetValue(request.User, out user))
+                {
+                    if (_cache.Refresh()) continue;
+
+                    throw new UserNotFoundException(string.Format("cannot find user name: {0}, please login again.", request.User));
+                }
+
+                Player player = null;
+                while (!Players.TryGetValue(request.Player, out player))
+                {
+                    if (_cache.Refresh()) continue;
+
+                    throw new PlayerNotFoundException(string.Format("cannot find player id: {0}, please re-enter the room", request.Player));
+                }
+
+                result.RemainingMoney = user.StandUpToSpactate(player);
+                result.UserBank = user.UserBank.Money;
+
+                //TODO - idan - check JSON of user statistics
+                result.UserStatistics = user.UserStatistics;
+                result.Success = true;
+            }
+            catch (PokerException e)
+            {
+                result.Success = false;
+                result.ErrorMessage = e.Message;
+                Logger.Error(e, "At " + GetType().Name, e.Source);
+            }
+
+            return result;
+        }
+
+        public LeaveRoomResult LeaveRoom(LeaveRoomRequest request)
+        {
             // TODO
             throw new NotImplementedException();
         }
+
         public void Clear()
         {
             _cache.Clear();

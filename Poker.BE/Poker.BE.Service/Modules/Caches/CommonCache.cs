@@ -119,6 +119,19 @@ namespace Poker.BE.Service.Modules.Caches
             return isChanged;
         }
 
+        public TValue RefreshAndGet<TKey, TValue>(IDictionary<TKey, TValue> dictionary, TKey key, Exception e)
+        {
+            var resultObject = default(TValue);
+            while (!dictionary.TryGetValue(key, out resultObject))
+            {
+                if (Refresh()) continue;
+
+                throw e;
+            }
+
+            return resultObject;
+        }
+
         public void Clear()
         {
             GameCenter.ClearAll();

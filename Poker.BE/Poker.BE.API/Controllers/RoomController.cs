@@ -82,6 +82,45 @@ namespace Poker.BE.API.Controllers
 
             return Request.CreateResponse(HttpStatusCode.OK, result);
         }
+
+        [HttpPost]
+        public HttpResponseMessage StandUpToSpactate(StandUpToSpactateRequest request)
+        {
+            var result = new StandUpToSpactateResult();
+
+            try
+            {
+                service.StandUpToSpactate(request);
+            }
+            catch (Exception e)
+            {
+                result.ErrorMessage = e.Message;
+                result.Success = false;
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, result);
+            }
+
+            return Request.CreateResponse(HttpStatusCode.OK, result);
+        }
+
+
+        [HttpPost]
+        public HttpResponseMessage LeaveRoom(LeaveRoomRequest request)
+        {
+            var result = new LeaveRoomResult();
+
+            try
+            {
+                service.LeaveRoom(request);
+            }
+            catch (Exception e)
+            {
+                result.ErrorMessage = e.Message;
+                result.Success = false;
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, result);
+            }
+
+            return Request.CreateResponse(HttpStatusCode.OK, result);
+        }
 		#endregion
 	}
 }
