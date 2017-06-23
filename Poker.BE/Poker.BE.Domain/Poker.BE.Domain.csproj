@@ -48,7 +48,6 @@
     <Compile Include="Core\User.cs" />
     <Compile Include="Game\Card.cs" />
     <Compile Include="Game\Chair.cs" />
-    <Compile Include="Game\CommunityCard.cs" />
     <Compile Include="Game\Deck.cs" />
     <Compile Include="Game\GamePreferences.cs" />
     <Compile Include="Game\GamePreferencesDecorator.cs" />
@@ -60,7 +59,6 @@
     <Compile Include="Game\Player.cs" />
     <Compile Include="Game\Pot.cs" />
     <Compile Include="Game\PotLimitHoldem.cs" />
-    <Compile Include="Game\PrivateCard.cs" />
     <Compile Include="Game\Room.cs" />
     <Compile Include="Game\Round.cs" />
     <Compile Include="Game\Turn.cs" />

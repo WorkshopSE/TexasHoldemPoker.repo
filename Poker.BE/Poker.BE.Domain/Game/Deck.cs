@@ -63,7 +63,7 @@ namespace Poker.BE.Domain.Game
              {
                  for (int currNumber = 1; currNumber <= Card.NVALUE; currNumber++)
                  {
-                     result[index] = new Card(currSuit, currNumber);
+                     result[index] = new Card(index, currSuit, currNumber);
                      index++;
                  }
 

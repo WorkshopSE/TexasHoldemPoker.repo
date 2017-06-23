@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace Poker.BE.Service.Services
 {
-    public class PokerGamePlayService : IServices.IPokerGamePlayService
+    public class KeepAliveService : IServices.IKeepAliveService
     {
         #region Fields
         private CommonCache _cache;
@@ -27,7 +27,7 @@ namespace Poker.BE.Service.Services
         #endregion
 
         #region Constructors
-        public PokerGamePlayService()
+        public KeepAliveService()
         {
             _cache = CommonCache.Instance;
             //UserManager = UserManager.Instance;
@@ -36,8 +36,8 @@ namespace Poker.BE.Service.Services
         #endregion
 
         public PlayMoveResult PlayMove(PlayMoveRequest request)
-		{
-			var result = new PlayMoveResult();
+        {
+            var result = new PlayMoveResult();
             try
             {
                 User user = UserManager.Users[request.User];
@@ -83,7 +83,12 @@ namespace Poker.BE.Service.Services
             }
 
             return result;
-		}
+        }
+
+        public KeepAliveResult KeepAlive(KeepAliveRequest request)
+        {
+            throw new NotImplementedException();
+        }
 
         public void Clear()
         {

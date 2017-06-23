@@ -86,6 +86,7 @@ namespace Poker.BE.Service.Services
 				Players.Add(creator.GetHashCode(), creator);
 				result.Player = creator.GetHashCode();
 				result.Room = room.GetHashCode();
+                result.RoomName = room.Preferences.Name;
 				result.Success = true;
 			}
 			catch (LevelNotFoundException e)

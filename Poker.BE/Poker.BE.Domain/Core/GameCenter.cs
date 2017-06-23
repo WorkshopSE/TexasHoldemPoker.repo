@@ -65,8 +65,6 @@ namespace Poker.BE.Domain.Core
             playersManager = new Dictionary<Player, Room>();
             roomsManager = new Dictionary<Room, League>();
             leagues = new List<League>();
-
-            //TODO - get/create StatisticsManager... how?
         }
 
 

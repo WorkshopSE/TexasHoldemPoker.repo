@@ -43,6 +43,7 @@ namespace Poker.BE.Domain.Game
         #endregion
 
         #region Properties
+        public int Index { get; }
         public Suit CardSuit { get; }
         public Value CardValue { get; }
         public int Number { get; private set; }
@@ -52,16 +53,18 @@ namespace Poker.BE.Domain.Game
         #endregion
 
         #region Constructors
-        public Card(Suit suit, Value val)
+        public Card(int index, Suit suit, Value val)
         {
+            Index = index;
             CardSuit = suit;
             CardValue = val;
             Number = ValueToNumber(val);
             CardState = State.FaceUp;
         }
 
-        public Card(Suit suit, int num)
+        public Card(int index, Suit suit, int num)
         {
+            Index = index;
             CardSuit = suit;
             Number = num;
             CardValue = NumberToValue(Number);

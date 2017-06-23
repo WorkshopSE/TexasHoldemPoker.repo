@@ -49,7 +49,7 @@ namespace Poker.BE.Domain.Game
             {
                 PlayersBets.Add(player, 0);
             }
-            communityCards = new CommunityCard[NUM_OF_COMMUNITY_CARDS];
+            communityCards = new Card[NUM_OF_COMMUNITY_CARDS];
             pot = new Pot();
             this.dealer = dealer;
             CurrentRound = new Round(dealer, activePlayers, this.pot, true, this.preferences);
