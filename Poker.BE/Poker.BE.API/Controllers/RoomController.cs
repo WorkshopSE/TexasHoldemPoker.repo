@@ -40,7 +40,7 @@ namespace Poker.BE.API.Controllers
 			catch (Exception e)
 			{
 				result.ErrorMessage = e.Message;
-                result.Success = false;
+				result.Success = false;
 				return Request.CreateResponse(HttpStatusCode.InternalServerError, result);
 			}
 
@@ -58,7 +58,22 @@ namespace Poker.BE.API.Controllers
 			catch (Exception e)
 			{
 				result.ErrorMessage = e.Message;
-                result.Success = false;
+				result.Success = false;
+				return Request.CreateResponse(HttpStatusCode.InternalServerError, result);
+			}
+			return Request.CreateResponse(HttpStatusCode.OK, result);
+		}
+		public HttpResponseMessage JoinNextHand(JoinNextHandRequest request)
+		{
+			var result = default(JoinNextHandResult);
+			try
+			{
+				result = service.JoinNextHand(request);
+			}
+			catch (Exception e)
+			{
+				result.ErrorMessage = e.Message;
+				result.Success = false;
 				return Request.CreateResponse(HttpStatusCode.InternalServerError, result);
 			}
 			return Request.CreateResponse(HttpStatusCode.OK, result);

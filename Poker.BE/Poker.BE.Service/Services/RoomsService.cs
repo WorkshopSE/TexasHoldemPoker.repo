@@ -11,14 +11,15 @@ using Poker.BE.CrossUtility.Exceptions;
 
 namespace Poker.BE.Service.Services
 {
-    /// <summary>
-    /// UCC03 Rooms Management
-    /// </summary>
-    /// <see cref="https://docs.google.com/document/d/1OTee6BGDWK2usL53jdoeBOI-1Jh8wyNejbQ0ZroUhcA/edit#heading=h.286w5j2ewu5c"/>
-    public class RoomsService : IServices.IRoomsService
+	/// <summary>
+	/// UCC03 Rooms Management
+	/// </summary>
+	/// <see cref="https://docs.google.com/document/d/1OTee6BGDWK2usL53jdoeBOI-1Jh8wyNejbQ0ZroUhcA/edit#heading=h.286w5j2ewu5c"/>
+	public class RoomsService : IServices.IRoomsService
 	{
 		#region Fields
 		public UserManager userManager;
+		public GameCenter gameCenter;
 		#endregion
 
 		#region Properties
@@ -44,6 +45,7 @@ namespace Poker.BE.Service.Services
 		public RoomsService()
 		{
 			userManager = UserManager.Instance;
+			gameCenter = GameCenter.Instance;
 			Players = new Dictionary<int, Player>();
 			Rooms = new Dictionary<int, Room>();
 			Users = new Dictionary<string, User>();
@@ -74,6 +76,7 @@ namespace Poker.BE.Service.Services
 				{
 					result.Success = false;
 					result.ErrorMessage = e.Message;
+					Logger.Error(e, "At " + GetType().Name, e.Source);
 					return result;
 				}
 
@@ -92,6 +95,7 @@ namespace Poker.BE.Service.Services
 			{
 				result.Success = false;
 				result.ErrorMessage = e.Message;
+				Logger.Error(e, "At " + GetType().Name, e.Source);
 			}
 			return result;
 		}
@@ -99,33 +103,55 @@ namespace Poker.BE.Service.Services
 		public EnterRoomResult EnterRoom(EnterRoomRequest request)
 		{
 			var result = new EnterRoomResult();
-
+			Room room;
 			try
 			{
-				Room room;
 				if (!Rooms.TryGetValue(request.Room, out room))
 				{
-					throw new RoomNotFoundException(string.Format("Requested room ID {0} not found", request.Room));
+					try
+					{
+						var roomMatchingHash = from existingRoom in gameCenter.Rooms
+											   where existingRoom.GetHashCode() == request.Room
+											   select existingRoom;
+						if (roomMatchingHash.ToList().Count != 1)
+						{
+							throw new RoomNotFoundException("Room was not found, can't create room");
+						}
+						room = roomMatchingHash.First();
+					}
+					catch (RoomNotFoundException e)
+					{
+						result.Success = false;
+						result.ErrorMessage = e.Message;
+						Logger.Error(e, "At " + GetType().Name, e.Source);
+					}
 				}
 
 				User user;
 				if (!Users.TryGetValue(request.User, out user))
 				{
-					throw new UserNotFoundException(string.Format("User ID {0} not found", request.User));
+					try
+					{
+						var userMatchingHash = from existingUser in userManager.Users
+											   where existingUser.Value.UserName == request.User
+											   select existingUser;
+						if (userMatchingHash.ToList().Count != 1)
+						{
+							throw new UserNotFoundException("User was not found, can't Enter room");
+						}
+						user = userMatchingHash.First().Value;
+					}
+					catch (UserNotFoundException e)
+					{
+						result.Success = false;
+						result.ErrorMessage = e.Message;
+						Logger.Error(e, "At " + GetType().Name, e.Source);
+					}
 				}
 
 				result.Player = user.EnterRoom(room).GetHashCode();
 			}
-			catch (RoomNotFoundException e)
-			{
-				// TODO
-				throw e;
-			}
-			catch (UserNotFoundException e)
-			{
-				// TODO
-				throw e;
-			}
+
 			catch (PokerException e)
 			{
 				result.Success = false;
@@ -138,8 +164,58 @@ namespace Poker.BE.Service.Services
 
 		public JoinNextHandResult JoinNextHand(JoinNextHandRequest request)
 		{
-			// TODO
-			throw new NotImplementedException();
+			var result = new JoinNextHandResult();
+			Player player;
+			if (!Players.TryGetValue(request.Player, out player))
+			{
+				try
+				{
+					var playerMatchingHash = from existingPlayer in gameCenter.Players
+											 where existingPlayer.GetHashCode() == request.Player
+											 select existingPlayer;
+					if (playerMatchingHash.ToList().Count != 1)
+					{
+						throw new PlayerNotFoundException("Player was not found, can't join next hand");
+					}
+					player = playerMatchingHash.First();
+				}
+				catch (PlayerNotFoundException e)
+				{
+					result.Success = false;
+					result.ErrorMessage = e.Message;
+					Logger.Error(e, "At " + GetType().Name, e.Source);
+				}
+			}
+			try
+			{
+				gameCenter.JoinNextHand(player, request.seatIndex, request.buyIn);
+				result.Success = true;
+			}
+			catch (RoomNotFoundException e)
+			{
+				result.Success = false;
+				result.ErrorMessage = e.Message;
+				Logger.Error(e, "At " + GetType().Name, e.Source);
+			}
+			catch (PlayerModeException e)
+			{
+				result.Success = false;
+				result.ErrorMessage = e.Message;
+				Logger.Error(e, "At " + GetType().Name, e.Source);
+			}
+			catch (RoomRulesException e)
+			{
+				result.Success = false;
+				result.ErrorMessage = e.Message;
+				Logger.Error(e, "At " + GetType().Name, e.Source);
+			}
+			catch (NotEnoughMoneyException e)
+			{
+				result.Success = false;
+				result.ErrorMessage = e.Message;
+				Logger.Error(e, "At " + GetType().Name, e.Source);
+			}
+			return result;
 		}
 
 		public StandUpToSpactateResult StandUpToSpactate(StandUpToSpactateRequest request)
