@@ -113,14 +113,6 @@ namespace Poker.BE.Service.Services
 
                 result.Player = user.EnterRoom(room).GetHashCode();
             }
-            //catch (RoomNotFoundException e)
-            //{
-            //    // TODO recover option?
-            //}
-            //catch (UserNotFoundException e)
-            //{
-            //    // TODO recover option?
-            //}
             catch (PokerException e)
             {
                 result.Success = false;
@@ -133,8 +125,33 @@ namespace Poker.BE.Service.Services
 
         public JoinNextHandResult JoinNextHand(JoinNextHandRequest request)
         {
-            // TODO
-            throw new NotImplementedException();
+            var result = new JoinNextHandResult();
+
+            try
+            {
+
+                Player player;
+                while (!Players.TryGetValue(request.Player, out player))
+                {
+                    if (_cache.Refresh())
+                    {
+                        continue;
+                    }
+
+                    throw new PlayerNotFoundException(string.Format("Cannot find player id: {0}, please exit and re-enter the room.", request.Player));
+                }
+
+                // UNDONE - Idan - continue from here.
+                user.JoinNextHand(player, request.seatIndex, request.buyIn);
+                result.Success = true;
+            }
+            catch (PokerException e)
+            {
+                result.Success = false;
+                result.ErrorMessage = e.Message;
+                Logger.Error(e, "At " + GetType().Name, e.Source);
+            }
+            return result;
         }
 
         public StandUpToSpactateResult StandUpToSpactate(StandUpToSpactateRequest request)

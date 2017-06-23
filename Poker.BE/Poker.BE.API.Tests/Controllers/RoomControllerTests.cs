@@ -121,5 +121,12 @@ namespace Poker.BE.API.Controllers.Tests
             Assert.AreNotEqual(default(int?), actContent.Player, "player not default value");
             Assert.IsNotNull(actContent.Player, "player not null");
         }
+
+        [TestMethod()]
+        public void JoinNextHandTest()
+        {
+            // TODO
+            throw new NotImplementedException();
+        }
     }
 }

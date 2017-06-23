@@ -63,6 +63,25 @@ namespace Poker.BE.API.Controllers
 			}
 			return Request.CreateResponse(HttpStatusCode.OK, result);
 		}
+
+        [HttpPost]
+        public HttpResponseMessage JoinNextHand(JoinNextHandRequest request)
+        {
+            var result = new JoinNextHandResult();
+
+            try
+            {
+                result = service.JoinNextHand(request);
+            }
+            catch (Exception e)
+            {
+                result.ErrorMessage = e.Message;
+                result.Success = false;
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, result);
+            }
+
+            return Request.CreateResponse(HttpStatusCode.OK, result);
+        }
 		#endregion
 	}
 }
