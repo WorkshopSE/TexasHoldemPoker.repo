@@ -141,7 +141,14 @@ namespace Poker.BE.Service.Services
                     throw new PlayerNotFoundException(string.Format("Cannot find player id: {0}, please exit and re-enter the room.", request.Player));
                 }
 
-                // UNDONE - Idan - continue from here.
+                User user;
+                while (!Users.TryGetValue(request.User, out user))
+                {
+                    if (_cache.Refresh()) { continue; }
+
+                    throw new UserNotFoundException(string.Format("Cannot find user name: {0}, please login to the server again.", request.User));
+                }
+
                 user.JoinNextHand(player, request.seatIndex, request.buyIn);
                 result.Success = true;
             }

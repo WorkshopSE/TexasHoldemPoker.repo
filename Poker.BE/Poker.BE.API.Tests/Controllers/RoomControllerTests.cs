@@ -28,6 +28,7 @@ namespace Poker.BE.API.Controllers.Tests
         private GameCenter _gameCenter;
         private User _user;
         private int _level;
+        private NoLimitHoldem _config;
 
         public TestContext TestContext { get; set; }
 
@@ -44,6 +45,7 @@ namespace Poker.BE.API.Controllers.Tests
                 Request = new System.Net.Http.HttpRequestMessage(),
                 Configuration = new System.Web.Http.HttpConfiguration()
             };
+            _config = new NoLimitHoldem();
         }
 
         [TestCleanup]
@@ -125,8 +127,30 @@ namespace Poker.BE.API.Controllers.Tests
         [TestMethod()]
         public void JoinNextHandTest()
         {
-            // TODO
-            throw new NotImplementedException();
+            //Arrange
+            var room = default(Room);
+            var player = default(Player);
+
+            room = _user.CreateNewRoom(_level, _config, out player);
+
+            JoinNextHandRequest request = new JoinNextHandRequest() {
+                buyIn = room.Preferences.BuyInCost,
+                Player = player.GetHashCode(),
+                seatIndex = 1,
+                User = _user.UserName,
+            };
+
+            //Act
+            var act = _ctrl.JoinNextHand(request);
+            JoinNextHandResult actContent;
+            var hasContent = act.TryGetContentValue(out actContent);
+
+            //Assert
+            TestContext.WriteLine("error message: '{0}'", (actContent != null && actContent.ErrorMessage != "") ? actContent.ErrorMessage : "null");
+            Assert.AreEqual(HttpStatusCode.OK, act.StatusCode, "status code");
+            Assert.IsTrue(hasContent, "has contact");
+            Assert.AreEqual("", actContent.ErrorMessage, "error message");
+            Assert.AreEqual(true, actContent.Success, "success");
         }
     }
 }
