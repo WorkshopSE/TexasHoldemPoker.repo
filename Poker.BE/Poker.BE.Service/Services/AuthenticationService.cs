@@ -5,6 +5,7 @@ using Poker.BE.Domain.Core;
 using Poker.BE.Domain.Security;
 using Poker.BE.CrossUtility.Exceptions;
 using Poker.BE.Service.Modules.Caches;
+using Poker.BE.CrossUtility.Loggers;
 
 namespace Poker.BE.Service.Services
 {
@@ -17,15 +18,14 @@ namespace Poker.BE.Service.Services
         #region properties
         public IDictionary<string, User> Users { get { return _cache.Users; } }
         public UserManager UserManager { get { return _cache.UserManager; } }
-
+        public ILogger Logger { get { return CrossUtility.Loggers.Logger.Instance; } }
+        // TODO: idan - add logger calls.
         #endregion
 
         #region Constructors
         public AuthenticationService()
         {
             _cache = CommonCache.Instance;
-            //UserManager = UserManager.Instance;
-            //Users = new Dictionary<string, User>();
         }
         #endregion
 
@@ -33,21 +33,18 @@ namespace Poker.BE.Service.Services
         public LoginResult Login(LoginRequest request)
         {
             var result = new LoginResult();
+
             try
             {
                 result.User = UserManager.LogIn(request.UserName, request.Password).UserName;
                 result.Success = true;
             }
-            catch (UserNotFoundException e)
+            catch (PokerException e)
             {
                 result.Success = false;
                 result.ErrorMessage = e.Message;
             }
-            catch (IncorrectPasswordException e)
-            {
-                result.Success = false;
-                result.ErrorMessage = e.Message;
-            }
+
             return result;
         }
 
@@ -56,22 +53,24 @@ namespace Poker.BE.Service.Services
         public LogoutResult Logout(LogoutRequest request)
         {
             var result = new LogoutResult();
-
-            User user;
-            if (!Users.TryGetValue(request.User, out user))
-            {
-                result.Success = false;
-                result.ErrorMessage = "User ID not found";
-                return result;
-            }
-
             try
             {
+                User user;
+                while (!Users.TryGetValue(request.User, out user))
+                {
+                    if (_cache.Refresh())
+                    {
+                        continue;
+                    }
+
+                    throw new UserNotFoundException(string.Format("User ID: {0} Name: {1} not found", user.GetHashCode(), user.UserName));
+                }
+
                 result.Output = UserManager.LogOut(user);
                 result.User = user.UserName;
                 result.Success = true;
             }
-            catch (UserNotFoundException e)
+            catch (PokerException e)
             {
                 result.Success = false;
                 result.ErrorMessage = e.Message;
@@ -91,22 +90,7 @@ namespace Poker.BE.Service.Services
                 Users.Add(user.UserName, user);
                 result.Success = true;
             }
-            catch (UserNameTakenException e)
-            {
-                result.Success = false;
-                result.ErrorMessage = e.Message;
-            }
-            catch (IncorrectPasswordException e)
-            {
-                result.Success = false;
-                result.ErrorMessage = e.Message;
-            }
-            catch (InvalidPasswordException e)
-            {
-                result.Success = false;
-                result.ErrorMessage = e.Message;
-            }
-            catch (InvalidDepositException e)
+            catch (PokerException e)
             {
                 result.Success = false;
                 result.ErrorMessage = e.Message;

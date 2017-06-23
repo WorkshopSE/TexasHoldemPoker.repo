@@ -8,33 +8,33 @@ using System.Web.Http;
 
 namespace Poker.BE.API.Controllers
 {
-    public class PokerGamePlayController : ApiController
+    public class KeepAliveController : ApiController
     {
         #region Fields
-        private IPokerGamePlayService service;
+        private IKeepAliveService service;
         #endregion
 
         #region Properties
-        public IPokerGamePlayService Service { get { return service; } }
+        public IKeepAliveService Service { get { return service; } }
         #endregion
 
         #region Constructors
-        public PokerGamePlayController()
+        public KeepAliveController()
         {
-            service = new Service.Services.PokerGamePlayService();
+            service = new Service.Services.KeepAliveService();
         }
 
         #endregion
 
         #region Methods
         [HttpPost]
-        public HttpResponseMessage PlayMove(PlayMoveRequest request)
+        public HttpResponseMessage KeepAlive(KeepAliveRequest request)
         {
-            var result = new PlayMoveResult();
+            var result = new KeepAliveResult();
 
             try
             {
-                result = service.PlayMove(request);
+                result = service.KeepAlive(request);
             }
             catch (Exception e)
             {

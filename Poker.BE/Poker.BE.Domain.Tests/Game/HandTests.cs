@@ -27,14 +27,14 @@ namespace Poker.BE.Domain.Game.Tests
             players.Add(player3);
             Hand hand = new Hand(player3, players, new NoLimitHoldem());
 
-            player1.PrivateCards = new Card[2] { new Card(Card.Suit.Hearts, Card.Value.Queen), new Card(Card.Suit.Hearts, Card.Value.Three) };
-            player2.PrivateCards = new Card[2] { new Card(Card.Suit.Hearts, Card.Value.Eight), new Card(Card.Suit.Spades, Card.Value.Nine) };
-            player3.PrivateCards = new Card[2] { new Card(Card.Suit.Spades, Card.Value.Seven), new Card(Card.Suit.Diamonds, Card.Value.Six) };
-            Card card1 = new Card(Card.Suit.Clubs, Card.Value.Eight);
-            Card card2 = new Card(Card.Suit.Hearts, Card.Value.King);
-            Card card3 = new Card(Card.Suit.Hearts, Card.Value.Ten);
-            Card card4 = new Card(Card.Suit.Diamonds, Card.Value.Nine);
-            Card card5 = new Card(Card.Suit.Hearts, Card.Value.Nine);
+            player1.PrivateCards = new Card[2] { new Card(11, Card.Suit.Hearts, Card.Value.Queen), new Card(2, Card.Suit.Hearts, Card.Value.Three) };
+            player2.PrivateCards = new Card[2] { new Card(7, Card.Suit.Hearts, Card.Value.Eight), new Card(47, Card.Suit.Spades, Card.Value.Nine) };
+            player3.PrivateCards = new Card[2] { new Card(45, Card.Suit.Spades, Card.Value.Seven), new Card(18, Card.Suit.Diamonds, Card.Value.Six) };
+            Card card1 = new Card(33, Card.Suit.Clubs, Card.Value.Eight);
+            Card card2 = new Card(12, Card.Suit.Hearts, Card.Value.King);
+            Card card3 = new Card(9, Card.Suit.Hearts, Card.Value.Ten);
+            Card card4 = new Card(21, Card.Suit.Diamonds, Card.Value.Nine);
+            Card card5 = new Card(8, Card.Suit.Hearts, Card.Value.Nine);
             Card[] tableCards = new Card[5] { card1, card2, card3, card4, card5 };
             hand.CommunityCards = tableCards;
 

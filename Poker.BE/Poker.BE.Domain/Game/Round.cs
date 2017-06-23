@@ -23,13 +23,14 @@ namespace Poker.BE.Domain.Game
         #region Fields
         private ICollection<Player> activeUnfoldedPlayers;
         private Turn currentTurn;
-        private Player dealer;
         private Player currentPlayer;
         private Pot currentPot;
         private Dictionary<Player, double> liveBets;
         private double totalRaise;
         private double lastRaise;
         private Player lastPlayerToRaise;
+
+        private Player dealer;
         private bool isPreflop;
         private GamePreferences config;
         #endregion

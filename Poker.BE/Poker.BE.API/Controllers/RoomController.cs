@@ -50,7 +50,7 @@ namespace Poker.BE.API.Controllers
 		[HttpPost]
 		public HttpResponseMessage CreateNewRoom(CreateNewRoomRequest request)
 		{
-			var result = default(CreateNewRoomResult);
+			var result = new CreateNewRoomResult();
 			try
 			{
 				result = service.CreateNewRoom(request);

@@ -109,21 +109,6 @@ namespace Poker.BE.Domain.Core
             return freshPlayer;
         }
 
-        public void ChoosePlayMove(object sender, EventArgs e)
-        {
-            //Note: systactic suger for checking if sender is a player type
-            if ((sender is Player) && (e is PlayMoveEventArgs))
-            {
-                Player player = (Player)sender;
-                PlayMoveEventArgs playMoveEvent = (PlayMoveEventArgs)e;
-
-                if (!Players.Contains(player))
-                    throw new PlayerNotFoundException("This player doesn't belong to this user");
-
-                player.ChoosePlayMove(playMoveEvent.PlayMove, playMoveEvent.AmountToBetOrCall);
-            }
-        }
-
         public Room CreateNewRoom(int level, GamePreferences config, out Player creator)
         {
             var result = gameCenter.CreateNewRoom(level, config, out creator);
@@ -201,6 +186,22 @@ namespace Poker.BE.Domain.Core
         }
         #endregion
 
+        #region UCC06: GamePlay
+        public void ChoosePlayMove(object sender, EventArgs e)
+        {
+            //Note: systactic suger for checking if sender is a player type
+            if ((sender is Player) && (e is PlayMoveEventArgs))
+            {
+                Player player = (Player)sender;
+                PlayMoveEventArgs playMoveEvent = (PlayMoveEventArgs)e;
+
+                if (!Players.Contains(player))
+                    throw new PlayerNotFoundException("This player doesn't belong to this user");
+
+                player.ChoosePlayMove(playMoveEvent.PlayMove, playMoveEvent.AmountToBetOrCall);
+            }
+        }
+        #endregion
 
         #endregion
 
