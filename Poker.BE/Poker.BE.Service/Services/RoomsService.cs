@@ -17,8 +17,8 @@ namespace Poker.BE.Service.Services
     /// </summary>
     /// <see cref="https://docs.google.com/document/d/1OTee6BGDWK2usL53jdoeBOI-1Jh8wyNejbQ0ZroUhcA/edit#heading=h.286w5j2ewu5c"/>
     public class RoomsService : IServices.IRoomsService
-	{
-		#region Fields
+    {
+        #region Fields
         private CommonCache _cache;
         #endregion
 
@@ -36,120 +36,117 @@ namespace Poker.BE.Service.Services
         ///    - this option is blocked.
         /// </remarks>
         public IDictionary<int, Player> Players { get { return _cache.Players; } }
-		public IDictionary<int, Room> Rooms { get { return _cache.Rooms; } }
-		public IDictionary<string, User> Users { get { return _cache.Users; } }
+        public IDictionary<int, Room> Rooms { get { return _cache.Rooms; } }
+        public IDictionary<string, User> Users { get { return _cache.Users; } }
         public UserManager UserManager { get { return UserManager.Instance; } }
         public ILogger Logger { get { return CrossUtility.Loggers.Logger.Instance; } }
-		#endregion
+        #endregion
 
-		#region Constructors
-		public RoomsService()
-		{
+        #region Constructors
+        public RoomsService()
+        {
             _cache = CommonCache.Instance;
-		}
-		#endregion
+        }
+        #endregion
 
-		#region Methods
-		public CreateNewRoomResult CreateNewRoom(CreateNewRoomRequest request)
-		{
-			var result = new CreateNewRoomResult();
-			User user;
-			if (!Users.TryGetValue(request.User, out user))
-			{
-				try
-				{
-					var userMatchingHash = from existingUser in UserManager.Users
-										   where existingUser.Value.UserName == request.User
-										   select existingUser;
-					if (userMatchingHash.ToList().Count != 1)
-					{
-						throw new UserNotFoundException("User was not found, can't create room");
-					}
-					user = userMatchingHash.First().Value;
-				}
+        #region Methods
+        public CreateNewRoomResult CreateNewRoom(CreateNewRoomRequest request)
+        {
+            var result = new CreateNewRoomResult();
+            User user;
+            while (!Users.TryGetValue(request.User, out user))
+            {
+                if (_cache.Refresh())
+                {
+                    continue;
+                }
 
-				catch (UserNotFoundException e)
-				{
-					result.Success = false;
-					result.ErrorMessage = e.Message;
-					return result;
-				}
+                throw new UserNotFoundException("User was not found, can't create room");
+            }
 
-			}
-			try
-			{
-				Player creator;
-				Room room = user.CreateNewRoom(request.Level, new NoLimitHoldem(), out creator);
-				Rooms.Add(room.GetHashCode(), room);
-				Players.Add(creator.GetHashCode(), creator);
-				result.Player = creator.GetHashCode();
-				result.Room = room.GetHashCode();
-				result.Success = true;
-			}
-			catch (LevelNotFoundException e)
-			{
-				result.Success = false;
-				result.ErrorMessage = e.Message;
-			}
-			return result;
-		}
+            try
+            {
+                Player creator;
+                Room room = user.CreateNewRoom(request.Level, new NoLimitHoldem(), out creator);
+                Rooms.Add(room.GetHashCode(), room);
+                Players.Add(creator.GetHashCode(), creator);
+                result.Player = creator.GetHashCode();
+                result.Room = room.GetHashCode();
+                result.Success = true;
+            }
+            catch (PokerException e)
+            {
+                result.Success = false;
+                result.ErrorMessage = e.Message;
+            }
 
-		public EnterRoomResult EnterRoom(EnterRoomRequest request)
-		{
-			var result = new EnterRoomResult();
+            return result;
+        }
 
-			try
-			{
-				Room room;
-				if (!Rooms.TryGetValue(request.Room, out room))
-				{
-					throw new RoomNotFoundException(string.Format("Requested room ID {0} not found", request.Room));
-				}
+        public EnterRoomResult EnterRoom(EnterRoomRequest request)
+        {
+            var result = new EnterRoomResult();
 
-				User user;
-				if (!Users.TryGetValue(request.User, out user))
-				{
-					throw new UserNotFoundException(string.Format("User ID {0} not found", request.User));
-				}
+            try
+            {
+                Room room;
+                while (!Rooms.TryGetValue(request.Room, out room))
+                {
+                    if (_cache.Refresh())
+                    {
+                        continue;
+                    }
 
-				result.Player = user.EnterRoom(room).GetHashCode();
-			}
-			catch (RoomNotFoundException e)
-			{
-				// TODO
-				throw e;
-			}
-			catch (UserNotFoundException e)
-			{
-				// TODO
-				throw e;
-			}
-			catch (PokerException e)
-			{
-				result.Success = false;
-				result.ErrorMessage = e.Message;
-				Logger.Error(e, "At " + GetType().Name, e.Source);
-			}
+                    throw new RoomNotFoundException(string.Format("Requested room ID {0} not found", request.Room));
+                }
 
-			return result;
-		}
+                User user;
+                while (!Users.TryGetValue(request.User, out user))
+                {
+                    if (_cache.Refresh())
+                    {
+                        continue;
+                    }
 
-		public JoinNextHandResult JoinNextHand(JoinNextHandRequest request)
-		{
-			// TODO
-			throw new NotImplementedException();
-		}
+                    throw new UserNotFoundException(string.Format("User ID {0} not found", request.User));
+                }
 
-		public StandUpToSpactateResult StandUpToSpactate(StandUpToSpactateRequest request)
-		{
-			// TODO
-			throw new NotImplementedException();
-		}
-		public void Clear()
-		{
+                result.Player = user.EnterRoom(room).GetHashCode();
+            }
+            //catch (RoomNotFoundException e)
+            //{
+            //    // TODO recover option?
+            //}
+            //catch (UserNotFoundException e)
+            //{
+            //    // TODO recover option?
+            //}
+            catch (PokerException e)
+            {
+                result.Success = false;
+                result.ErrorMessage = e.Message;
+                Logger.Error(e, "At " + GetType().Name, e.Source);
+            }
 
-		}
-		#endregion
+            return result;
+        }
 
-	}// class
+        public JoinNextHandResult JoinNextHand(JoinNextHandRequest request)
+        {
+            // TODO
+            throw new NotImplementedException();
+        }
+
+        public StandUpToSpactateResult StandUpToSpactate(StandUpToSpactateRequest request)
+        {
+            // TODO
+            throw new NotImplementedException();
+        }
+        public void Clear()
+        {
+
+        }
+        #endregion
+
+    }// class
 }

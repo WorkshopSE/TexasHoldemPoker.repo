@@ -5,6 +5,7 @@ using Poker.BE.Domain.Core;
 using Poker.BE.Domain.Security;
 using Poker.BE.CrossUtility.Exceptions;
 using Poker.BE.Service.Modules.Caches;
+using Poker.BE.CrossUtility.Loggers;
 
 namespace Poker.BE.Service.Services
 {
@@ -17,7 +18,8 @@ namespace Poker.BE.Service.Services
         #region properties
         public IDictionary<string, User> Users { get { return _cache.Users; } }
         public UserManager UserManager { get { return _cache.UserManager; } }
-
+        public ILogger Logger { get { return CrossUtility.Loggers.Logger.Instance; } }
+        // TODO: idan - add logger calls.
         #endregion
 
         #region Constructors
