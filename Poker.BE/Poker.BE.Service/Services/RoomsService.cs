@@ -8,6 +8,7 @@ using Poker.BE.Domain.Core;
 using Poker.BE.CrossUtility.Loggers;
 using Poker.BE.Domain.Security;
 using Poker.BE.CrossUtility.Exceptions;
+using Poker.BE.Service.Modules.Caches;
 
 namespace Poker.BE.Service.Services
 {
@@ -18,36 +19,33 @@ namespace Poker.BE.Service.Services
     public class RoomsService : IServices.IRoomsService
 	{
 		#region Fields
-		public UserManager userManager;
-		#endregion
+        private CommonCache _cache;
+        #endregion
 
-		#region Properties
-		/// <summary>
-		/// Map for the player (user session) ID -> player at the given session.
-		/// using the player.GetHashCode() for generating this ID.
-		/// </summary>
-		/// <remarks>
-		/// session ID is the ID we give for a screen the user opens.
-		/// this is a need because the user can play several screen at once.
-		/// thus, to play with different players at the same time.
-		/// 
-		/// for now - the user cannot play as several players, at the same room.
-		///    - this option is blocked.
-		/// </remarks>
-		public IDictionary<int, Player> Players { get; set; }
-		public IDictionary<int, Room> Rooms { get; set; }
-		public IDictionary<string, User> Users { get; set; }
-		public ILogger Logger { get; }
+        #region Properties
+        /// <summary>
+        /// Map for the player (user session) ID -> player at the given session.
+        /// using the player.GetHashCode() for generating this ID.
+        /// </summary>
+        /// <remarks>
+        /// session ID is the ID we give for a screen the user opens.
+        /// this is a need because the user can play several screen at once.
+        /// thus, to play with different players at the same time.
+        /// 
+        /// for now - the user cannot play as several players, at the same room.
+        ///    - this option is blocked.
+        /// </remarks>
+        public IDictionary<int, Player> Players { get { return _cache.Players; } }
+		public IDictionary<int, Room> Rooms { get { return _cache.Rooms; } }
+		public IDictionary<string, User> Users { get { return _cache.Users; } }
+        public UserManager UserManager { get { return UserManager.Instance; } }
+        public ILogger Logger { get { return CrossUtility.Loggers.Logger.Instance; } }
 		#endregion
 
 		#region Constructors
 		public RoomsService()
 		{
-			userManager = UserManager.Instance;
-			Players = new Dictionary<int, Player>();
-			Rooms = new Dictionary<int, Room>();
-			Users = new Dictionary<string, User>();
-			Logger = CrossUtility.Loggers.Logger.Instance;
+            _cache = CommonCache.Instance;
 		}
 		#endregion
 
@@ -60,7 +58,7 @@ namespace Poker.BE.Service.Services
 			{
 				try
 				{
-					var userMatchingHash = from existingUser in userManager.Users
+					var userMatchingHash = from existingUser in UserManager.Users
 										   where existingUser.Value.UserName == request.User
 										   select existingUser;
 					if (userMatchingHash.ToList().Count != 1)

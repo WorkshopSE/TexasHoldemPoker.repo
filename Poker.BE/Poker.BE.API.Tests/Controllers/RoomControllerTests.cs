@@ -14,6 +14,7 @@ using FakeItEasy;
 using Poker.BE.Service.IServices;
 using Poker.BE.Domain.Security;
 using Poker.BE.Domain.Core;
+using Poker.BE.Domain.Game;
 
 namespace Poker.BE.API.Controllers.Tests
 {
@@ -22,19 +23,23 @@ namespace Poker.BE.API.Controllers.Tests
     {
 
         #region Setup
-        private RoomController ctrl;
-        private UserManager userManager;
-        private User user;
+        private RoomController _ctrl;
+        private UserManager _userManager;
+        private GameCenter _gameCenter;
+        private User _user;
+        private int _level;
 
         public TestContext TestContext { get; set; }
 
         [TestInitialize]
         public void Before()
         {
-            userManager = UserManager.Instance;
-            user = new User();
-            userManager.Users.Add(user.UserName, user);
-            ctrl = new RoomController()
+            _level = 20;
+            _userManager = UserManager.Instance;
+            _gameCenter = GameCenter.Instance;
+            _user = new User();
+            _userManager.Users.Add(_user.UserName, _user);
+            _ctrl = new RoomController()
             {
                 Request = new System.Net.Http.HttpRequestMessage(),
                 Configuration = new System.Web.Http.HttpConfiguration()
@@ -44,9 +49,9 @@ namespace Poker.BE.API.Controllers.Tests
         [TestCleanup]
         public void After()
         {
-            ((RoomsService)ctrl.Service).Clear();
-            ctrl = null;
-            userManager.Users.Remove(user.UserName);
+            ((RoomsService)_ctrl.Service).Clear();
+            _ctrl = null;
+            _userManager.Users.Remove(_user.UserName);
         }
         #endregion
 
@@ -55,12 +60,11 @@ namespace Poker.BE.API.Controllers.Tests
         {
 
             //Arrange
-            int lvl = 20;
 
             CreateNewRoomRequest request = new CreateNewRoomRequest()
             {
-                Level = lvl,
-                User = user.UserName
+                Level = _level,
+                User = _user.UserName
 
             };
 
@@ -74,7 +78,7 @@ namespace Poker.BE.API.Controllers.Tests
             };
 
             //Act
-            var act = ctrl.CreateNewRoom(request);
+            var act = _ctrl.CreateNewRoom(request);
             CreateNewRoomResult actContent;
             var hasContent = act.TryGetContentValue(out actContent);
 
@@ -89,12 +93,32 @@ namespace Poker.BE.API.Controllers.Tests
             Assert.IsNotNull(actContent.Player, "player not null");
 
         }
-        // UNDONE: @gwainer - gal, please continue my work from here
-        //[TestMethod()]
-        //public void EnterRoomTest()
-        //{
-        //    // TODO
-        //    throw new NotImplementedException();
-        //}
+
+        //UNDONE: @idanizi - taking this from gal.
+        [TestMethod()]
+        public void EnterRoomTest()
+        {
+            //Arrange
+            Player creator;
+            var room = _gameCenter.CreateNewRoom(_level, new NoLimitHoldem(), out creator);
+
+            EnterRoomRequest request = new EnterRoomRequest() {
+                Room = room.GetHashCode(),
+                User = _user.UserName
+            };
+
+            //Act
+            var act = _ctrl.EnterRoom(request);
+            EnterRoomResult actContent;
+            var hasContent = act.TryGetContentValue(out actContent);
+
+            //Assert
+            Assert.AreEqual(HttpStatusCode.OK, act.StatusCode, "status code");
+            Assert.IsTrue(hasContent, "has content");
+            Assert.AreEqual("", actContent.ErrorMessage, "error message");
+            Assert.AreEqual(true, actContent.Success, "success");
+            Assert.AreNotEqual(default(int?), actContent.Player, "player not default value");
+            Assert.IsNotNull(actContent.Player, "player not null");
+        }
     }
 }

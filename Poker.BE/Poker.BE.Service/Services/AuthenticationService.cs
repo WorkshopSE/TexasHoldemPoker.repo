@@ -24,8 +24,6 @@ namespace Poker.BE.Service.Services
         public AuthenticationService()
         {
             _cache = CommonCache.Instance;
-            //UserManager = UserManager.Instance;
-            //Users = new Dictionary<string, User>();
         }
         #endregion
 
