@@ -8,14 +8,14 @@ namespace Poker.BE.Service.Modules.Requests
 		public string User { get; set; }
 
         //Game Preferences data
-        public string _name { get; set; }
-        public double _buyInCost { get; set; }
-        public double _minimumBet { get; set; }
-        public double _antes { get; set; }
-        public int _minNumberOfPlayers { get; set; }
-        public int _maxNumberOfPlayers { get; set; }
-        public bool _isSpactatorsAllowed { get; set; }
+        public string Name { get; set; }
+        public double BuyInCost { get; set; }
+        public double MinimumBet { get; set; }
+        public double Antes { get; set; }
+        public int MinNumberOfPlayers { get; set; }
+        public int MaxNumberOfPlayers { get; set; }
+        public bool IsSpactatorsAllowed { get; set; }
 
-        public double limit { get; set; }       //this is for decorator (PotLimit/Limit game mode)
+        public double Limit { get; set; }       //this is for decorator (PotLimit/Limit game mode)
     }
 }

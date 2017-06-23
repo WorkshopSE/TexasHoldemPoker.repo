@@ -14,17 +14,16 @@ public class CreateARoom : MonoBehaviour {
     public GameObject createFeedback;
     public GameObject limitInput;
     public GameObject UIControl;
-    private string ConfirmPassword;
     public float messageDelay = 3f;
 
-    private CreateNewRoomRequest current = new CreateNewRoomRequest();
+    private CreateNewRoomRequest current;
     private HttpCallFactory http = new HttpCallFactory();
     private CreateNewRoomResult result;
 
 
     public void CreateRoomAction()
     {
-        if (current.Name != "" && current.Antes >= 0 && current.BuyInCost > 0 && current.MinNumberOfPlayers > 0 && current.MaxNumberOfPlayers > 0 && !limitInput.activeSelf)
+        if (current.Name != "" && current.Antes >= 0 && current.BuyInCost > 0 && current.MinNumberOfPlayers > 0 && current.MaxNumberOfPlayers > 0 && (!limitInput.activeSelf || (limitInput.activeSelf && current.Limit > 0)))
         {
             limitInput.SetActive(false);
             createFeedback.GetComponent<Text>().text = "";
@@ -54,6 +53,14 @@ public class CreateARoom : MonoBehaviour {
         }
         StartCoroutine(LateFlushFeedback());
     }
+    public void Awake()
+    {
+        current = new CreateNewRoomRequest()
+        {
+            Limit = 0,
+            IsSpactatorsAllowed = true
+        };
+    }
 
     private IEnumerator LateFlushFeedback()
     {
@@ -69,7 +76,6 @@ public class CreateARoom : MonoBehaviour {
     {
         createFeedback.GetComponent<Text>().text = "Creation Failed!\n" + failMessage;
         UIControl.GetComponent<UIControl>().HideLoading();
-        //UIControl.GetComponent<UIControl>().ChangeScene("Room");
     }
 
     private void CreateRoomSuccess(string successMessage)
@@ -79,9 +85,16 @@ public class CreateARoom : MonoBehaviour {
             createFeedback.GetComponent<Text>().text = "Creation Sucessful!";
         else
         {
-            createFeedback.GetComponent<Text>().text = "Creation Failed!\n" + result.ErrorMessage;
+            createFeedback.GetComponent<Text>().text = "[FAKE ENABLE] Creation Failed!\n" + result.ErrorMessage;
         }
         UIControl.GetComponent<UIControl>().HideLoading();
+        //FAKE
+        StartCoroutine(Fake());
+    }
+    private IEnumerator Fake()
+    {
+        yield return new WaitForSeconds(3);
+        UIControl.GetComponent<UIControl>().ChangeScene("Room");
     }
     public void FillLimit(int choose)
     {
@@ -143,18 +156,25 @@ public class CreateARoom : MonoBehaviour {
             CreateRoomAction();
         }
         current.Name = roomName.GetComponent<InputField>().text;
-        if (antes.GetComponent<InputField>().text.Length > 0)
-            current.Antes = int.Parse(antes.GetComponent<InputField>().text);
-        if (buyInCost.GetComponent<InputField>().text.Length > 0)
-            current.BuyInCost = int.Parse(buyInCost.GetComponent<InputField>().text);
-        if (minimumBet.GetComponent<InputField>().text.Length > 0)
-            current.MinimumBet = int.Parse(minimumBet.GetComponent<InputField>().text);
-        if (minNumberOfPlayers.GetComponent<InputField>().text.Length > 0)
-            current.MinNumberOfPlayers = int.Parse(minNumberOfPlayers.GetComponent<InputField>().text);
-        if (maxNumberOfPlayers.GetComponent<InputField>().text.Length > 0)
-            current.MaxNumberOfPlayers = int.Parse(maxNumberOfPlayers.GetComponent<InputField>().text);
-        if (limitInput.activeSelf && limitInput.GetComponent<InputField>().text.Length > 0)
-            current.Limit = int.Parse(maxNumberOfPlayers.GetComponent<InputField>().text);
+        try
+        {
+            if (antes.GetComponent<InputField>().text.Length > 0)
+                current.Antes = int.Parse(antes.GetComponent<InputField>().text);
+            if (buyInCost.GetComponent<InputField>().text.Length > 0)
+                current.BuyInCost = int.Parse(buyInCost.GetComponent<InputField>().text);
+            if (minimumBet.GetComponent<InputField>().text.Length > 0)
+                current.MinimumBet = int.Parse(minimumBet.GetComponent<InputField>().text);
+            if (minNumberOfPlayers.GetComponent<InputField>().text.Length > 0)
+                current.MinNumberOfPlayers = int.Parse(minNumberOfPlayers.GetComponent<InputField>().text);
+            if (maxNumberOfPlayers.GetComponent<InputField>().text.Length > 0)
+                current.MaxNumberOfPlayers = int.Parse(maxNumberOfPlayers.GetComponent<InputField>().text);
+            if (limitInput.activeSelf && limitInput.GetComponent<InputField>().text.Length > 0)
+                current.Limit = int.Parse(limitInput.GetComponent<InputField>().text);
+        }
+        catch (FormatException)
+        {
+            createFeedback.GetComponent<Text>().text = "We support only positive numbers";
+        }
     }
 
 }

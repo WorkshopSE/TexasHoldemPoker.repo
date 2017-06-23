@@ -11,4 +11,9 @@ public class RoomManagement : MonoBehaviour {
         RoomOptions.SetActive(false);
         RoomCreatePanel.SetActive(true);
     }
+    public void ShowRoomOptions()
+    {
+        RoomCreatePanel.SetActive(false);
+        RoomOptions.SetActive(true);
+    }
 }
