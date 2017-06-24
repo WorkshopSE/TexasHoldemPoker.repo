@@ -210,6 +210,7 @@ namespace Poker.BE.API.Controllers.Tests
             Assert.AreEqual("", actContent.ErrorMessage, "error message");
             Assert.AreEqual(true, actContent.Success, "success");
             Assert.AreEqual(false, _user.Players.Contains(player, new AddressComparer<Player>()));
+            Assert.IsNotNull(actContent.UserStatistics, "user statistics not null");
         }
     }
 }

@@ -226,6 +226,10 @@ namespace Poker.BE.Service.Services
 
                 user.ExitRoom(player);
                 result.Success = true;
+                result.UserStatistics = user.UserStatistics;
+
+                // update cache on removal
+                Players.Remove(player.GetHashCode());
             }
             catch (PokerException e)
             {
