@@ -11,58 +11,116 @@ using System.Web.Http;
 
 namespace Poker.BE.API.Controllers
 {
-	public class RoomController : ApiController
-	{
-		#region Fields
-		private IRoomsService service;
-		#endregion
+    public class RoomController : ApiController
+    {
+        #region Fields
+        private IRoomsService service;
+        #endregion
 
-		#region Properties
-		public IRoomsService Service { get { return service; } }
-		#endregion
+        #region Properties
+        public IRoomsService Service { get { return service; } }
+        #endregion
 
-		#region Constructors
-		public RoomController()
-		{
-			service = new Service.Services.RoomsService();
-		}
-		#endregion
+        #region Constructors
+        public RoomController()
+        {
+            service = new Service.Services.RoomsService();
+        }
+        #endregion
 
-		#region Methods
-		[HttpPost]
-		public HttpResponseMessage EnterRoom(EnterRoomRequest request)
-		{
-			var result = new EnterRoomResult();
-			try
-			{
-				result = service.EnterRoom(request);
-			}
-			catch (Exception e)
-			{
-				result.ErrorMessage = e.Message;
+        #region Methods
+        [HttpPost]
+        public HttpResponseMessage EnterRoom(EnterRoomRequest request)
+        {
+            var result = new EnterRoomResult();
+            try
+            {
+                result = service.EnterRoom(request);
+            }
+            catch (Exception e)
+            {
+                result.ErrorMessage = e.Message;
                 result.Success = false;
-				return Request.CreateResponse(HttpStatusCode.InternalServerError, result);
-			}
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, result);
+            }
 
-			return Request.CreateResponse(HttpStatusCode.OK, result);
-		}
+            return Request.CreateResponse(HttpStatusCode.OK, result);
+        }
 
-		[HttpPost]
-		public HttpResponseMessage CreateNewRoom(CreateNewRoomRequest request)
-		{
-			var result = new CreateNewRoomResult();
-			try
-			{
-				result = service.CreateNewRoom(request);
-			}
-			catch (Exception e)
-			{
-				result.ErrorMessage = e.Message;
+        [HttpPost]
+        public HttpResponseMessage CreateNewRoom(CreateNewRoomRequest request)
+        {
+            var result = new CreateNewRoomResult();
+            try
+            {
+                result = service.CreateNewRoom(request);
+            }
+            catch (Exception e)
+            {
+                result.ErrorMessage = e.Message;
                 result.Success = false;
-				return Request.CreateResponse(HttpStatusCode.InternalServerError, result);
-			}
-			return Request.CreateResponse(HttpStatusCode.OK, result);
-		}
-		#endregion
-	}
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, result);
+            }
+            return Request.CreateResponse(HttpStatusCode.OK, result);
+        }
+
+        [HttpPost]
+        public HttpResponseMessage JoinNextHand(JoinNextHandRequest request)
+        {
+            var result = new JoinNextHandResult();
+
+            try
+            {
+                result = service.JoinNextHand(request);
+            }
+            catch (Exception e)
+            {
+                result.ErrorMessage = e.Message;
+                result.Success = false;
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, result);
+            }
+
+            return Request.CreateResponse(HttpStatusCode.OK, result);
+        }
+
+        [HttpPost]
+        public HttpResponseMessage StandUpToSpactate(StandUpToSpactateRequest request)
+        {
+            var result = new StandUpToSpactateResult();
+
+            try
+            {
+                result = service.StandUpToSpactate(request);
+            }
+            catch (Exception e)
+            {
+                result.ErrorMessage = e.Message;
+                result.Success = false;
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, result);
+            }
+
+            return Request.CreateResponse(HttpStatusCode.OK, result);
+        }
+
+
+        [HttpPost]
+        public HttpResponseMessage LeaveRoom(LeaveRoomRequest request)
+        {
+            var result = new LeaveRoomResult();
+
+            try
+            {
+                result = service.LeaveRoom(request);
+            }
+            catch (Exception e)
+            {
+                result.ErrorMessage = e.Message;
+                result.Success = false;
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, result);
+            }
+
+            return Request.CreateResponse(HttpStatusCode.OK, result);
+        }
+        #endregion
+    }
 }
