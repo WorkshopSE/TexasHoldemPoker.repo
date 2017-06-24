@@ -78,8 +78,6 @@ namespace Poker.BE.Service.Services
                 result.Room = room.GetHashCode();
 
                 //Request's info
-                result.Level = request.Level;
-                result.User = request.User;
                 result.Name = request.Name;
                 result.BuyInCost = request.BuyInCost;
                 result.MinimumBet = request.MinimumBet;
@@ -129,6 +127,18 @@ namespace Poker.BE.Service.Services
                 }
 
                 result.Player = user.EnterRoom(room).GetHashCode();
+                result.Name = room.Preferences.Name;
+                result.BuyInCost = room.Preferences.BuyInCost;
+                result.MinimumBet = room.Preferences.MinimumBet;
+                result.Antes = room.Preferences.AntesValue;
+                result.MinNumberOfPlayers = room.Preferences.MinNumberOfPlayers;
+                result.MaxNumberOfPlayers = room.Preferences.MaxNumberOfPlayers;
+                result.IsSpactatorsAllowed = room.Preferences.IsSpactatorsAllowed;
+                if (room.Preferences is GamePreferencesDecorator)
+                {
+                    result.Limit = ((GamePreferencesDecorator)room.Preferences).Limit;
+                }
+
             }
             catch (PokerException e)
             {
@@ -168,7 +178,7 @@ namespace Poker.BE.Service.Services
 
                 user.JoinNextHand(player, request.seatIndex, request.buyIn);
                 result.UserBank = user.UserBank.Money;
-                
+
                 result.Success = true;
             }
             catch (PokerException e)
@@ -203,7 +213,7 @@ namespace Poker.BE.Service.Services
                 }
 
                 result.RemainingMoney = user.StandUpToSpactate(player);
-                result.UserBank = user.UserBank.Money;
+                result.UserBankMoney = user.UserBank.Money;
 
                 //TODO - idan - check JSON of user statistics
                 result.UserStatistics = user.UserStatistics;
@@ -221,8 +231,37 @@ namespace Poker.BE.Service.Services
 
         public LeaveRoomResult LeaveRoom(LeaveRoomRequest request)
         {
-            // TODO
-            throw new NotImplementedException();
+            var result = new LeaveRoomResult();
+
+            try
+            {
+                var user = _cache.RefreshAndGet(
+                    Users,
+                    request.User,
+                    new UserNotFoundException(string.Format("cannot find user name: {0}, please login again.", request.User))
+                    );
+
+                var player = _cache.RefreshAndGet(
+                    Players,
+                    request.Player,
+                    new PlayerNotFoundException(string.Format("player id: {0} not found, please re-enter the room.", request.Player))
+                    );
+
+                user.ExitRoom(player);
+                result.Success = true;
+                result.UserStatistics = user.UserStatistics;
+
+                // update cache on removal
+                Players.Remove(player.GetHashCode());
+            }
+            catch (PokerException e)
+            {
+                result.Success = false;
+                result.ErrorMessage = e.Message;
+                Logger.Error(e, "At " + GetType().Name, e.Source);
+            }
+
+            return result;
         }
 
         public void Clear()

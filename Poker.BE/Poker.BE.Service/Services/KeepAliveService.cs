@@ -38,7 +38,49 @@ namespace Poker.BE.Service.Services
         #region Methods
         public KeepAliveResult KeepAlive(KeepAliveRequest request)
         {
-            throw new NotImplementedException();
+            var result = new KeepAliveResult ();
+            try
+            {
+                //first of all get the relevant room
+                Room room = null;
+                foreach (Room r in GameCenter.Rooms)
+                {
+                    if (request.Room == r.GetHashCode())
+                    {
+                        room = r;
+                        break;
+                    }
+                }
+                if (room == null)
+                {
+                    throw new RoomNotFoundException("can't find room in game center");
+                }
+
+                //get room's active players
+                result.ActivePlayers = new List<int>();
+                foreach (Player p in room.ActivePlayers)
+                {
+                    result.ActivePlayers.Add(p.GetHashCode());
+                }
+
+                //get room's players location in table
+                result.TableLocationOfActivePlayers = new int[10];
+                for (int i = 0; i < 10; i++)
+                {
+                    
+                }
+
+                result.IsTableFull = room.IsTableFull;
+
+
+            }
+            catch (RoomNotFoundException e)
+            {
+                result.Success = false;
+                result.ErrorMessage = e.Message;
+            }
+
+            return result;
         }
 
         public void Clear()
