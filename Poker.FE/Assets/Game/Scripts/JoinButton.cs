@@ -11,6 +11,7 @@ public class JoinButton : MonoBehaviour {
     public List<GameObject> players;
 
     private bool flash;
+    private HttpCallFactory http = new HttpCallFactory();
 
     public void ChooseFreeChair()
     {
@@ -49,6 +50,7 @@ public class JoinButton : MonoBehaviour {
                 chair.GetComponent<Button>().enabled = false;
             }
         });
+        //http.POST
         players[i].SetActive(true);
         chairs[i].GetComponent<Image>().enabled = false;
         spectate.SetActive(false);
