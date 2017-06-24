@@ -9,8 +9,8 @@
 
         public class RoomResult
         {
-            public int ID { get; set; }
-            public string name { get; set; }
+            public int RoomID { get; set; }
+            public string RoomName { get; set; }
             public int LeagueID { get; set; }
         }
     }

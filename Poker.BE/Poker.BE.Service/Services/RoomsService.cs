@@ -250,14 +250,53 @@ namespace Poker.BE.Service.Services
             return result;
         }
 
+        private FindRoomsByCriteriaResult.RoomResult[] DomainRoomsToRoomsResults(ICollection<Room> domainRooms)
+        {
+            var rooms = new List<FindRoomsByCriteriaResult.RoomResult>();
+
+            _cache.Refresh();
+            foreach (var room in domainRooms)
+            {
+                rooms.Add(new FindRoomsByCriteriaResult.RoomResult()
+                {
+                    RoomID = room.GetHashCode(),
+                    LeagueID = _cache.RoomToLeague[room].GetHashCode(),
+                    RoomName = room.Preferences.Name,
+                });
+            }
+            return rooms.ToArray();
+        }
+
         public FindRoomsByCriteriaResult FindRoomsByCriteria(FindRoomsByCriteriaRequest request)
         {
             var result = new FindRoomsByCriteriaResult();
 
+
             try
             {
-                // UNDONE - Idan
-                var rooms = GameCenter.FindRoomsByCriteria();
+                // arrange search criteria
+                double betSize = request.Criterias.Contains(FindRoomsByCriteriaRequest.BET_SIZE) ? request.BetSize : -1;
+
+                GamePreferences preferences = request.Criterias.Contains(FindRoomsByCriteriaRequest.PREFERENCES) ? request.Preferences : null;
+
+                Player player = null;
+                if (request.Criterias.Contains(FindRoomsByCriteriaRequest.PLAYER))
+                {
+                    player = _cache.RefreshAndGet(
+                         Players,
+                         request.Player,
+                         new PlayerNotFoundException(string.Format("player id: {0} not found, please re-enter the room.", request.Player))
+                         );
+                }
+
+                int level = request.Criterias.Contains(FindRoomsByCriteriaRequest.LEVEL) ? request.Level : -1;
+
+                // call search
+                var domainRooms = GameCenter.FindRoomsByCriteria(level, player, preferences, betSize);
+
+                // assemble result
+                result.Rooms = DomainRoomsToRoomsResults(domainRooms);
+                result.Success = true;
             }
             catch (PokerException e)
             {
@@ -275,8 +314,8 @@ namespace Poker.BE.Service.Services
 
             try
             {
-                //Rooms.ToList().ForEach(room 
-                GameCenter.
+                result.Rooms = DomainRoomsToRoomsResults(Rooms.Values);
+                result.Success = true;
             }
             catch (PokerException e)
             {
