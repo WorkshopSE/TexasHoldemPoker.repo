@@ -17,7 +17,7 @@ namespace Poker.BE.Service.Modules.Caches
         public UserManager UserManager { get; set; }
 
         public GameCenter GameCenter { get; set; }
-        
+
         /// <summary>
         /// Map for the player (user session) ID -> player at the given session.
         /// using the player.GetHashCode() for generating this ID.
@@ -38,20 +38,19 @@ namespace Poker.BE.Service.Modules.Caches
 
         public IDictionary<int, League> Leagues { get; set; }
 
-
         #endregion
 
         #region Singleton Constructor
         // Note: for c# implementation
         static CommonCache() { }
 
-		/* Note: Singleton private constructor
+        /* Note: Singleton private constructor
          * -----------------------------------
          * 
          * For every Cached Property we should initiate its value here.
          * */
-		private CommonCache()
-		{
+        private CommonCache()
+        {
             UserManager = UserManager.Instance;
             GameCenter = GameCenter.Instance;
             Players = new Dictionary<int, Player>();
@@ -60,14 +59,17 @@ namespace Poker.BE.Service.Modules.Caches
             Leagues = new Dictionary<int, League>();
         }
 
-		private static readonly CommonCache _instance = new CommonCache();
+        private static readonly CommonCache _instance = new CommonCache();
+        public static CommonCache Instance { get { return _instance; } }
 
-		public static CommonCache Instance { get { return _instance; } }
+        #endregion
+
+        #region ICache Methods
 
         private bool UpdateEnumerables<S, D>(IEnumerable<S> source, IEnumerable<D> destination)
         {
             var isUpdated = false;
-            // TODO
+            // TODO ? - idan.
             return isUpdated;
         }
 
@@ -115,6 +117,19 @@ namespace Poker.BE.Service.Modules.Caches
             }
 
             return isChanged;
+        }
+
+        public TValue RefreshAndGet<TKey, TValue>(IDictionary<TKey, TValue> dictionary, TKey key, Exception e)
+        {
+            var resultObject = default(TValue);
+            while (!dictionary.TryGetValue(key, out resultObject))
+            {
+                if (Refresh()) continue;
+
+                throw e;
+            }
+
+            return resultObject;
         }
 
         public void Clear()
