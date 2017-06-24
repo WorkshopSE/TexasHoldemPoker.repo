@@ -10,6 +10,7 @@ namespace Poker.BE.Domain.Core
 		public Bank UserBank { get; set; }
 		public bool IsConnected { get; set; }
 		public string Avatar { get; set; }
+        public int Level { get; set; }
 		#endregion
 	}
 }

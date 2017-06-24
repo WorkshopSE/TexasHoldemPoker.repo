@@ -57,10 +57,22 @@ namespace Poker.BE.Service.Services
                 }
 
                 //get room's active players
+                result.ActivePlayers = new List<int>();
                 foreach (Player p in room.ActivePlayers)
                 {
                     result.ActivePlayers.Add(p.GetHashCode());
                 }
+
+                //get room's players location in table
+                result.TableLocationOfActivePlayers = new int[10];
+                for (int i = 0; i < 10; i++)
+                {
+                    
+                }
+
+                result.IsTableFull = room.IsTableFull;
+
+
             }
             catch (RoomNotFoundException e)
             {

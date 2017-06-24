@@ -37,6 +37,8 @@ namespace Poker.BE.Service.Services
             try
             {
                 result.User = UserManager.LogIn(request.UserName, request.Password).UserName;
+                result.Level = UserManager.Users[request.UserName].Level;
+
                 result.Success = true;
             }
             catch (PokerException e)

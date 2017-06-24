@@ -78,8 +78,6 @@ namespace Poker.BE.Service.Services
                 result.Room = room.GetHashCode();
 
                 //Request's info
-                result.Level = request.Level;
-                result.User = request.User;
                 result.Name = request.Name;
                 result.BuyInCost = request.BuyInCost;
                 result.MinimumBet = request.MinimumBet;

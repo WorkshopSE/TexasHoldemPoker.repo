@@ -32,6 +32,7 @@ namespace Poker.BE.Domain.Core
             UserBank = new Bank();
             UserName = GetHashCode().ToString();
             UserStatistics = new Statistics();
+            Level = 0;
         }
 
         public User(string userName, string password, double sumToDeposit) : this()
