@@ -14,9 +14,9 @@ namespace Poker.BE.Service.Modules.Caches
     {
 
         #region Properties
-        public UserManager UserManager { get; set; }
+        public UserManager UserManager { get; }
 
-        public GameCenter GameCenter { get; set; }
+        public GameCenter GameCenter { get; }
 
         /// <summary>
         /// Map for the player (user session) ID -> player at the given session.
@@ -30,13 +30,17 @@ namespace Poker.BE.Service.Modules.Caches
         /// for now - the user cannot play as several players, at the same room.
         ///    - this option is blocked.
         /// </remarks>
-        public IDictionary<int, Player> Players { get; set; }
+        public IDictionary<int, Player> Players { get; }
 
-        public IDictionary<int, Room> Rooms { get; set; }
+        public IDictionary<int, Room> Rooms { get; }
 
-        public IDictionary<string, User> Users { get; set; }
+        public IDictionary<string, User> Users { get; }
 
-        public IDictionary<int, League> Leagues { get; set; }
+        public IDictionary<int, League> Leagues { get; }
+
+        public IDictionary<Player, Room> PlayerToRoom { get; }
+
+        public IDictionary<Room, League> RoomToLeague { get; }
 
         #endregion
 

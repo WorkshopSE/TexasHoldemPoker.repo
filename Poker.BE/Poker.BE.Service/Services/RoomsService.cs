@@ -271,8 +271,21 @@ namespace Poker.BE.Service.Services
 
         public FindRoomsByCriteriaResult GetAllRooms()
         {
-            // TODO
-            throw new NotImplementedException();
+            var result = new FindRoomsByCriteriaResult();
+
+            try
+            {
+                //Rooms.ToList().ForEach(room 
+                GameCenter.
+            }
+            catch (PokerException e)
+            {
+                result.Success = false;
+                result.ErrorMessage = e.Message;
+                Logger.Error(e, "At " + GetType().Name, e.Source);
+            }
+
+            return result;
         }
 
 
