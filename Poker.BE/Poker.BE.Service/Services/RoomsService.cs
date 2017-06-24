@@ -155,7 +155,7 @@ namespace Poker.BE.Service.Services
 
                 user.JoinNextHand(player, request.seatIndex, request.buyIn);
                 result.UserBank = user.UserBank.Money;
-                
+
                 result.Success = true;
             }
             catch (PokerException e)
@@ -190,7 +190,7 @@ namespace Poker.BE.Service.Services
                 }
 
                 result.RemainingMoney = user.StandUpToSpactate(player);
-                result.UserBank = user.UserBank.Money;
+                result.UserBankMoney = user.UserBank.Money;
 
                 //TODO - idan - check JSON of user statistics
                 result.UserStatistics = user.UserStatistics;
@@ -208,8 +208,33 @@ namespace Poker.BE.Service.Services
 
         public LeaveRoomResult LeaveRoom(LeaveRoomRequest request)
         {
-            // TODO
-            throw new NotImplementedException();
+            var result = new LeaveRoomResult();
+
+            try
+            {
+                var user = _cache.RefreshAndGet(
+                    Users,
+                    request.User,
+                    new UserNotFoundException(string.Format("cannot find user name: {0}, please login again.", request.User))
+                    );
+
+                var player = _cache.RefreshAndGet(
+                    Players,
+                    request.Player,
+                    new PlayerNotFoundException(string.Format("player id: {0} not found, please re-enter the room.", request.Player))
+                    );
+
+                user.ExitRoom(player);
+                result.Success = true;
+            }
+            catch (PokerException e)
+            {
+                result.Success = false;
+                result.ErrorMessage = e.Message;
+                Logger.Error(e, "At " + GetType().Name, e.Source);
+            }
+
+            return result;
         }
 
         public void Clear()

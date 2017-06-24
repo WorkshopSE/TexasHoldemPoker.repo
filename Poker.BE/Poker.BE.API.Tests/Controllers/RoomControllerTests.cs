@@ -15,6 +15,7 @@ using Poker.BE.Service.IServices;
 using Poker.BE.Domain.Security;
 using Poker.BE.Domain.Core;
 using Poker.BE.Domain.Game;
+using Poker.BE.Domain.Utility;
 
 namespace Poker.BE.API.Controllers.Tests
 {
@@ -153,18 +154,62 @@ namespace Poker.BE.API.Controllers.Tests
             Assert.AreEqual(true, actContent.Success, "success");
         }
 
-        //[TestMethod()]
-        //public void StandUpToSpactateTest()
-        //{
-        //    // TODO
-        //    throw new NotImplementedException();
-        //}
+        [TestMethod()]
+        public void StandUpToSpactateTest()
+        {
+            //Arrange
+            Player player;
+            var room = _user.CreateNewRoom(_level, _config, out player);
+            double buyIn = room.Preferences.BuyInCost;
+            int seatIndex = 0;
+            _user.JoinNextHand(player, seatIndex, buyIn);
+            player.Fold();
+            StandUpToSpactateRequest request = new StandUpToSpactateRequest()
+            {
+                Player = player.GetHashCode(),
+                User = _user.UserName
+            };
 
-        //[TestMethod()]
-        //public void LeaveRoomTest()
-        //{
-        //    // TODO
-        //    throw new NotImplementedException();
-        //}
+            //Act
+            var act = _ctrl.StandUpToSpactate(request);
+            StandUpToSpactateResult actContent;
+            var hasContent = act.TryGetContentValue(out actContent);
+
+            //Assert
+            TestContext.WriteLine("error message: '{0}'", (actContent != null && actContent.ErrorMessage != "") ? actContent.ErrorMessage : "null");
+            Assert.AreEqual(HttpStatusCode.OK, act.StatusCode, "status code");
+            Assert.IsTrue(hasContent, "has contact");
+            Assert.AreEqual("", actContent.ErrorMessage, "error message");
+            Assert.AreEqual(true, actContent.Success, "success");
+            Assert.AreEqual(buyIn, actContent.RemainingMoney, "remaining money");
+            Assert.AreEqual(_user.UserBank.Money , actContent.UserBankMoney, "user bank money");
+            Assert.AreEqual(_user.UserStatistics, actContent.UserStatistics, "user statistics object");
+        }
+
+        [TestMethod()]
+        public void LeaveRoomTest()
+        {
+            //Arrange
+            var player = default(Player);
+            var room = _user.CreateNewRoom(_level, _config, out player);
+            LeaveRoomRequest request = new LeaveRoomRequest()
+            {
+                Player = player.GetHashCode(),
+                User = _user.UserName
+            };
+
+            //Act
+            var act = _ctrl.LeaveRoom(request);
+            var actContent = default(LeaveRoomResult);
+            var hasContent = act.TryGetContentValue(out actContent);
+
+            //Assert
+            TestContext.WriteLine("error message: '{0}'", (actContent != null && actContent.ErrorMessage != "") ? actContent.ErrorMessage : "null");
+            Assert.AreEqual(HttpStatusCode.OK, act.StatusCode, "status code");
+            Assert.IsTrue(hasContent, "has contact");
+            Assert.AreEqual("", actContent.ErrorMessage, "error message");
+            Assert.AreEqual(true, actContent.Success, "success");
+            Assert.AreEqual(false, _user.Players.Contains(player, new AddressComparer<Player>()));
+        }
     }
 }
