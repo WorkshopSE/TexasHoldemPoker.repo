@@ -129,6 +129,18 @@ namespace Poker.BE.Service.Services
                 }
 
                 result.Player = user.EnterRoom(room).GetHashCode();
+                result.Name = room.Preferences.Name;
+                result.BuyInCost = room.Preferences.BuyInCost;
+                result.MinimumBet = room.Preferences.MinimumBet;
+                result.Antes = room.Preferences.AntesValue;
+                result.MinNumberOfPlayers = room.Preferences.MinNumberOfPlayers;
+                result.MaxNumberOfPlayers = room.Preferences.MaxNumberOfPlayers;
+                result.IsSpactatorsAllowed = room.Preferences.IsSpactatorsAllowed;
+                if (room.Preferences is GamePreferencesDecorator)
+                {
+                    result.Limit = ((GamePreferencesDecorator)room.Preferences).Limit;
+                }
+
             }
             catch (PokerException e)
             {
