@@ -27,7 +27,7 @@ namespace Poker.BE.API.Controllers
         #endregion
 
         #region Methods
-        [HttpPost]
+        [HttpGet]
         public HttpResponseMessage KeepAlive(KeepAliveRequest request)
         {
             var result = new KeepAliveResult();

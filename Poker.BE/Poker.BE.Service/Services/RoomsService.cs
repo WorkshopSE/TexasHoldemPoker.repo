@@ -76,6 +76,19 @@ namespace Poker.BE.Service.Services
                 Players.Add(creator.GetHashCode(), creator);
                 result.Player = creator.GetHashCode();
                 result.Room = room.GetHashCode();
+
+                //Request's info
+                result.Level = request.Level;
+                result.User = request.User;
+                result.Name = request.Name;
+                result.BuyInCost = request.BuyInCost;
+                result.MinimumBet = request.MinimumBet;
+                result.Antes = request.Antes;
+                result.MinNumberOfPlayers = request.MinNumberOfPlayers;
+                result.MaxNumberOfPlayers = request.MaxNumberOfPlayers;
+                result.IsSpactatorsAllowed = request.IsSpactatorsAllowed;
+                result.Limit = request.Limit;
+
                 result.Success = true;
             }
             catch (PokerException e)
