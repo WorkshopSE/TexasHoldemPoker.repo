@@ -241,10 +241,18 @@ namespace Poker.BE.Service.Services
             return result;
         }
 
+        public FindRoomsByCriteriaResult FindRoomsByCriteria(FindRoomsByCriteriaRequest request)
+        {
+            // TODO
+            throw new NotImplementedException();
+        }
+
         public void Clear()
         {
             _cache.Clear();
         }
+
+        
         #endregion
 
     }// class

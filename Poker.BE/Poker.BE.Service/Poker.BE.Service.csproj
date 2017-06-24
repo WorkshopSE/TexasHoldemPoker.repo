@@ -52,6 +52,7 @@
     <Compile Include="Modules\Caches\ICache.cs" />
     <Compile Include="Modules\Requests\CheckRequest.cs" />
     <Compile Include="Modules\Requests\EnterRoomRequest.cs" />
+    <Compile Include="Modules\Requests\FindRoomsByCriteriaRequest.cs" />
     <Compile Include="Modules\Requests\IRequest.cs" />
     <Compile Include="Modules\Requests\JoinNextHandRequest.cs" />
     <Compile Include="Modules\Requests\CreateNewRoomRequest.cs" />
@@ -62,6 +63,7 @@
     <Compile Include="Modules\Responses\IResponse.cs" />
     <Compile Include="Modules\Results\CheckResult.cs" />
     <Compile Include="Modules\Results\EnterRoomResult.cs" />
+    <Compile Include="Modules\Results\FindRoomsByCriteriaResult.cs" />
     <Compile Include="Modules\Results\IResult.cs" />
     <Compile Include="Modules\Results\JoinNextHandResult.cs" />
     <Compile Include="Modules\Results\CreateNewRoomResult.cs" />
