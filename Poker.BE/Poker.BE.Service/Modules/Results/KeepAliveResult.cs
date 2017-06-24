@@ -28,5 +28,8 @@ namespace Poker.BE.Service.Modules.Results
         public double[] PlayersBets { get; set; }   //by table location
         public double TotalRaise { get; set; }
         public double LastRaise { get; set; }
+
+        //Player's info
+        public double PlayerWallet { get; set; }
     }
 }

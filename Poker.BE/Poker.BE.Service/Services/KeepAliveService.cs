@@ -142,6 +142,15 @@ namespace Poker.BE.Service.Services
                 result.TotalRaise = round.TotalRaise;
                 result.LastRaise = round.LastRaise;
                 #endregion
+
+                foreach (Player p in room.ActivePlayers)
+                {
+                    if (p.GetHashCode() == request.PlayerID)
+                    {
+                        result.PlayerWallet = p.Wallet.Value;
+                        break;
+                    }
+                }
             }
             catch (RoomNotFoundException e)
             {
