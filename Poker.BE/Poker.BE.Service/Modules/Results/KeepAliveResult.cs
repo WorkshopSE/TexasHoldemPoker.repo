@@ -7,20 +7,26 @@ namespace Poker.BE.Service.Modules.Results
         //Room's info
         public List<int> ActivePlayers { get; set; }
         public int[] TableLocationOfActivePlayers { get; set; }
+        public string[] PlayersStates { get; set; } //by table location: passive means the seat is empty
         public bool IsTableFull { get; set; }
 
         //Hand's info
+        /// <summary>
+        /// this field is an array with size of 52, according to cards indexes.
+        /// Each cell contains onr of the followings:
+        /// The player's hash code (the one that holds this card)
+        /// A negative number represent each of the table cards (if there are any): -1 for the first card, -2 for the second...
+        /// Zero, meanning this card is not in use (still in the deck)
+        /// </summary>
         public int[] PlayersAndTableCards { get; set; }
         public int DealerId { get; set; }
 
-
         //Round's info
-        public string[] PlayersStates { get; set; } //by table location: passive means the seat is empty
         public int CurrentPlayerID { get; set; }
-        public List<int> PotsValues { get; set; }
-        public List<int> PotsAmountToClaim { get; set; }
-        public int[] PlayersBets { get; set; }   //by table location
-        public int TotalRaise { get; set; }
-        public int LastRaise { get; set; }
+        public List<double> PotsValues { get; set; }
+        public List<double> PotsAmountToClaim { get; set; }
+        public double[] PlayersBets { get; set; }   //by table location
+        public double TotalRaise { get; set; }
+        public double LastRaise { get; set; }
     }
 }
