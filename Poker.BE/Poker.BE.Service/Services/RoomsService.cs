@@ -8,6 +8,7 @@ using Poker.BE.Domain.Core;
 using Poker.BE.CrossUtility.Loggers;
 using Poker.BE.Domain.Security;
 using Poker.BE.CrossUtility.Exceptions;
+using Poker.BE.Service.Modules.Responses;
 
 namespace Poker.BE.Service.Services
 {
@@ -147,6 +148,14 @@ namespace Poker.BE.Service.Services
 			// TODO
 			throw new NotImplementedException();
 		}
+
+		public GetAllRoomsResponse GetAllRooms(GetAllRoomsRequest request)
+		{
+			var response = new GetAllRoomsResponse();
+
+			return response;
+		}
+
 		public void Clear()
 		{
 
