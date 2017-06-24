@@ -10,5 +10,6 @@ namespace Poker.BE.Service.Modules.Requests
     {
         public string User { get; set; }
         public int Room { get; set; }
+        public int PlayerID { get; set; }
     }
 }

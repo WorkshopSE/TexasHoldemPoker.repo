@@ -32,6 +32,8 @@ namespace Poker.BE.Domain.Game
         public Pot Pot { get { return pot; } set { pot = value; } }
         public Card[] CommunityCards { get { return communityCards; } set { communityCards = value; } }
         public Dictionary<Player, double> PlayersBets { get; private set; }
+        public ICollection<Player> ActivePlayers { get { return activePlayers; } }
+        public Player Dealer { get { return dealer; } }
         #endregion
 
         #region Constructors

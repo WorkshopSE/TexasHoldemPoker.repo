@@ -12,6 +12,7 @@ namespace Poker.BE.Domain.Game
 
         #region Properties
         public bool IsTaken { get { return isTaken; } }
+        public int Index { get { return index; } }
         #endregion
 
         #region Constructors
