@@ -16,5 +16,6 @@ namespace Poker.BE.Service.IServices
         StandUpToSpactateResult StandUpToSpactate(StandUpToSpactateRequest request);
         LeaveRoomResult LeaveRoom(LeaveRoomRequest request);
         FindRoomsByCriteriaResult FindRoomsByCriteria(FindRoomsByCriteriaRequest request);
+        FindRoomsByCriteriaResult GetAllRooms();
     }
 }

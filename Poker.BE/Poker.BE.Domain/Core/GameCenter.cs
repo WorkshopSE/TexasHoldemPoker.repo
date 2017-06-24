@@ -48,6 +48,8 @@ namespace Poker.BE.Domain.Core
         public ICollection<Room> Rooms { get { return roomsManager.Keys; } }
         public ICollection<Player> Players { get { return playersManager.Keys; } }
         public ICollection<League> Leagues { get { return leagues; } }
+        public IDictionary<Player, Room> PlayerToRoom { get { return playersManager; } }
+        public IDictionary<Room, League> RoomToLeague { get { return roomsManager; } }
         #endregion
 
         #region Constructors

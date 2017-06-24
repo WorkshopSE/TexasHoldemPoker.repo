@@ -38,7 +38,8 @@ namespace Poker.BE.Service.Services
         public IDictionary<int, Player> Players { get { return _cache.Players; } }
         public IDictionary<int, Room> Rooms { get { return _cache.Rooms; } }
         public IDictionary<string, User> Users { get { return _cache.Users; } }
-        public UserManager UserManager { get { return UserManager.Instance; } }
+        public UserManager UserManager { get { return _cache.UserManager; } }
+        public GameCenter GameCenter { get { return _cache.GameCenter; } }
         public ILogger Logger { get { return CrossUtility.Loggers.Logger.Instance; } }
         #endregion
 
@@ -54,6 +55,14 @@ namespace Poker.BE.Service.Services
         #endregion
 
         #region Methods
+        /// <summary>
+        /// for testing
+        /// </summary>
+        public void Clear()
+        {
+            _cache.Clear();
+        }
+
         public CreateNewRoomResult CreateNewRoom(CreateNewRoomRequest request)
         {
             var result = new CreateNewRoomResult();
@@ -243,16 +252,30 @@ namespace Poker.BE.Service.Services
 
         public FindRoomsByCriteriaResult FindRoomsByCriteria(FindRoomsByCriteriaRequest request)
         {
+            var result = new FindRoomsByCriteriaResult();
+
+            try
+            {
+                // UNDONE - Idan
+                var rooms = GameCenter.FindRoomsByCriteria();
+            }
+            catch (PokerException e)
+            {
+                result.Success = false;
+                result.ErrorMessage = e.Message;
+                Logger.Error(e, "At " + GetType().Name, e.Source);
+            }
+
+            return result;
+        }
+
+        public FindRoomsByCriteriaResult GetAllRooms()
+        {
             // TODO
             throw new NotImplementedException();
         }
 
-        public void Clear()
-        {
-            _cache.Clear();
-        }
 
-        
         #endregion
 
     }// class
