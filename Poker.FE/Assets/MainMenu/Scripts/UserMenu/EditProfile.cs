@@ -22,6 +22,7 @@ public class EditProfile : MonoBehaviour {
     {
         if (current.newPassword != "" && current.newUserName != "")
         {
+            current.oldUserName = GameProperties.user.userName;
             EditProfileFeedback.GetComponent<Text>().text = "";
             UIControl.GetComponent<UIControl>().ShowLoading();
             string profileJson = JsonUtility.ToJson(current);

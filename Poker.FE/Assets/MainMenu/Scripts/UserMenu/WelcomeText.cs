@@ -27,7 +27,8 @@ public class WelcomeText : MonoBehaviour {
     private void GetProfileFailed(string failedMessage)
     {
         connectionFeedback.GetComponent<Text>().text = failedMessage;
-        editProfileButton.GetComponent<Button>().interactable = false;
+        if (editProfileButton != null)
+            editProfileButton.GetComponent<Button>().interactable = false;
     }
 
     private void GetProfileSuccess(string successMessage)

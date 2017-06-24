@@ -11,6 +11,7 @@ public static class URL
     public static string RoomCreate = "Room/CreateNewRoom";
     public static string GetProfile = "Profile/GetProfile";
     public static string EditProfile = "Profile/EditProfile";
+    public static string KeepAlive = "KeepAlive/KeepAlive";
 }
 
 public class HttpCallFactory
@@ -21,7 +22,6 @@ public class HttpCallFactory
      * Note: base URL
      * this url change accoriding to the server location (environment)
      * 
-     * TODO: make this use a Relative URL (if possible at C#).
      */
     private const string baseUrl = "http://localhost:9000/api/";
 

@@ -11,7 +11,6 @@ public class JoinButton : MonoBehaviour {
     public List<GameObject> players;
 
     private bool flash;
-    private int tick = 0;
 
     public void ChooseFreeChair()
     {
@@ -23,14 +22,6 @@ public class JoinButton : MonoBehaviour {
             }
         });
         flash = true;
-    }
-    void Start()
-    {
-        InvokeRepeating("RequestUpdate", 0, GameProperties.pollingFrequency);
-    }
-    void RequestUpdate()
-    {
-        Debug.Log("tick " + tick++);
     }
 
     void Update()
