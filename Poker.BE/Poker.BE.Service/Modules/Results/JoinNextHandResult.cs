@@ -2,5 +2,6 @@
 {
     public class JoinNextHandResult : IResult
     {
+        public double UserBank { get; set; }
     }
 }

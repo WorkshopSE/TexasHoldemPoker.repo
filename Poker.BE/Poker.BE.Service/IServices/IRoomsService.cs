@@ -14,5 +14,6 @@ namespace Poker.BE.Service.IServices
         EnterRoomResult EnterRoom(EnterRoomRequest request);
         JoinNextHandResult JoinNextHand(JoinNextHandRequest request);
         StandUpToSpactateResult StandUpToSpactate(StandUpToSpactateRequest request);
+        LeaveRoomResult LeaveRoom(LeaveRoomRequest request);
     }
 }
