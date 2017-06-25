@@ -10,6 +10,6 @@ namespace Poker.BE.Service.Modules.Results
 	{
 		public string newUserName { get; set; }
 		public string newPassword { get; set; }
-		public byte[] newAvatar { get; set; }
+		public int[] newAvatar { get; set; }
 	}
 }

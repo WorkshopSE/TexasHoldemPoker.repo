@@ -91,6 +91,7 @@ namespace Poker.BE.Service.Services
             {
                 result.Success = false;
                 result.ErrorMessage = e.Message;
+                Logger.Error(e, this);
             }
 
             return result;
@@ -130,7 +131,7 @@ namespace Poker.BE.Service.Services
             {
                 result.Success = false;
                 result.ErrorMessage = e.Message;
-                Logger.Error(e, "At " + GetType().Name, e.Source);
+                Logger.Error(e, this);
             }
 
             return result;
@@ -171,7 +172,7 @@ namespace Poker.BE.Service.Services
             {
                 result.Success = false;
                 result.ErrorMessage = e.Message;
-                Logger.Error(e, "At " + GetType().Name, e.Source);
+                Logger.Error(e, this);
             }
             return result;
         }
@@ -209,7 +210,7 @@ namespace Poker.BE.Service.Services
             {
                 result.Success = false;
                 result.ErrorMessage = e.Message;
-                Logger.Error(e, "At " + GetType().Name, e.Source);
+                Logger.Error(e, this);
             }
 
             return result;
@@ -244,7 +245,7 @@ namespace Poker.BE.Service.Services
             {
                 result.Success = false;
                 result.ErrorMessage = e.Message;
-                Logger.Error(e, "At " + GetType().Name, e.Source);
+                Logger.Error(e, this);
             }
 
             return result;
@@ -313,7 +314,7 @@ namespace Poker.BE.Service.Services
             {
                 result.Success = false;
                 result.ErrorMessage = e.Message;
-                Logger.Error(e, "At " + GetType().Name, e.Source);
+                Logger.Error(e, this);
             }
 
             return result;
@@ -332,7 +333,7 @@ namespace Poker.BE.Service.Services
             {
                 result.Success = false;
                 result.ErrorMessage = e.Message;
-                Logger.Error(e, "At " + GetType().Name, e.Source);
+                Logger.Error(e, this);
             }
 
             return result;
