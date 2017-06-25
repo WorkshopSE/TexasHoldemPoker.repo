@@ -71,6 +71,7 @@
     <Compile Include="Modules\Results\IResult.cs" />
     <Compile Include="Modules\Results\JoinNextHandResult.cs" />
     <Compile Include="Modules\Results\CreateNewRoomResult.cs" />
+    <Compile Include="Modules\Results\LeaguesResult.cs" />
     <Compile Include="Modules\Results\LeaveRoomRequest.cs" />
     <Compile Include="Modules\Results\LeaveRoomResult.cs" />
     <Compile Include="Modules\Results\LoginResult.cs" />
@@ -79,11 +80,9 @@
     <Compile Include="Modules\Results\StandUpToSpactateResult.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\AuthenticationService.cs" />
-    <Compile Include="IServices\ILevelService.cs" />
     <Compile Include="IServices\IRoomsService.cs" />
     <Compile Include="Services\HistoryService.cs" />
     <Compile Include="Services\LeagueService.cs" />
-    <Compile Include="Services\LevelService.cs" />
     <Compile Include="Services\MessagesService.cs" />
     <Compile Include="Services\NotificationService.cs" />
     <Compile Include="Services\PokerGamePlayService.cs" />

@@ -50,6 +50,8 @@ namespace Poker.BE.Domain.Core
         public ICollection<League> Leagues { get { return leagues; } }
         public IDictionary<Player, Room> PlayerToRoom { get { return playersManager; } }
         public IDictionary<Room, League> RoomToLeague { get { return roomsManager; } }
+
+        
         #endregion
 
         #region Constructors
@@ -447,6 +449,12 @@ namespace Poker.BE.Domain.Core
             }
 
             RemovePlayer(player);
+        }
+
+        public int GetRelevantLeague(int level)
+        {
+            // TODO Tomer - please write your code here...
+            throw new NotImplementedException();
         }
         #endregion
 

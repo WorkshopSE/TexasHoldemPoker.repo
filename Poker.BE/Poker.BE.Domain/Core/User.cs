@@ -21,6 +21,7 @@ namespace Poker.BE.Domain.Core
         #region Properties
         public Statistics UserStatistics { get; private set; }
         public ICollection<Player> Players { get; set; }
+        public int Level { get; set; }
         #endregion
 
         #region Constructors

@@ -16,6 +16,7 @@ namespace Poker.BE.Domain.Game
         public int MaxLevel { get; set; }
         public int MinLevel { get; set; }
         public bool IsFull { get; set; }
+        public string Name { get; set; }
         #endregion
 
         #region Constructors
