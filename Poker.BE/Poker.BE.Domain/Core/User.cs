@@ -154,7 +154,24 @@ namespace Poker.BE.Domain.Core
             //Add dead player's statistics to user's statistics
             UserStatistics.CombineStatistics(player.PlayerStatistics);
 
+            //Update Level
+            Level = CalculateLevel();
+
             Players.Remove(player);
+        }
+        #endregion
+
+        #region UCC02
+        public int CalculateLevel()
+        {
+            double winRate = UserStatistics.GrossProfits - UserStatistics.GrossLosses;
+
+            if (winRate < 1)
+                return 1;
+            else if (winRate > 6000)
+                return 600;
+
+            return (int)winRate / 10;
         }
         #endregion
 
