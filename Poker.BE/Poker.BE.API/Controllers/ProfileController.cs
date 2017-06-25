@@ -67,7 +67,24 @@ namespace Poker.BE.API.Controllers
 			return Request.CreateResponse(HttpStatusCode.OK, result);
 		}
 
+        [HttpPost]
+        public HttpResponseMessage GetStatistics(GetStatisticsRequest request)
+        {
+            var result = new GetStatisticsResult();
 
+            try
+            {
+                result = service.GetStatistics(request);
+            }
+            catch (Exception e)
+            {
+                result.ErrorMessage = e.Message;
+                result.Success = false;
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, result);
+            }
+
+            return Request.CreateResponse(HttpStatusCode.OK, result);
+        }
 		#endregion
 	}
 }

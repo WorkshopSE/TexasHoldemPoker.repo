@@ -14,9 +14,9 @@ namespace Poker.BE.Service.Modules.Results
         /// <summary>
         /// this field is an array with size of 52, according to cards indexes.
         /// Each cell contains onr of the followings:
-        /// The player's hash code (the one that holds this card)
-        /// A negative number represent each of the table cards (if there are any): -1 for the first card, -2 for the second...
-        /// Zero, meanning this card is not in use (still in the deck)
+        /// 1. The player's hash code (the one that holds this card)
+        /// 2. A negative number represent each of the table cards (if there are any): -1 for the first card, -2 for the second...
+        /// 3. Zero, meanning this card is not in use (still in the deck)
         /// </summary>
         public int[] PlayersAndTableCards { get; set; }
         public int DealerId { get; set; }
