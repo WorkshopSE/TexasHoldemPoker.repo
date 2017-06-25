@@ -65,6 +65,7 @@ namespace Poker.BE.Service.Services
 			}
 			return result;
 		}
+
 		public GetProfileResult GetProfile(GetProfileRequest request)
 		{
 			var result = new GetProfileResult();
@@ -86,5 +87,5 @@ namespace Poker.BE.Service.Services
 			}
 			return result;
 		}
-	}
+    }
 }

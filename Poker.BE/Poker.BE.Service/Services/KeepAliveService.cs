@@ -44,15 +44,9 @@ namespace Poker.BE.Service.Services
                 Room room = null;
                 Hand hand = null;
                 Round round = null;
+
                 #region Set Room, Hand and Round
-                foreach (Room r in GameCenter.Rooms)
-                {
-                    if (request.Room == r.GetHashCode())
-                    {
-                        room = r;
-                        break;
-                    }
-                }
+                room = GameCenter.RoomsByID[request.Room];
                 if (room == null)
                 {
                     throw new RoomNotFoundException("Can't find room in game center");
@@ -172,16 +166,10 @@ namespace Poker.BE.Service.Services
                 }
                 #endregion
 
-                #region Player's info
-                foreach (Player p in room.ActivePlayers)
-                {
-                    if (p.GetHashCode() == request.PlayerID)
-                    {
-                        result.PlayerWallet = p.WalletValue;
-                        break;
-                    }
-                }
-                #endregion
+                //Player's info
+                result.PlayerWallet = room.ActivePlayersByID[request.PlayerID].WalletValue;
+
+                result.Success = true;
             }
             catch (RoomNotFoundException e)
             {
