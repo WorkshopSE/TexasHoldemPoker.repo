@@ -32,3 +32,6 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/Game/SimChat/ChatMessage.unity
     guid: 00000000000000000000000000000000
+  - enabled: 1
+    path: Assets/View/EditProfile.unity
+    guid: 3dff0d5d06e4faa4a9b959ecc90f180a

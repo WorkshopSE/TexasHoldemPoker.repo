@@ -15,7 +15,7 @@ public class StandUp : MonoBehaviour {
     StandUpToSpactateRequest request;
     StandUpToSpactateResult result;
 
-	public void doStandUp()
+	public void DoStandUp()
     {
         request = new StandUpToSpactateRequest()
         {

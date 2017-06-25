@@ -25,7 +25,8 @@ public class EditProfile : MonoBehaviour {
     {
         if (current.newPassword != "" && current.newUserName != "")
         {
-            current.oldUserName = GameProperties.user.userName;
+            current.UserName = GameProperties.user.userName;
+            current.Password = GameProperties.user.password;
             EditProfileFeedback.GetComponent<Text>().text = "";
             UIControl.GetComponent<UIControl>().ShowLoading();
             string profileJson = JsonUtility.ToJson(current);
@@ -70,13 +71,12 @@ public class EditProfile : MonoBehaviour {
         }
         UIControl.GetComponent<UIControl>().HideLoading();
     }
-    void Awake()
+    void Start()
     {
         if (GameProperties.user.Avatar != null)
         {
             Texture2D tex = new Texture2D(2,2);
             tex.LoadImage(GameProperties.user.Avatar);
-
             avatar.GetComponent<RawImage>().texture = tex;
         }
         username.GetComponent<InputField>().text = GameProperties.user.userName;
@@ -96,7 +96,7 @@ public class EditProfile : MonoBehaviour {
         var loader = new WWW(url);
         yield return loader;
         avatar.GetComponent<RawImage>().texture = loader.texture;
-        current.newAvatar = loader.texture.GetRawTextureData();
+        current.newAvatar = loader.texture.EncodeToPNG();
     }
     // Update is called once per frame
     void Update()

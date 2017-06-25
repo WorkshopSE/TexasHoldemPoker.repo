@@ -6,6 +6,7 @@ public class WelcomeText : MonoBehaviour {
     public GameObject text;
     public GameObject editProfileButton;
     public GameObject connectionFeedback;
+    public RawImage avatar;
 
     private HttpCallFactory http;
     private GetProfileRequest request;
@@ -37,5 +38,12 @@ public class WelcomeText : MonoBehaviour {
         GameProperties.user.password = result.Password;
         GameProperties.user.userName = result.UserName;
         GameProperties.user.Avatar = result.Avatar;
+        if (GameProperties.user.Avatar != null && GameProperties.user.Avatar.Length > 0)
+        {
+            Texture2D tex = new Texture2D(2, 2);
+            tex.LoadImage(GameProperties.user.Avatar);
+            avatar.texture = tex;
+        }
+        
     }
 }

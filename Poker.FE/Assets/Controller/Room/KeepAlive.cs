@@ -7,12 +7,17 @@ using UnityEngine.UI;
 public class KeepAlive : MonoBehaviour
 {
     public GameObject delayFeedback;
+    public List<GameObject> chairs;
+    public List<GameObject> players;
+    public List<Image> dealers;
+    public List<Text> playerStates;
 
     private int delayCounter = 0;
     private HttpCallFactory http;
     private KeepAliveRequest request;
     private KeepAliveResult result;
     private string requestJson;
+    private int currentPlayerID = 0;
 
     // Use this for initialization
     void Start()
@@ -29,17 +34,17 @@ public class KeepAlive : MonoBehaviour
     }
     void RequestUpdate()
     {
-        StartCoroutine(http.POST(URL.KeepAlive, requestJson, new System.Action<string>(updateComplete), new System.Action<string>(updateFailed)));
+        StartCoroutine(http.POST(URL.KeepAlive, requestJson, new System.Action<string>(UpdateComplete), new System.Action<string>(UpdateFailed)));
         
     }
 
-    private void updateFailed(string failMessage)
+    private void UpdateFailed(string failMessage)
     {
         delayFeedback.GetComponent<Text>().text = "Please wait [Delay count = " + ++delayCounter + " sec]";
         Debug.Log("Keep Alive Error " + failMessage);
     }
 
-    private void updateComplete(string successMessage)
+    private void UpdateComplete(string successMessage)
     {
         delayCounter = 0;
         delayFeedback.GetComponent<Text>().text = "";
@@ -51,7 +56,29 @@ public class KeepAlive : MonoBehaviour
         else
         {
             //TODO: Add update to table
-            throw new NotImplementedException();
+            for (int chairIndex = 0; chairIndex < result.TableLocationOfActivePlayers.Length; chairIndex++)
+            {
+                playerStates[chairIndex].text = result.PlayersStates[chairIndex] == "passive" ? "" : result.PlayersStates[chairIndex];
+                int playerID = result.TableLocationOfActivePlayers[chairIndex];
+                players[chairIndex].GetComponent<Animator>().enabled = false;
+                if (playerID > 0)
+                {
+                    players[chairIndex].SetActive(true);
+                    chairs[chairIndex].GetComponent<Image>().enabled = false;
+                    if (playerID == result.CurrentPlayerID && result.CurrentPlayerID != currentPlayerID)
+                    {
+                        currentPlayerID = playerID;
+                        players[chairIndex].GetComponent<Animator>().enabled = true;
+                    }
+                }
+                else
+                {
+                    players[chairIndex].SetActive(true);
+                    chairs[chairIndex].GetComponent<Image>().enabled = false;
+                }
+            }
+            GameProperties.CurrentRoom.IsTableFull = result.IsTableFull;
+            GameProperties.CurrentRoom.PlayerWallet = result.PlayerWallet;
         }
         
     }

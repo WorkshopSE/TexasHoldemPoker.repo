@@ -8,20 +8,21 @@ public class CardModel : MonoBehaviour {
 
 	public Sprite[] faces;
 	public Sprite cardBack;
-
 	public int cardIndex;
+	public bool showFace;
 
-	public void ToggleFace (bool showFace){
+	public void ToggleFace (){
+		GameObject card = new GameObject ();
+		card.AddComponent<SpriteRenderer> ();
 		if (showFace) {
-			spriteRenderer.sprite = faces [cardIndex];
+			card.AddComponent<SpriteRenderer> ().sprite = faces [15];
 		}
 		else {
-			spriteRenderer.sprite = cardBack;
+			card.AddComponent<SpriteRenderer> ().sprite = faces [20];
 		}
 	}
 
 	public void Awake(){
-		
 		spriteRenderer = GetComponent<SpriteRenderer> ();
 		spriteRenderer.enabled = true;
 	}

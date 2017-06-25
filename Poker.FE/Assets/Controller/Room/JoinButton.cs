@@ -21,10 +21,17 @@ public class JoinButton : MonoBehaviour
 
     public void ChooseFreeChair()
     {
-        request = new JoinNextHandRequest();
-        request.buyIn = int.Parse(buyInInput.text);
-        request.Player = GameProperties.CurrentRoom.playerid;
-        request.User = GameProperties.user.userName;
+        if (GameProperties.CurrentRoom.IsTableFull)
+        {
+            feedback.text = "Table Is Full";
+            return;
+        }
+        request = new JoinNextHandRequest()
+        {
+            buyIn = int.Parse(buyInInput.text),
+            Player = GameProperties.CurrentRoom.playerid,
+            User = GameProperties.user.userName
+        };
         chairs.ForEach(chair =>
         {
             if (chair.GetComponent<Image>().enabled)
@@ -65,11 +72,11 @@ public class JoinButton : MonoBehaviour
         });
         request.seatIndex = i;
         string joinJson = JsonUtility.ToJson(request);
-        StartCoroutine(http.POST(URL.JoinNextHand, joinJson, new Action<string>(joinSuccess), new Action<string>(joinFail)));
+        StartCoroutine(http.POST(URL.JoinNextHand, joinJson, new Action<string>(JoinSuccess), new Action<string>(JoinFail)));
         GameProperties.CurrentRoom.ChairIndex = i;
     }
 
-    private void joinFail(string failmsg)
+    private void JoinFail(string failmsg)
     {
         feedback.text = failmsg;
         Debug.Log(failmsg);
@@ -77,11 +84,12 @@ public class JoinButton : MonoBehaviour
         buyInInput.interactable = true;
     }
 
-    private void joinSuccess(string successmsg)
+    private void JoinSuccess(string successmsg)
     {
         result = JsonUtility.FromJson<JoinNextHandResult>(successmsg);
         if (result.Success)
         {
+            //TODO: Add Wallet here (wait for idan to do it)
             GameProperties.user.deposit = result.UserBank;
             spectate.SetActive(false);
             active.SetActive(true);

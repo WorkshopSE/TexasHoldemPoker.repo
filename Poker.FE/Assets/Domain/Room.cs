@@ -17,4 +17,6 @@ public class Room {
     public bool IsSpactatorsAllowed { get; internal set; }
     public double Limit { get; internal set; }
     public int ChairIndex { get; internal set; }
+    public bool IsTableFull { get; internal set; }
+    public double PlayerWallet { get; internal set; }
 }
