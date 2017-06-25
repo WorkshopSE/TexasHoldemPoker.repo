@@ -65,7 +65,7 @@ namespace Poker.BE.Domain.Game
         {
             if (CurrentState != State.Passive)
             {
-                return false;
+                throw new PlayerModeException("Player is not a spectator");
             }
 
             // buy in to wallet

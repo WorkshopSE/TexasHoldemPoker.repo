@@ -251,6 +251,8 @@ namespace Poker.BE.Domain.Game.Tests
             room.TakeChair(roomCreator, 3);
             var actual1 = room.TableLocationOfActivePlayers.Count;
             var actChair = room.Chairs.ElementAt(3).IsTaken;
+            roomCreator.CurrentState = Player.State.ActiveFolded;
+            //Note: this is because the TakeChair doesn't set the player's state (a different method does it)
             room.LeaveChair(roomCreator);
             var actual2 = room.TableLocationOfActivePlayers.Count;
             var actChair2 = room.Chairs.ElementAt(3).IsTaken;
