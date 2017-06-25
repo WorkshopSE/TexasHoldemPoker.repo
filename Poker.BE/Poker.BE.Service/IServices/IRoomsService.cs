@@ -15,5 +15,9 @@ namespace Poker.BE.Service.IServices
         JoinNextHandResult JoinNextHand(JoinNextHandRequest request);
         StandUpToSpactateResult StandUpToSpactate(StandUpToSpactateRequest request);
         LeaveRoomResult LeaveRoom(LeaveRoomRequest request);
+        FindRoomsByCriteriaResult FindRoomsByCriteria(FindRoomsByCriteriaRequest request);
+        FindRoomsByCriteriaResult GetAllRooms();
+        FindRoomsByCriteriaResult GetAllRoomsOfLeague(int leagueId);
+
     }
 }

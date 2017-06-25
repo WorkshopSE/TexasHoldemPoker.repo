@@ -57,7 +57,12 @@ namespace Poker.BE.Domain.Game
                 return result.ToList();
             }
         }
+        
+        /// <summary>
+        /// Current number of players at the room
+        /// </summary>
         public ICollection<Player> Players { get { return activeAndPassivePlayers; } }
+
         public IDictionary<Chair, Player> TableLocationOfActivePlayers { get; private set; }
         public GamePreferences Preferences { get; }
         public bool IsTableFull

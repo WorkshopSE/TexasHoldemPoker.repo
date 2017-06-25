@@ -121,6 +121,67 @@ namespace Poker.BE.API.Controllers
 
             return Request.CreateResponse(HttpStatusCode.OK, result);
         }
+
+
+        [HttpPost]
+        public HttpResponseMessage FindRoomsByCriteria(FindRoomsByCriteriaRequest request)
+        {
+            var result = new FindRoomsByCriteriaResult();
+
+            try
+            {
+                result = service.FindRoomsByCriteria(request);
+            }
+            catch (Exception e)
+            {
+                result.ErrorMessage = e.Message;
+                result.Success = false;
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, result);
+            }
+
+            return Request.CreateResponse(HttpStatusCode.OK, result);
+        }
+
+
+        [HttpGet]
+        public HttpResponseMessage GetAllRooms()
+        {
+            var result = new FindRoomsByCriteriaResult();
+
+            try
+            {
+                result = service.GetAllRooms();
+            }
+            catch (Exception e)
+            {
+                result.ErrorMessage = e.Message;
+                result.Success = false;
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, result);
+            }
+
+            return Request.CreateResponse(HttpStatusCode.OK, result);
+        }
+
+
+        [HttpGet]
+        public HttpResponseMessage GetAllRoomsOfLeague(int leagueId)
+        {
+            var result = new FindRoomsByCriteriaResult();
+
+            try
+            {
+                result = service.GetAllRoomsOfLeague(leagueId);
+            }
+            catch (Exception e)
+            {
+                result.ErrorMessage = e.Message;
+                result.Success = false;
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, result);
+            }
+
+            return Request.CreateResponse(HttpStatusCode.OK, result);
+        }
+
         #endregion
     }
 }
