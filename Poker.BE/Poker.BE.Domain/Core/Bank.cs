@@ -23,16 +23,7 @@ namespace Poker.BE.Domain.Core
         #endregion
 
         #region Methods
-
-
-
-
-        protected bool CanWithdraw(double sum)
-        {
-            return (sum < Money);
-        }
-
-        protected bool Withdraw(double sum)
+        public bool Withdraw(double sum)
         {
             if (CanWithdraw(sum))
             {
@@ -42,13 +33,17 @@ namespace Poker.BE.Domain.Core
             return false;
         }
 
-        protected void Deposit(double sum)
+        public void Deposit(double sum)
         {
             Money = Money + sum;
         }
+        #endregion
 
-
-
+        #region Protected Functions
+        protected bool CanWithdraw(double sum)
+        {
+            return (sum < Money);
+        }
         #endregion
 
     }

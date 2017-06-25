@@ -206,7 +206,7 @@ namespace Poker.BE.Domain.Game
             }
         }
 
-        public void LeaveChair(Player player)
+        public double LeaveChair(Player player)
         {
             if (TableLocationOfActivePlayers.Values.Contains(player))
             {
@@ -216,10 +216,11 @@ namespace Poker.BE.Domain.Game
                     {
                         TableLocationOfActivePlayers.Remove(chair);
                         chair.Release();
-                        return;
+                        return player.StandUp();
                     }
                 }
             }
+            throw new PlayerNotFoundException("Can't find player at the table");
         }
 
         public void SendMessage()
