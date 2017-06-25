@@ -27,7 +27,7 @@ namespace Poker.BE.API.Controllers
 
         #region Methods
 
-        [HttpPost]
+        [HttpGet]
         public HttpResponseMessage GetAllLeagues(string userName)
         {
             var result = new LeaguesResult();
