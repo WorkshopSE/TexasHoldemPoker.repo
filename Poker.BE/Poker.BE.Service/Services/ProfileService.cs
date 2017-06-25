@@ -45,30 +45,23 @@ namespace Poker.BE.Service.Services
 			result.newUserName = request.UserName;
 			try
 			{
-				UserManager.EditProfile(request.UserName, request.NewUserName ?? request.UserName, request.NewPassword, request.NewAvatar);
-				result.newAvatar = request.NewAvatar;
+                // call domain action
+				UserManager.EditProfile(request.UserName, request.NewUserName ?? request.UserName, request.NewPassword ?? request.Password, request.NewAvatar);
+
+                // update result
+
+                // parse byte[] to JSON (using int[] as a cleaver KOMBINA)
+				result.newAvatar = request.NewAvatar.Select(b => (int)b).ToArray();
+
 				result.newPassword = request.NewPassword;
 				result.newUserName = request.NewUserName;
 				result.Success = true;
 			}
-			catch (UserNotFoundException e)
+            catch(PokerException e)
 			{
 				result.Success = false;
 				result.ErrorMessage = e.Message;
-				Logger.Log(e.Message, this);
-
-			}
-			catch (IncorrectPasswordException e)
-			{
-				result.Success = false;
-				result.ErrorMessage = e.Message;
-				Logger.Log(e.Message, this);
-			}
-			catch (UserNameTakenException e)
-			{
-				result.Success = false;
-				result.ErrorMessage = e.Message;
-				Logger.Log(e.Message, this);
+                Logger.Error(e, this);
 			}
 			return result;
 		}
