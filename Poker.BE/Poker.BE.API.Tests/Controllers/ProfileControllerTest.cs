@@ -8,6 +8,7 @@ using System.Net;
 using Poker.BE.Service.Modules.Requests;
 using Poker.BE.Service.Modules.Results;
 using System.Net.Http;
+using System.Linq;
 
 namespace Poker.BE.API.Tests.Controllers
 {
@@ -48,10 +49,10 @@ namespace Poker.BE.API.Tests.Controllers
 			//Arrange
 			var request = new EditProfileRequest()
 			{
-				oldUserName = user.UserName,
-				newUserName = "GAL",
-				newPassword = "Password2",
-				newAvatar = new byte[] { 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20 }
+				UserName = user.UserName,
+				NewUserName = "GAL",
+				NewPassword = "Password2",
+				NewAvatar = new byte[] { 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20 }
 			};
 
 			var exStatus = HttpStatusCode.OK;
@@ -60,7 +61,7 @@ namespace Poker.BE.API.Tests.Controllers
 				ErrorMessage = "",
 				Success = true,
 				newUserName = "GAL",
-				newAvatar = new byte[] { 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20 },
+				newAvatar = (new byte[] { 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20 }).Select(b => (int)b).ToArray(),
 				newPassword = "Password2"
 			};
 

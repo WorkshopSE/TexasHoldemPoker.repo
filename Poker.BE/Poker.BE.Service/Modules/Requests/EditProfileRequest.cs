@@ -8,9 +8,10 @@ namespace Poker.BE.Service.Modules.Requests
 {
 	public class EditProfileRequest : IRequest
 	{
-		public string oldUserName { get; set; }
-		public string newUserName { get; set; }
-		public string newPassword { get; set; }
-		public byte[] newAvatar { get; set; }
+		public string UserName { get; set; }
+        public string Password { get; set; }
+        public string NewUserName { get; set; }
+		public string NewPassword { get; set; }
+		public byte[] NewAvatar { get; set; }
 	}
 }

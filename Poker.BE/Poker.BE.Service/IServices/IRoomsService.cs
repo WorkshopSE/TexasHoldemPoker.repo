@@ -17,5 +17,7 @@ namespace Poker.BE.Service.IServices
         LeaveRoomResult LeaveRoom(LeaveRoomRequest request);
         FindRoomsByCriteriaResult FindRoomsByCriteria(FindRoomsByCriteriaRequest request);
         FindRoomsByCriteriaResult GetAllRooms();
+        FindRoomsByCriteriaResult GetAllRoomsOfLeague(int leagueId);
+
     }
 }
