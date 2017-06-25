@@ -19,7 +19,12 @@ namespace Poker.BE.Service.Modules.Requests
         public const string LEVEL = "level";
         public const string PREFERENCES = "preferences";
         public const string PLAYER = "player";
-
+        public const string ANTES_VALUE = "ante";
+        public const string MAX_NUMBER_OF_PLAYERS = "max number of players";
+        public const string BUY_IN_COST = "buy in cost";
+        public const string NAME = "name";
+        public const string MIN_BET = "minimum bet";
+        public const string MIN_NUMBER_OF_PLAYERS = "min number of players";
 
         public int Level { get; set; }
         public int Player { get; set; }
@@ -29,5 +34,10 @@ namespace Poker.BE.Service.Modules.Requests
         public double MinimumBuyIn { get; set; }
         public int MaxNumberOfPlayers { get; set; }
         public int CurrentNumberOfPlayers { get; set; }
+        public double Antes { get; set; }
+        public double BuyInCost { get; set; }
+        public string Name { get; set; }
+        public double MinimumBet { get; set; }
+        public int MinNumberOfPlayers { get; set; }
     }
 }

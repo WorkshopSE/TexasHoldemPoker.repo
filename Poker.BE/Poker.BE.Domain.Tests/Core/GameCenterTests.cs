@@ -109,16 +109,43 @@ namespace Poker.BE.Domain.Core.Tests
             Assert.AreEqual(expRoom, actual.Single());
         }
 
-        // TODO: find room by preferences
-        //[TestMethod()]
-        //public void FindRoomsByCriteriaTest_perf()
-        //{
-        //    //Arrange
+        [TestMethod()]
+        public void FindRoomsByCriteriaTest_perf_success()
+        {
+            //Arrange
+            var pref = new NoLimitHoldem()
+            {
+                Name = "test room",
+            };
 
-        //    //Act
+            Player expPlayer;
+            var expRoom = gameCenter.CreateNewRoom(6, pref, out expPlayer);
 
-        //    //Assert
-        //}
+            //Act
+            var actual = gameCenter.FindRoomsByCriteria(-1, null, pref);
+
+            //Assert
+            Assert.AreEqual(1, actual.Count);
+            Assert.AreEqual(expRoom, actual.Single());
+        }
+
+        public void FindRoomsByCriteriaTest_perf_fail()
+        {
+            //Arrange
+            var pref = new NoLimitHoldem()
+            {
+                Name = "test room",
+            };
+
+            Player expPlayer;
+            var expRoom = gameCenter.CreateNewRoom(6, pref, out expPlayer);
+
+            //Act
+            var actual = gameCenter.FindRoomsByCriteria(-1, null, new NoLimitHoldem() { });
+
+            //Assert
+            Assert.AreEqual(0, actual.Count);
+        }
 
         [TestMethod()]
         public void FindRoomsByCriteriaTest_betsize()

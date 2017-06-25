@@ -280,7 +280,15 @@ namespace Poker.BE.Service.Services
                 // arrange search criteria
                 double betSize = request.Criterias.Contains(FindRoomsByCriteriaRequest.BET_SIZE) ? request.BetSize : -1;
 
-                GamePreferences preferences = request.Criterias.Contains(FindRoomsByCriteriaRequest.PREFERENCES) ? request.Preferences : null;
+                GamePreferences preferences =
+                    new NoLimitHoldem() {
+                        MaxNumberOfPlayers = request.Criterias.Contains(FindRoomsByCriteriaRequest.MAX_NUMBER_OF_PLAYERS) ? request.MaxNumberOfPlayers : -1,
+                        AntesValue = request.Criterias.Contains(FindRoomsByCriteriaRequest.ANTES_VALUE) ? request.Antes : -1,
+                        BuyInCost = request.Criterias.Contains(FindRoomsByCriteriaRequest.BUY_IN_COST) ? request.BuyInCost : -1,
+                        Name = request.Criterias.Contains(FindRoomsByCriteriaRequest.NAME) ? request.Name : "",
+                        MinimumBet = request.Criterias.Contains(FindRoomsByCriteriaRequest.MIN_BET)? request.MinimumBet : -1,
+                        MinNumberOfPlayers = request.Criterias.Contains(FindRoomsByCriteriaRequest.MIN_NUMBER_OF_PLAYERS) ? request.MinNumberOfPlayers : -1,
+                    };
 
                 Player player = null;
                 if (request.Criterias.Contains(FindRoomsByCriteriaRequest.PLAYER))
