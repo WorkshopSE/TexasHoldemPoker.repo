@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace AT.Tests
 {
 	[TestFixture]
-	[Category("SignUp")]
+	[Category("UCC01: Authentication & Profile")]
 	class TestSignUp : ProjectTests
 	{
 		private string TestUser;

@@ -8,15 +8,14 @@ using System.Threading.Tasks;
 namespace AT.Tests
 {
 	[TestFixture]
-	[Category("UCC01: Authentication & Profile")]
-	class TestLogout : ProjectTests
+	[Category("UCC03: Rooms Management")]
+	class TestRoom_EnterRoom : ProjectTests
 	{
 		[SetUp]
 		public new void Setup()
 		{
 			base.Setup();
 			base.SignUp("tomer", "Tomer123", "123456");
-			base.Login("Tomer123", "123456");
 		}
 
 		[TearDown]
@@ -24,10 +23,8 @@ namespace AT.Tests
 		{
 			base.TearDown();
 		}
+
 		[Test]
-		public void TestSuccesfulLogout()
-		{
-			Assert.IsTrue(base.Logout("Tomer123", "123456"));
-		}
+		public
 	}
 }

@@ -50,6 +50,7 @@
     <Compile Include="TestEditUserProfile.cs" />
     <Compile Include="TestLogin.cs" />
     <Compile Include="TestLogout.cs" />
+    <Compile Include="TestRoom_EnterRoom.cs" />
     <Compile Include="TestShuffleCard.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="ProjectTests.cs" />

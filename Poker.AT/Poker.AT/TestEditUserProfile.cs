@@ -11,7 +11,7 @@ using System.IO;
 namespace AT.Tests
 {
 	[TestFixture]
-	[Category("Edit User Profile")]
+	[Category("UCC01: Authentication & Profile")]
 	class TestEditUserProfile : ProjectTests
 	{
 		string TestUser;
