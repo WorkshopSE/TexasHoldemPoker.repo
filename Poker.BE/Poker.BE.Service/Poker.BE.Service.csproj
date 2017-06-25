@@ -53,6 +53,7 @@
     <Compile Include="Modules\Requests\CheckRequest.cs" />
     <Compile Include="Modules\Requests\EditProfileRequest.cs" />
     <Compile Include="Modules\Requests\EnterRoomRequest.cs" />
+    <Compile Include="Modules\Requests\FindRoomsByCriteriaRequest.cs" />
     <Compile Include="Modules\Requests\GetProfileRequest.cs" />
     <Compile Include="Modules\Requests\IRequest.cs" />
     <Compile Include="Modules\Requests\JoinNextHandRequest.cs" />
@@ -65,6 +66,7 @@
     <Compile Include="Modules\Results\CheckResult.cs" />
     <Compile Include="Modules\Results\EditProfileResult.cs" />
     <Compile Include="Modules\Results\EnterRoomResult.cs" />
+    <Compile Include="Modules\Results\FindRoomsByCriteriaResult.cs" />
     <Compile Include="Modules\Results\GetProfileResult.cs" />
     <Compile Include="Modules\Results\IResult.cs" />
     <Compile Include="Modules\Results\JoinNextHandResult.cs" />
