@@ -57,6 +57,7 @@ namespace Poker.BE.Domain.Game
                 return result.ToList();
             }
         }
+        public Dictionary<int, Player> ActivePlayersByID { get; private set; }
         
         /// <summary>
         /// Current number of players at the room
@@ -78,6 +79,7 @@ namespace Poker.BE.Domain.Game
         private Room()
         {
             activeAndPassivePlayers = new List<Player>();
+            ActivePlayersByID = new Dictionary<int, Player>();
 
             chairs = new Chair[NCHAIRS_IN_ROOM];
 
@@ -129,6 +131,8 @@ namespace Poker.BE.Domain.Game
             {
                 return false;
             }
+
+            ActivePlayersByID.Add(player.GetHashCode(), player);
 
             return player.JoinToTable(buyIn);
         }
@@ -236,49 +240,3 @@ namespace Poker.BE.Domain.Game
 
     }
 }
-
-
-
-
-
-//#region GameConfig Properties (8)
-//public string Name
-//{
-//    get { return preferences.Name; }
-//    set { preferences.Name = value; }
-//}
-
-//public bool IsSpactatorsAllowed
-//{
-//    get { return preferences.IsSpactatorsAllowed; }
-//    set { preferences.IsSpactatorsAllowed = value; }
-//}
-
-//public int MaxNumberOfPlayers
-//{
-//    get { return preferences.MaxNumberOfPlayers; }
-//    set { preferences.MaxNumberOfPlayers = value; }
-//}
-
-//public int MinNumberOfPlayers
-//{
-//    get { return preferences.MinNumberOfPlayers; }
-//    set { preferences.MinNumberOfPlayers = value; }
-//}
-
-//public double MinimumBet
-//{
-//    get { return preferences.MinimumBet; }
-//    set { preferences.MinimumBet = value; }
-//}
-
-//public double BuyInCost
-//{
-//    get { return preferences.BuyInCost; }
-//    set { preferences.BuyInCost = value; }
-//}
-//#endregion
-
-//
-
-//#endregion

@@ -94,22 +94,5 @@ namespace Poker.BE.Service.Services
 			}
 			return result;
 		}
-
-        public GetStatisticsResult GetStatistics(GetStatisticsRequest request)
-        {
-            var result = new GetStatisticsResult();
-            try
-            {
-                result.WinRateStatistics = UserManager.Users[request.UserName].GetWinRateStatistics();
-                result.GrossProfitWinRateStatistics = UserManager.Users[request.UserName].GetGrossProfitWinRateStatistics();
-            }
-            catch (PokerException e)
-            {
-                result.ErrorMessage = e.Message;
-                result.Success = false;
-                Logger.Log(e.Message, this);
-            }
-            return result;
-        }
     }
 }

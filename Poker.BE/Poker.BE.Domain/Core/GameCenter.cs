@@ -46,6 +46,7 @@ namespace Poker.BE.Domain.Core
 
         #region Properties
         public ICollection<Room> Rooms { get { return roomsManager.Keys; } }
+        public Dictionary<int, Room> RoomsByID { get; private set;}
         public ICollection<Player> Players { get { return playersManager.Keys; } }
         public ICollection<League> Leagues { get { return leagues; } }
         public IDictionary<Player, Room> PlayerToRoom { get { return playersManager; } }
@@ -67,6 +68,8 @@ namespace Poker.BE.Domain.Core
             playersManager = new Dictionary<Player, Room>();
             roomsManager = new Dictionary<Room, League>();
             leagues = new List<League>();
+
+            RoomsByID = new Dictionary<int, Room>();
         }
 
 
@@ -343,6 +346,7 @@ namespace Poker.BE.Domain.Core
 
             league.Rooms.Add(room);
             BindRoomToLeague(room, league);
+            RoomsByID.Add(room.GetHashCode(), room);
 
             return room;
         }
