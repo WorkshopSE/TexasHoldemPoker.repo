@@ -48,10 +48,10 @@ namespace Poker.BE.API.Tests.Controllers
 			//Arrange
 			var request = new EditProfileRequest()
 			{
-				oldUserName = user.UserName,
-				newUserName = "GAL",
-				newPassword = "Password2",
-				newAvatar = new byte[] { 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20 }
+				UserName = user.UserName,
+				NewUserName = "GAL",
+				NewPassword = "Password2",
+				NewAvatar = new byte[] { 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20 }
 			};
 
 			var exStatus = HttpStatusCode.OK;
