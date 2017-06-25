@@ -182,7 +182,7 @@ namespace Poker.BE.API.Controllers.Tests
             Assert.AreEqual("", actContent.ErrorMessage, "error message");
             Assert.AreEqual(true, actContent.Success, "success");
             Assert.AreEqual(buyIn, actContent.RemainingMoney, "remaining money");
-            Assert.AreEqual(_user.UserBank.Money , actContent.UserBankMoney, "user bank money");
+            Assert.AreEqual(_user.UserBank.Money, actContent.UserBankMoney, "user bank money");
             Assert.AreEqual(_user.UserStatistics, actContent.UserStatistics, "user statistics object");
         }
 
@@ -211,6 +211,57 @@ namespace Poker.BE.API.Controllers.Tests
             Assert.AreEqual(true, actContent.Success, "success");
             Assert.AreEqual(false, _user.Players.Contains(player, new AddressComparer<Player>()));
             Assert.IsNotNull(actContent.UserStatistics, "user statistics not null");
+        }
+
+        [TestMethod()]
+        public void GetAllRoomsTest()
+        {
+            //Arrange
+            Player creator;
+            _user.CreateNewRoom(_level, new NoLimitHoldem() { Name = "room 1" }, out creator);
+            _user.CreateNewRoom(_level, new NoLimitHoldem() { Name = "room 2" }, out creator);
+            _user.CreateNewRoom(_level, new NoLimitHoldem() { Name = "room 3" }, out creator);
+            int roomCount = 3;
+
+            //Act
+            var act = _ctrl.GetAllRooms();
+            var actContent = default(FindRoomsByCriteriaResult);
+            var hasContent = act.TryGetContentValue(out actContent);
+
+            //Assert
+            TestContext.WriteLine("error message: '{0}'", (actContent != null && actContent.ErrorMessage != "") ? actContent.ErrorMessage : "null");
+            Assert.AreEqual(HttpStatusCode.OK, act.StatusCode, "status code");
+            Assert.IsTrue(hasContent, "has contact");
+            Assert.AreEqual("", actContent.ErrorMessage, "error message");
+            Assert.AreEqual(true, actContent.Success, "success");
+
+            // print the result rooms
+            TestContext.WriteLine("rooms:");
+            foreach (var room in actContent.Rooms)
+            {
+                foreach (var property in room.GetType().GetProperties())
+                {
+
+                    TestContext.WriteLine("{0} : {1}", property.Name, property.GetValue(room)); 
+                }
+
+                TestContext.WriteLine("");
+            }
+
+            Assert.AreEqual(roomCount, actContent.Rooms.Count(), "room count");
+        }
+
+        [TestMethod()]
+        public void FindRoomsByCriteriaTest()
+        {
+            // TODO
+            throw new NotImplementedException();
+
+            //Arrange
+
+            //Act
+
+            //Assert
         }
     }
 }
