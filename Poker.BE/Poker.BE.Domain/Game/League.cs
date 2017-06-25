@@ -1,24 +1,22 @@
-﻿using System;
+﻿using Poker.BE.CrossUtility.Exceptions;
+using System;
 using System.Collections.Generic;
 
 namespace Poker.BE.Domain.Game
 {
     public class League
     {
-        // TODO: complete - set team member to do this - Gal?
         #region Constants
         public const int MAX_LEVEL = 100;
         public const int MIN_LEVEL = 1;
-        #endregion
-
-        #region Fields
         #endregion
 
         #region Properties
         public ICollection<Room> Rooms { get; set; }
         public int MaxLevel { get; set; }
         public int MinLevel { get; set; }
-        public bool IsFull { get; internal set; }
+        public bool IsFull { get; set; }
+        public string Name { get; set; }
         #endregion
 
         #region Constructors
@@ -30,16 +28,12 @@ namespace Poker.BE.Domain.Game
         }
         #endregion
 
-        #region Private Functions
-
-        #endregion
-
         #region Methods
         public void RemoveRoom(Room room)
         {
-            // TODO
-            throw new NotImplementedException();
+            Rooms.Remove(room);
         }
+
         #endregion
 
     }
