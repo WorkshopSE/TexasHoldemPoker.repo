@@ -15,13 +15,19 @@ namespace AT.Tests
 		public new void Setup()
 		{
 			base.Setup();
-			base.SignUp("tomer", "Tomer123", "12345");
-			base.Login("Tomer123", "12345");
+			base.SignUp("tomer", "Tomer123", "123456");
+			base.Login("Tomer123", "123456");
+		}
+
+		[TearDown]
+		public void After()
+		{
+			base.TearDown();
 		}
 		[Test]
 		public void TestSuccesfulLogout()
 		{
-			Assert.IsTrue(base.Logout("Tomer123", "12345"));
+			Assert.IsTrue(base.Logout("Tomer123", "123456"));
 		}
 	}
 }

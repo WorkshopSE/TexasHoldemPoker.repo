@@ -12,37 +12,35 @@ namespace AT.Tests
 	[Category("SignUp")]
 	class TestSignUp : ProjectTests
 	{
-		private User TestUser;
-		private User SecondTestUser;
+		private string TestUser;
+		private string SecondTestUser;
 		[SetUp]
 		public new void Setup()
 		{
 			base.Setup();
-			TestUser = base.SignUp("Gal", "galwa", "12345");
+			TestUser = base.SignUp("Gal", "galwa", "123456");
 			SecondTestUser = base.SignUp("idan", "idanizi", "12345");
+		}
+
+		[TearDown]
+		public void After()
+		{
+			base.TearDown();
 		}
 		[Test]
 		public void TestNewUserSignUp()
 		{
-			Assert.AreNotEqual(TestUser.ID, 0);
+			Assert.AreEqual("galwa", TestUser);
 		}
 		[Test]
 		public void TestExsistingUserSignUp()
 		{
-			try
-			{
-				TestUser = base.SignUp("Gal", "galwa", "12345");
-				Assert.Fail();
-			}
-			catch(ArgumentException e)
-			{
-				Assert.Pass();
-			}
+			Assert.IsNull(base.SignUp("Gal", "galwa", "123456"));
 		}
 		[Test]
 		public void TestUniqeID()
 		{
-			Assert.AreNotEqual(TestUser.ID, SecondTestUser.ID);
+			Assert.AreNotEqual(TestUser, SecondTestUser);
 		}
 	}
 }

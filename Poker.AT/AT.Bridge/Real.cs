@@ -5,54 +5,93 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using AT.Domain;
+using Poker.BE.Service.Modules.Requests;
+using Poker.BE.Service.IServices;
+using Poker.BE.Service.Modules.Results;
+using Poker.BE.Service.Services;
 
 namespace AT.Bridge
 {
     class Real : TestsBridge
     {
+		#region Fields
+		private IAuthenticationService AuthenticationService;
+		#endregion
+
+		#region Constructors
+		public Real()
+		{
+			AuthenticationService = new Poker.BE.Service.Services.AuthenticationService();
+		}
+		#endregion
+
 		public bool Logout(string UserName, string Password)
 		{
-			throw new NotImplementedException();
+			LogoutResult result = AuthenticationService.Logout(new LogoutRequest() { User = UserName });
+			if (!result.Success.HasValue || !result.Success.Value)
+			{
+				return false;
+			}
+			return true;
 		}
 		public bool Login(string UserName, string Password)
 		{
-			throw new NotImplementedException();
+			LoginResult result = AuthenticationService.Login(new LoginRequest() { UserName = UserName, Password = Password});
+			if (!result.Success.HasValue || !result.Success.Value)
+			{
+				return false;
+			}
+			return true;
 		}
 
 		public IList<Card> ShuffleCards(Deck TestDeck)
 		{
-			throw new NotImplementedException();
+			return null;
+			//throw new NotImplementedException();
 		}
 
-		public User SignUp(string Name, string UserName, string Password)
+		public string SignUp(string Name, string UserName, string Password)
 		{
-			throw new NotImplementedException();
+			SignUpResult result = AuthenticationService.SignUp(new SignUpRequest() {UserName = UserName, Password = Password, Deposit = 100 });
+			if(!result.Success.HasValue || !result.Success.Value)
+			{
+				return null;
+			}
+			return result.User;
 		}
 
 		//Here goes the Adapter implementation - for later use!
 		public int testCase1(int someParam)
         {
-            throw new NotImplementedException();
+			return 0;
+            //throw new NotImplementedException();
         }
 
         public string testCase2(string someParam)
         {
-            throw new NotImplementedException();
+			return null;
+            //throw new NotImplementedException();
         }
 
 		public void EditProfilePassword(User User, string Password)
 		{
-			throw new NotImplementedException();
+			//throw new NotImplementedException();
 		}
 
 		public void EditProfileEmail(User User, string Email)
 		{
-			throw new NotImplementedException();
+			//throw new NotImplementedException();
 		}
 
 		public Image EditProfileAvatar(Image TestUserImage)
 		{
-			throw new NotImplementedException();
+			return null;
+			//throw new NotImplementedException();
+		}
+
+		public void TearDown()
+		{
+			((AuthenticationService)AuthenticationService).Clear();
 		}
 	}
 }

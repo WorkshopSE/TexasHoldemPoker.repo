@@ -16,39 +16,29 @@ namespace AT.Tests
 		public new void Setup()
 		{
 			base.Setup();
-			base.SignUp("tomer", "Tomer123", "12345");
+			base.SignUp("tomer", "Tomer123", "123456");
 		}
+
+		[TearDown]
+		public void After()
+		{
+			base.TearDown();
+		}
+
 		[Test]
 		public void TestSuccesfulLogin()
 		{
-			Assert.IsTrue(base.Login("Tomer123", "12345"));
+			Assert.IsTrue(base.Login("Tomer123", "123456"));
 		}
 		[Test]
 		public void TestIncorrectUserName()
 		{
-			try
-			{
-				base.Login("Tomer12", "12345");
-				Assert.Fail();
-			}catch(ArgumentException e)
-			{
-				Assert.Pass();
-			}
-			
+			Assert.IsFalse(base.Login("Tomer12", "123456"));
 		}
 		[Test]
-		public void TestIncorrectPassword()
+		public void TestIvalidPassword()
 		{
-			try
-			{
-				base.Login("Tomer123", "125");
-				Assert.Fail();
-			}
-			catch (ArgumentException e)
-			{
-				Assert.Pass();
-			}
-
+			Assert.IsFalse(base.Login("Tomer123", "182759"));
 		}
 
 	}

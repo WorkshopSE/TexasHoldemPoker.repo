@@ -19,8 +19,13 @@ namespace AT.Tests
         {
             this.bridge = Driver.getBridge();
         }
+		[TearDown]
+		public void TearDown()
+		{
+			this.bridge.TearDown();
+		}
 
-		public User SignUp(string Name, string UserName, string Password)
+		public string SignUp(string Name, string UserName, string Password)
 		{
 			return bridge.SignUp(Name, UserName, Password);
 		}

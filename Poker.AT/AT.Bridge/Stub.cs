@@ -24,9 +24,9 @@ namespace AT.Bridge
 			return new List<Card>();
 		}
 
-		public User SignUp(string Name, string UserName, string Password)
+		public string SignUp(string Name, string UserName, string Password)
 		{
-			return new User(Name, UserName, Password);
+			return UserName;
 		}
 
 		public int testCase1(int someParam)
@@ -52,6 +52,10 @@ namespace AT.Bridge
 		public Image EditProfileAvatar(Image TestUserImage)
 		{
 			return Image.FromFile("DefaultAvatar");
+		}
+
+		public void TearDown()
+		{
 		}
 	}
 }

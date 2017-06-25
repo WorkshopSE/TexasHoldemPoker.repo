@@ -47,7 +47,7 @@ namespace AT.Bridge
             return bridge.testCase2(someParam);
         }
 
-		public User SignUp(string Name, string UserName, string Password)
+		public string SignUp(string Name, string UserName, string Password)
 		{
 			return bridge.SignUp(Name, UserName, Password);
 		}
@@ -65,6 +65,11 @@ namespace AT.Bridge
 		public Image EditProfileAvatar(Image TestUserImage)
 		{
 			return bridge.EditProfileAvatar(TestUserImage);
+		}
+
+		public void TearDown()
+		{
+			bridge.TearDown();
 		}
 	}
 }
