@@ -53,7 +53,10 @@
     <Compile Include="Modules\Caches\ICache.cs" />
     <Compile Include="Modules\Requests\KeepAliveRequest.cs" />
     <Compile Include="Modules\Requests\PlayMoveRequest.cs" />
+
+    <Compile Include="Modules\Requests\EditProfileRequest.cs" />
     <Compile Include="Modules\Requests\EnterRoomRequest.cs" />
+    <Compile Include="Modules\Requests\GetProfileRequest.cs" />
     <Compile Include="Modules\Requests\IRequest.cs" />
     <Compile Include="Modules\Requests\JoinNextHandRequest.cs" />
     <Compile Include="Modules\Requests\CreateNewRoomRequest.cs" />
@@ -64,7 +67,10 @@
     <Compile Include="Modules\Responses\IResponse.cs" />
     <Compile Include="Modules\Results\KeepAliveResult.cs" />
     <Compile Include="Modules\Results\PlayMoveResult.cs" />
+    
+    <Compile Include="Modules\Results\EditProfileResult.cs" />
     <Compile Include="Modules\Results\EnterRoomResult.cs" />
+    <Compile Include="Modules\Results\GetProfileResult.cs" />
     <Compile Include="Modules\Results\IResult.cs" />
     <Compile Include="Modules\Results\JoinNextHandResult.cs" />
     <Compile Include="Modules\Results\CreateNewRoomResult.cs" />

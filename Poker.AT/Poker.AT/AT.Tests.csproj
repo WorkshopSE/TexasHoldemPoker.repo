@@ -68,9 +68,9 @@
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\AT.Bridage\AT.Bridage.csproj">
+    <ProjectReference Include="..\AT.Bridge\AT.Bridge.csproj">
       <Project>{0495f2f3-fa0a-42f4-9d31-f2e3cc6c2852}</Project>
-      <Name>AT.Bridage</Name>
+      <Name>AT.Bridge</Name>
     </ProjectReference>
     <ProjectReference Include="..\AT.Domain\AT.Domain.csproj">
       <Project>{72ebefd3-5dee-4cff-aa68-773081d82e82}</Project>

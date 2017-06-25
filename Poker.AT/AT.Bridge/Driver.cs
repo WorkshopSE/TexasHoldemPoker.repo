@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace AT.Bridge
 {
-    class Driver
+    public class Driver
     {
         public static TestsBridge getBridge()
         {

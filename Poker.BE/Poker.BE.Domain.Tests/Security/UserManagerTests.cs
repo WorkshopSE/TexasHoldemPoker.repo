@@ -1,4 +1,5 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Poker.BE.CrossUtility.Exceptions;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Poker.BE.Domain.Security;
 using System;
 using System.Collections.Generic;
@@ -131,22 +132,47 @@ namespace Poker.BE.Domain.Security.Tests
 		{
             //Arrange
             var userManager = UserManager.Instance;
+			UserNotFoundException e1 = null;
+			InvalidPasswordException e2 = null;
+			UserNameTakenException e3 = null;
 
 			//Act
-			var res1 = userManager.EditProfile("yossi", "yossi", "password", "hat");
+
+			try
+			{
+				var res1 = userManager.EditProfile("yossi", "yossi", "password", null);
+			}
+			catch (UserNotFoundException e)
+			{
+				e1 = e;
+			}
 			userManager.AddUser("yossi", "mypassword", 200);
-			var res2 = userManager.EditProfile("yossi", "yossi", "pass", "hat");
-			var res3 = userManager.EditProfile("yossi", "yossi", "password", "hat");
+			try
+			{
+				var res2 = userManager.EditProfile("yossi", "yossi", "pass", null);
+			}
+			catch (InvalidPasswordException e)
+			{
+				e2 = e;
+			}
+			var res3 = userManager.EditProfile("yossi", "yossi", "password", null);
 			userManager.AddUser("dana", "danapassword", 200);
-			var res4 = userManager.EditProfile("yossi", "dana", "password", "hat");
-			var res5 = userManager.EditProfile("yossi", "bill", "password", "hat");
+			try
+			{
+				var res4 = userManager.EditProfile("yossi", "dana", "password", null);
+			}
+			catch(UserNameTakenException e)
+			{
+				e3 = e;
+			}
+			var res5 = userManager.EditProfile("yossi", "bill", "password", null);
 
 			//Assert
-			Assert.IsFalse(res1);
-			Assert.IsFalse(res2);
-			Assert.IsTrue(res3);
-			Assert.IsFalse(res4);
-			Assert.IsTrue(res5);
+			Assert.IsNotNull(e1);
+			Assert.IsNotNull(e2);
+			Assert.AreEqual("yossi", res3);
+			Assert.IsNotNull(e3);
+			Assert.AreEqual("bill",res5);
 		}
 
 	}

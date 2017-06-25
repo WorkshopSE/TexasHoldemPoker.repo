@@ -1,14 +1,14 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26403.7
+VisualStudioVersion = 15.0.26430.6
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AT.Tests", "Poker.AT\AT.Tests.csproj", "{8EDF4429-251A-416D-BB68-93F227191BCF}"
 	ProjectSection(ProjectDependencies) = postProject
 		{72EBEFD3-5DEE-4CFF-AA68-773081D82E82} = {72EBEFD3-5DEE-4CFF-AA68-773081D82E82}
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AT.Bridage", "AT.Bridage\AT.Bridage.csproj", "{0495F2F3-FA0A-42F4-9D31-F2E3CC6C2852}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AT.Bridge", "AT.Bridge\AT.Bridge.csproj", "{0495F2F3-FA0A-42F4-9D31-F2E3CC6C2852}"
 	ProjectSection(ProjectDependencies) = postProject
 		{72EBEFD3-5DEE-4CFF-AA68-773081D82E82} = {72EBEFD3-5DEE-4CFF-AA68-773081D82E82}
 	EndProjectSection
