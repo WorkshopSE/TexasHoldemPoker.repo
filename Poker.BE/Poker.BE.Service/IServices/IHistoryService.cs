@@ -14,6 +14,6 @@ namespace Poker.BE.Service.IServices
     /// <see cref="https://docs.google.com/document/d/1ob4bSynssE3UOfehUAFNv_VDpPbybhS4dW_O-v-QDiw/edit#heading=h.abxv4a36ufy8"/>
     public interface IHistoryService
     {
-        GetStatisticsResult GetStatistics(GetStatisticsRequest request);
+        GetStatisticsResult GetStatistics(string userName);
     }
 }
