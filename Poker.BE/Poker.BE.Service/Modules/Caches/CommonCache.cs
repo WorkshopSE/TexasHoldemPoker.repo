@@ -14,9 +14,9 @@ namespace Poker.BE.Service.Modules.Caches
     {
 
         #region Properties
-        public UserManager UserManager { get; set; }
+        public UserManager UserManager { get; }
 
-        public GameCenter GameCenter { get; set; }
+        public GameCenter GameCenter { get; }
 
         /// <summary>
         /// Map for the player (user session) ID -> player at the given session.
@@ -30,13 +30,17 @@ namespace Poker.BE.Service.Modules.Caches
         /// for now - the user cannot play as several players, at the same room.
         ///    - this option is blocked.
         /// </remarks>
-        public IDictionary<int, Player> Players { get; set; }
+        public IDictionary<int, Player> Players { get; }
 
-        public IDictionary<int, Room> Rooms { get; set; }
+        public IDictionary<int, Room> Rooms { get; }
 
-        public IDictionary<string, User> Users { get; set; }
+        public IDictionary<string, User> Users { get; }
 
-        public IDictionary<int, League> Leagues { get; set; }
+        public IDictionary<int, League> Leagues { get; }
+
+        public IDictionary<Player, Room> PlayerToRoom { get; }
+
+        public IDictionary<Room, League> RoomToLeague { get; }
 
         #endregion
 
@@ -57,6 +61,8 @@ namespace Poker.BE.Service.Modules.Caches
             Rooms = new Dictionary<int, Room>();
             Users = new Dictionary<string, User>();
             Leagues = new Dictionary<int, League>();
+            PlayerToRoom = new Dictionary<Player, Room>();
+            RoomToLeague = new Dictionary<Room, League>();
         }
 
         private static readonly CommonCache _instance = new CommonCache();
@@ -65,13 +71,6 @@ namespace Poker.BE.Service.Modules.Caches
         #endregion
 
         #region ICache Methods
-
-        private bool UpdateEnumerables<S, D>(IEnumerable<S> source, IEnumerable<D> destination)
-        {
-            var isUpdated = false;
-            // TODO ? - idan.
-            return isUpdated;
-        }
 
         public bool Refresh()
         {
@@ -85,38 +84,64 @@ namespace Poker.BE.Service.Modules.Caches
              *  Author:
              *      Idan Izicovich.
              * */
-            bool isChanged = false;
+
+            /* ---------- Cache Dictionaries ---------- */
 
             // Users
+            bool isUserChanged = false;
             if (!UserManager.Users.SequenceEqual(Users))
             {
+                Users.Clear();
                 UserManager.Users.ToList().ForEach(userPair => Users.Add(userPair.Key, userPair.Value));
-                isChanged = true;
+                isUserChanged = true;
             }
 
             // Players
+            bool isPlayersChanged = false;
             if (!GameCenter.Players.SequenceEqual(Players.Values, new AddressComparer<Player>()))
             {
+                Players.Clear();
                 GameCenter.Players.ToList().ForEach(player => Players.Add(player.GetHashCode(), player));
-                isChanged = true;
+                isPlayersChanged = true;
             }
 
             // Rooms
+            bool isRoomChanged = false;
             if (!GameCenter.Rooms.SequenceEqual(Rooms.Values))
             {
+                Rooms.Clear();
                 GameCenter.Rooms.ToList().ForEach(room => Rooms.Add(room.GetHashCode(), room));
-                isChanged = true;
+                isRoomChanged = true;
             }
 
             // Leagues
             //Undone: idan - make sure this is the right dictionary key needed for mapping the leagues at the cache
+            bool isLeagueChange = false;
             if (!GameCenter.Leagues.SequenceEqual(Leagues.Values))
             {
+                Leagues.Clear();
                 GameCenter.Leagues.ToList().ForEach(league => Leagues.Add(league.GetHashCode(), league));
-                isChanged = true;
+                isLeagueChange = true;
             }
 
-            return isChanged;
+
+            /* ------- link-cache dictionaries ---------- */
+
+            // PlayerToRoom
+            if (isPlayersChanged | isRoomChanged)
+            {
+                PlayerToRoom.Clear();
+                GameCenter.PlayerToRoom.ToList().ForEach(pair => PlayerToRoom.Add(pair.Key, pair.Value));
+            }
+
+            // RoomToLeague
+            if (isRoomChanged | isLeagueChange)
+            {
+                RoomToLeague.Clear();
+                GameCenter.RoomToLeague.ToList().ForEach(pair => RoomToLeague.Add(pair.Key, pair.Value));
+            }
+
+            return isLeagueChange | isPlayersChanged | isRoomChanged | isUserChanged;
         }
 
         public TValue RefreshAndGet<TKey, TValue>(IDictionary<TKey, TValue> dictionary, TKey key, Exception e)
@@ -140,6 +165,8 @@ namespace Poker.BE.Service.Modules.Caches
             Players.Clear();
             Rooms.Clear();
             Users.Clear();
+            PlayerToRoom.Clear();
+            RoomToLeague.Clear();
         }
         #endregion
 

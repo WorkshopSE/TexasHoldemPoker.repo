@@ -18,6 +18,7 @@ namespace Poker.BE.Service.Services
 		#region Fields
 		private CommonCache _cache;
 		#endregion
+
 		#region properties
 		public IDictionary<string, User> Users { get { return _cache.Users; } }
 		public ILogger Logger { get { return CrossUtility.Loggers.Logger.Instance; } }
@@ -41,13 +42,13 @@ namespace Poker.BE.Service.Services
 		public EditProfileResult EditProfile(EditProfileRequest request)
 		{
 			var result = new EditProfileResult();
-			result.newUserName = request.oldUserName;
+			result.newUserName = request.UserName;
 			try
 			{
-				UserManager.EditProfile(request.oldUserName, request.newUserName, request.newPassword, request.newAvatar);
-				result.newAvatar = request.newAvatar;
-				result.newPassword = request.newPassword;
-				result.newUserName = request.newUserName;
+				UserManager.EditProfile(request.UserName, request.NewUserName ?? request.UserName, request.NewPassword, request.NewAvatar);
+				result.newAvatar = request.NewAvatar;
+				result.newPassword = request.NewPassword;
+				result.newUserName = request.NewUserName;
 				result.Success = true;
 			}
 			catch (UserNotFoundException e)

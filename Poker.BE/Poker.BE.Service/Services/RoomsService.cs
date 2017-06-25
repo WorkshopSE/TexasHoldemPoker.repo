@@ -38,7 +38,8 @@ namespace Poker.BE.Service.Services
         public IDictionary<int, Player> Players { get { return _cache.Players; } }
         public IDictionary<int, Room> Rooms { get { return _cache.Rooms; } }
         public IDictionary<string, User> Users { get { return _cache.Users; } }
-        public UserManager UserManager { get { return UserManager.Instance; } }
+        public UserManager UserManager { get { return _cache.UserManager; } }
+        public GameCenter GameCenter { get { return _cache.GameCenter; } }
         public ILogger Logger { get { return CrossUtility.Loggers.Logger.Instance; } }
         #endregion
 
@@ -54,6 +55,14 @@ namespace Poker.BE.Service.Services
         #endregion
 
         #region Methods
+        /// <summary>
+        /// for testing
+        /// </summary>
+        public void Clear()
+        {
+            _cache.Clear();
+        }
+
         public CreateNewRoomResult CreateNewRoom(CreateNewRoomRequest request)
         {
             var result = new CreateNewRoomResult();
@@ -285,10 +294,95 @@ namespace Poker.BE.Service.Services
             return result;
         }
 
-        public void Clear()
+        private FindRoomsByCriteriaResult.RoomResult[] DomainRoomsToRoomsResults(ICollection<Room> domainRooms)
         {
-            _cache.Clear();
+            var rooms = new List<FindRoomsByCriteriaResult.RoomResult>();
+
+            _cache.Refresh();
+            foreach (var room in domainRooms)
+            {
+                rooms.Add(new FindRoomsByCriteriaResult.RoomResult()
+                {
+                    RoomID = room.GetHashCode(),
+                    LeagueID = _cache.RoomToLeague[room].GetHashCode(),
+                    RoomName = room.Preferences.Name,
+                    CurrentNumberOfPlayers = room.Players.Count,
+                    MaxNumberOfPlayers = room.Preferences.MaxNumberOfPlayers,
+                    MinimumBuyIn = room.Preferences.BuyInCost,
+                    //PotLimit = room.Preferences., UNDONE: Tomer - how do i get the pot limit of the room?
+                });
+            }
+            return rooms.ToArray();
         }
+
+        public FindRoomsByCriteriaResult FindRoomsByCriteria(FindRoomsByCriteriaRequest request)
+        {
+            var result = new FindRoomsByCriteriaResult();
+
+            try
+            {
+                // arrange search criteria
+                double betSize = request.Criterias.Contains(FindRoomsByCriteriaRequest.BET_SIZE) ? request.BetSize : -1;
+
+                GamePreferences preferences =
+                    new NoLimitHoldem() {
+                        MaxNumberOfPlayers = request.Criterias.Contains(FindRoomsByCriteriaRequest.MAX_NUMBER_OF_PLAYERS) ? request.MaxNumberOfPlayers : -1,
+                        AntesValue = request.Criterias.Contains(FindRoomsByCriteriaRequest.ANTES_VALUE) ? request.Antes : -1,
+                        BuyInCost = request.Criterias.Contains(FindRoomsByCriteriaRequest.BUY_IN_COST) ? request.BuyInCost : -1,
+                        Name = request.Criterias.Contains(FindRoomsByCriteriaRequest.NAME) ? request.Name : "",
+                        MinimumBet = request.Criterias.Contains(FindRoomsByCriteriaRequest.MIN_BET)? request.MinimumBet : -1,
+                        MinNumberOfPlayers = request.Criterias.Contains(FindRoomsByCriteriaRequest.MIN_NUMBER_OF_PLAYERS) ? request.MinNumberOfPlayers : -1,
+                    };
+
+                Player player = null;
+                if (request.Criterias.Contains(FindRoomsByCriteriaRequest.PLAYER))
+                {
+                    player = _cache.RefreshAndGet(
+                         Players,
+                         request.Player,
+                         new PlayerNotFoundException(string.Format("player id: {0} not found, please re-enter the room.", request.Player))
+                         );
+                }
+
+                int level = request.Criterias.Contains(FindRoomsByCriteriaRequest.LEVEL) ? request.Level : -1;
+
+                // call search
+                var domainRooms = GameCenter.FindRoomsByCriteria(level, player, preferences, betSize);
+
+                // assemble result
+                result.Rooms = DomainRoomsToRoomsResults(domainRooms);
+                result.Success = true;
+            }
+            catch (PokerException e)
+            {
+                result.Success = false;
+                result.ErrorMessage = e.Message;
+                Logger.Error(e, "At " + GetType().Name, e.Source);
+            }
+
+            return result;
+        }
+
+        public FindRoomsByCriteriaResult GetAllRooms()
+        {
+            var result = new FindRoomsByCriteriaResult();
+
+            try
+            {
+                result.Rooms = DomainRoomsToRoomsResults(Rooms.Values);
+                result.Success = true;
+            }
+            catch (PokerException e)
+            {
+                result.Success = false;
+                result.ErrorMessage = e.Message;
+                Logger.Error(e, "At " + GetType().Name, e.Source);
+            }
+
+            return result;
+        }
+
+
         #endregion
 
     }// class
