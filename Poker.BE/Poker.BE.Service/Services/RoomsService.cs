@@ -262,6 +262,10 @@ namespace Poker.BE.Service.Services
                     RoomID = room.GetHashCode(),
                     LeagueID = _cache.RoomToLeague[room].GetHashCode(),
                     RoomName = room.Preferences.Name,
+                    CurrentNumberOfPlayers = room.Players.Count,
+                    MaxNumberOfPlayers = room.Preferences.MaxNumberOfPlayers,
+                    MinimumBuyIn = room.Preferences.BuyInCost,
+                    //PotLimit = room.Preferences., UNDONE: Tomer - how do i get the pot limit of the room?
                 });
             }
             return rooms.ToArray();
@@ -270,7 +274,6 @@ namespace Poker.BE.Service.Services
         public FindRoomsByCriteriaResult FindRoomsByCriteria(FindRoomsByCriteriaRequest request)
         {
             var result = new FindRoomsByCriteriaResult();
-
 
             try
             {
