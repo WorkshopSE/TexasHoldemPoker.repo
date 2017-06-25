@@ -1,4 +1,6 @@
 ﻿
+using Poker.BE.CrossUtility.Exceptions;
+
 namespace Poker.BE.Domain.Game
 {
     public abstract class GamePreferencesDecorator : GamePreferences
@@ -30,6 +32,11 @@ namespace Poker.BE.Domain.Game
         public override void CheckRaise(double raiseAmount)
         {
             preferences.CheckRaise(raiseAmount);
+
+            if (raiseAmount > Limit)
+            {
+                throw new WrongIOException("Can't raise more than room's raise limit");
+            }
         }
         #endregion
     }

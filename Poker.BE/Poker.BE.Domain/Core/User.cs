@@ -131,16 +131,17 @@ namespace Poker.BE.Domain.Core
             }
 
             gameCenter.JoinNextHand(player, seatIndex, buyIn);
+            UserBank.Withdraw(buyIn);
         }
 
         public double StandUpToSpactate(Player player)
         {
-            if (!Players.Contains(player, new Utility.AddressComparer<Player>()))
+            if (!Players.Contains(player, new AddressComparer<Player>()))
             {
                 throw new PlayerNotFoundException("the user doesn't have this player");
             }
 
-            UserBank.Money = gameCenter.StandUpToSpactate(player);
+            UserBank.Deposit(gameCenter.StandUpToSpactate(player));
 
             return UserBank.Money;
         }

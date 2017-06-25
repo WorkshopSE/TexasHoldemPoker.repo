@@ -25,18 +25,18 @@ namespace Poker.BE.Domain.Core
             AllIn
         }
 
-		/// <summary>
-		/// clears all game-center resources
-		/// </summary>
-		public void ClearAll()
-		{
-			playersManager.Clear();
-			roomsManager.Clear();
-			leagues.Clear();
-		}
-		bool ROOM_NAME_UNAVAILABLE = false;
-		bool ROOM_NAME_AVAILABLE = true;
-		#endregion
+        /// <summary>
+        /// clears all game-center resources
+        /// </summary>
+        public void ClearAll()
+        {
+            playersManager.Clear();
+            roomsManager.Clear();
+            leagues.Clear();
+        }
+        bool ROOM_NAME_UNAVAILABLE = false;
+        bool ROOM_NAME_AVAILABLE = true;
+        #endregion
 
         #region Fields
         private IDictionary<Player, Room> playersManager;
@@ -192,18 +192,18 @@ namespace Poker.BE.Domain.Core
                  select league).First();
         }
 
-		private bool IsRoomNameAvailable(String name)
-		{
-			foreach(KeyValuePair<Room,League> roomPair in roomsManager)
-			{
-				if (name == roomPair.Key.Preferences.Name)
-				{
-					return ROOM_NAME_UNAVAILABLE;
-				}
-			}
-			return ROOM_NAME_AVAILABLE;
-		}
-		#endregion
+        private bool IsRoomNameAvailable(String name)
+        {
+            foreach (KeyValuePair<Room, League> roomPair in roomsManager)
+            {
+                if (name == roomPair.Key.Preferences.Name)
+                {
+                    return ROOM_NAME_UNAVAILABLE;
+                }
+            }
+            return ROOM_NAME_AVAILABLE;
+        }
+        #endregion
 
         #region Methods
 
@@ -351,16 +351,16 @@ namespace Poker.BE.Domain.Core
                 throw new RoomRulesException("The Table is full.");
             }
 
-            // the chosen seat is not taken
-            if (!room.TakeChair(player, seatIndex))
-            {
-                throw new RoomRulesException("The seat is already taken, please try again.");
-            }
-
             // the user don't have enough money to buy in
             if (buyIn < room.Preferences.BuyInCost)
             {
                 throw new NotEnoughMoneyException("Buy in amount is less then the minimum to join the table.");
+            }
+
+            // the chosen seat is not taken
+            if (!room.TakeChair(player, seatIndex))
+            {
+                throw new RoomRulesException("The seat is already taken, please try again.");
             }
 
             /* Joining the player to the next hand */
@@ -385,29 +385,17 @@ namespace Poker.BE.Domain.Core
                 throw new RoomNotFoundException("Unable to stand up - The player is not at the room");
             }
 
-            // it's the player's turn
-
-            try
+            //Player is a spactator
+            if (player.CurrentState == Player.State.Passive)
             {
-                if (room.CurrentHand.CurrentRound.CurrentTurn.CurrentPlayer != player)
-                {
-                    throw new NotPlayersTurnException("Unable to stand up");
-                }
-            }
-            catch (NullReferenceException)
-            {
-                if (player.CurrentState == Player.State.Passive)
-                {
-                    throw new RoomRulesException("Player is already a spectator");
-                }
+                throw new RoomRulesException("Player is already a spectator");
             }
 
             /* Action - Make the player to stand up */
 
-            room.LeaveChair(player);
-            return player.StandUp();
+            return room.LeaveChair(player);
         }
-        
+
         public void ExitRoom(Player player)
         {
             if (!playersManager.ContainsKey(player))

@@ -70,8 +70,29 @@ namespace Poker.BE.Service.Services
 
             try
             {
-                Player creator;
-                Room room = user.CreateNewRoom(request.Level, new NoLimitHoldem(), out creator);
+                Player creator = null;
+                Room room = null;
+                NoLimitHoldem noLimitPreferences = new NoLimitHoldem(request.Name, request.BuyInCost, request.MinimumBet, request.Antes,
+                                                                        request.MinNumberOfPlayers, request.MaxNumberOfPlayers, request.IsSpactatorsAllowed);
+                if (request.Limit == 0)
+                {
+                    room = user.CreateNewRoom(request.Level, noLimitPreferences, out creator);
+                }
+                else if (request.Limit == -1)
+                {
+                    PotLimitHoldem potPreferences = new PotLimitHoldem(noLimitPreferences);
+                    room = user.CreateNewRoom(request.Level, potPreferences, out creator);
+                }
+                else if (request.Limit > 0)
+                {
+                    LimitHoldem limitPreferences = new LimitHoldem(noLimitPreferences, request.Limit);
+                    room = user.CreateNewRoom(request.Level, limitPreferences, out creator);
+                }
+
+                if (creator == null || room == null)
+                {
+                    throw new WrongIOException("Limit field in the request is not valid");
+                }
                 Rooms.Add(room.GetHashCode(), room);
                 Players.Add(creator.GetHashCode(), creator);
                 result.Player = creator.GetHashCode();

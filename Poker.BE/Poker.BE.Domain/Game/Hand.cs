@@ -49,6 +49,7 @@ namespace Poker.BE.Domain.Game
             PlayersBets = new Dictionary<Player, double>();
             foreach (Player player in activePlayers)
             {
+                player.CurrentState = Player.State.ActiveUnfolded;
                 PlayersBets.Add(player, 0);
             }
             communityCards = new Card[NUM_OF_COMMUNITY_CARDS];

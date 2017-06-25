@@ -4,7 +4,7 @@ using System.Runtime.Serialization;
 namespace Poker.BE.CrossUtility.Exceptions
 {
     [Serializable]
-    public class WrongIOException : Exception
+    public class WrongIOException : PokerException
     {
         public WrongIOException()
         {
