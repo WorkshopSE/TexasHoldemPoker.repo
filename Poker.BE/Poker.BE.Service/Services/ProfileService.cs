@@ -45,6 +45,14 @@ namespace Poker.BE.Service.Services
             result.newUserName = request.UserName;
             try
             {
+                var user = _cache.RefreshAndGet(
+                    Users,
+                    request.UserName,
+                    new UserNotFoundException(string.Format("user id: {0} not found, please re-login", request.UserName))
+                    );
+
+                // UNDONE Gal - user.EditProfile....
+
                 // call domain action
                 UserManager.EditProfile(request.UserName, request.NewUserName ?? request.UserName, request.NewPassword ?? request.Password, request.NewAvatar);
 
@@ -78,7 +86,7 @@ namespace Poker.BE.Service.Services
                 result.UserName = request.UserName;
                 result.Success = true;
             }
-            catch (UserNotFoundException e)
+            catch (PokerException e)
             {
                 result.Success = false;
                 result.ErrorMessage = e.Message;
