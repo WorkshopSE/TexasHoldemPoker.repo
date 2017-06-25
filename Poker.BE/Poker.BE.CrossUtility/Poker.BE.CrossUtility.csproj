@@ -45,6 +45,7 @@
     <Compile Include="Exceptions\IncorrectPasswordException.cs" />
     <Compile Include="Exceptions\InvalidDepositException.cs" />
     <Compile Include="Exceptions\InvalidPasswordException.cs" />
+    <Compile Include="Exceptions\LeagueNotFoundException.cs" />
     <Compile Include="Exceptions\LevelNotFoundException.cs" />
     <Compile Include="Exceptions\NotEnoughMoneyException.cs" />
     <Compile Include="Exceptions\NotEnoughPlayersException.cs" />
@@ -54,7 +55,7 @@
     <Compile Include="Exceptions\PokerException.cs" />
     <Compile Include="Exceptions\RoomNotFoundException.cs" />
     <Compile Include="Exceptions\RoomRulesException.cs" />
-    <Compile Include="Exceptions\userNameTakenException.cs" />
+    <Compile Include="Exceptions\UserNameTakenException.cs" />
     <Compile Include="Exceptions\UserNotFoundException.cs" />
     <Compile Include="Exceptions\WrongIOException.cs" />
     <Compile Include="Loggers\ILogger.cs" />

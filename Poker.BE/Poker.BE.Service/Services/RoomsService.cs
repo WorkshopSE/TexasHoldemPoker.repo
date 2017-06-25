@@ -339,6 +339,31 @@ namespace Poker.BE.Service.Services
             return result;
         }
 
+        public FindRoomsByCriteriaResult GetAllRoomsOfLeague(int leagueId)
+        {
+            var result = new FindRoomsByCriteriaResult();
+
+            try
+            {
+                var league = _cache.RefreshAndGet(
+                    _cache.Leagues,
+                    leagueId,
+                    new LeagueNotFoundException(string.Format("league id: {0} not found, please try again on different league", leagueId))
+                    );
+
+                result.Rooms = DomainRoomsToRoomsResults(league.Rooms);
+                result.Success = true;
+            }
+            catch (PokerException e)
+            {
+                result.Success = false;
+                result.ErrorMessage = e.Message;
+                Logger.Error(e, this);
+            }
+
+            return result;
+        }
+
 
         #endregion
 

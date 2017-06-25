@@ -143,7 +143,7 @@ namespace Poker.BE.API.Controllers
         }
 
 
-        [HttpPost]
+        [HttpGet]
         public HttpResponseMessage GetAllRooms()
         {
             var result = new FindRoomsByCriteriaResult();
@@ -151,6 +151,26 @@ namespace Poker.BE.API.Controllers
             try
             {
                 result = service.GetAllRooms();
+            }
+            catch (Exception e)
+            {
+                result.ErrorMessage = e.Message;
+                result.Success = false;
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, result);
+            }
+
+            return Request.CreateResponse(HttpStatusCode.OK, result);
+        }
+
+
+        [HttpGet]
+        public HttpResponseMessage GetAllRoomsOfLeague(int leagueId)
+        {
+            var result = new FindRoomsByCriteriaResult();
+
+            try
+            {
+                result = service.GetAllRoomsOfLeague(leagueId);
             }
             catch (Exception e)
             {

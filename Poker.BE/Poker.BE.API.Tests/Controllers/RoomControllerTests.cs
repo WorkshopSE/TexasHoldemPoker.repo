@@ -301,5 +301,12 @@ namespace Poker.BE.API.Controllers.Tests
 
             Assert.AreEqual(roomCount, actContent.Rooms.Count(), "room count");
         }
+
+        //[TestMethod()]
+        //public void GetAllRoomsOfLeagueTest()
+        //{
+        //    // TODO - for Gal
+        //    throw new NotImplementedException();
+        //}
     }
 }
