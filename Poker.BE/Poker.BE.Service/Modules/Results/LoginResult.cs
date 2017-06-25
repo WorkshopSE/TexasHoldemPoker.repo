@@ -13,5 +13,6 @@ namespace Poker.BE.Service.Modules.Results
 		/// </summary>
 		public string User { get; set; }
         public int Level { get; set; }
+        public double UserBank { get; set; }
 	}
 }

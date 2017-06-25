@@ -38,6 +38,7 @@ namespace Poker.BE.Service.Services
             {
                 result.User = UserManager.LogIn(request.UserName, request.Password).UserName;
                 result.Level = UserManager.Users[request.UserName].Level;
+                result.UserBank = UserManager.Users[request.UserName].UserBank.Money;
 
                 result.Success = true;
             }

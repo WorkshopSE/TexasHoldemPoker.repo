@@ -41,8 +41,10 @@ namespace Poker.BE.Service.Services
             var result = new KeepAliveResult ();
             try
             {
-                //first of all get the relevant room
                 Room room = null;
+                Hand hand = null;
+                Round round = null;
+                #region Set Room, Hand and Round
                 foreach (Room r in GameCenter.Rooms)
                 {
                     if (request.Room == r.GetHashCode())
@@ -53,8 +55,18 @@ namespace Poker.BE.Service.Services
                 }
                 if (room == null)
                 {
-                    throw new RoomNotFoundException("can't find room in game center");
+                    throw new RoomNotFoundException("Can't find room in game center");
                 }
+
+                if (room.CurrentHand != null)
+                {
+                    hand = room.CurrentHand;
+                    if (hand.CurrentRound != null)
+                    {
+                        round = hand.CurrentRound;
+                    }
+                }
+                #endregion
 
                 #region Room's info
                 //get room's active players
@@ -64,11 +76,13 @@ namespace Poker.BE.Service.Services
                     result.ActivePlayers.Add(p.GetHashCode());
                 }
 
+                #region Players info by table location
                 //get room's players location in table
                 //get all current active player's states at the table
                 //get all players bets in the current round
                 result.TableLocationOfActivePlayers = new int[10];
                 result.PlayersStates = new string[10];
+                result.PlayersBets = new double[10];
                 for (int i = 0; i < 10; i++)
                 {
                     Chair chair = null;
@@ -90,7 +104,8 @@ namespace Poker.BE.Service.Services
 
                         result.TableLocationOfActivePlayers[i] = player.GetHashCode();
                         result.PlayersStates[i] = player.CurrentState.ToString();
-                        result.PlayersBets[i] = room.CurrentHand.CurrentRound.LiveBets[player];
+                        if (hand != null && round != null)
+                            result.PlayersBets[i] = room.CurrentHand.CurrentRound.LiveBets[player];
                     }
                     else
                     {
@@ -98,59 +113,75 @@ namespace Poker.BE.Service.Services
                         result.PlayersBets[i] = -1;
                     }
                 }
+                #endregion
 
                 result.IsTableFull = room.IsTableFull;
                 #endregion
 
-                Hand hand = room.CurrentHand;
                 #region Hand's info
                 //get player's and table's cards
-                result.PlayersAndTableCards = new int[52];
-                foreach (Player p in hand.ActivePlayers)
+                if (hand != null)
                 {
-                    result.PlayersAndTableCards[p.PrivateCards[0].Index] = p.GetHashCode();
-                    result.PlayersAndTableCards[p.PrivateCards[1].Index] = p.GetHashCode();
-                }
-                for (int i = 0; i < hand.CommunityCards.Length; i++)
-                {
-                    result.PlayersAndTableCards[hand.CommunityCards[i].Index] = (-1) * (i + 1);
-                }
+                    result.PlayersAndTableCards = new int[52];
+                    foreach (Player p in hand.ActivePlayers)
+                    {
+                        if (p.PrivateCards[0] != null && p.PrivateCards[1] != null)
+                        {
+                            result.PlayersAndTableCards[p.PrivateCards[0].Index] = p.GetHashCode();
+                            result.PlayersAndTableCards[p.PrivateCards[1].Index] = p.GetHashCode();
+                        }
+                    }
+                    for (int i = 0; i < hand.CommunityCards.Length; i++)
+                    {
+                        if (hand.CommunityCards[i] == null)
+                            break;
+                        result.PlayersAndTableCards[hand.CommunityCards[i].Index] = (-1) * (i + 1);
+                    }
 
-                result.DealerId = hand.Dealer.GetHashCode();
+                    result.DealerId = hand.Dealer.GetHashCode();
+                }
                 #endregion
 
-                Round round = hand.CurrentRound;
                 #region Round's info
-                result.CurrentPlayerID = round.CurrentPlayer.GetHashCode();
-
-                //get pot's values and amount to claim
-                result.PotsValues = new List<double>();
-                Pot potIter = round.CurrentPot;
-                while (potIter != null)
+                if (round != null)
                 {
-                    potIter = potIter.BasePot;
-                }
-                while (potIter != null)
-                {
-                    result.PotsValues.Add(potIter.Value);
-                    result.PotsAmountToClaim.Add(potIter.AmountToClaim);
-                    potIter = potIter.PartialPot;
-                }
+                    result.CurrentPlayerID = round.CurrentPlayer.GetHashCode();
 
-                //Note: Result.PlayersBets info is in Room's info (above)
+                    //get pot's values and amount to claim
+                    result.PotsValues = new List<double>();
+                    if (round.CurrentPot == null)
+                    {
+                        throw new WrongIOException("Round's pot is somehow null...");
+                    }
+                    Pot potIter = round.CurrentPot;
+                    while (potIter.BasePot != null)
+                    {
+                        potIter = potIter.BasePot;
+                    }
+                    while (potIter != null)
+                    {
+                        result.PotsValues.Add(potIter.Value);
+                        result.PotsAmountToClaim.Add(potIter.AmountToClaim);
+                        potIter = potIter.PartialPot;
+                    }
 
-                result.TotalRaise = round.TotalRaise;
-                result.LastRaise = round.LastRaise;
+                    //Note: Result.PlayersBets info is in Room's info (above)
+
+                    result.TotalRaise = round.TotalRaise;
+                    result.LastRaise = round.LastRaise;
+                }
                 #endregion
 
+                #region Player's info
                 foreach (Player p in room.ActivePlayers)
                 {
                     if (p.GetHashCode() == request.PlayerID)
                     {
-                        result.PlayerWallet = p.Wallet.Value;
+                        result.PlayerWallet = p.WalletValue;
                         break;
                     }
                 }
+                #endregion
             }
             catch (RoomNotFoundException e)
             {

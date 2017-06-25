@@ -157,6 +157,11 @@ namespace Poker.BE.Domain.Game
                     }
             }
 
+            if (config is PotLimitHoldem)
+            {
+                ((PotLimitHoldem)config).ChangePotLimitValue(CurrentPot.Value);
+            }
+
             //Change to next player
             CalculateNextPlayer();
         }
@@ -354,9 +359,14 @@ namespace Poker.BE.Domain.Game
                 throw new GameRulesException("Can't raise less than last raise");
             }
 
-            double highestAllIn = 0;
+            if ((config is PotLimitHoldem && amountToRaise > ((PotLimitHoldem)config).Limit)
+                || (config is LimitHoldem && amountToRaise > ((LimitHoldem)config).Limit))
+            {
+                throw new GameRulesException("Can't raise more than game preferences raise limit");
+            }
 
             //Note: find highest all-in at the table
+            double highestAllIn = 0;
             foreach (Player player in ActiveUnfoldedPlayers)
             {
                 if (player.Wallet.AmountOfMoney + LiveBets[player] > highestAllIn)
