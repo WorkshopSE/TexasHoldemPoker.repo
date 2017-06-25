@@ -16,4 +16,5 @@ public class Room {
     public int MaxNumberOfPlayers { get; internal set; }
     public bool IsSpactatorsAllowed { get; internal set; }
     public double Limit { get; internal set; }
+    public int ChairIndex { get; internal set; }
 }

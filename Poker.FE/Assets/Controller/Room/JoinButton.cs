@@ -18,7 +18,6 @@ public class JoinButton : MonoBehaviour
     private HttpCallFactory http = new HttpCallFactory();
     private JoinNextHandRequest request;
     private JoinNextHandResult result;
-    private int chairIndexChoosen;
 
     public void ChooseFreeChair()
     {
@@ -67,7 +66,7 @@ public class JoinButton : MonoBehaviour
         request.seatIndex = i;
         string joinJson = JsonUtility.ToJson(request);
         StartCoroutine(http.POST(URL.JoinNextHand, joinJson, new Action<string>(joinSuccess), new Action<string>(joinFail)));
-        chairIndexChoosen = i;
+        GameProperties.CurrentRoom.ChairIndex = i;
     }
 
     private void joinFail(string failmsg)
@@ -86,8 +85,8 @@ public class JoinButton : MonoBehaviour
             GameProperties.user.deposit = result.UserBank;
             spectate.SetActive(false);
             active.SetActive(true);
-            players[chairIndexChoosen].SetActive(true);
-            chairs[chairIndexChoosen].GetComponent<Image>().enabled = false;
+            players[GameProperties.CurrentRoom.ChairIndex].SetActive(true);
+            chairs[GameProperties.CurrentRoom.ChairIndex].GetComponent<Image>().enabled = false;
         }
         else
         {
