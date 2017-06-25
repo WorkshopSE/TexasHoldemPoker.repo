@@ -33,6 +33,7 @@ namespace Poker.BE.Domain.Core
             UserName = GetHashCode().ToString();
             UserStatistics = new Statistics();
             Level = 0;
+	    Avatar = null;
         }
 
         public User(string userName, string password, double sumToDeposit) : this()
@@ -41,6 +42,7 @@ namespace Poker.BE.Domain.Core
             Password = password;
             UserBank = new Bank(sumToDeposit);
             IsConnected = true;
+     	    Avatar = null;
         }
         #endregion
 
