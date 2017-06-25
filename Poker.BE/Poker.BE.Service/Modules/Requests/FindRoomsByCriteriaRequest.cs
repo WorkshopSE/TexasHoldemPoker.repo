@@ -24,9 +24,10 @@ namespace Poker.BE.Service.Modules.Requests
         public int Level { get; set; }
         public int Player { get; set; }
 
-        // TODO check that preferences JOSN working OK
-        public GamePreferences Preferences { get; set; }
-
+        // TODO PotLimit : double
         public double BetSize { get; set; }
+        public double MinimumBuyIn { get; set; }
+        public int MaxNumberOfPlayers { get; set; }
+        public int CurrentNumberOfPlayers { get; set; }
     }
 }
