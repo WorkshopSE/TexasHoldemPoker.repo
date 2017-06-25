@@ -116,6 +116,7 @@ namespace Poker.BE.Domain.Core
 
                 room.ClearAll();
             }
+            RoomsByID.Remove(room.GetHashCode());
 
             // remove the room from the league
             roomsManager[room].RemoveRoom(room);

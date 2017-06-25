@@ -224,6 +224,7 @@ namespace Poker.BE.Domain.Game
                     if (TableLocationOfActivePlayers[chair] == player)
                     {
                         TableLocationOfActivePlayers.Remove(chair);
+                        ActivePlayersByID.Remove(player.GetHashCode());
                         chair.Release();
                         return player.StandUp();
                     }

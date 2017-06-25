@@ -46,8 +46,11 @@ namespace Poker.BE.Service.Services
                 Round round = null;
 
                 #region Set Room, Hand and Round
-                room = GameCenter.RoomsByID[request.Room];
-                if (room == null)
+                if (GameCenter.RoomsByID.ContainsKey(request.Room))
+                {
+                    room = GameCenter.RoomsByID[request.Room];
+                }
+                else
                 {
                     throw new RoomNotFoundException("Can't find room in game center");
                 }
@@ -167,7 +170,10 @@ namespace Poker.BE.Service.Services
                 #endregion
 
                 //Player's info
-                result.PlayerWallet = room.ActivePlayersByID[request.PlayerID].WalletValue;
+                if (room.ActivePlayersByID.ContainsKey(request.PlayerID))
+                {
+                    result.PlayerWallet = room.ActivePlayersByID[request.PlayerID].WalletValue;
+                }
 
                 result.Success = true;
             }
