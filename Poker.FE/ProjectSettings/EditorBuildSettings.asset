@@ -6,26 +6,29 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/MainMenu/LoadingGame.unity
+    path: Assets/View/LoadingGame.unity
     guid: 1b31676bff896814c868c073e105eeaf
   - enabled: 1
-    path: Assets/MainMenu/MainMenu.unity
+    path: Assets/View/MainMenu.unity
     guid: d0fc0a92a846fe44bbee2d02ee9fb55b
   - enabled: 1
-    path: Assets/MainMenu/ContactUs.unity
+    path: Assets/View/ContactUs.unity
     guid: d7eacb013e6b2c64a849dc1de306ecbf
   - enabled: 1
-    path: Assets/MainMenu/SignIn.unity
+    path: Assets/View/SignIn.unity
     guid: 454dfe8cf74bef5469cf8a2719e54775
   - enabled: 1
-    path: Assets/MainMenu/SignUp.unity
+    path: Assets/View/SignUp.unity
     guid: 3f499daaeae20da4c8478219c052410c
   - enabled: 1
-    path: Assets/MainMenu/UserMenu.unity
+    path: Assets/View/UserMenu.unity
     guid: 02d99557a1f239649a474d4f66bd3a03
   - enabled: 1
-    path: Assets/MainMenu/RoomManagement.unity
+    path: Assets/View/RoomManagement.unity
     guid: 1ec5155600366f04b83e53bb76ab1a1a
   - enabled: 1
-    path: Assets/Game/Room.unity
+    path: Assets/View/Room.unity
     guid: df115feff98de614fa8cff945dd1e699
+  - enabled: 0
+    path: Assets/Game/SimChat/ChatMessage.unity
+    guid: 00000000000000000000000000000000

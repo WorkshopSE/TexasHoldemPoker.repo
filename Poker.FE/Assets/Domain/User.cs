@@ -5,6 +5,7 @@ public class User {
     public string userName;
     internal string password;
     internal byte[] Avatar;
+    internal double deposit;
 
     public User()
     {

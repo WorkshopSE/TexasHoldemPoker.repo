@@ -12,6 +12,7 @@ public static class URL
     public static string GetProfile = "Profile/GetProfile";
     public static string EditProfile = "Profile/EditProfile";
     public static string KeepAlive = "KeepAlive/KeepAlive";
+    public static string JoinNextHand = "Room/JoinNextHand";
 }
 
 public class HttpCallFactory
