@@ -27,14 +27,14 @@ namespace Poker.BE.API.Controllers
         }
         #endregion
 
-        [HttpPost]
-        public HttpResponseMessage GetStatistics(GetStatisticsRequest request)
+        [HttpGet]
+        public HttpResponseMessage GetStatistics(string userName)
         {
             var result = new GetStatisticsResult();
 
             try
             {
-                result = service.GetStatistics(request);
+                result = service.GetStatistics(userName);
             }
             catch (Exception e)
             {

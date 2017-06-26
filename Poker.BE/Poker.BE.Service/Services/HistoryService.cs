@@ -40,13 +40,22 @@ namespace Poker.BE.Service.Services
         #endregion
 
 
-        public GetStatisticsResult GetStatistics(GetStatisticsRequest request)
+        public GetStatisticsResult GetStatistics(string userName)
         {
             var result = new GetStatisticsResult();
             try
             {
-                result.WinRateStatistics = UserManager.Users[request.UserName].GetWinRateStatistics();
-                result.GrossProfitWinRateStatistics = UserManager.Users[request.UserName].GetGrossProfitWinRateStatistics();
+				User user = null;
+				if (userName!=null)
+				{
+					user = _cache.RefreshAndGet(
+						Users,
+						userName,
+						new UserNotFoundException("User was not found, can't get statistics")
+						);
+				}
+				result.WinRateStatistics = user.GetWinRateStatistics();
+                result.GrossProfitWinRateStatistics = user.GetGrossProfitWinRateStatistics();
                 result.Success = true;
             }
             catch (PokerException e)

@@ -20,6 +20,8 @@ namespace Poker.BE.Service.Modules.Results
         /// </summary>
         public int[] PlayersAndTableCards { get; set; }
         public int DealerId { get; set; }
+        public int SmallBlindId { get; set; }
+        public int BigBlindId { get; set; }
 
         //Round's info
         public int CurrentPlayerID { get; set; }
