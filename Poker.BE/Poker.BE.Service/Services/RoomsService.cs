@@ -147,9 +147,9 @@ namespace Poker.BE.Service.Services
                     );
                 UserManager.SecurityCheck(request.SecurityKey, user);
 
-                user.JoinNextHand(player, request.seatIndex, request.buyIn);
+                user.JoinNextHand(player, request.SeatIndex, request.BuyIn);
                 result.UserBank = user.UserBank.Money;
-
+                result.Wallet = player.Wallet.Value;
                 result.Success = true;
             }
             catch (PokerException e)

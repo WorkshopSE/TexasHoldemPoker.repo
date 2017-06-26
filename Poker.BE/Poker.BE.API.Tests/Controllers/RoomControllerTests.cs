@@ -142,9 +142,9 @@ namespace Poker.BE.API.Controllers.Tests
 
             JoinNextHandRequest request = new JoinNextHandRequest()
             {
-                buyIn = room.Preferences.BuyInCost,
+                BuyIn = room.Preferences.BuyInCost,
                 Player = player.GetHashCode(),
-                seatIndex = 1,
+                SeatIndex = 1,
                 UserName = _user.UserName,
                 SecurityKey = _securityKey,
             };

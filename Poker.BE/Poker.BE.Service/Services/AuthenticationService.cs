@@ -39,6 +39,7 @@ namespace Poker.BE.Service.Services
                 var user = UserManager.Login(request.UserName, request.Password);
                 result.UserName = user.UserName;
                 result.SecurityKey = user.SecurityKey.Value;
+                result.UserBank = user.UserBank.Money;
                 result.Success = true;
             }
             catch (PokerException e)

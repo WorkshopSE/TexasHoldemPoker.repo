@@ -17,5 +17,7 @@ namespace Poker.BE.Service.Modules.Results
         /// random generated security key - for the front-end to keep
         /// </summary>
         public int SecurityKey { get; set; }
+
+        public double UserBank { get; set; }
     }
 }
