@@ -417,12 +417,6 @@ namespace Poker.BE.Domain.Core
                 throw new RoomNotFoundException("Unable to stand up - The player is not at the room");
             }
 
-            //Player is a spactator
-            if (player.CurrentState == Player.State.Passive)
-            {
-                throw new RoomRulesException("Player is already a spectator");
-            }
-
             /* Action - Make the player to stand up */
 
             return room.LeaveChair(player);
