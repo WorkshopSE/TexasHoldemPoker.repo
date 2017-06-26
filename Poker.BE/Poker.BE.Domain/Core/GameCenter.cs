@@ -408,16 +408,12 @@ namespace Poker.BE.Domain.Core
         /// <see cref="https://docs.google.com/document/d/1OTee6BGDWK2usL53jdoeBOI-1Jh8wyNejbQ0ZroUhcA/edit#heading=h.kl4k8p3d5mt6"/>
         public double StandUpToSpactate(Player player)
         {
-            /* Checking Preconditions */
-
             // the player is sitting at the table
             Room room = null;
             if (!playersManager.TryGetValue(player, out room))
             {
                 throw new RoomNotFoundException("Unable to stand up - The player is not at the room");
             }
-
-            /* Action - Make the player to stand up */
 
             return room.LeaveChair(player);
         }

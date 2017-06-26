@@ -1,6 +1,7 @@
 ﻿using Poker.BE.CrossUtility.Exceptions;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Poker.BE.Domain.Game
 {
@@ -94,8 +95,16 @@ namespace Poker.BE.Domain.Game
             //Play round until everyone is called or folded
             while (LastPlayerToRaise != CurrentPlayer)
             {
-                //Waiting for the player to choose play move
-                while (CurrentPlayer.PlayMove == Move.Null) ;
+                // UNDONE - Tomer & Idan
+
+                // NOTE: Guard: Waiting for the player to choose play move
+
+                while (CurrentPlayer.PlayMove == Move.Null)
+                {
+                    // todo wait
+                }
+
+
 
                 //Make the move
                 PlayMove(CurrentPlayer.PlayMove, CurrentPlayer.AmountToBetOrCall);

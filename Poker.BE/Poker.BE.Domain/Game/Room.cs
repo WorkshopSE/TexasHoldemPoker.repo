@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Poker.BE.CrossUtility.Exceptions;
+using System.Threading.Tasks;
 
 namespace Poker.BE.Domain.Game
 {
@@ -24,7 +25,7 @@ namespace Poker.BE.Domain.Game
         #endregion
 
         #region Properties
-        
+
         //Return all players (active+passive) in the room
         public ICollection<Player> Players { get { return activeAndPassivePlayers; } }
         public ICollection<Player> ActivePlayers
@@ -63,6 +64,7 @@ namespace Poker.BE.Domain.Game
                 return ActivePlayers.Count == Preferences.MaxNumberOfPlayers;
             }
         }
+        
         #endregion
 
         #region Constructors
@@ -161,9 +163,9 @@ namespace Poker.BE.Domain.Game
         /// UC014 Start (Deal) a New Hand
         /// </summary>
         /// <see cref="https://docs.google.com/document/d/1OTee6BGDWK2usL53jdoeBOI-1Jh8wyNejbQ0ZroUhcA/edit#heading=h.3z6a7b6nlnjj"/>
-        public void StartNewHand()
+        public async void StartNewHand()
         {
-            if (ActivePlayers.Count < 2)
+            if (ActivePlayers.Count < Preferences.MinNumberOfPlayers)
             {
                 throw new NotEnoughPlayersException("Its should be at least 2 active players to start new hand!");
             }
@@ -174,8 +176,22 @@ namespace Poker.BE.Domain.Game
 
             Player dealer = ActivePlayers.ElementAt(dealerIndex);
             CurrentHand = new Hand(dealer, ActivePlayers, Preferences);
-            CurrentHand.PlayHand();
-            EndCurrentHand();
+
+            Action StartHand = new Action(() =>
+            {
+                CurrentHand.PlayHand();
+                EndCurrentHand();
+            });
+
+            /* Note: only the first player joining the room start 
+             * the new thread of the hand 
+             */
+            if (ActivePlayers.Count == 1)
+            {
+                //await StartHand();
+            }
+
+            return;
         }
 
         public void EndCurrentHand()
