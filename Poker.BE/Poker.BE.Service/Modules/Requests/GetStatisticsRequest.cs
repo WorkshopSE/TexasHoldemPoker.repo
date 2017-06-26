@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Poker.BE.Service.Modules.Results
+namespace Poker.BE.Service.Modules.Requests
 {
-	public class CheckResult : IResult
-	{
-	}
+    public class GetStatisticsRequest : IRequest
+    {
+    }
 }

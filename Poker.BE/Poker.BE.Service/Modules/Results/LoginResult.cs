@@ -19,5 +19,6 @@ namespace Poker.BE.Service.Modules.Results
         public int SecurityKey { get; set; }
 
         public double UserBank { get; set; }
+        public int Level { get; set; }
     }
 }

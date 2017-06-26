@@ -1,40 +1,40 @@
-﻿using Poker.BE.Service.IServices;
+﻿using System;
+using Poker.BE.Service.IServices;
 using Poker.BE.Service.Modules.Requests;
 using Poker.BE.Service.Modules.Results;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 
 namespace Poker.BE.API.Controllers
 {
-    public class HistoryController : ApiController
+    public class KeepAliveController : ApiController
     {
         #region Fields
-        private IHistoryService service;
+        private IKeepAliveService service;
         #endregion
 
         #region Properties
-        public IHistoryService Service { get { return service; } }
+        public IKeepAliveService Service { get { return service; } }
         #endregion
 
         #region Constructors
-        public HistoryController()
+        public KeepAliveController()
         {
-            service = new Service.Services.HistoryService();
+            service = new Service.Services.KeepAliveService();
         }
+
         #endregion
 
+        #region Methods
         [HttpPost]
-        public HttpResponseMessage GetStatistics(GetStatisticsRequest request)
+        public HttpResponseMessage KeepAlive(KeepAliveRequest request)
         {
-            var result = new GetStatisticsResult();
+            var result = new KeepAliveResult();
 
             try
             {
-                result = service.GetStatistics(request);
+                result = service.KeepAlive(request);
             }
             catch (Exception e)
             {
@@ -45,5 +45,6 @@ namespace Poker.BE.API.Controllers
 
             return Request.CreateResponse(HttpStatusCode.OK, result);
         }
+        #endregion
     }
 }

@@ -8,15 +8,16 @@ namespace Poker.BE.Domain.Game
         /// <summary>
         /// default configuration
         /// </summary>
-        public NoLimitHoldem()
+        public NoLimitHoldem(string name = "Unknown Room", double buyInCost = 100.0, double minimumBet = 10.0, double antes = 0,
+                                int minNumOfPlayers = 2, int maxNumOfPlayers = 10, bool isSpectatorsAllowed = true)
         {
-            Name = "Unknown Room";
-            BuyInCost = 100.0;
-            MinimumBet = 10.0;
-            AntesValue = 0;
-            MaxNumberOfPlayers = 10;
-            MinNumberOfPlayers = 2;
-            IsSpactatorsAllowed = true;
+            Name = name;
+            BuyInCost = buyInCost;
+            MinimumBet = minimumBet;
+            AntesValue = antes;
+            MinNumberOfPlayers = minNumOfPlayers;
+            MaxNumberOfPlayers = maxNumOfPlayers;
+            IsSpactatorsAllowed = isSpectatorsAllowed;
         }
         #endregion
 

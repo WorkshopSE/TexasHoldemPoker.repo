@@ -9,11 +9,10 @@ using Poker.BE.Service.Modules.Results;
 namespace Poker.BE.Service.IServices
 {
     /// <summary>
-    /// UCC06: Poker Game-play
+    /// Getting information to show for GUI
     /// </summary>
-    /// <see cref="https://docs.google.com/document/d/1ob4bSynssE3UOfehUAFNv_VDpPbybhS4dW_O-v-QDiw/edit#heading=h.kaxnrwixytqc"/>
-    public interface IPokerGamePlayService : IPokerService
+    public interface IKeepAliveService
     {
-        PlayMoveResult PlayMove(PlayMoveRequest request);
+        KeepAliveResult KeepAlive(KeepAliveRequest request);
     }
 }

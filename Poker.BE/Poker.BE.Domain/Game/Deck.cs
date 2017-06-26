@@ -63,21 +63,21 @@ namespace Poker.BE.Domain.Game
              {
                  for (int currNumber = 1; currNumber <= Card.NVALUE; currNumber++)
                  {
-                     result[index] = new Card(currSuit, currNumber);
+                     result[index] = new Card(index, currSuit, currNumber);
                      index++;
                  }
 
                  return index;
              };
 
-            // Clubs
-            loop(Card.Suit.Clubs, index);
+            // Hearts
+            loop(Card.Suit.Hearts, index);
 
             // Diamonds
             loop(Card.Suit.Diamonds, index);
 
-            // Hearts
-            loop(Card.Suit.Hearts, index);
+            // Clubs
+            loop(Card.Suit.Clubs, index);
 
             // Spades
             loop(Card.Suit.Spades, index);

@@ -76,13 +76,44 @@ namespace Poker.BE.Service.Services
                 );
                 UserManager.SecurityCheck(request.SecurityKey, user);
 
-                Player creator;
-                Room room = user.CreateNewRoom(request.Level, new NoLimitHoldem(), out creator);
+                Player creator = null;
+                Room room = null;
+                NoLimitHoldem noLimitPreferences = new NoLimitHoldem(request.Name, request.BuyInCost, request.MinimumBet, request.Antes,
+                                                                        request.MinNumberOfPlayers, request.MaxNumberOfPlayers, request.IsSpactatorsAllowed);
+                if (request.Limit == 0)
+                {
+                    room = user.CreateNewRoom(request.Level, noLimitPreferences, out creator);
+                }
+                else if (request.Limit == -1)
+                {
+                    PotLimitHoldem potPreferences = new PotLimitHoldem(noLimitPreferences);
+                    room = user.CreateNewRoom(request.Level, potPreferences, out creator);
+                }
+                else if (request.Limit > 0)
+                {
+                    LimitHoldem limitPreferences = new LimitHoldem(noLimitPreferences, request.Limit);
+                    room = user.CreateNewRoom(request.Level, limitPreferences, out creator);
+                }
 
+                if (creator == null || room == null)
+                {
+                    throw new WrongIOException("Limit field in the request is not valid");
+                }
                 Rooms.Add(room.GetHashCode(), room);
                 Players.Add(creator.GetHashCode(), creator);
                 result.Player = creator.GetHashCode();
                 result.Room = room.GetHashCode();
+
+                //Request's info
+                result.Name = request.Name;
+                result.BuyInCost = request.BuyInCost;
+                result.MinimumBet = request.MinimumBet;
+                result.Antes = request.Antes;
+                result.MinNumberOfPlayers = request.MinNumberOfPlayers;
+                result.MaxNumberOfPlayers = request.MaxNumberOfPlayers;
+                result.IsSpactatorsAllowed = request.IsSpactatorsAllowed;
+                result.Limit = request.Limit;
+
                 result.Success = true;
             }
             catch (PokerException e)
@@ -117,6 +148,17 @@ namespace Poker.BE.Service.Services
 
                 result.Player = user.EnterRoom(room).GetHashCode();
                 result.RoomID = room.GetHashCode();
+                result.Name = room.Preferences.Name;
+                result.BuyInCost = room.Preferences.BuyInCost;
+                result.MinimumBet = room.Preferences.MinimumBet;
+                result.Antes = room.Preferences.AntesValue;
+                result.MinNumberOfPlayers = room.Preferences.MinNumberOfPlayers;
+                result.MaxNumberOfPlayers = room.Preferences.MaxNumberOfPlayers;
+                result.IsSpactatorsAllowed = room.Preferences.IsSpactatorsAllowed;
+                if (room.Preferences is GamePreferencesDecorator)
+                {
+                    result.Limit = ((GamePreferencesDecorator)room.Preferences).Limit;
+                }
             }
             catch (PokerException e)
             {
