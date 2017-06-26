@@ -25,7 +25,6 @@ namespace Poker.BE.Domain.Game
         #region Properties
         public State CurrentState { get; set; }
         public Wallet Wallet { get { return _wallet; } }
-        public double WalletValue { get { return _wallet.Value; } private set { _wallet.Value = value; } }
         public Card[] PrivateCards { get; set; }
         public string Nickname { get; set; }
         public Round.Move PlayMove { get; private set; }
@@ -40,9 +39,8 @@ namespace Poker.BE.Domain.Game
             Nickname = "";
             CurrentState = State.Passive;
             _wallet = new Wallet();
-            WalletValue = 0.0;
             PlayerStatistics = new Statistics();
-            PlayMove = default(Round.Move);
+            PlayMove = Round.Move.Null;
         }
 
         public Player(string nickname) : this()
@@ -69,7 +67,7 @@ namespace Poker.BE.Domain.Game
             }
 
             // buy in to wallet
-            _wallet.Value = buyIn;
+            _wallet.AmountOfMoney = buyIn;
 
             CurrentState = State.ActiveFolded;
             return true;
@@ -92,7 +90,7 @@ namespace Poker.BE.Domain.Game
             }
 
             CurrentState = State.Passive;
-            return WalletValue;
+            return _wallet.AmountOfMoney;
         }
 
         public void AddStatistics(double amountOfMoney)
@@ -158,7 +156,7 @@ namespace Poker.BE.Domain.Game
                 && CurrentState == other.CurrentState
                 && Nickname.Equals(other.Nickname)
                 //&& this.PrivateCards.Equals(other.PrivateCards) //TODO override card.equals
-                && WalletValue.Equals(other.WalletValue)
+                && _wallet.AmountOfMoney.Equals(other._wallet.AmountOfMoney)
                 ;
         }
 

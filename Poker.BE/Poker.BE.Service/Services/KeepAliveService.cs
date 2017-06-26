@@ -172,7 +172,7 @@ namespace Poker.BE.Service.Services
                 //Player's info
                 if (room.ActivePlayersByID.ContainsKey(request.PlayerID))
                 {
-                    result.PlayerWallet = room.ActivePlayersByID[request.PlayerID].WalletValue;
+                    result.PlayerWallet = room.ActivePlayersByID[request.PlayerID].Wallet.AmountOfMoney;
                 }
 
                 result.Success = true;

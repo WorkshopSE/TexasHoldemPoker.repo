@@ -1,19 +1,18 @@
 ﻿
 namespace Poker.BE.Domain.Game
 {
-    public class Wallet : Utility.MoneyStorage
+    public class Wallet
     {
         #region Properties
         public double AmountOfMoney { get; set; }
         #endregion
 
         #region Constructors
-        public Wallet() : base() { }
-        public Wallet(Currency currency) : base(currency) { }
-        public Wallet(Currency currency, double amount) : base(currency, amount) { }
-
-        // fixme - make wallet unified by ucc03/6
-        public Wallet(int amount)
+        public Wallet()
+        {
+            AmountOfMoney = 0.0;
+        }
+        public Wallet(double amount)
         {
             AmountOfMoney = amount;
         }
