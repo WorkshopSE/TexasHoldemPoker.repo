@@ -116,6 +116,7 @@ namespace Poker.BE.Service.Services
                 UserManager.SecurityCheck(request.SecurityKey, user);
 
                 result.Player = user.EnterRoom(room).GetHashCode();
+                result.RoomID = room.GetHashCode();
             }
             catch (PokerException e)
             {

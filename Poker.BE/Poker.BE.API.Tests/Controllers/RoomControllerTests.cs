@@ -129,6 +129,13 @@ namespace Poker.BE.API.Controllers.Tests
             Assert.AreEqual(true, actContent.Success, "success");
             Assert.AreNotEqual(default(int?), actContent.Player, "player not default value");
             Assert.IsNotNull(actContent.Player, "player not null");
+
+
+            TestContext.WriteLine("\nContent:");
+            foreach (var property in actContent.GetType().GetProperties())
+            {
+                TestContext.WriteLine("{0} : {1}", property.Name, property.GetValue(actContent));
+            }
         }
 
         [TestMethod()]
