@@ -9,13 +9,14 @@ namespace AT.Tests
 {
 	[TestFixture]
 	[Category("UCC03: Rooms Management")]
-	class TestRoom_EnterRoom : ProjectTests
+	class TestRoom : ProjectTests
 	{
 		[SetUp]
 		public new void Setup()
 		{
 			base.Setup();
 			base.SignUp("tomer", "Tomer123", "123456");
+			base.Login("Tomer123", "123456",out int key);
 		}
 
 		[TearDown]
@@ -25,6 +26,19 @@ namespace AT.Tests
 		}
 
 		[Test]
-		public
+		public void CreateARoomTest()
+		{
+			//Arrange
+			int level = 3;
+			int securityKey = 1;
+
+			//act
+			int player;
+			int actresult = base.CreateARoom(level, "Tomer123", securityKey, out player);
+
+			//Assert
+			Assert.AreNotEqual(0,actresult);
+			Assert.AreNotEqual(0, player);
+		}
 	}
 }

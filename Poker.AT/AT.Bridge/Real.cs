@@ -16,31 +16,38 @@ namespace AT.Bridge
     {
 		#region Fields
 		private IAuthenticationService AuthenticationService;
+		private IRoomsService RoomService;
 		#endregion
 
 		#region Constructors
 		public Real()
 		{
-			AuthenticationService = new Poker.BE.Service.Services.AuthenticationService();
+			AuthenticationService = new AuthenticationService();
+			RoomService = new RoomsService();
 		}
 		#endregion
 
-		public bool Logout(string UserName, string Password)
+		public bool Logout(string userName, int securityKey)
 		{
-			LogoutResult result = AuthenticationService.Logout(new LogoutRequest() { User = UserName });
+			LogoutResult result = AuthenticationService.Logout(new LogoutRequest() {
+				UserName = userName,
+				SecurityKey = securityKey,
+			});
 			if (!result.Success.HasValue || !result.Success.Value)
 			{
 				return false;
 			}
 			return true;
 		}
-		public bool Login(string UserName, string Password)
+		public bool Login(string UserName, string Password, out int securityKey)
 		{
 			LoginResult result = AuthenticationService.Login(new LoginRequest() { UserName = UserName, Password = Password});
 			if (!result.Success.HasValue || !result.Success.Value)
 			{
+				securityKey = result.SecurityKey;
 				return false;
 			}
+			securityKey = result.SecurityKey;
 			return true;
 		}
 
@@ -57,7 +64,7 @@ namespace AT.Bridge
 			{
 				return null;
 			}
-			return result.User;
+			return result.UserName;
 		}
 
 		//Here goes the Adapter implementation - for later use!
@@ -88,10 +95,23 @@ namespace AT.Bridge
 			return null;
 			//throw new NotImplementedException();
 		}
+		public int CreateARoom(int level, string userName, int securityKey, out int player)
+		{
+			CreateNewRoomResult result = RoomService.CreateNewRoom(new CreateNewRoomRequest() { Level = level, UserName = userName, SecurityKey = securityKey });
+			if(!result.Success.HasValue || !result.Success.Value)
+			{
+				string error = result.ErrorMessage;
+				player = 0;
+				return 0;
+			}
+			player = result.Player;
+			return result.Room;
+		}
 
 		public void TearDown()
 		{
 			((AuthenticationService)AuthenticationService).Clear();
+			((RoomsService)RoomService).Clear();
 		}
 	}
 }

@@ -22,7 +22,7 @@ namespace AT.Tests
 		{
 			base.Setup();
 			TestUser=base.SignUp("asaf", "Asaf", "12345");
-			base.Login("Asaf", "12345");
+			base.Login("Asaf", "12345",out int key);
 			TestUserImage = Image.FromFile("donaldtramp");
 			
 		}
@@ -65,7 +65,7 @@ namespace AT.Tests
 		[Test]
 		public void TestUnloggedUser()
 		{
-			base.Logout("Asaf", "12345");
+			//base.Logout("Asaf", "12345");
 			//string TestEmail = TestUser.Email;
 			try
 			{

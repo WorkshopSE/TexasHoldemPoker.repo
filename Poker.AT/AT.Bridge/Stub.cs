@@ -10,12 +10,13 @@ namespace AT.Bridge
 {
     class Stub : TestsBridge
     {
-		public bool Logout(string UserName, string Password)
+		public bool Logout(string UserName, int securityKey)
 		{
 			return false;
 		}
-		public bool Login(string UserName, string Password)
+		public bool Login(string UserName, string Password, out int securityKey)
 		{
+			securityKey = 0;
 			return false;
 		}
 
@@ -56,6 +57,12 @@ namespace AT.Bridge
 
 		public void TearDown()
 		{
+		}
+
+		public int CreateARoom(int level, string userName, int securityKey, out int player)
+		{
+			player = 0;
+			return 0;
 		}
 	}
 }

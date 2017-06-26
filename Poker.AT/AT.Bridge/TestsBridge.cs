@@ -15,10 +15,11 @@ namespace AT.Bridge
         int testCase1(int someParam);
         string testCase2(string someParam);
 		IList<Card> ShuffleCards(Deck TestDeck);
-		bool Login( string UserName, string Password);
+		bool Login( string UserName, string Password, out int securityKey);
 		string SignUp(string Name, string UserName, string Password);
 		void TearDown();
-		bool Logout(string UserName, string Password);
+		bool Logout(string UserName, int securityKey);
+		int CreateARoom(int level, string userName, int securityKey, out int player);
 		void EditProfilePassword(User User, string Password);
 		void EditProfileEmail(User User, string Email);
 		Image EditProfileAvatar(Image TestUserImage);

@@ -8,27 +8,27 @@ using AT.Domain;
 
 namespace AT.Bridge
 {
-    class ProxyBridge : TestsBridge
-    {
-        private TestsBridge bridge;
-        public ProxyBridge()
-        {
-            bridge = null;
-        }
+	class ProxyBridge : TestsBridge
+	{
+		private TestsBridge bridge;
+		public ProxyBridge()
+		{
+			bridge = null;
+		}
 
 
 		public void setRealBridge(TestsBridge implementation)
-        {
-            if (bridge == null)
-                bridge = implementation;
-        }
-		public bool Logout(string UserName, string Password)
 		{
-			return bridge.Logout(UserName, Password);
+			if (bridge == null)
+				bridge = implementation;
 		}
-		public bool Login(string UserName, string Password)
+		public bool Logout(string UserName, int securityKey)
 		{
-			return bridge.Login(UserName,Password);
+			return bridge.Logout(UserName, securityKey);
+		}
+		public bool Login(string UserName, string Password, out int securityKey)
+		{
+			return bridge.Login(UserName, Password, out securityKey);
 		}
 
 		public IList<Card> ShuffleCards(Deck TestDeck)
@@ -38,14 +38,14 @@ namespace AT.Bridge
 
 		//Implementation Example:
 		public int testCase1(int someParam)
-        {
-            return bridge.testCase1(someParam);
-        }
+		{
+			return bridge.testCase1(someParam);
+		}
 
-        public string testCase2(string someParam)
-        {
-            return bridge.testCase2(someParam);
-        }
+		public string testCase2(string someParam)
+		{
+			return bridge.testCase2(someParam);
+		}
 
 		public string SignUp(string Name, string UserName, string Password)
 		{
@@ -54,7 +54,7 @@ namespace AT.Bridge
 
 		public void EditProfilePassword(User User, string Password)
 		{
-			bridge.EditProfilePassword(User,Password);
+			bridge.EditProfilePassword(User, Password);
 		}
 
 		public void EditProfileEmail(User User, string Email)
@@ -70,6 +70,11 @@ namespace AT.Bridge
 		public void TearDown()
 		{
 			bridge.TearDown();
+		}
+
+		public int CreateARoom(int level, string userName, int securityKey, out int player)
+		{
+			return bridge.CreateARoom(level, userName, securityKey, out player);
 		}
 	}
 }
