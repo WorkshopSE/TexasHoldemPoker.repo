@@ -125,16 +125,21 @@ namespace Poker.BE.Domain.Game
         /// postcondition: the player is active player at the room.
         /// </summary>
         /// <param name="player">a passive player at the room</param>
-        public bool JoinPlayerToTable(Player player, double buyIn)
+        public void JoinPlayerToTable(Player player, double buyIn)
         {
             if (player.CurrentState != Player.State.Passive)
             {
-                return false;
+                throw new PlayerModeException("Player is not a spectator");
             }
 
             ActivePlayersByID.Add(player.GetHashCode(), player);
 
-            return player.JoinToTable(buyIn);
+            player.JoinToTable(buyIn);
+
+            if (ActivePlayers.Count >= Preferences.MinNumberOfPlayers)
+            {
+                StartNewHand();
+            }
         }
 
         public void RemovePlayer(Player player)
