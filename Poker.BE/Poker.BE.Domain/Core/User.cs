@@ -160,6 +160,12 @@ namespace Poker.BE.Domain.Core
                 throw new PlayerNotFoundException("the user doesn't have this player");
             }
 
+            //Player is not ActiveFolded
+            if (player.CurrentState != Player.State.ActiveFolded)
+            {
+                throw new RoomRulesException("Player is not in ActiveFolded state");
+            }
+
             UserBank.Deposit(gameCenter.StandUpToSpactate(player));
 
             return UserBank.Money;
