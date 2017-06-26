@@ -36,7 +36,10 @@ namespace Poker.BE.Service.Services
 
             try
             {
-                result.User = UserManager.LogIn(request.UserName, request.Password).UserName;
+                var user = UserManager.Login(request.UserName, request.Password);
+                result.UserName = user.UserName;
+                result.SecurityKey = user.SecurityKey.Value;
+                result.UserBank = user.UserBank.Money;
                 result.Success = true;
             }
             catch (PokerException e)
@@ -49,26 +52,21 @@ namespace Poker.BE.Service.Services
             return result;
         }
 
-
-
         public LogoutResult Logout(LogoutRequest request)
         {
             var result = new LogoutResult();
             try
             {
-                User user;
-                while (!Users.TryGetValue(request.User, out user))
-                {
-                    if (_cache.Refresh())
-                    {
-                        continue;
-                    }
+                var user = _cache.RefreshAndGet(
+                    Users,
+                    request.UserName,
+                    new UserNotFoundException(string.Format("User Name: {0} not found", request.UserName))
+                    );
 
-                    throw new UserNotFoundException(string.Format("User ID: {0} Name: {1} not found", user.GetHashCode(), user.UserName));
-                }
+                UserManager.SecurityCheck(request.SecurityKey, user);
 
-                result.Output = UserManager.LogOut(user);
-                result.User = user.UserName;
+                result.Output = UserManager.Logout(user);
+                result.UserName = user.UserName;
                 result.Success = true;
             }
             catch (PokerException e)
@@ -88,7 +86,7 @@ namespace Poker.BE.Service.Services
             try
             {
                 User user = UserManager.AddUser(request.UserName, request.Password, request.Deposit);
-                result.User = user.UserName;
+                result.UserName = user.UserName;
                 Users.Add(user.UserName, user);
                 result.Success = true;
             }

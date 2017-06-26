@@ -72,7 +72,7 @@
     <Compile Include="Modules\Results\JoinNextHandResult.cs" />
     <Compile Include="Modules\Results\CreateNewRoomResult.cs" />
     <Compile Include="Modules\Results\LeaguesResult.cs" />
-    <Compile Include="Modules\Results\LeaveRoomRequest.cs" />
+    <Compile Include="Modules\Requests\LeaveRoomRequest.cs" />
     <Compile Include="Modules\Results\LeaveRoomResult.cs" />
     <Compile Include="Modules\Results\LoginResult.cs" />
     <Compile Include="Modules\Results\LogoutResult.cs" />

@@ -16,222 +16,144 @@ namespace Poker.BE.Domain.Security
     ///     - moving constructor to be private, at 'constructor' region
     /// </remarks>
     public sealed class UserManager
-	{
-		#region Constants
-		public const int MINIMUM_PASSWORD_LENGTH = 6;
-		#endregion
+    {
+        #region Constants
+        public const int MINIMUM_PASSWORD_LENGTH = 6;
+        #endregion
 
-		#region Fields
-		private IDictionary<string, User> _usersCache;
-		private bool _isUpdated = false;
-		#endregion
+        #region Properties
+        public IDictionary<string, User> Users { get; set; }
 
-		#region Properties
-		public IDictionary<string, User> Users
-		{
-			get
-			{
-				return _isUpdated ? _usersCache : RetrieveUsers();
-			}
-		}
+        public IDictionary<string, User> ConnectedUsers
+        {
+            get
+            {
+                var result = from user in Users
+                             where user.Value.IsConnected
+                             select user;
+                return result.ToDictionary(x => x.Key, x => x.Value);
+            }
+        }
 
-		public IDictionary<string, User> ConnectedUsers
-		{
-			get
-			{
-				var result = from user in Users
-							 where user.Value.IsConnected
-							 select user;
-				return result.ToDictionary(x => x.Key, x => x.Value);
-			}
-		}
+        public Random SecurityKeyGenerator { get; set; }
+        #endregion
 
-		#endregion
+        #region Singleton Constructor
+        // Note: for c# implementation
+        static UserManager() { }
 
-		#region Singleton Constructor
-		// Note: for c# implementation
-		static UserManager() { }
+        // Note: Singleton private constructor
+        private UserManager()
+        {
+            Users = new Dictionary<string, User>();
+            SecurityKeyGenerator = new Random();
+        }
 
-		// Note: Singleton private constructor
-		private UserManager()
-		{
-			_usersCache = new Dictionary<string, User>();
-		}
+        private static readonly UserManager _instance = new UserManager();
 
-		private static readonly UserManager _instance = new UserManager();
+        public static UserManager Instance { get { return _instance; } }
+        #endregion
 
-		public static UserManager Instance { get { return _instance; } }
-		#endregion
+        #region Private Functions
+        private bool IsPasswordValid(string password, out string reason)
+        {
+            reason = "";
+            if (password.Length < MINIMUM_PASSWORD_LENGTH)
+            {
+                reason = "password length must be over " + MINIMUM_PASSWORD_LENGTH;
+                return false;
+            }
 
-		#region Private Functions
-		private IDictionary<string, User> RetrieveUsers()
-		{
-			// undone
-			_isUpdated = true;
-			return _usersCache;
-		}
+            return true;
+        }
+        #endregion
 
-		private void StoreUsers(IDictionary<string, User> value)
-		{
-			// undone
-			_usersCache = value;
-		}
-		#endregion
+        public static bool SecurityCheck(int? securityKey, User user)
+        {
+            if (!securityKey.HasValue)
+                throw new SecurityException("Security key missing.");
 
-		#region Methods
-		public User AddUser(string userName, string password, double sumToDeposit)
-		{
-			if (IsUserExists(userName))
-			{
-				throw new UserNameTakenException(string.Format("the user name: {0} is taken, please try again",
-						userName));
-			}
-			String reason;
-			if (!IsPasswordValid(password, out reason))
-			{
-				throw new InvalidPasswordException(reason + " please try again");
-			}
+            if (!user.IsSecure(securityKey.Value))
+                throw new SecurityException("Security key violation: key corrupted or faked.");
 
-			if (sumToDeposit < 0)
-			{
-				throw new InvalidDepositException("deposit amount must be positive. Please try again");
-			}
+            return true;
+        }
 
-			User userToAdd = new User(userName, password, sumToDeposit);
-			_usersCache.Add(userName, userToAdd);
-			return userToAdd;
-		}
+        #region Methods
+        public User AddUser(string userName, string password, double sumToDeposit)
+        {
+            if (Users.ContainsKey(userName))
+            {
+                throw new UserNameTakenException(string.Format("User name: {0} is taken, please try again",
+                        userName));
+            }
 
-		/// <summary>
-		/// remove the user? summery missing
-		/// </summary>
-		/// <param name="userName">user name</param>
-		/// <returns>true if found and deleted</returns>
-		public bool RemoveUser(string userName)
-		{
-			return _usersCache.Remove(userName);
-		}
+            String reason;
+            if (!IsPasswordValid(password, out reason))
+            {
+                throw new InvalidPasswordException(reason + " please try again");
+            }
 
-		public bool IsUserExists(string userName)
-		{
-			if (userName != null)
-			{
-				return (_usersCache.ContainsKey(userName));
-			}
-			return false;
-		}
+            if (sumToDeposit < 0)
+            {
+                throw new InvalidDepositException("Deposit amount must be positive, please try again.");
+            }
 
-		private bool IsPasswordValid(string password, out string reason)
-		{
-			reason = "";
-			if (password.Length < MINIMUM_PASSWORD_LENGTH)
-			{
-				reason = "password length must be over " + MINIMUM_PASSWORD_LENGTH;
-				return false;
-			}
+            User userToAdd = new User(userName, password, sumToDeposit);
+            Users.Add(userName, userToAdd);
 
-			return true;
-		}
+            return userToAdd;
+        }
 
-		public User LogIn(string userName, string password)
-		{
-			if (!IsUserExists(userName))
-			{
-				throw new UserNotFoundException("User not found. Please try again od sign up");
-			}
+        public User Login(string userName, string password)
+        {
+            User user;
+            if (!Users.TryGetValue(userName, out user))
+            {
+                throw new UserNotFoundException("User name: " + userName + " not found, please check for typing mistakes.");
+            }
 
-			User UserToCheck;
-			if (_usersCache.TryGetValue(userName, out UserToCheck))
-			{
-				/**
-                 * Note: We take the User Object from our DB
-                 *      - answer - no need at this point of coding.
-                 *      - UNDONE - change this.
-                 * */
-				string GoodPassword = UserToCheck.Password;
+            if (!password.Equals(password, StringComparison.Ordinal))
+            {
+                throw new IncorrectPasswordException("Incorrect password entered. Please try again");
+            }
 
-				// We check that the password is correct
-				bool arePasswordMatching = GoodPassword.Equals(password, StringComparison.Ordinal);
-				if (!arePasswordMatching)
-				{
-					throw new IncorrectPasswordException("Incorrect password entered. Please try again");
-				}
+            user.Connect(SecurityKeyGenerator.Next());
 
-				UserToCheck.Connect();
-				return UserToCheck;
-			}
-			return null;
-		}
+            return user;
+        }
 
-		public bool LogOut(User userToLogout)
-		{
-			if (!IsUserExists(userToLogout.UserName))
-			{
-				throw new UserNotFoundException("user " + userToLogout.UserName + " not found. Can't log out");
-			}
+        public bool Logout(User userToLogout)
+        {
+            if (!userToLogout.IsConnected)
+            {
+                return false;
+            }
 
-			userToLogout.Disconnect();
-			RemoveUser(userToLogout.UserName);
+            userToLogout.Disconnect();
 
-			return true;
-		}
+            return true;
+        }
 
-		public string EditProfile(string oldUserName, string newUserName, string newPassword, byte[] newAvatar)
-		{
-			//Check user's existence
-			if (!IsUserExists(oldUserName))
-			{
-				throw new UserNotFoundException("User not found, please try again");
-			}
-			User userToUpdate = _usersCache[oldUserName];
-			RemoveUser(oldUserName);
+        public void EditProfile(User user, string newUserName, string newPassword, byte[] newAvatar)
+        {
+            Users.Remove(user.UserName);
 
-			// New user-name and password validation
-			string notValidReason;
-			if (IsUserExists(newUserName))
-			{
-				_usersCache.Add(oldUserName, userToUpdate);
-				throw new UserNameTakenException("new User name taken, please try again");
-			}
+            user.UserName = newUserName;
+            user.Password = newPassword;
+            user.Avatar = newAvatar;
 
-			if (!IsPasswordValid(newPassword, out notValidReason))
-			{
-				_usersCache.Add(oldUserName, userToUpdate);
-				throw new InvalidPasswordException("invalid password , please try again");
-			}
+            Users.Add(newUserName, user);
+        }
 
-			userToUpdate.UserName = newUserName;
-			userToUpdate.Password = newPassword;
-			userToUpdate.Avatar = newAvatar;
+        /// <summary>
+        /// Clears all class resources
+        /// </summary>
+        public void Clear()
+        {
+            Users.Clear();
+        }
+        #endregion
 
-			_usersCache.Add(newUserName, userToUpdate);
-			return newUserName;
-		}
-
-		/// <summary>
-		/// returns all profile details for a user given his user name
-		/// </summary>
-		public string GetProfile(string userName, out string Password, out byte[] Avatar)
-		{
-			//Check user's existence
-			if (!IsUserExists(userName))
-			{
-				throw new UserNotFoundException("User not found, please try again");
-			}
-			User user = _usersCache[userName];
-			Password = user.Password;
-			Avatar = user.Avatar;
-			return userName;
-		}
-
-		/// <summary>
-		/// Clears all class resources
-		/// </summary>
-		public void Clear()
-		{
-			_usersCache.Clear();
-		}
-		#endregion
-
-	}
+    }
 }

@@ -10,8 +10,8 @@ namespace Poker.BE.Service.Modules.Results
 	public class SignUpResult : IResult
 	{
 		/// <summary>
-		/// username
+		/// user name
 		/// </summary>
-		public string User { get; set; }
+		public string UserName { get; set; }
 	}
 }

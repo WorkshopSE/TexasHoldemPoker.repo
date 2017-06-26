@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Net.Http;
 
 namespace Poker.BE.API.Controllers.Tests
 {
@@ -13,14 +14,17 @@ namespace Poker.BE.API.Controllers.Tests
     {
 
         #region Setup
-        private object obj;
+        private LeagueController _ctrl;
 
         public TestContext TestContext { get; set; }
 
         [TestInitialize]
         public void Before()
         {
-
+            _ctrl = new LeagueController() {
+                Request = new HttpRequestMessage(),
+                Configuration = new System.Web.Http.HttpConfiguration(),
+            };
         }
 
         [TestCleanup]
