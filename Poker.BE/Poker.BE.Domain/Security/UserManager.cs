@@ -113,7 +113,7 @@ namespace Poker.BE.Domain.Security
                 throw new UserNotFoundException("User name: " + userName + " not found, please check for typing mistakes.");
             }
 
-            if (!password.Equals(password, StringComparison.Ordinal))
+            if (!user.Password.Equals(password))
             {
                 throw new IncorrectPasswordException("Incorrect password entered. Please try again");
             }
