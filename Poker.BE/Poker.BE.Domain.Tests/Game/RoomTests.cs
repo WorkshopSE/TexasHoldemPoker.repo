@@ -162,6 +162,7 @@ namespace Poker.BE.Domain.Game.Tests
             //Arrange
             var expPlayer = room.PassivePlayers.First();
             var actual = false;
+            
             //Act
             try
             {

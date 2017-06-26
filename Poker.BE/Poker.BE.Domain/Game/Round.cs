@@ -95,7 +95,7 @@ namespace Poker.BE.Domain.Game
             while (LastPlayerToRaise != CurrentPlayer)
             {
                 //Waiting for the player to choose play move
-                while (CurrentPlayer.PlayMove == default(Move)) ;
+                while (CurrentPlayer.PlayMove == Move.Null) ;
 
                 //Make the move
                 PlayMove(CurrentPlayer.PlayMove, CurrentPlayer.AmountToBetOrCall);

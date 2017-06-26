@@ -24,26 +24,18 @@ namespace Poker.BE.Domain.Game
         #endregion
 
         #region Properties
-        // TODO: do we need ID for the Room? if so, what type should it be? 'long?' means nullable long.
-        //public long? ID { get; }
-
-        public ICollection<Chair> Chairs { get { return chairs; } }
-        public Hand CurrentHand { get; private set; }
+        
+        //Return all players (active+passive) in the room
+        public ICollection<Player> Players { get { return activeAndPassivePlayers; } }
         public ICollection<Player> ActivePlayers
         {
             get
             {
-                // TODO clean this comment code
-                //return activeAndPassivePlayers.Where(
-                //    player => (player.CurrentState == Player.State.ActiveUnfolded | player.CurrentState == Player.State.ActiveFolded))
-                //    .ToList();
-
                 var result = from player in activeAndPassivePlayers
                              where player.CurrentState != Player.State.Passive
                              select player;
 
                 return result.ToList();
-
             }
         }
         public ICollection<Player> PassivePlayers
@@ -58,13 +50,11 @@ namespace Poker.BE.Domain.Game
             }
         }
         public Dictionary<int, Player> ActivePlayersByID { get; private set; }
-        
-        /// <summary>
-        /// Current number of players at the room
-        /// </summary>
-        public ICollection<Player> Players { get { return activeAndPassivePlayers; } }
 
+        public ICollection<Chair> Chairs { get { return chairs; } }
         public IDictionary<Chair, Player> TableLocationOfActivePlayers { get; private set; }
+
+        public Hand CurrentHand { get; private set; }
         public GamePreferences Preferences { get; }
         public bool IsTableFull
         {
