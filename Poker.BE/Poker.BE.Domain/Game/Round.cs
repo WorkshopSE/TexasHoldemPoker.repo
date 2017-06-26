@@ -162,6 +162,9 @@ namespace Poker.BE.Domain.Game
                 ((PotLimitHoldem)config).ChangePotLimitValue(CurrentPot.Value);
             }
 
+            //Change player's PlayMove to null
+            currentPlayer.ChoosePlayMove("Null", 0);
+
             //Change to next player
             CalculateNextPlayer();
         }
