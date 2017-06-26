@@ -66,13 +66,6 @@ namespace Poker.BE.Service.Services
                 #endregion
 
                 #region Room's info
-                //get room's active players
-                result.ActivePlayers = new List<int>();
-                foreach (Player p in room.ActivePlayers)
-                {
-                    result.ActivePlayers.Add(p.GetHashCode());
-                }
-
                 #region Players info by table location
                 //get room's players location in table
                 //get all current active player's states at the table
@@ -146,6 +139,7 @@ namespace Poker.BE.Service.Services
 
                     //get pot's values and amount to claim
                     result.PotsValues = new List<double>();
+                    result.PotsAmountToClaim = new List<double>();
                     if (round.CurrentPot == null)
                     {
                         throw new WrongIOException("Round's pot is somehow null...");
