@@ -9,15 +9,5 @@ namespace Poker.BE.Domain.Game
         {
             Limit = limitAmount;
         }
-
-        public override void CheckRaise(double raiseAmount)
-        {
-            base.CheckRaise(raiseAmount);
-
-            if (raiseAmount > Limit)
-            {
-                throw new WrongIOException("Can't raise more than room's raise limit");
-            }
-        }
     }
 }

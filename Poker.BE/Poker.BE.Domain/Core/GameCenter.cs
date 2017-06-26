@@ -46,6 +46,7 @@ namespace Poker.BE.Domain.Core
 
         #region Properties
         public ICollection<Room> Rooms { get { return roomsManager.Keys; } }
+        public Dictionary<int, Room> RoomsByID { get; private set;}
         public ICollection<Player> Players { get { return playersManager.Keys; } }
         public ICollection<League> Leagues { get { return leagues; } }
         public IDictionary<Player, Room> PlayerToRoom { get { return playersManager; } }
@@ -70,7 +71,7 @@ namespace Poker.BE.Domain.Core
             roomsManager = new Dictionary<Room, League>();
             leagues = new List<League>();
 
-            //TODO - get/create StatisticsManager... how?
+            RoomsByID = new Dictionary<int, Room>();
         }
 
 
@@ -117,6 +118,7 @@ namespace Poker.BE.Domain.Core
 
                 room.ClearAll();
             }
+            RoomsByID.Remove(room.GetHashCode());
 
             // remove the room from the league
             roomsManager[room].RemoveRoom(room);
@@ -332,7 +334,7 @@ namespace Poker.BE.Domain.Core
         /// <see cref="https://docs.google.com/document/d/1OTee6BGDWK2usL53jdoeBOI-1Jh8wyNejbQ0ZroUhcA/edit#heading=h.eqjp0wvvpmjg"/>
         /// <param name="level">user level</param>
         /// <returns>the new created room</returns>
-        public Room CreateNewRoom(int level, NoLimitHoldem config, out Player creator)
+        public Room CreateNewRoom(int level, GamePreferences config, out Player creator)
         {
             creator = new Player();
 
@@ -347,6 +349,7 @@ namespace Poker.BE.Domain.Core
 
             league.Rooms.Add(room);
             BindRoomToLeague(room, league);
+            RoomsByID.Add(room.GetHashCode(), room);
 
             return room;
         }
@@ -380,16 +383,16 @@ namespace Poker.BE.Domain.Core
                 throw new RoomRulesException("The Table is full.");
             }
 
-            // the chosen seat is not taken
-            if (!room.TakeChair(player, seatIndex))
-            {
-                throw new RoomRulesException("The seat is already taken, please try again.");
-            }
-
             // the user don't have enough money to buy in
             if (buyIn < room.Preferences.BuyInCost)
             {
                 throw new NotEnoughMoneyException("Buy in amount is less then the minimum to join the table.");
+            }
+
+            // the chosen seat is not taken
+            if (!room.TakeChair(player, seatIndex))
+            {
+                throw new RoomRulesException("The seat is already taken, please try again.");
             }
 
             /* Joining the player to the next hand */
@@ -414,27 +417,15 @@ namespace Poker.BE.Domain.Core
                 throw new RoomNotFoundException("Unable to stand up - The player is not at the room");
             }
 
-            // it's the player's turn
-
-            try
+            //Player is a spactator
+            if (player.CurrentState == Player.State.Passive)
             {
-                if (room.CurrentHand.CurrentRound.CurrentTurn.CurrentPlayer != player)
-                {
-                    throw new NotPlayersTurnException("Unable to stand up");
-                }
-            }
-            catch (NullReferenceException)
-            {
-                if (player.CurrentState == Player.State.Passive)
-                {
-                    throw new RoomRulesException("Player is already a spectator");
-                }
+                throw new RoomRulesException("Player is already a spectator");
             }
 
             /* Action - Make the player to stand up */
 
-            room.LeaveChair(player);
-            return player.StandUp();
+            return room.LeaveChair(player);
         }
 
         public void ExitRoom(Player player)

@@ -23,13 +23,14 @@ namespace Poker.BE.Domain.Game
         #region Fields
         private ICollection<Player> activeUnfoldedPlayers;
         private Turn currentTurn;
-        private Player dealer;
         private Player currentPlayer;
         private Pot currentPot;
         private Dictionary<Player, double> liveBets;
         private double totalRaise;
         private double lastRaise;
         private Player lastPlayerToRaise;
+
+        private Player dealer;
         private bool isPreflop;
         private GamePreferences config;
         #endregion
@@ -154,6 +155,11 @@ namespace Poker.BE.Domain.Game
                         //TODO: print invalid move exception
                         throw new GameRulesException("Invalid Move");
                     }
+            }
+
+            if (config is PotLimitHoldem)
+            {
+                ((PotLimitHoldem)config).ChangePotLimitValue(CurrentPot.Value);
             }
 
             //Change to next player
@@ -353,9 +359,14 @@ namespace Poker.BE.Domain.Game
                 throw new GameRulesException("Can't raise less than last raise");
             }
 
-            double highestAllIn = 0;
+            if ((config is PotLimitHoldem && amountToRaise > ((PotLimitHoldem)config).Limit)
+                || (config is LimitHoldem && amountToRaise > ((LimitHoldem)config).Limit))
+            {
+                throw new GameRulesException("Can't raise more than game preferences raise limit");
+            }
 
             //Note: find highest all-in at the table
+            double highestAllIn = 0;
             foreach (Player player in ActiveUnfoldedPlayers)
             {
                 if (player.Wallet.AmountOfMoney + LiveBets[player] > highestAllIn)

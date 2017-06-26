@@ -65,13 +65,13 @@ namespace Poker.BE.Domain.Game
         {
             if (CurrentState != State.Passive)
             {
-                return false;
+                throw new PlayerModeException("Player is not a spectator");
             }
 
             // buy in to wallet
             WalletValue = buyIn;
 
-            CurrentState = State.ActiveUnfolded;
+            CurrentState = State.ActiveFolded;
             return true;
         }
         
@@ -86,9 +86,9 @@ namespace Poker.BE.Domain.Game
                 throw new PlayerModeException("Unable to stand up: Player already a spectator.");
             }
 
-            if (CurrentState == State.ActiveUnfolded)
+            if (CurrentState != State.ActiveFolded)
             {
-                throw new PlayerModeException("Unable to stand up: Player needs to fold first.");
+                throw new PlayerModeException("Unable to stand up: Player needs to be folded.");
             }
 
             CurrentState = State.Passive;

@@ -32,6 +32,8 @@ namespace Poker.BE.Domain.Game
         public Pot Pot { get { return pot; } set { pot = value; } }
         public Card[] CommunityCards { get { return communityCards; } set { communityCards = value; } }
         public Dictionary<Player, double> PlayersBets { get; private set; }
+        public ICollection<Player> ActivePlayers { get { return activePlayers; } }
+        public Player Dealer { get { return dealer; } }
         #endregion
 
         #region Constructors
@@ -47,9 +49,10 @@ namespace Poker.BE.Domain.Game
             PlayersBets = new Dictionary<Player, double>();
             foreach (Player player in activePlayers)
             {
+                player.CurrentState = Player.State.ActiveUnfolded;
                 PlayersBets.Add(player, 0);
             }
-            communityCards = new CommunityCard[NUM_OF_COMMUNITY_CARDS];
+            communityCards = new Card[NUM_OF_COMMUNITY_CARDS];
             pot = new Pot();
             this.dealer = dealer;
             CurrentRound = new Round(dealer, activePlayers, this.pot, true, this.preferences);

@@ -14,6 +14,5 @@ namespace Poker.BE.Service.IServices
     {
 		EditProfileResult EditProfile(EditProfileRequest request);
 		GetProfileResult GetProfile(GetProfileRequest request);
-
-	}
+    }
 }

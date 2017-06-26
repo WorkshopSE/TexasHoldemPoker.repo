@@ -42,6 +42,7 @@
   <ItemGroup>
     <Compile Include="IServices\IAuthenticationService.cs" />
     <Compile Include="IServices\IHistoryService.cs" />
+    <Compile Include="IServices\IKeepAliveService.cs" />
     <Compile Include="IServices\ILeaguesService.cs" />
     <Compile Include="IServices\IMessageService.cs" />
     <Compile Include="IServices\INotificationService.cs" />
@@ -50,7 +51,9 @@
     <Compile Include="IServices\IProfileService.cs" />
     <Compile Include="Modules\Caches\CommonCache.cs" />
     <Compile Include="Modules\Caches\ICache.cs" />
-    <Compile Include="Modules\Requests\CheckRequest.cs" />
+    <Compile Include="Modules\Requests\GetStatisticsRequest.cs" />
+    <Compile Include="Modules\Requests\KeepAliveRequest.cs" />
+    <Compile Include="Modules\Requests\PlayMoveRequest.cs" />
     <Compile Include="Modules\Requests\EditProfileRequest.cs" />
     <Compile Include="Modules\Requests\EnterRoomRequest.cs" />
     <Compile Include="Modules\Requests\FindRoomsByCriteriaRequest.cs" />
@@ -63,7 +66,9 @@
     <Compile Include="Modules\Requests\SignUpRequest.cs" />
     <Compile Include="Modules\Requests\StandUpToSpactateRequest.cs" />
     <Compile Include="Modules\Responses\IResponse.cs" />
-    <Compile Include="Modules\Results\CheckResult.cs" />
+    <Compile Include="Modules\Results\GetStatisticsResult.cs" />
+    <Compile Include="Modules\Results\KeepAliveResult.cs" />
+    <Compile Include="Modules\Results\PlayMoveResult.cs" />
     <Compile Include="Modules\Results\EditProfileResult.cs" />
     <Compile Include="Modules\Results\EnterRoomResult.cs" />
     <Compile Include="Modules\Results\FindRoomsByCriteriaResult.cs" />
@@ -82,6 +87,7 @@
     <Compile Include="Services\AuthenticationService.cs" />
     <Compile Include="IServices\IRoomsService.cs" />
     <Compile Include="Services\HistoryService.cs" />
+    <Compile Include="Services\KeepAliveService.cs" />
     <Compile Include="Services\LeagueService.cs" />
     <Compile Include="Services\MessagesService.cs" />
     <Compile Include="Services\NotificationService.cs" />

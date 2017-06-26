@@ -66,8 +66,6 @@ namespace Poker.BE.API.Controllers
 
 			return Request.CreateResponse(HttpStatusCode.OK, result);
 		}
-
-
 		#endregion
 	}
 }

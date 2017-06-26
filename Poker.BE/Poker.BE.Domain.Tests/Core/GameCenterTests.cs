@@ -280,28 +280,10 @@ namespace Poker.BE.Domain.Core.Tests
             gameCenter.JoinNextHand(expPlayer, seatIndex, buyIn);
 
             //Assert
-            Assert.AreEqual(Player.State.ActiveUnfolded, expPlayer.CurrentState);
+            Assert.AreEqual(Player.State.ActiveFolded, expPlayer.CurrentState);
             Assert.AreEqual(buyIn, expPlayer.WalletValue);
             Assert.AreEqual(expPlayer, expRoom.TableLocationOfActivePlayers[expRoom.Chairs.ElementAt(seatIndex)]);
             Assert.AreEqual(1, expRoom.ActivePlayers.Count);
-        }
-
-        [TestMethod()]
-        [ExpectedException(typeof(CrossUtility.Exceptions.PlayerModeException))]
-        public void StandUpToSpactateTest()
-        {
-            //Arrange
-            Player actPlayer;
-            var expRoom = gameCenter.CreateNewRoom(1, new NoLimitHoldem(), out actPlayer);
-            actPlayer.Nickname = "yossi";
-            var expMoney = expRoom.Preferences.BuyInCost;
-            gameCenter.JoinNextHand(actPlayer, 2, expMoney);
-
-            //Act
-            var actMoney = gameCenter.StandUpToSpactate(actPlayer);
-
-            //Assert
-            Assert.Fail("expected exception: player mode exception");
         }
 
         [TestMethod]
