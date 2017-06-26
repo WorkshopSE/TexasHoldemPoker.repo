@@ -93,9 +93,10 @@ namespace Poker.BE.API.Controllers.Tests
 			ctrl.Login(new LoginRequest() { Password = "123456", UserName = "johnny" })
 				.TryGetContentValue(out login);
 
-			LogoutRequest request = new LogoutRequest()
-			{
-				UserName = login.UserName
+            LogoutRequest request = new LogoutRequest()
+            {
+                UserName = login.UserName,
+                SecurityKey = login.SecurityKey,
 			};
 
 			//Act
@@ -105,6 +106,7 @@ namespace Poker.BE.API.Controllers.Tests
 			//Assert
 			Assert.IsTrue(act.TryGetContentValue(out actContent));
 			Assert.AreEqual("", actContent.ErrorMessage, "error message");
+            Assert.AreEqual(HttpStatusCode.OK, act.StatusCode, "status code");
 			Assert.AreEqual(true, actContent.Success, "success");
 			Assert.AreEqual(login.UserName, actContent.UserName, "username");
 			Assert.AreEqual(true, actContent.Output, "output");

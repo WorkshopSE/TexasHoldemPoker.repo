@@ -59,7 +59,7 @@ namespace Poker.BE.Service.Services
                 var user = _cache.RefreshAndGet(
                     Users,
                     request.UserName,
-                    new UserNotFoundException(string.Format("User Name: {1} not found", request.UserName))
+                    new UserNotFoundException(string.Format("User Name: {0} not found", request.UserName))
                     );
 
                 UserManager.SecurityCheck(request.SecurityKey, user);
