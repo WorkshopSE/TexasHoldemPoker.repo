@@ -55,6 +55,7 @@
     <Compile Include="Exceptions\PokerException.cs" />
     <Compile Include="Exceptions\RoomNotFoundException.cs" />
     <Compile Include="Exceptions\RoomRulesException.cs" />
+    <Compile Include="Exceptions\SecurityException.cs" />
     <Compile Include="Exceptions\UserNameTakenException.cs" />
     <Compile Include="Exceptions\UserNotFoundException.cs" />
     <Compile Include="Exceptions\WrongIOException.cs" />

@@ -64,7 +64,7 @@ namespace Poker.BE.API.Controllers.Tests
 			{
 				ErrorMessage = "",
 				Success = true,
-				User = "1"
+				UserName = "1"
 			};
 
 			//Act
@@ -77,8 +77,8 @@ namespace Poker.BE.API.Controllers.Tests
 			Assert.IsTrue(hasContent, "has content");
 			Assert.AreEqual(exResult.ErrorMessage, actContent.ErrorMessage, "error message");
 			Assert.AreEqual(exResult.Success, actContent.Success, "success bool");
-			Assert.AreNotEqual(default(int?), actContent.User, "user not default");
-			Assert.IsNotNull(actContent.User, "user not null");
+			Assert.AreNotEqual(default(int?), actContent.UserName, "user not default");
+			Assert.IsNotNull(actContent.UserName, "user not null");
 		}
 
 		[TestMethod()]
@@ -95,7 +95,7 @@ namespace Poker.BE.API.Controllers.Tests
 
 			LogoutRequest request = new LogoutRequest()
 			{
-				User = login.User
+				UserName = login.UserName
 			};
 
 			//Act
@@ -106,7 +106,7 @@ namespace Poker.BE.API.Controllers.Tests
 			Assert.IsTrue(act.TryGetContentValue(out actContent));
 			Assert.AreEqual("", actContent.ErrorMessage, "error message");
 			Assert.AreEqual(true, actContent.Success, "success");
-			Assert.AreEqual(login.User, actContent.User, "username");
+			Assert.AreEqual(login.UserName, actContent.UserName, "username");
 			Assert.AreEqual(true, actContent.Output, "output");
 		}
 
@@ -131,7 +131,7 @@ namespace Poker.BE.API.Controllers.Tests
 			Assert.IsTrue(actHasContent);
 			Assert.AreEqual("", actValue.ErrorMessage);
 			Assert.AreEqual(true, actValue.Success);
-			Assert.IsNotNull(actValue.User);
+			Assert.IsNotNull(actValue.UserName);
 		}
 
         [TestMethod]
@@ -155,7 +155,7 @@ namespace Poker.BE.API.Controllers.Tests
             Assert.IsTrue(actHasContent);
             Assert.AreEqual("", actValue.ErrorMessage);
             Assert.AreEqual(true, actValue.Success);
-            Assert.IsNotNull(actValue.User);
+            Assert.IsNotNull(actValue.UserName);
         }
 	}
 }

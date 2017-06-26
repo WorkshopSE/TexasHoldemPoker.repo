@@ -33,6 +33,7 @@ namespace Poker.BE.API.Controllers.Tests
         private User _user;
         private int _level;
         private NoLimitHoldem _config;
+        private int _securityKey;
 
         public TestContext TestContext { get; set; }
 
@@ -44,6 +45,8 @@ namespace Poker.BE.API.Controllers.Tests
             _gameCenter = GameCenter.Instance;
             _user = new User();
             _userManager.Users.Add(_user.UserName, _user);
+            _securityKey = 1;
+            _user.Connect(_securityKey);
             _ctrl = new RoomController()
             {
                 Request = new System.Net.Http.HttpRequestMessage(),
@@ -69,8 +72,8 @@ namespace Poker.BE.API.Controllers.Tests
             CreateNewRoomRequest request = new CreateNewRoomRequest()
             {
                 Level = _level,
-                User = _user.UserName
-
+                UserName = _user.UserName,
+                SecurityKey = _securityKey
             };
 
             var exStatus = HttpStatusCode.OK;
@@ -109,7 +112,8 @@ namespace Poker.BE.API.Controllers.Tests
             EnterRoomRequest request = new EnterRoomRequest()
             {
                 Room = room.GetHashCode(),
-                User = _user.UserName
+                UserName = _user.UserName,
+                SecurityKey = _securityKey,
             };
 
             //Act
@@ -141,7 +145,8 @@ namespace Poker.BE.API.Controllers.Tests
                 buyIn = room.Preferences.BuyInCost,
                 Player = player.GetHashCode(),
                 seatIndex = 1,
-                User = _user.UserName,
+                UserName = _user.UserName,
+                SecurityKey = _securityKey,
             };
 
             //Act
@@ -170,7 +175,8 @@ namespace Poker.BE.API.Controllers.Tests
             StandUpToSpactateRequest request = new StandUpToSpactateRequest()
             {
                 Player = player.GetHashCode(),
-                User = _user.UserName
+                UserName = _user.UserName,
+                SecurityKey = _securityKey,
             };
 
             //Act
@@ -198,7 +204,8 @@ namespace Poker.BE.API.Controllers.Tests
             LeaveRoomRequest request = new LeaveRoomRequest()
             {
                 Player = player.GetHashCode(),
-                User = _user.UserName
+                UserName = _user.UserName,
+                SecurityKey = _securityKey,
             };
 
             //Act
