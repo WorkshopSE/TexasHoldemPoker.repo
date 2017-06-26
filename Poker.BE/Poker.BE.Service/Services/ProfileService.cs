@@ -45,8 +45,19 @@ namespace Poker.BE.Service.Services
             result.newUserName = request.UserName;
             try
             {
-                // call domain action
-                UserManager.EditProfile(request.UserName, request.NewUserName ?? request.UserName, request.NewPassword ?? request.Password, request.NewAvatar);
+                var user = _cache.RefreshAndGet(
+                    Users,
+                    request.UserName,
+                    new UserNotFoundException(string.Format("user id: {0} not found, please re-login", request.UserName))
+                    );
+                UserManager.SecurityCheck(request.SecurityKey, user);
+
+                // call domain action - if null don't update (?? operator)
+                UserManager.EditProfile(
+                    user,
+                    request.NewUserName ?? request.UserName,
+                    request.NewPassword ?? request.Password,
+                    request.NewAvatar ?? user.Avatar);
 
                 // update result
 
@@ -65,25 +76,32 @@ namespace Poker.BE.Service.Services
             }
             return result;
         }
+
         public GetProfileResult GetProfile(GetProfileRequest request)
         {
             var result = new GetProfileResult();
+
             try
             {
-                String password;
-                byte[] avatar;
-                UserManager.GetProfile(request.UserName, out password, out avatar);
-                result.Avatar = avatar?.Select(b => (int)b).ToArray();
-                result.Password = password;
+                var user = _cache.RefreshAndGet(
+                    Users,
+                    request.UserName,
+                    new UserNotFoundException(string.Format("User name: {0} not found. please re-login.", request.UserName))
+                    );
+                UserManager.SecurityCheck(request.SecurityKey, user);
+
+                result.Avatar = (user.Avatar)?.Select(b => (int)b).ToArray();
+                result.Password = user.Password;
                 result.UserName = request.UserName;
                 result.Success = true;
             }
-            catch (UserNotFoundException e)
+            catch (PokerException e)
             {
                 result.Success = false;
                 result.ErrorMessage = e.Message;
                 Logger.Log(e.Message, this);
             }
+
             return result;
         }
     }

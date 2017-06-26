@@ -8,7 +8,5 @@ namespace Poker.BE.Service.Modules.Requests
 {
     public class GetStatisticsRequest : IRequest
     {
-		//user id
-        public string UserName { get; set; }
     }
 }

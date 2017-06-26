@@ -12,7 +12,7 @@ namespace Poker.BE.Service.IServices
     /// UCC06: Poker Game-play
     /// </summary>
     /// <see cref="https://docs.google.com/document/d/1ob4bSynssE3UOfehUAFNv_VDpPbybhS4dW_O-v-QDiw/edit#heading=h.kaxnrwixytqc"/>
-    public interface IPokerGamePlayService
+    public interface IPokerGamePlayService : IPokerService
     {
         PlayMoveResult PlayMove(PlayMoveRequest request);
     }

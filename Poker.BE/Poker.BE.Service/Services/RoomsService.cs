@@ -66,19 +66,16 @@ namespace Poker.BE.Service.Services
         public CreateNewRoomResult CreateNewRoom(CreateNewRoomRequest request)
         {
             var result = new CreateNewRoomResult();
-            User user;
-            while (!Users.TryGetValue(request.User, out user))
-            {
-                if (_cache.Refresh())
-                {
-                    continue;
-                }
-
-                throw new UserNotFoundException("User was not found, can't create room");
-            }
 
             try
             {
+                var user = _cache.RefreshAndGet(
+                        Users,
+                        request.UserName,
+                        new UserNotFoundException("User was not found, can't create room")
+                );
+                UserManager.SecurityCheck(request.SecurityKey, user);
+
                 Player creator = null;
                 Room room = null;
                 NoLimitHoldem noLimitPreferences = new NoLimitHoldem(request.Name, request.BuyInCost, request.MinimumBet, request.Antes,
@@ -135,29 +132,22 @@ namespace Poker.BE.Service.Services
 
             try
             {
-                Room room;
-                while (!Rooms.TryGetValue(request.Room, out room))
-                {
-                    if (_cache.Refresh())
-                    {
-                        continue;
-                    }
+                var room = _cache.RefreshAndGet(
+                    Rooms,
+                    request.Room,
+                    new RoomNotFoundException(string.Format("Requested room ID {0} not found", request.Room))
+                    );
 
-                    throw new RoomNotFoundException(string.Format("Requested room ID {0} not found", request.Room));
-                }
 
-                User user;
-                while (!Users.TryGetValue(request.User, out user))
-                {
-                    if (_cache.Refresh())
-                    {
-                        continue;
-                    }
-
-                    throw new UserNotFoundException(string.Format("User ID {0} not found", request.User));
-                }
+                var user = _cache.RefreshAndGet(
+                    Users,
+                    request.UserName,
+                    new UserNotFoundException(string.Format("User ID {0} not found", request.UserName))
+                    );
+                UserManager.SecurityCheck(request.SecurityKey, user);
 
                 result.Player = user.EnterRoom(room).GetHashCode();
+                result.RoomID = room.GetHashCode();
                 result.Name = room.Preferences.Name;
                 result.BuyInCost = room.Preferences.BuyInCost;
                 result.MinimumBet = room.Preferences.MinimumBet;
@@ -169,7 +159,6 @@ namespace Poker.BE.Service.Services
                 {
                     result.Limit = ((GamePreferencesDecorator)room.Preferences).Limit;
                 }
-
             }
             catch (PokerException e)
             {
@@ -188,28 +177,22 @@ namespace Poker.BE.Service.Services
             try
             {
 
-                Player player;
-                while (!Players.TryGetValue(request.Player, out player))
-                {
-                    if (_cache.Refresh())
-                    {
-                        continue;
-                    }
+                var player = _cache.RefreshAndGet(
+                    Players,
+                    request.Player,
+                    new PlayerNotFoundException(string.Format("Cannot find player id: {0}, please exit and re-enter the room.", request.Player))
+                    );
 
-                    throw new PlayerNotFoundException(string.Format("Cannot find player id: {0}, please exit and re-enter the room.", request.Player));
-                }
+                var user = _cache.RefreshAndGet(
+                    Users,
+                    request.UserName,
+                    new UserNotFoundException(string.Format("Cannot find user name: {0}, please login to the server again.", request.UserName))
+                    );
+                UserManager.SecurityCheck(request.SecurityKey, user);
 
-                User user;
-                while (!Users.TryGetValue(request.User, out user))
-                {
-                    if (_cache.Refresh()) { continue; }
-
-                    throw new UserNotFoundException(string.Format("Cannot find user name: {0}, please login to the server again.", request.User));
-                }
-
-                user.JoinNextHand(player, request.seatIndex, request.buyIn);
+                user.JoinNextHand(player, request.SeatIndex, request.BuyIn);
                 result.UserBank = user.UserBank.Money;
-
+                result.Wallet = player.Wallet.Value;
                 result.Success = true;
             }
             catch (PokerException e)
@@ -227,13 +210,12 @@ namespace Poker.BE.Service.Services
 
             try
             {
-                var user = default(User);
-                while (!Users.TryGetValue(request.User, out user))
-                {
-                    if (_cache.Refresh()) continue;
-
-                    throw new UserNotFoundException(string.Format("cannot find user name: {0}, please login again.", request.User));
-                }
+                var user = _cache.RefreshAndGet(
+                    Users,
+                    request.UserName,
+                    new UserNotFoundException(string.Format("cannot find user name: {0}, please login again.", request.UserName))
+                    );
+                UserManager.SecurityCheck(request.SecurityKey, user);
 
                 Player player = null;
                 while (!Players.TryGetValue(request.Player, out player))
@@ -268,9 +250,10 @@ namespace Poker.BE.Service.Services
             {
                 var user = _cache.RefreshAndGet(
                     Users,
-                    request.User,
-                    new UserNotFoundException(string.Format("cannot find user name: {0}, please login again.", request.User))
+                    request.UserName,
+                    new UserNotFoundException(string.Format("cannot find user name: {0}, please login again.", request.UserName))
                     );
+                UserManager.SecurityCheck(request.SecurityKey, user);
 
                 var player = _cache.RefreshAndGet(
                     Players,
@@ -310,7 +293,7 @@ namespace Poker.BE.Service.Services
                     CurrentNumberOfPlayers = room.Players.Count,
                     MaxNumberOfPlayers = room.Preferences.MaxNumberOfPlayers,
                     MinimumBuyIn = room.Preferences.BuyInCost,
-                    //PotLimit = room.Preferences., UNDONE: Tomer - how do i get the pot limit of the room?
+                    PotLimit = (room.Preferences as PotLimitHoldem)?.Limit,
                 });
             }
             return rooms.ToArray();
@@ -326,12 +309,13 @@ namespace Poker.BE.Service.Services
                 double betSize = request.Criterias.Contains(FindRoomsByCriteriaRequest.BET_SIZE) ? request.BetSize : -1;
 
                 GamePreferences preferences =
-                    new NoLimitHoldem() {
+                    new NoLimitHoldem()
+                    {
                         MaxNumberOfPlayers = request.Criterias.Contains(FindRoomsByCriteriaRequest.MAX_NUMBER_OF_PLAYERS) ? request.MaxNumberOfPlayers : -1,
                         AntesValue = request.Criterias.Contains(FindRoomsByCriteriaRequest.ANTES_VALUE) ? request.Antes : -1,
                         BuyInCost = request.Criterias.Contains(FindRoomsByCriteriaRequest.BUY_IN_COST) ? request.BuyInCost : -1,
                         Name = request.Criterias.Contains(FindRoomsByCriteriaRequest.NAME) ? request.Name : "",
-                        MinimumBet = request.Criterias.Contains(FindRoomsByCriteriaRequest.MIN_BET)? request.MinimumBet : -1,
+                        MinimumBet = request.Criterias.Contains(FindRoomsByCriteriaRequest.MIN_BET) ? request.MinimumBet : -1,
                         MinNumberOfPlayers = request.Criterias.Contains(FindRoomsByCriteriaRequest.MIN_NUMBER_OF_PLAYERS) ? request.MinNumberOfPlayers : -1,
                     };
 

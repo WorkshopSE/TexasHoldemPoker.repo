@@ -1,4 +1,5 @@
-﻿using Poker.BE.Domain.Core;
+﻿using Poker.BE.CrossUtility.Exceptions;
+using Poker.BE.Domain.Core;
 using Poker.BE.Domain.Game;
 using Poker.BE.Domain.Security;
 using Poker.BE.Domain.Utility;
@@ -167,6 +168,21 @@ namespace Poker.BE.Service.Modules.Caches
             Users.Clear();
             PlayerToRoom.Clear();
             RoomToLeague.Clear();
+        }
+        #endregion
+
+        #region Methods
+        public User GetSecuredUser(int? securityKey, string userName)
+        {
+            var user = RefreshAndGet(
+                    Users,
+                    userName,
+                    new UserNotFoundException(string.Format("User Name: {0} not found", userName))
+                    );
+
+            UserManager.SecurityCheck(securityKey, user);
+
+            return user;
         }
         #endregion
 

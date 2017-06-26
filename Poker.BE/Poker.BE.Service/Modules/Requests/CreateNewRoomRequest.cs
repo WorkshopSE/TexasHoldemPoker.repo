@@ -5,7 +5,6 @@ namespace Poker.BE.Service.Modules.Requests
 	public class CreateNewRoomRequest : IRequest
 	{
 		public int Level { get; set; }
-		public string User { get; set; }
 
         //Game Preferences data
         public string Name { get; set; }

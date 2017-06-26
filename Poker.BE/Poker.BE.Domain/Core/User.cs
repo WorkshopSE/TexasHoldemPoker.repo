@@ -21,6 +21,8 @@ namespace Poker.BE.Domain.Core
         #region Properties
         public Statistics UserStatistics { get; private set; }
         public ICollection<Player> Players { get; set; }
+        public int Level { get; set; }
+        public int? SecurityKey { get; private set; }
         #endregion
 
         #region Constructors
@@ -48,16 +50,33 @@ namespace Poker.BE.Domain.Core
 
         #region Methods
 
-        // TODO: for Ariel - what is this 2 methods?
-        public void Connect()
+        #region Security Methods
+        /// <summary>
+        /// Connect user on-line
+        /// </summary>
+        /// <param name="key">security random key</param>
+        public void Connect(int key)
         {
+            SecurityKey = key;
             IsConnected = true;
         }
 
         public void Disconnect()
         {
+            SecurityKey = null;
             IsConnected = false;
         }
+
+        /// <summary>
+        /// tests if the user is secure by its security key
+        /// </summary>
+        /// <param name="key">security key sent by the actual user</param>
+        /// <returns>true case this is the true key</returns>
+        public bool IsSecure(int key)
+        {
+            return key == SecurityKey;
+        }
+        #endregion
 
         #region UCC03 Rooms Management Methods
         /// <summary>

@@ -6,6 +6,7 @@
         /// player hash code (session id)
         /// </summary>
         public int? Player { get; set; }
+        public int RoomID { get; set; }
 
         //Game Preferences data
         public string Name { get; set; }

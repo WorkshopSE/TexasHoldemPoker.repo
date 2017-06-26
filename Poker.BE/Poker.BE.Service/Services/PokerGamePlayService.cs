@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Poker.BE.CrossUtility.Loggers;
 
 namespace Poker.BE.Service.Services
 {
@@ -24,6 +25,10 @@ namespace Poker.BE.Service.Services
         public IDictionary<string, User> Users { get { return _cache.Users; } }
         public UserManager UserManager { get { return _cache.UserManager; } }
         public GameCenter GameCenter { get { return _cache.GameCenter; } }
+
+        public ILogger Logger { get { return CrossUtility.Loggers.Logger.Instance; } }
+
+
         #endregion
 
         #region Constructors
@@ -40,7 +45,8 @@ namespace Poker.BE.Service.Services
 			var result = new PlayMoveResult();
             try
             {
-                User user = UserManager.Users[request.User];
+                User user = _cache.GetSecuredUser(request.SecurityKey, request.UserName);
+                
                 //getting the acting player
                 Player player = null;
                 foreach (Player p in user.Players)
@@ -66,20 +72,11 @@ namespace Poker.BE.Service.Services
                 result.NextPlayerInvest = GameCenter.FindRoomsByCriteria(-1, player).ElementAt(0).CurrentHand.CurrentRound.LiveBets[player];
                 result.Success = true;
             }
-            catch (UserNotFoundException e)
+            catch(PokerException e)
             {
                 result.Success = false;
                 result.ErrorMessage = e.Message;
-            }
-            catch (PlayerNotFoundException e)
-            {
-                result.Success = false;
-                result.ErrorMessage = e.Message;
-            }
-            catch (ArgumentException e)
-            {
-                result.Success = false;
-                result.ErrorMessage = e.Message;
+                Logger.Error(e, this);
             }
 
             return result;
