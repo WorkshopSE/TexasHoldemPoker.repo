@@ -69,7 +69,7 @@ namespace Poker.BE.Domain.Game
             }
 
             // buy in to wallet
-            WalletValue = buyIn;
+            _wallet.Value = buyIn;
 
             CurrentState = State.ActiveFolded;
             return true;
