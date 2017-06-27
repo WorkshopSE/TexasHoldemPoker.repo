@@ -68,7 +68,7 @@ namespace Poker.BE.Domain.Game
             PrepareHand();
 
             //PRE FLOP
-            CurrentRound = new Round(dealer, activePlayers, pot, true, this.preferences);
+            CurrentRound.IsPreflop = true;
             CurrentRound.PlayBettingRound(_lock);
             UpdatePlayersBets();
             pot = CurrentRound.CurrentPot;
