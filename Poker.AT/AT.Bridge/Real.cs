@@ -107,8 +107,18 @@ namespace AT.Bridge
 			avatar = result.Avatar;
 			return result.UserName;
 		}
-
-		public int CreateARoom(int level, string userName, int securityKey, out int player)
+		public int EnterRoom(int room, string userName, int securityKey, out int? player )
+		{
+			EnterRoomResult result = roomService.EnterRoom(new EnterRoomRequest() { Room = room, UserName = userName, SecurityKey = securityKey });
+			if(!result.Success.HasValue || !result.Success.Value)
+			{
+				player = 0;
+				return 0;
+			}
+			player = result.Player;
+			return result.RoomID;
+		}
+		public int CreateARoom(int level, string userName, int securityKey, out int? player)
 		{
 			CreateNewRoomResult result = roomService.CreateNewRoom(new CreateNewRoomRequest() { Level = level, UserName = userName, SecurityKey = securityKey });
 			if (!result.Success.HasValue || !result.Success.Value)

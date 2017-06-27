@@ -46,9 +46,14 @@ namespace AT.Bridge
 			bridge.TearDown();
 		}
 
-		public int CreateARoom(int level, string userName, int securityKey, out int player)
+		public int CreateARoom(int level, string userName, int securityKey, out int? player)
 		{
 			return bridge.CreateARoom(level, userName, securityKey, out player);
+		}
+
+		public int EnterRoom(int room, string userName, int securityKey, out int? player)
+		{
+			return bridge.EnterRoom(room, userName, securityKey, out player);
 		}
 
 		public string GetProfile(string userName, int securityKey, out string password, out int[] avatar)

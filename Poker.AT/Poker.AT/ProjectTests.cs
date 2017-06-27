@@ -25,7 +25,7 @@ namespace AT.Tests
 			this.bridge.TearDown();
 		}
 
-		public int CreateARoom(int level, string userName, int securityKey, out int player)
+		public int CreateARoom(int level, string userName, int securityKey, out int? player)
 		{
 			return bridge.CreateARoom(level, userName, securityKey, out player);
 		}
@@ -57,6 +57,10 @@ namespace AT.Tests
 			return bridge.GetProfile(userName, securityKey, out password, out avatar);
 		}
 
+		public int EnterRoom(int room, string userName, int securityKey, out int? player)
+		{
+			return bridge.EnterRoom(room, userName, securityKey, out player);
+		}
 		public IList<Card> ShuffleCards(Deck TestDeck)
 		{
 			return bridge.ShuffleCards(TestDeck);

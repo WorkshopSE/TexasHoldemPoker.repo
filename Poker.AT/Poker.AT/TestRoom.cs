@@ -13,6 +13,8 @@ namespace AT.Tests
 	{
 		#region fields
 		string TestUser;
+		string TestUser2;
+		int TestUser2Key;
 		int TestUserKey;
 		#endregion
 
@@ -20,8 +22,10 @@ namespace AT.Tests
 		public new void Setup()
 		{
 			base.Setup();
-			TestUser=base.SignUp("tomer", "Tomer123", "123456");
-			base.Login("Tomer123", "123456",out TestUserKey);
+			TestUser = base.SignUp("tomer", "Tomer123", "123456");
+			TestUser2 = base.SignUp("asaf", "Asafbil", "123457");
+			base.Login("Asafbil", "123457", out TestUser2Key);
+			base.Login("Tomer123", "123456", out TestUserKey);
 		}
 
 		[TearDown]
@@ -38,11 +42,26 @@ namespace AT.Tests
 			int securityKey = TestUserKey;
 
 			//act
-			int player;
-			int actResult = base.CreateARoom(level, "Tomer123", securityKey, out player);
+			int? player;
+			int actResult = base.CreateARoom(level, TestUser, securityKey, out player);
 
 			//Assert
-			Assert.AreNotEqual(0,actResult);
+			Assert.AreNotEqual(0, actResult);
+			Assert.AreNotEqual(0, player);
+		}
+		public void EnterARoomTest()
+		{
+			//Arrange
+			int level = 4;
+			int securityKey = TestUserKey;
+			int? player;
+			int room = base.CreateARoom(level, TestUser, securityKey, out player);
+
+			//act
+			int actResult = base.EnterRoom(room, TestUser2, TestUser2Key, out player);
+
+			//Assert
+			Assert.AreNotEqual(0, actResult);
 			Assert.AreNotEqual(0, player);
 		}
 	}

@@ -51,7 +51,13 @@ namespace AT.Bridge
 		{
 		}
 
-		public int CreateARoom(int level, string userName, int securityKey, out int player)
+		public int CreateARoom(int level, string userName, int securityKey, out int? player)
+		{
+			player = 0;
+			return 0;
+		}
+
+		public int EnterRoom(int room, string userName, int securityKey, out int? player)
 		{
 			player = 0;
 			return 0;
