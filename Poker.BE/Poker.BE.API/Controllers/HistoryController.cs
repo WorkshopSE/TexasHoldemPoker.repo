@@ -27,14 +27,15 @@ namespace Poker.BE.API.Controllers
         }
         #endregion
 
-        [HttpGet]
-        public HttpResponseMessage GetStatistics(string userName)
+        // TODO: change to post - for security key
+        [HttpPost]
+        public HttpResponseMessage GetStatistics(CommonRequest request)
         {
             var result = new GetStatisticsResult();
 
             try
             {
-                result = service.GetStatistics(userName);
+                result = service.GetStatistics(request);
             }
             catch (Exception e)
             {
@@ -45,5 +46,27 @@ namespace Poker.BE.API.Controllers
 
             return Request.CreateResponse(HttpStatusCode.OK, result);
         }
+
+
+        [HttpPost]
+        public HttpResponseMessage GetAllUsers(CommonRequest request)
+        {
+            var result = new GetAllUsersResult();
+
+            try
+            {
+                result = service.GetAllUsers(request);
+            }
+            catch (Exception e)
+            {
+                result.ErrorMessage = e.Message;
+                result.Success = false;
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, result);
+            }
+
+            return Request.CreateResponse(HttpStatusCode.OK, result);
+        }
+
+
     }
 }

@@ -113,7 +113,7 @@ namespace Poker.BE.Domain.Security
                 throw new UserNotFoundException("User name: " + userName + " not found, please check for typing mistakes.");
             }
 
-            if (!password.Equals(password, StringComparison.Ordinal))
+            if (!user.Password.Equals(password))
             {
                 throw new IncorrectPasswordException("Incorrect password entered. Please try again");
             }
@@ -137,9 +137,22 @@ namespace Poker.BE.Domain.Security
 
         public void EditProfile(User user, string newUserName, string newPassword, byte[] newAvatar)
         {
+            if (Users.ContainsKey(newUserName) && user.UserName != newUserName)
+            {
+                throw new UserNameTakenException(string.Format("User name: {0} is taken, please try again",
+                        newUserName));
+            }
+
             Users.Remove(user.UserName);
 
             user.UserName = newUserName;
+
+            string reason;
+            if (!IsPasswordValid(newPassword, out reason))
+            {
+                throw new InvalidPasswordException("password is not valid - must be more than 6 characters");
+            }
+
             user.Password = newPassword;
             user.Avatar = newAvatar;
 

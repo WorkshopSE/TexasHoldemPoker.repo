@@ -11,94 +11,118 @@ using System.IO;
 namespace AT.Tests
 {
 	[TestFixture]
-	[Category("Edit User Profile")]
+	[Category("UCC01: Authentication & Profile")]
 	class TestEditUserProfile : ProjectTests
 	{
-		User TestUser;
-		
-		Image TestUserImage;
+		#region Fields
+		string TestUser;
+		string TestUser2;
+		int TestUserKey;
+		int TestUser2Key;
+		#endregion
+
 		[SetUp]
 		public new void Setup()
 		{
 			base.Setup();
-			TestUser=base.SignUp("asaf", "Asaf", "12345");
-			base.Login("Asaf", "12345");
-			TestUserImage = Image.FromFile("donaldtramp");
-			
+			TestUser=base.SignUp("asaf", "Asaf", "123456");
+			TestUser2 = base.SignUp("asaf", "Asafbil", "123457");
+			base.Login("Asaf", "123456",out TestUserKey);
+			base.Login("Asafbil", "123457", out TestUser2Key);
+		}
+		[Test]
+		public void TestGetProfile()
+		{
+			//Arrange
+			string password;
+			int[] avatar;
+
+			//Act
+			string actResult = base.GetProfile(TestUser, TestUserKey, out password, out avatar);
+
+			//Assert
+			Assert.AreEqual(TestUser, actResult);
+			Assert.IsNotNull(password);
 		}
 		[Test]
 		public void TestValidPasswordChange()
 		{
-			base.EditProfilePassword(TestUser, "12894");
-			Assert.AreEqual("12894", TestUser.Password);
+			//Arrange
+			string oldPassword = "123456";
+			string password = "555555";
+
+			//Act
+			bool actResult=base.EditProfilePassword(TestUser, oldPassword, password, TestUserKey);
+
+			//Assert
+			Assert.IsTrue(actResult);
 		}
 		[Test]
-		public void TestInValidPasswordChange()
+		public void TestInvalidPasswordChange()
 		{
-			string TestPassword = TestUser.Password;
-			try
-			{
-				base.EditProfilePassword(TestUser, Int64.MinValue.ToString());
-				Assert.Fail();
-			}
-			catch(ArgumentException e)
-			{
-				Assert.AreEqual(TestPassword, TestUser.Password);
-			}
+			//Arrange
+			string oldPassword = "123456";
+			string invalidPassword = "123";
+
+			//Act
+			bool actResult = base.EditProfilePassword(TestUser, oldPassword, invalidPassword, TestUserKey);
+
+			//Assert
+			Assert.IsFalse(actResult);
 		}
 		[Test]
-		public void TestValidEmailChange()
+		public void TestValidUserNameChange()
 		{
-			base.EditProfileEmail(TestUser, "galwa@post.bgu.ac.il");
-			Assert.AreEqual("galwa@post.bgu.ac.il", TestUser.Email);
+			//Arrange
+			string oldUserName = TestUser;
+			string userName = "123";
+			string password = "123456";
+
+			//Act
+			bool actResult = base.EditProfileUserName(oldUserName, userName, password, TestUserKey);
+
+			//Assert
+			Assert.IsTrue(actResult);
 		}
+
 		[Test]
-		public void TestInValidEmailChange()
+		public void TestInvalidUserNameChange()
 		{
-			string TestEmail = TestUser.Email;
-			try
-			{
-				base.EditProfileEmail(TestUser, "galwapost.bgu.ac.il");
-				Assert.Fail();
-			}
-			catch (ArgumentException e)
-			{
-				Assert.AreEqual(TestEmail, TestUser.Email);
-			}
+			//Arrange
+			string oldUserName = TestUser;
+			string userName = TestUser2;
+			string password = "123456";
+
+			//Act
+			bool actResult = base.EditProfileUserName(oldUserName, userName, password, TestUserKey);
+
+			//Assert
+			Assert.IsFalse(actResult);
 		}
-		[Test]
-		public void TestAvatarChange()
-		{
-			MemoryStream ms = new MemoryStream();
-			TestUserImage.Save(ms, System.Drawing.Imaging.ImageFormat.Jpeg);
-			string Expected = Convert.ToBase64String(ms.ToArray());
-			base.EditProfileAvatar(TestUserImage).Save(ms, System.Drawing.Imaging.ImageFormat.Jpeg);
-			string Real = Convert.ToBase64String(ms.ToArray());
-			Assert.AreEqual(Expected, Real);
-		}
+
 		[Test]
 		public void TestUnloggedUser()
 		{
-			base.Logout("Asaf", "12345");
-			string TestEmail = TestUser.Email;
+			//base.Logout("Asaf", "12345");
+			//string TestEmail = TestUser.Email;
 			try
 			{
-				base.EditProfileEmail(TestUser, "galw@apost.bgu.ac.il");
+				//base.EditProfileEmail(TestUser, "galw@apost.bgu.ac.il");
 				Assert.Fail();
 			}
 			catch (Exception e)
 			{
-				Assert.AreEqual(TestEmail, TestUser.Email);
+				//Assert.AreEqual(TestEmail, TestUser.Email);
 			}
-			string TestPassword = TestUser.Password;
+			//string TestPassword = TestUser.Password;
 			try
 			{
-				base.EditProfilePassword(TestUser, "12673");
+				//base.EditProfilePassword(TestUser, "12673");
 				Assert.Fail();
 			}
 			catch (Exception e)
 			{
-				Assert.AreEqual(TestPassword, TestUser.Password);
+				//Assert.AreEqual(TestPassword, TestUser.Password);
 			}
 		}
 	}
