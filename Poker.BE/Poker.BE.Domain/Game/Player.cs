@@ -39,7 +39,9 @@ namespace Poker.BE.Domain.Game
             private set
             {
                 _playMove = value;
+                Monitor.Enter(Lock);
                 Monitor.PulseAll(Lock);
+                Monitor.Exit(Lock);
             }
         }
         #endregion

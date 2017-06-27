@@ -31,7 +31,6 @@ namespace Poker.BE.Domain.Game.Tests
             Exception expectedException2 = new Exception();
 
             //Act
-            Monitor.Enter(this);
             round.PlayMove(Round.Move.Check, 0);
             var res0 = round.CurrentPlayer == player1 && round.LiveBets[player3] == 0
                         && pot.AmountToClaim == 0 && pot.Value == 0 && round.LastRaise == 0 && round.TotalRaise == 0;
@@ -82,7 +81,6 @@ namespace Poker.BE.Domain.Game.Tests
                         && round.LiveBets[player3] == 120 && round.CurrentPot.AmountToClaim == 350 && round.CurrentPot.Value == 820
                         && round.CurrentPot.PartialPot.Value == 150 && round.CurrentPot.PartialPot.AmountToClaim == 150;
 
-            Monitor.Exit(this);
 
             //Assert
             Assert.IsTrue(res0);
