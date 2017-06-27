@@ -1,4 +1,6 @@
 ﻿
+using Poker.BE.CrossUtility.Exceptions;
+
 namespace Poker.BE.Domain.Game
 {
     public class PotLimitHoldem : GamePreferencesDecorator

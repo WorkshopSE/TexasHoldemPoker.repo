@@ -21,6 +21,8 @@ namespace Poker.BE.Domain.Core
         #region Properties
         public Statistics UserStatistics { get; private set; }
         public ICollection<Player> Players { get; set; }
+        public int Level { get; set; }
+        public int? SecurityKey { get; private set; }
         #endregion
 
         #region Constructors
@@ -32,6 +34,8 @@ namespace Poker.BE.Domain.Core
             UserBank = new Bank();
             UserName = GetHashCode().ToString();
             UserStatistics = new Statistics();
+            Level = 0;
+	    Avatar = null;
         }
 
         public User(string userName, string password, double sumToDeposit) : this()
@@ -40,21 +44,39 @@ namespace Poker.BE.Domain.Core
             Password = password;
             UserBank = new Bank(sumToDeposit);
             IsConnected = true;
+     	    Avatar = null;
         }
         #endregion
 
         #region Methods
 
-        // TODO: for Ariel - what is this 2 methods?
-        public void Connect()
+        #region Security Methods
+        /// <summary>
+        /// Connect user on-line
+        /// </summary>
+        /// <param name="key">security random key</param>
+        public void Connect(int key)
         {
+            SecurityKey = key;
             IsConnected = true;
         }
 
         public void Disconnect()
         {
+            SecurityKey = null;
             IsConnected = false;
         }
+
+        /// <summary>
+        /// tests if the user is secure by its security key
+        /// </summary>
+        /// <param name="key">security key sent by the actual user</param>
+        /// <returns>true case this is the true key</returns>
+        public bool IsSecure(int key)
+        {
+            return key == SecurityKey;
+        }
+        #endregion
 
         #region UCC03 Rooms Management Methods
         /// <summary>
@@ -109,22 +131,7 @@ namespace Poker.BE.Domain.Core
             return freshPlayer;
         }
 
-        public void ChoosePlayMove(object sender, EventArgs e)
-        {
-            //Note: systactic suger for checking if sender is a player type
-            if ((sender is Player) && (e is PlayMoveEventArgs))
-            {
-                Player player = (Player)sender;
-                PlayMoveEventArgs playMoveEvent = (PlayMoveEventArgs)e;
-
-                if (!Players.Contains(player))
-                    throw new PlayerNotFoundException("This player doesn't belong to this user");
-
-                player.ChoosePlayMove(playMoveEvent.PlayMove, playMoveEvent.AmountToBetOrCall);
-            }
-        }
-
-        public Room CreateNewRoom(int level, NoLimitHoldem config, out Player creator)
+        public Room CreateNewRoom(int level, GamePreferences config, out Player creator)
         {
             var result = gameCenter.CreateNewRoom(level, config, out creator);
             Players.Add(creator);
@@ -143,16 +150,17 @@ namespace Poker.BE.Domain.Core
             }
 
             gameCenter.JoinNextHand(player, seatIndex, buyIn);
+            UserBank.Withdraw(buyIn);
         }
 
         public double StandUpToSpactate(Player player)
         {
-            if (!Players.Contains(player, new Utility.AddressComparer<Player>()))
+            if (!Players.Contains(player, new AddressComparer<Player>()))
             {
                 throw new PlayerNotFoundException("the user doesn't have this player");
             }
 
-            UserBank.Money = gameCenter.StandUpToSpactate(player);
+            UserBank.Deposit(gameCenter.StandUpToSpactate(player));
 
             return UserBank.Money;
         }
@@ -165,7 +173,24 @@ namespace Poker.BE.Domain.Core
             //Add dead player's statistics to user's statistics
             UserStatistics.CombineStatistics(player.PlayerStatistics);
 
+            //Update Level
+            Level = CalculateLevel();
+
             Players.Remove(player);
+        }
+        #endregion
+
+        #region UCC02
+        public int CalculateLevel()
+        {
+            double winRate = UserStatistics.GrossProfits - UserStatistics.GrossLosses;
+
+            if (winRate < 1)
+                return 1;
+            else if (winRate > 6000)
+                return 600;
+
+            return (int)winRate / 10;
         }
         #endregion
 
@@ -201,6 +226,22 @@ namespace Poker.BE.Domain.Core
         }
         #endregion
 
+        #region UCC06: GamePlay
+        public void ChoosePlayMove(object sender, EventArgs e)
+        {
+            //Note: systactic suger for checking if sender is a player type
+            if ((sender is Player) && (e is PlayMoveEventArgs))
+            {
+                Player player = (Player)sender;
+                PlayMoveEventArgs playMoveEvent = (PlayMoveEventArgs)e;
+
+                if (!Players.Contains(player))
+                    throw new PlayerNotFoundException("This player doesn't belong to this user");
+
+                player.ChoosePlayMove(playMoveEvent.PlayMove, playMoveEvent.AmountToBetOrCall);
+            }
+        }
+        #endregion
 
         #endregion
 

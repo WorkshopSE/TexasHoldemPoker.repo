@@ -6,7 +6,9 @@ using System.Threading.Tasks;
 
 namespace Poker.BE.Service.Modules.Requests
 {
-	public class CheckRequest : IRequest
-	{
-	}
+    public class KeepAliveRequest : IRequest
+    {
+        public int Room { get; set; }
+        public int PlayerID { get; set; }
+    }
 }

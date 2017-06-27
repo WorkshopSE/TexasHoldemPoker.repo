@@ -38,7 +38,8 @@ namespace Poker.BE.Service.Services
         public IDictionary<int, Player> Players { get { return _cache.Players; } }
         public IDictionary<int, Room> Rooms { get { return _cache.Rooms; } }
         public IDictionary<string, User> Users { get { return _cache.Users; } }
-        public UserManager UserManager { get { return UserManager.Instance; } }
+        public UserManager UserManager { get { return _cache.UserManager; } }
+        public GameCenter GameCenter { get { return _cache.GameCenter; } }
         public ILogger Logger { get { return CrossUtility.Loggers.Logger.Instance; } }
         #endregion
 
@@ -54,34 +55,72 @@ namespace Poker.BE.Service.Services
         #endregion
 
         #region Methods
+        /// <summary>
+        /// for testing
+        /// </summary>
+        public void Clear()
+        {
+            _cache.Clear();
+        }
+
         public CreateNewRoomResult CreateNewRoom(CreateNewRoomRequest request)
         {
             var result = new CreateNewRoomResult();
-            User user;
-            while (!Users.TryGetValue(request.User, out user))
-            {
-                if (_cache.Refresh())
-                {
-                    continue;
-                }
-
-                throw new UserNotFoundException("User was not found, can't create room");
-            }
 
             try
             {
-                Player creator;
-                Room room = user.CreateNewRoom(request.Level, new NoLimitHoldem(), out creator);
+                var user = _cache.RefreshAndGet(
+                        Users,
+                        request.UserName,
+                        new UserNotFoundException("User was not found, can't create room")
+                );
+                UserManager.SecurityCheck(request.SecurityKey, user);
+
+                Player creator = null;
+                Room room = null;
+                NoLimitHoldem noLimitPreferences = new NoLimitHoldem(request.Name, request.BuyInCost, request.MinimumBet, request.Antes,
+                                                                        request.MinNumberOfPlayers, request.MaxNumberOfPlayers, request.IsSpactatorsAllowed);
+                if (request.Limit == 0)
+                {
+                    room = user.CreateNewRoom(request.Level, noLimitPreferences, out creator);
+                }
+                else if (request.Limit == -1)
+                {
+                    PotLimitHoldem potPreferences = new PotLimitHoldem(noLimitPreferences);
+                    room = user.CreateNewRoom(request.Level, potPreferences, out creator);
+                }
+                else if (request.Limit > 0)
+                {
+                    LimitHoldem limitPreferences = new LimitHoldem(noLimitPreferences, request.Limit);
+                    room = user.CreateNewRoom(request.Level, limitPreferences, out creator);
+                }
+
+                if (creator == null || room == null)
+                {
+                    throw new WrongIOException("Limit field in the request is not valid");
+                }
                 Rooms.Add(room.GetHashCode(), room);
                 Players.Add(creator.GetHashCode(), creator);
                 result.Player = creator.GetHashCode();
                 result.Room = room.GetHashCode();
+
+                //Request's info
+                result.Name = request.Name;
+                result.BuyInCost = request.BuyInCost;
+                result.MinimumBet = request.MinimumBet;
+                result.Antes = request.Antes;
+                result.MinNumberOfPlayers = request.MinNumberOfPlayers;
+                result.MaxNumberOfPlayers = request.MaxNumberOfPlayers;
+                result.IsSpactatorsAllowed = request.IsSpactatorsAllowed;
+                result.Limit = request.Limit;
+
                 result.Success = true;
             }
             catch (PokerException e)
             {
                 result.Success = false;
                 result.ErrorMessage = e.Message;
+                Logger.Error(e, this);
             }
 
             return result;
@@ -93,35 +132,39 @@ namespace Poker.BE.Service.Services
 
             try
             {
-                Room room;
-                while (!Rooms.TryGetValue(request.Room, out room))
-                {
-                    if (_cache.Refresh())
-                    {
-                        continue;
-                    }
+                var room = _cache.RefreshAndGet(
+                    Rooms,
+                    request.Room,
+                    new RoomNotFoundException(string.Format("Requested room ID {0} not found", request.Room))
+                    );
 
-                    throw new RoomNotFoundException(string.Format("Requested room ID {0} not found", request.Room));
-                }
 
-                User user;
-                while (!Users.TryGetValue(request.User, out user))
-                {
-                    if (_cache.Refresh())
-                    {
-                        continue;
-                    }
-
-                    throw new UserNotFoundException(string.Format("User ID {0} not found", request.User));
-                }
+                var user = _cache.RefreshAndGet(
+                    Users,
+                    request.UserName,
+                    new UserNotFoundException(string.Format("User ID {0} not found", request.UserName))
+                    );
+                UserManager.SecurityCheck(request.SecurityKey, user);
 
                 result.Player = user.EnterRoom(room).GetHashCode();
+                result.RoomID = room.GetHashCode();
+                result.Name = room.Preferences.Name;
+                result.BuyInCost = room.Preferences.BuyInCost;
+                result.MinimumBet = room.Preferences.MinimumBet;
+                result.Antes = room.Preferences.AntesValue;
+                result.MinNumberOfPlayers = room.Preferences.MinNumberOfPlayers;
+                result.MaxNumberOfPlayers = room.Preferences.MaxNumberOfPlayers;
+                result.IsSpactatorsAllowed = room.Preferences.IsSpactatorsAllowed;
+                if (room.Preferences is GamePreferencesDecorator)
+                {
+                    result.Limit = ((GamePreferencesDecorator)room.Preferences).Limit;
+                }
             }
             catch (PokerException e)
             {
                 result.Success = false;
                 result.ErrorMessage = e.Message;
-                Logger.Error(e, "At " + GetType().Name, e.Source);
+                Logger.Error(e, this);
             }
 
             return result;
@@ -134,35 +177,29 @@ namespace Poker.BE.Service.Services
             try
             {
 
-                Player player;
-                while (!Players.TryGetValue(request.Player, out player))
-                {
-                    if (_cache.Refresh())
-                    {
-                        continue;
-                    }
+                var player = _cache.RefreshAndGet(
+                    Players,
+                    request.Player,
+                    new PlayerNotFoundException(string.Format("Cannot find player id: {0}, please exit and re-enter the room.", request.Player))
+                    );
 
-                    throw new PlayerNotFoundException(string.Format("Cannot find player id: {0}, please exit and re-enter the room.", request.Player));
-                }
+                var user = _cache.RefreshAndGet(
+                    Users,
+                    request.UserName,
+                    new UserNotFoundException(string.Format("Cannot find user name: {0}, please login to the server again.", request.UserName))
+                    );
+                UserManager.SecurityCheck(request.SecurityKey, user);
 
-                User user;
-                while (!Users.TryGetValue(request.User, out user))
-                {
-                    if (_cache.Refresh()) { continue; }
-
-                    throw new UserNotFoundException(string.Format("Cannot find user name: {0}, please login to the server again.", request.User));
-                }
-
-                user.JoinNextHand(player, request.seatIndex, request.buyIn);
+                user.JoinNextHand(player, request.SeatIndex, request.BuyIn);
                 result.UserBank = user.UserBank.Money;
-
+                result.Wallet = player.Wallet.Value;
                 result.Success = true;
             }
             catch (PokerException e)
             {
                 result.Success = false;
                 result.ErrorMessage = e.Message;
-                Logger.Error(e, "At " + GetType().Name, e.Source);
+                Logger.Error(e, this);
             }
             return result;
         }
@@ -173,13 +210,12 @@ namespace Poker.BE.Service.Services
 
             try
             {
-                var user = default(User);
-                while (!Users.TryGetValue(request.User, out user))
-                {
-                    if (_cache.Refresh()) continue;
-
-                    throw new UserNotFoundException(string.Format("cannot find user name: {0}, please login again.", request.User));
-                }
+                var user = _cache.RefreshAndGet(
+                    Users,
+                    request.UserName,
+                    new UserNotFoundException(string.Format("cannot find user name: {0}, please login again.", request.UserName))
+                    );
+                UserManager.SecurityCheck(request.SecurityKey, user);
 
                 Player player = null;
                 while (!Players.TryGetValue(request.Player, out player))
@@ -200,7 +236,7 @@ namespace Poker.BE.Service.Services
             {
                 result.Success = false;
                 result.ErrorMessage = e.Message;
-                Logger.Error(e, "At " + GetType().Name, e.Source);
+                Logger.Error(e, this);
             }
 
             return result;
@@ -214,9 +250,10 @@ namespace Poker.BE.Service.Services
             {
                 var user = _cache.RefreshAndGet(
                     Users,
-                    request.User,
-                    new UserNotFoundException(string.Format("cannot find user name: {0}, please login again.", request.User))
+                    request.UserName,
+                    new UserNotFoundException(string.Format("cannot find user name: {0}, please login again.", request.UserName))
                     );
+                UserManager.SecurityCheck(request.SecurityKey, user);
 
                 var player = _cache.RefreshAndGet(
                     Players,
@@ -235,16 +272,127 @@ namespace Poker.BE.Service.Services
             {
                 result.Success = false;
                 result.ErrorMessage = e.Message;
-                Logger.Error(e, "At " + GetType().Name, e.Source);
+                Logger.Error(e, this);
             }
 
             return result;
         }
 
-        public void Clear()
+        private FindRoomsByCriteriaResult.RoomResult[] DomainRoomsToRoomsResults(ICollection<Room> domainRooms)
         {
-            _cache.Clear();
+            var rooms = new List<FindRoomsByCriteriaResult.RoomResult>();
+
+            _cache.Refresh();
+            foreach (var room in domainRooms)
+            {
+                rooms.Add(new FindRoomsByCriteriaResult.RoomResult()
+                {
+                    RoomID = room.GetHashCode(),
+                    LeagueID = _cache.RoomToLeague[room].GetHashCode(),
+                    RoomName = room.Preferences.Name,
+                    CurrentNumberOfPlayers = room.Players.Count,
+                    MaxNumberOfPlayers = room.Preferences.MaxNumberOfPlayers,
+                    MinimumBuyIn = room.Preferences.BuyInCost,
+                    PotLimit = (room.Preferences as PotLimitHoldem)?.Limit,
+                });
+            }
+            return rooms.ToArray();
         }
+
+        public FindRoomsByCriteriaResult FindRoomsByCriteria(FindRoomsByCriteriaRequest request)
+        {
+            var result = new FindRoomsByCriteriaResult();
+
+            try
+            {
+                // arrange search criteria
+                double betSize = request.Criterias.Contains(FindRoomsByCriteriaRequest.BET_SIZE) ? request.BetSize : -1;
+
+                GamePreferences preferences =
+                    new NoLimitHoldem()
+                    {
+                        MaxNumberOfPlayers = request.Criterias.Contains(FindRoomsByCriteriaRequest.MAX_NUMBER_OF_PLAYERS) ? request.MaxNumberOfPlayers : -1,
+                        AntesValue = request.Criterias.Contains(FindRoomsByCriteriaRequest.ANTES_VALUE) ? request.Antes : -1,
+                        BuyInCost = request.Criterias.Contains(FindRoomsByCriteriaRequest.BUY_IN_COST) ? request.BuyInCost : -1,
+                        Name = request.Criterias.Contains(FindRoomsByCriteriaRequest.NAME) ? request.Name : "",
+                        MinimumBet = request.Criterias.Contains(FindRoomsByCriteriaRequest.MIN_BET) ? request.MinimumBet : -1,
+                        MinNumberOfPlayers = request.Criterias.Contains(FindRoomsByCriteriaRequest.MIN_NUMBER_OF_PLAYERS) ? request.MinNumberOfPlayers : -1,
+                    };
+
+                Player player = null;
+                if (request.Criterias.Contains(FindRoomsByCriteriaRequest.PLAYER))
+                {
+                    player = _cache.RefreshAndGet(
+                         Players,
+                         request.Player,
+                         new PlayerNotFoundException(string.Format("player id: {0} not found, please re-enter the room.", request.Player))
+                         );
+                }
+
+                int level = request.Criterias.Contains(FindRoomsByCriteriaRequest.LEVEL) ? request.Level : -1;
+
+                // call search
+                var domainRooms = GameCenter.FindRoomsByCriteria(level, player, preferences, betSize);
+
+                // assemble result
+                result.Rooms = DomainRoomsToRoomsResults(domainRooms);
+                result.Success = true;
+            }
+            catch (PokerException e)
+            {
+                result.Success = false;
+                result.ErrorMessage = e.Message;
+                Logger.Error(e, this);
+            }
+
+            return result;
+        }
+
+        public FindRoomsByCriteriaResult GetAllRooms()
+        {
+            var result = new FindRoomsByCriteriaResult();
+
+            try
+            {
+                result.Rooms = DomainRoomsToRoomsResults(Rooms.Values);
+                result.Success = true;
+            }
+            catch (PokerException e)
+            {
+                result.Success = false;
+                result.ErrorMessage = e.Message;
+                Logger.Error(e, this);
+            }
+
+            return result;
+        }
+
+        public FindRoomsByCriteriaResult GetAllRoomsOfLeague(int leagueId)
+        {
+            var result = new FindRoomsByCriteriaResult();
+
+            try
+            {
+                var league = _cache.RefreshAndGet(
+                    _cache.Leagues,
+                    leagueId,
+                    new LeagueNotFoundException(string.Format("league id: {0} not found, please try again on different league", leagueId))
+                    );
+
+                result.Rooms = DomainRoomsToRoomsResults(league.Rooms);
+                result.Success = true;
+            }
+            catch (PokerException e)
+            {
+                result.Success = false;
+                result.ErrorMessage = e.Message;
+                Logger.Error(e, this);
+            }
+
+            return result;
+        }
+
+
         #endregion
 
     }// class

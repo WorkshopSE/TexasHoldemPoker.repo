@@ -25,18 +25,18 @@ namespace Poker.BE.Domain.Core
             AllIn
         }
 
-		/// <summary>
-		/// clears all game-center resources
-		/// </summary>
-		public void ClearAll()
-		{
-			playersManager.Clear();
-			roomsManager.Clear();
-			leagues.Clear();
-		}
-		bool ROOM_NAME_UNAVAILABLE = false;
-		bool ROOM_NAME_AVAILABLE = true;
-		#endregion
+        /// <summary>
+        /// clears all game-center resources
+        /// </summary>
+        public void ClearAll()
+        {
+            playersManager.Clear();
+            roomsManager.Clear();
+            leagues.Clear();
+        }
+        bool ROOM_NAME_UNAVAILABLE = false;
+        bool ROOM_NAME_AVAILABLE = true;
+        #endregion
 
         #region Fields
         private IDictionary<Player, Room> playersManager;
@@ -46,8 +46,13 @@ namespace Poker.BE.Domain.Core
 
         #region Properties
         public ICollection<Room> Rooms { get { return roomsManager.Keys; } }
+        public Dictionary<int, Room> RoomsByID { get; private set;}
         public ICollection<Player> Players { get { return playersManager.Keys; } }
         public ICollection<League> Leagues { get { return leagues; } }
+        public IDictionary<Player, Room> PlayerToRoom { get { return playersManager; } }
+        public IDictionary<Room, League> RoomToLeague { get { return roomsManager; } }
+
+        
         #endregion
 
         #region Constructors
@@ -66,7 +71,7 @@ namespace Poker.BE.Domain.Core
             roomsManager = new Dictionary<Room, League>();
             leagues = new List<League>();
 
-            //TODO - get/create StatisticsManager... how?
+            RoomsByID = new Dictionary<int, Room>();
         }
 
 
@@ -113,6 +118,7 @@ namespace Poker.BE.Domain.Core
 
                 room.ClearAll();
             }
+            RoomsByID.Remove(room.GetHashCode());
 
             // remove the room from the league
             roomsManager[room].RemoveRoom(room);
@@ -194,20 +200,31 @@ namespace Poker.BE.Domain.Core
                  select league).First();
         }
 
-		private bool IsRoomNameAvailable(String name)
-		{
-			foreach(KeyValuePair<Room,League> roomPair in roomsManager)
-			{
-				if (name == roomPair.Key.Preferences.Name)
-				{
-					return ROOM_NAME_UNAVAILABLE;
-				}
-			}
-			return ROOM_NAME_AVAILABLE;
-		}
-		#endregion
+        private bool IsRoomNameAvailable(String name)
+        {
+            foreach (KeyValuePair<Room, League> roomPair in roomsManager)
+            {
+                if (name == roomPair.Key.Preferences.Name)
+                {
+                    return ROOM_NAME_UNAVAILABLE;
+                }
+            }
+            return ROOM_NAME_AVAILABLE;
+        }
+        #endregion
 
         #region Methods
+
+        /**************************************
+         * Default Search Criteria Values for Preferences
+         * */
+        const double DEFAULT_SEARCH_ANTE = -1;
+        const double DEFAULT_SEARCH_BUYIN = -1;
+        const int DEFAULT_SEARCH_MAX_PLAYERS = -1;
+        const double DEFAULT_SEARCH_MIN_BET = -1;
+        const int DEFAULT_SEARCH_MIN_PLAEYRS = -1;
+        const string DEFAULT_SEARCH_NAME = "";
+        /*************************************/
 
         /// <summary>
         /// Allow the user to find an existing room according to different criteria and enter the room as a spectator.
@@ -215,7 +232,7 @@ namespace Poker.BE.Domain.Core
         /// <remarks>UC004: Find an Existing Room</remarks>
         /// <returns>Collection of rooms</returns>
         /// <see cref="https://docs.google.com/document/d/1OTee6BGDWK2usL53jdoeBOI-1Jh8wyNejbQ0ZroUhcA/edit#heading=h.tvbd8487o8xd"/>
-        public ICollection<Room> FindRoomsByCriteria(int level = -1, Player player = null, GamePreferences preferences = null, double betSize = -1.0)
+        public ICollection<Room> FindRoomsByCriteria(int level = -1, Player player = null, GamePreferences preferences = null, double minimumBet = -1.0)
         {
             var result = new List<Room>();
 
@@ -255,17 +272,30 @@ namespace Poker.BE.Domain.Core
 
             if (preferences != null)
             {
-                // undone - idan - continue from here - after game preferences will be implemented.
-            }
-
-            if (betSize > 0)
-            {
                 result.AddRange(
                     from room in Rooms
-                    where room.Preferences.MinimumBet == betSize
+                    where
+                        (room.Preferences.AntesValue == preferences.AntesValue & preferences.AntesValue != DEFAULT_SEARCH_ANTE) |
+                        (room.Preferences.BuyInCost == preferences.BuyInCost & preferences.BuyInCost != DEFAULT_SEARCH_BUYIN) |
+                        (room.Preferences.MaxNumberOfPlayers == preferences.MaxNumberOfPlayers & preferences.MaxNumberOfPlayers != DEFAULT_SEARCH_MAX_PLAYERS) |
+                        (room.Preferences.MinimumBet == preferences.MinimumBet & preferences.MinimumBet != DEFAULT_SEARCH_MIN_BET) |
+                        (room.Preferences.MinNumberOfPlayers == preferences.MinNumberOfPlayers & preferences.MinNumberOfPlayers != DEFAULT_SEARCH_MIN_PLAEYRS) |
+                        (room.Preferences.Name.Equals(preferences.Name) & !preferences.Name.Equals(DEFAULT_SEARCH_NAME))
                     select room
                     );
             }
+
+            if (minimumBet > 0)
+            {
+                result.AddRange(
+                    from room in Rooms
+                    where room.Preferences.MinimumBet == minimumBet
+                    select room
+                    );
+            }
+
+            // finishing - removing duplicates
+            result = result.Distinct().ToList();
 
             if (result.Count == 0)
             {
@@ -273,8 +303,7 @@ namespace Poker.BE.Domain.Core
                     "no rooms are find by the criteria: "
                     + (level > -1 ? "level: " + level : "")
                     + (player != null ? "player id: " + player.GetHashCode() : "")
-                    + (preferences != null ? "game preferences: " + preferences.GetType().Name : "")
-                    + (betSize > -1.0 ? "bet size: " + betSize : "")
+                    + (minimumBet > -1.0 ? "bet size: " + minimumBet : "")
                     );
             }
 
@@ -305,7 +334,7 @@ namespace Poker.BE.Domain.Core
         /// <see cref="https://docs.google.com/document/d/1OTee6BGDWK2usL53jdoeBOI-1Jh8wyNejbQ0ZroUhcA/edit#heading=h.eqjp0wvvpmjg"/>
         /// <param name="level">user level</param>
         /// <returns>the new created room</returns>
-        public Room CreateNewRoom(int level, NoLimitHoldem config, out Player creator)
+        public Room CreateNewRoom(int level, GamePreferences config, out Player creator)
         {
             creator = new Player();
 
@@ -320,6 +349,7 @@ namespace Poker.BE.Domain.Core
 
             league.Rooms.Add(room);
             BindRoomToLeague(room, league);
+            RoomsByID.Add(room.GetHashCode(), room);
 
             return room;
         }
@@ -353,16 +383,16 @@ namespace Poker.BE.Domain.Core
                 throw new RoomRulesException("The Table is full.");
             }
 
-            // the chosen seat is not taken
-            if (!room.TakeChair(player, seatIndex))
-            {
-                throw new RoomRulesException("The seat is already taken, please try again.");
-            }
-
             // the user don't have enough money to buy in
             if (buyIn < room.Preferences.BuyInCost)
             {
                 throw new NotEnoughMoneyException("Buy in amount is less then the minimum to join the table.");
+            }
+
+            // the chosen seat is not taken
+            if (!room.TakeChair(player, seatIndex))
+            {
+                throw new RoomRulesException("The seat is already taken, please try again.");
             }
 
             /* Joining the player to the next hand */
@@ -387,29 +417,17 @@ namespace Poker.BE.Domain.Core
                 throw new RoomNotFoundException("Unable to stand up - The player is not at the room");
             }
 
-            // it's the player's turn
-
-            try
+            //Player is a spactator
+            if (player.CurrentState == Player.State.Passive)
             {
-                if (room.CurrentHand.CurrentRound.CurrentTurn.CurrentPlayer != player)
-                {
-                    throw new NotPlayersTurnException("Unable to stand up");
-                }
-            }
-            catch (NullReferenceException)
-            {
-                if (player.CurrentState == Player.State.Passive)
-                {
-                    throw new RoomRulesException("Player is already a spectator");
-                }
+                throw new RoomRulesException("Player is already a spectator");
             }
 
             /* Action - Make the player to stand up */
 
-            room.LeaveChair(player);
-            return player.StandUp();
+            return room.LeaveChair(player);
         }
-        
+
         public void ExitRoom(Player player)
         {
             if (!playersManager.ContainsKey(player))
@@ -422,6 +440,12 @@ namespace Poker.BE.Domain.Core
             }
 
             RemovePlayer(player);
+        }
+
+        public int GetRelevantLeague(int level)
+        {
+            // TODO Tomer - please write your code here...
+            throw new NotImplementedException();
         }
         #endregion
 

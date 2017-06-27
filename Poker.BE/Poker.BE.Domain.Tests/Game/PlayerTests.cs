@@ -36,7 +36,7 @@ namespace Poker.BE.Domain.Game.Tests
             //Arrange
             var expected1 = true;
             var expected2 = Player.State.Passive;
-            var expected3 = Player.State.ActiveUnfolded;
+            var expected3 = Player.State.ActiveFolded;
 
             //Act
             var actual2 = player.CurrentState;
@@ -62,29 +62,6 @@ namespace Poker.BE.Domain.Game.Tests
 
             //Act
             var actual0 = player.CurrentState;
-            var actual1 = player.StandUp();
-            var actual2 = player.CurrentState;
-
-            //Assert
-            Assert.AreEqual(expected0, actual0);
-            Assert.AreEqual(expected1, actual1);
-            Assert.AreEqual(expected2, actual2);
-        }
-
-        [TestMethod()]
-        [ExpectedException(typeof(CrossUtility.Exceptions.PlayerModeException))]
-        public void StandUpTest1() // need to fold first
-        {
-            player = new Player("a");
-
-            //Arrange
-            var expected1 = 10.3;
-            var expected0 = Player.State.ActiveFolded;
-            var expected2 = Player.State.Passive;
-
-            //Act
-            var actual0 = player.CurrentState;
-            player.JoinToTable(10.3);
             var actual1 = player.StandUp();
             var actual2 = player.CurrentState;
 

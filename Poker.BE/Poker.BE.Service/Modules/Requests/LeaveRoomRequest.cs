@@ -1,11 +1,7 @@
-﻿namespace Poker.BE.Service.Modules.Results
+﻿namespace Poker.BE.Service.Modules.Requests
 {
-    public class LeaveRoomRequest
+    public class LeaveRoomRequest : IRequest
     {
-        /// <summary>
-        /// user name unique identifier
-        /// </summary>
-        public string User { get; set; }
         
         /// <summary>
         /// player hash code

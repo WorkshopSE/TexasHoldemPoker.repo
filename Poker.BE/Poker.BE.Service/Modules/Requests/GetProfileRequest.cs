@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Poker.BE.Service.Services
+namespace Poker.BE.Service.Modules.Requests
 {
-    public class LevelService : IServices.ILevelService
-    {
-    }
+	public class GetProfileRequest : IRequest
+	{
+	}
 }

@@ -91,7 +91,7 @@ namespace Poker.BE.Domain.Core.Tests
             user.JoinNextHand(creator, 0, room.Preferences.BuyInCost + 20.2);
 
             //Assert
-            Assert.AreEqual(Player.State.ActiveUnfolded, user.Players.Single().CurrentState);
+            Assert.AreEqual(Player.State.ActiveFolded, user.Players.Single().CurrentState);
         }
 
         [TestMethod()]

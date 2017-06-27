@@ -9,8 +9,16 @@ namespace Poker.BE.Service.Modules.Results
 	public class LoginResult : IResult
 	{
 		/// <summary>
-		/// username 
+		/// User Name 
 		/// </summary>
-		public string User { get; set; }
-	}
+		public string UserName { get; set; }
+
+        /// <summary>
+        /// random generated security key - for the front-end to keep
+        /// </summary>
+        public int SecurityKey { get; set; }
+
+        public double UserBank { get; set; }
+        public int Level { get; set; }
+    }
 }

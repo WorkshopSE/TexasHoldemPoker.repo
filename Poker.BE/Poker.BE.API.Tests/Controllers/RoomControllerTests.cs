@@ -19,6 +19,9 @@ using Poker.BE.Domain.Utility;
 
 namespace Poker.BE.API.Controllers.Tests
 {
+    /* Alias */
+    using FRBCReq = FindRoomsByCriteriaRequest;
+
     [TestClass()]
     public class RoomControllerTests
     {
@@ -30,6 +33,7 @@ namespace Poker.BE.API.Controllers.Tests
         private User _user;
         private int _level;
         private NoLimitHoldem _config;
+        private int _securityKey;
 
         public TestContext TestContext { get; set; }
 
@@ -41,6 +45,8 @@ namespace Poker.BE.API.Controllers.Tests
             _gameCenter = GameCenter.Instance;
             _user = new User();
             _userManager.Users.Add(_user.UserName, _user);
+            _securityKey = 1;
+            _user.Connect(_securityKey);
             _ctrl = new RoomController()
             {
                 Request = new System.Net.Http.HttpRequestMessage(),
@@ -66,8 +72,8 @@ namespace Poker.BE.API.Controllers.Tests
             CreateNewRoomRequest request = new CreateNewRoomRequest()
             {
                 Level = _level,
-                User = _user.UserName
-
+                UserName = _user.UserName,
+                SecurityKey = _securityKey
             };
 
             var exStatus = HttpStatusCode.OK;
@@ -106,7 +112,8 @@ namespace Poker.BE.API.Controllers.Tests
             EnterRoomRequest request = new EnterRoomRequest()
             {
                 Room = room.GetHashCode(),
-                User = _user.UserName
+                UserName = _user.UserName,
+                SecurityKey = _securityKey,
             };
 
             //Act
@@ -122,6 +129,13 @@ namespace Poker.BE.API.Controllers.Tests
             Assert.AreEqual(true, actContent.Success, "success");
             Assert.AreNotEqual(default(int?), actContent.Player, "player not default value");
             Assert.IsNotNull(actContent.Player, "player not null");
+
+
+            TestContext.WriteLine("\nContent:");
+            foreach (var property in actContent.GetType().GetProperties())
+            {
+                TestContext.WriteLine("{0} : {1}", property.Name, property.GetValue(actContent));
+            }
         }
 
         [TestMethod()]
@@ -135,10 +149,11 @@ namespace Poker.BE.API.Controllers.Tests
 
             JoinNextHandRequest request = new JoinNextHandRequest()
             {
-                buyIn = room.Preferences.BuyInCost,
+                BuyIn = room.Preferences.BuyInCost,
                 Player = player.GetHashCode(),
-                seatIndex = 1,
-                User = _user.UserName,
+                SeatIndex = 1,
+                UserName = _user.UserName,
+                SecurityKey = _securityKey,
             };
 
             //Act
@@ -167,7 +182,8 @@ namespace Poker.BE.API.Controllers.Tests
             StandUpToSpactateRequest request = new StandUpToSpactateRequest()
             {
                 Player = player.GetHashCode(),
-                User = _user.UserName
+                UserName = _user.UserName,
+                SecurityKey = _securityKey,
             };
 
             //Act
@@ -182,7 +198,7 @@ namespace Poker.BE.API.Controllers.Tests
             Assert.AreEqual("", actContent.ErrorMessage, "error message");
             Assert.AreEqual(true, actContent.Success, "success");
             Assert.AreEqual(buyIn, actContent.RemainingMoney, "remaining money");
-            Assert.AreEqual(_user.UserBank.Money , actContent.UserBankMoney, "user bank money");
+            Assert.AreEqual(_user.UserBank.Money, actContent.UserBankMoney, "user bank money");
             Assert.AreEqual(_user.UserStatistics, actContent.UserStatistics, "user statistics object");
         }
 
@@ -195,7 +211,8 @@ namespace Poker.BE.API.Controllers.Tests
             LeaveRoomRequest request = new LeaveRoomRequest()
             {
                 Player = player.GetHashCode(),
-                User = _user.UserName
+                UserName = _user.UserName,
+                SecurityKey = _securityKey,
             };
 
             //Act
@@ -212,5 +229,98 @@ namespace Poker.BE.API.Controllers.Tests
             Assert.AreEqual(false, _user.Players.Contains(player, new AddressComparer<Player>()));
             Assert.IsNotNull(actContent.UserStatistics, "user statistics not null");
         }
+
+        [TestMethod()]
+        public void GetAllRoomsTest()
+        {
+            //Arrange
+            Player creator;
+            _user.CreateNewRoom(_level, new NoLimitHoldem() { Name = "room 1" }, out creator);
+            _user.CreateNewRoom(_level, new NoLimitHoldem() { Name = "room 2" }, out creator);
+            _user.CreateNewRoom(_level, new NoLimitHoldem() { Name = "room 3" }, out creator);
+            int roomCount = 3;
+
+            //Act
+            var act = _ctrl.GetAllRooms();
+            var actContent = default(FindRoomsByCriteriaResult);
+            var hasContent = act.TryGetContentValue(out actContent);
+
+            //Assert
+            TestContext.WriteLine("error message: '{0}'", (actContent != null && actContent.ErrorMessage != "") ? actContent.ErrorMessage : "null");
+            Assert.AreEqual(HttpStatusCode.OK, act.StatusCode, "status code");
+            Assert.IsTrue(hasContent, "has contact");
+            Assert.AreEqual("", actContent.ErrorMessage, "error message");
+            Assert.AreEqual(true, actContent.Success, "success");
+
+            // print the result rooms
+            TestContext.WriteLine("rooms:");
+            foreach (var room in actContent.Rooms)
+            {
+                foreach (var property in room.GetType().GetProperties())
+                {
+
+                    TestContext.WriteLine("{0} : {1}", property.Name, property.GetValue(room));
+                }
+
+                TestContext.WriteLine("");
+            }
+
+            Assert.AreEqual(roomCount, actContent.Rooms.Count(), "room count");
+        }
+
+        [TestMethod()]
+        public void FindRoomsByCriteriaTest()
+        {
+            //Arrange
+            Player player = null;
+            Room room = _user.CreateNewRoom(_level, _config, out player);
+            var roomCount = 1;
+
+
+            FRBCReq request = new FRBCReq()
+            {
+                BetSize = room.Preferences.BuyInCost,
+                Criterias = new string[] { FRBCReq.BET_SIZE, FRBCReq.LEVEL },
+                Level = _level,
+                Player = player.GetHashCode(),
+                CurrentNumberOfPlayers = room.Players.Count,
+                MaxNumberOfPlayers = room.Preferences.MaxNumberOfPlayers,
+                MinimumBuyIn = room.Preferences.BuyInCost,
+            };
+
+            //Act
+            var act = _ctrl.FindRoomsByCriteria(request);
+            var actContent = default(FindRoomsByCriteriaResult);
+            var hasContent = act.TryGetContentValue(out actContent);
+
+            //Assert
+            TestContext.WriteLine("error message: '{0}'", (actContent != null && actContent.ErrorMessage != "") ? actContent.ErrorMessage : "null");
+            Assert.AreEqual(HttpStatusCode.OK, act.StatusCode, "status code");
+            Assert.IsTrue(hasContent, "has contact");
+            Assert.AreEqual("", actContent.ErrorMessage, "error message");
+            Assert.AreEqual(true, actContent.Success, "success");
+
+            // print the result rooms
+            TestContext.WriteLine("rooms:");
+            foreach (var roomRes in actContent.Rooms)
+            {
+                foreach (var property in roomRes.GetType().GetProperties())
+                {
+
+                    TestContext.WriteLine("{0} : {1}", property.Name, property.GetValue(roomRes));
+                }
+
+                TestContext.WriteLine("");
+            }
+
+            Assert.AreEqual(roomCount, actContent.Rooms.Count(), "room count");
+        }
+
+        //[TestMethod()]
+        //public void GetAllRoomsOfLeagueTest()
+        //{
+        //    // TODO - for Gal
+        //    throw new NotImplementedException();
+        //}
     }
 }
