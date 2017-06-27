@@ -1,6 +1,7 @@
 ﻿using Poker.BE.Domain.Utility;
 using Poker.BE.CrossUtility.Exceptions;
 using System;
+using System.Threading;
 
 namespace Poker.BE.Domain.Game
 {
@@ -20,6 +21,7 @@ namespace Poker.BE.Domain.Game
         #region Fields
         private Wallet _wallet = default(Wallet);
         public event EventHandler TurnChanged;
+        private Round.Move _playMove;
         #endregion
 
         #region Properties
@@ -27,9 +29,19 @@ namespace Poker.BE.Domain.Game
         public Wallet Wallet { get { return _wallet; } }
         public Card[] PrivateCards { get; set; }
         public string Nickname { get; set; }
-        public Round.Move PlayMove { get; private set; }
         public double AmountToBetOrCall { get; private set; }
         public Statistics PlayerStatistics { get; set; }
+        public object Lock { get; set; }
+
+        public Round.Move PlayMove
+        {
+            get { return _playMove; }
+            private set
+            {
+                _playMove = value;
+                Monitor.PulseAll(Lock);
+            }
+        }
         #endregion
 
         #region Constructors
@@ -40,7 +52,7 @@ namespace Poker.BE.Domain.Game
             CurrentState = State.Passive;
             _wallet = new Wallet();
             PlayerStatistics = new Statistics();
-            PlayMove = Round.Move.Null;
+            _playMove = Round.Move.Null;
         }
 
         public Player(string nickname) : this()
@@ -57,6 +69,7 @@ namespace Poker.BE.Domain.Game
             Enum.TryParse(playMove, out parsedMove);
             PlayMove = parsedMove;
             AmountToBetOrCall = amountToBetOrCall;
+
         }
 
         public bool JoinToTable(double buyIn)
@@ -72,7 +85,7 @@ namespace Poker.BE.Domain.Game
             CurrentState = State.ActiveFolded;
             return true;
         }
-        
+
         /// <summary>
         /// Make the player to leave the table, and return his remaining wallet money to the user bank
         /// </summary>

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Poker.BE.CrossUtility.Exceptions;
 using System.Threading.Tasks;
+using System.Threading;
 
 namespace Poker.BE.Domain.Game
 {
@@ -22,6 +23,7 @@ namespace Poker.BE.Domain.Game
         private ICollection<Player> activeAndPassivePlayers;
         private Chair[] chairs;
         private int dealerIndex = 0;
+        private object _lock;
         #endregion
 
         #region Properties
@@ -64,7 +66,7 @@ namespace Poker.BE.Domain.Game
                 return ActivePlayers.Count == Preferences.MaxNumberOfPlayers;
             }
         }
-        
+        public Task GameThread { get; set; }
         #endregion
 
         #region Constructors
@@ -85,6 +87,12 @@ namespace Poker.BE.Domain.Game
 
             // Note: default configuration
             Preferences = new NoLimitHoldem();
+
+            _lock = this;
+
+            GameThread = new Task(() => StartNewHand());
+            GameThread.Start();
+
         }
 
         /// <summary>
@@ -130,7 +138,7 @@ namespace Poker.BE.Domain.Game
 
             if (ActivePlayers.Count >= Preferences.MinNumberOfPlayers)
             {
-                StartNewHand();
+                Monitor.PulseAll(this);
             }
         }
 
@@ -154,7 +162,7 @@ namespace Poker.BE.Domain.Game
 
         public Player CreatePlayer()
         {
-            var result = new Player();
+            var result = new Player() { Lock = _lock };
             activeAndPassivePlayers.Add(result);
             return result;
         }
@@ -163,35 +171,35 @@ namespace Poker.BE.Domain.Game
         /// UC014 Start (Deal) a New Hand
         /// </summary>
         /// <see cref="https://docs.google.com/document/d/1OTee6BGDWK2usL53jdoeBOI-1Jh8wyNejbQ0ZroUhcA/edit#heading=h.3z6a7b6nlnjj"/>
-        public async void StartNewHand()
+        public void StartNewHand()
         {
-            if (ActivePlayers.Count < Preferences.MinNumberOfPlayers)
+            while (true)
             {
-                throw new NotEnoughPlayersException("Its should be at least 2 active players to start new hand!");
-            }
-            if (this.CurrentHand != null && this.CurrentHand.Active)
-            {
-                throw new NotEnoughPlayersException("The previous hand hasnt ended");
-            }
 
-            Player dealer = ActivePlayers.ElementAt(dealerIndex);
-            CurrentHand = new Hand(dealer, ActivePlayers, Preferences);
+                Monitor.Enter(this);
+                while (ActivePlayers.Count < Preferences.MinNumberOfPlayers)
+                {
+                    Monitor.Wait(this);
+                    //throw new NotEnoughPlayersException("Its should be at least 2 active players to start new hand!");
+                }
+                Monitor.Exit(this);
 
-            Action StartHand = new Action(() =>
-            {
-                CurrentHand.PlayHand();
+                if (this.CurrentHand != null && this.CurrentHand.Active)
+                {
+                    throw new NotEnoughPlayersException("The previous hand hasnt ended");
+                }
+
+                Player dealer = ActivePlayers.ElementAt(dealerIndex);
+                CurrentHand = new Hand(dealer, ActivePlayers, Preferences);
+
+                CurrentHand.PlayHand(_lock);
                 EndCurrentHand();
-            });
 
-            /* Note: only the first player joining the room start 
-             * the new thread of the hand 
-             */
-            if (ActivePlayers.Count == 1)
-            {
-                //await StartHand();
+                /* Note: only the first player joining the room start 
+                 * the new thread of the hand 
+                 */
+
             }
-
-            return;
         }
 
         public void EndCurrentHand()

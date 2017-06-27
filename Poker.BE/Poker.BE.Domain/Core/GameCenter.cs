@@ -351,6 +351,8 @@ namespace Poker.BE.Domain.Core
             BindRoomToLeague(room, league);
             RoomsByID.Add(room.GetHashCode(), room);
 
+            creator.Lock = room;
+
             return room;
         }
 

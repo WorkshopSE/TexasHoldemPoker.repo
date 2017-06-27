@@ -63,12 +63,12 @@ namespace Poker.BE.Domain.Game
         #endregion
 
         #region Methods
-        public void PlayHand()
+        public void PlayHand(object _lock)
         {
             PrepareHand();
 
             //PRE FLOP
-            CurrentRound.PlayBettingRound();
+            CurrentRound.PlayBettingRound(_lock);
             UpdatePlayersBets();
             pot = CurrentRound.CurrentPot;
 
@@ -83,7 +83,7 @@ namespace Poker.BE.Domain.Game
 
             //SECOND BETTING ROUND
             CurrentRound = new Round(dealer, activePlayers, pot, false, preferences);
-            activePlayers = CurrentRound.PlayBettingRound();
+            activePlayers = CurrentRound.PlayBettingRound(_lock);
             UpdatePlayersBets();
             pot = CurrentRound.CurrentPot;
 
@@ -94,7 +94,7 @@ namespace Poker.BE.Domain.Game
 
             //THIRD BETTING ROUND
             CurrentRound = new Round(dealer, activePlayers, pot, false, preferences);
-            activePlayers = CurrentRound.PlayBettingRound();
+            activePlayers = CurrentRound.PlayBettingRound(_lock);
             UpdatePlayersBets();
             pot = CurrentRound.CurrentPot;
 
@@ -104,7 +104,7 @@ namespace Poker.BE.Domain.Game
 
             //FORTH BETTING ROUND
             CurrentRound = new Round(dealer, activePlayers, pot, false, preferences);
-            activePlayers = CurrentRound.PlayBettingRound();
+            activePlayers = CurrentRound.PlayBettingRound(_lock);
             UpdatePlayersBets();
             pot = CurrentRound.CurrentPot;
         }

@@ -1,6 +1,7 @@
 ﻿using Poker.BE.CrossUtility.Exceptions;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Poker.BE.Domain.Game
@@ -84,7 +85,7 @@ namespace Poker.BE.Domain.Game
         /// <remarks>UC024: Play a Betting Round</remarks>
         /// <see cref="https://docs.google.com/document/d/1OTee6BGDWK2usL53jdoeBOI-1Jh8wyNejbQ0ZroUhcA/edit#heading=h.kdfvqg7xrjgw"/>
         /// <returns>The remaining active unfolded players at the end of this round</returns>
-        public ICollection<Player> PlayBettingRound()
+        public ICollection<Player> PlayBettingRound(object _lock)
         {
             //Check Preconditions
             if (activeUnfoldedPlayers.Count < Hand.MINIMAL_NUMBER_OF_ACTIVE_PLAYERS_TO_START)
@@ -98,13 +99,12 @@ namespace Poker.BE.Domain.Game
                 // UNDONE - Tomer & Idan
 
                 // NOTE: Guard: Waiting for the player to choose play move
-
+                Monitor.Enter(_lock);
                 while (CurrentPlayer.PlayMove == Move.Null)
                 {
-                    // todo wait
+                    Monitor.Wait(_lock);
                 }
-
-
+                Monitor.Exit(_lock);
 
                 //Make the move
                 PlayMove(CurrentPlayer.PlayMove, CurrentPlayer.AmountToBetOrCall);
