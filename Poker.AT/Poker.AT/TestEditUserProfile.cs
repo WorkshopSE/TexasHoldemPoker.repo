@@ -14,23 +14,48 @@ namespace AT.Tests
 	[Category("UCC01: Authentication & Profile")]
 	class TestEditUserProfile : ProjectTests
 	{
+		#region Fields
 		string TestUser;
-		
-		Image TestUserImage;
+		string TestUser2;
+		int TestUserKey;
+		int TestUser2Key;
+		#endregion
+
 		[SetUp]
 		public new void Setup()
 		{
 			base.Setup();
-			TestUser=base.SignUp("asaf", "Asaf", "12345");
-			base.Login("Asaf", "12345",out int key);
-			TestUserImage = Image.FromFile("donaldtramp");
-			
+			TestUser=base.SignUp("asaf", "Asaf", "123456");
+			TestUser2 = base.SignUp("asaf", "Asafbil", "123457");
+			base.Login("Asaf", "123456",out TestUserKey);
+			base.Login("Asafbil", "123457", out TestUser2Key);
+		}
+		[Test]
+		public void TestGetProfile()
+		{
+			//Arrange
+			string password;
+			int[] avatar;
+
+			//Act
+			string actResult = base.GetProfile(TestUser, TestUserKey, out password, out avatar);
+
+			//Assert
+			Assert.AreEqual(TestUser, actResult);
+			Assert.IsNotNull(password);
 		}
 		[Test]
 		public void TestValidPasswordChange()
 		{
-			//base.EditProfilePassword(TestUser, "12894");
-			//Assert.AreEqual("12894", TestUser.Password);
+			//Arrange
+			string oldPassword = "123456";
+			string password = "123457";
+
+			//Act
+			bool actResult=base.EditProfilePassword(TestUser, oldPassword, password, TestUserKey);
+
+			//Assert
+			Assert.IsTrue(actResult);
 		}
 		[Test]
 		public void TestInValidPasswordChange()
@@ -52,16 +77,7 @@ namespace AT.Tests
 			//base.EditProfileEmail(TestUser, "galwa@post.bgu.ac.il");
 			//Assert.AreEqual("galwa@post.bgu.ac.il", TestUser.Email);
 		}
-		[Test]
-		public void TestAvatarChange()
-		{
-			MemoryStream ms = new MemoryStream();
-			TestUserImage.Save(ms, System.Drawing.Imaging.ImageFormat.Jpeg);
-			string Expected = Convert.ToBase64String(ms.ToArray());
-			base.EditProfileAvatar(TestUserImage).Save(ms, System.Drawing.Imaging.ImageFormat.Jpeg);
-			string Real = Convert.ToBase64String(ms.ToArray());
-			Assert.AreEqual(Expected, Real);
-		}
+
 		[Test]
 		public void TestUnloggedUser()
 		{

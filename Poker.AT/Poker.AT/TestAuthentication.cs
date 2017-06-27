@@ -11,17 +11,10 @@ namespace AT.Tests
 	[Category("UCC01: Authentication & Profile")]
 	class TestAuthentication : ProjectTests
 	{
-		#region field
-		private string TestUser;
-		private string SecondTestUser;
-		#endregion
-
 		[SetUp]
 		public new void Setup()
 		{
 			base.Setup();
-			base.SignUp("tomer", "Tomer123", "123456");
-			SecondTestUser = base.SignUp("idan", "idanizi", "12345");
 		}
 
 		[TearDown]
@@ -29,6 +22,7 @@ namespace AT.Tests
 		{
 			base.TearDown();
 		}
+
 		[Test]
 		public void TestNewUserSignUp()
 		{
@@ -43,6 +37,7 @@ namespace AT.Tests
 			//Assert
 			Assert.AreEqual(userName, actResult);
 		}
+
 		[Test]
 		public void TestExsistingUserSignUp()
 		{
@@ -53,11 +48,12 @@ namespace AT.Tests
 			base.SignUp(name, userName, password);
 
 			//Act
-			string actResult=base.SignUp(name, userName, password);
+			string actResult = base.SignUp(name, userName, password);
 
 			//Assert
 			Assert.IsNull(actResult);
 		}
+
 		[Test]
 		public void TestUniqeID()
 		{
@@ -88,12 +84,13 @@ namespace AT.Tests
 			base.SignUp(name, userName, password);
 
 			//Act
-			bool actResult = base.Login(userName, password,out securityKey);
+			bool actResult = base.Login(userName, password, out securityKey);
 
 			//Assert
 			Assert.IsTrue(actResult);
 			Assert.AreNotEqual(0, securityKey);
 		}
+
 		[Test]
 		public void TestLoginIncorrectUserName()
 		{
@@ -112,6 +109,7 @@ namespace AT.Tests
 			Assert.IsFalse(actResult);
 			Assert.AreEqual(0, securityKey);
 		}
+
 		[Test]
 		public void TestLoginWrongPassword()
 		{
@@ -130,10 +128,23 @@ namespace AT.Tests
 			Assert.IsFalse(actResult);
 			Assert.AreEqual(0, securityKey);
 		}
-		
+
+		[Test]
 		public void TestSuccesfulLogout()
 		{
-			//Assert.IsTrue(base.Logout("Tomer123", ));
+			//Arrange
+			string name = "or";
+			string userName = "or";
+			string password = "222444";
+			int securityKey;
+			base.SignUp(name, userName, password);
+			base.Login(userName, password, out securityKey);
+
+			//Act
+			bool actResult = base.Logout(userName, securityKey);
+
+			//Assert
+			Assert.IsTrue(actResult);
 		}
 	}
 }

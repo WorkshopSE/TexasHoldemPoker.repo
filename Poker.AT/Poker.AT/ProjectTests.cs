@@ -34,9 +34,9 @@ namespace AT.Tests
 		{
 			return bridge.SignUp(Name, UserName, Password);
 		}
-		public void EditProfilePassword(User User, string Password )
+		public bool EditProfilePassword(string userName, string oldPassword , string password, int securityKey)
 		{
-			bridge.EditProfilePassword(User, Password);
+			return bridge.EditProfilePassword(userName, oldPassword, password, securityKey);
 		}
 		public bool Logout(string UserName, int securityKey)
 		{
@@ -48,14 +48,9 @@ namespace AT.Tests
 			return bridge.Login( UserName, Password, out securityKey);
 		}
 
-		public int UC1(int someParam)
-        {
-            return bridge.testCase1(someParam);
-        }
-
-		public void EditProfileEmail(User User, string Email)
+		public string GetProfile(string userName, int securityKey, out string password, out int[] avatar)
 		{
-			bridge.EditProfileEmail(User,Email);
+			return bridge.GetProfile(userName, securityKey, out password, out avatar);
 		}
 
 		public IList<Card> ShuffleCards(Deck TestDeck)
@@ -63,14 +58,5 @@ namespace AT.Tests
 			return bridge.ShuffleCards(TestDeck);
 		}
 
-		public string UC2(String someParam)
-        {
-            return bridge.testCase2(someParam);
-        }
-
-		internal Image EditProfileAvatar(Image TestUserImage)
-		{
-			return bridge.EditProfileAvatar(TestUserImage);
-		}
 	}
 }

@@ -30,30 +30,18 @@ namespace AT.Bridge
 			return UserName;
 		}
 
-		public int testCase1(int someParam)
-        {
-            return -1;
-        }
-
-        public string testCase2(string someParam)
-        {
-            return "FAKE_HERE";
-        }
-
-		public void EditProfilePassword(User User, string Password)
+		public string GetProfile(string userName, int securityKey, out string password, out int[] avatar)
 		{
-			
+			password = null;
+			avatar = null;
+			return null;
 		}
 
-		public void EditProfileEmail(User User, string Email)
+		public bool EditProfilePassword(string userName, string oldPassword, string Password, int securityKey)
 		{
-			
+			return false;
 		}
 
-		public Image EditProfileAvatar(Image TestUserImage)
-		{
-			return Image.FromFile("DefaultAvatar");
-		}
 
 		public void TearDown()
 		{

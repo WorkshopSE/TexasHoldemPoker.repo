@@ -36,35 +36,9 @@ namespace AT.Bridge
 			return bridge.ShuffleCards(TestDeck);
 		}
 
-		//Implementation Example:
-		public int testCase1(int someParam)
-		{
-			return bridge.testCase1(someParam);
-		}
-
-		public string testCase2(string someParam)
-		{
-			return bridge.testCase2(someParam);
-		}
-
 		public string SignUp(string Name, string UserName, string Password)
 		{
 			return bridge.SignUp(Name, UserName, Password);
-		}
-
-		public void EditProfilePassword(User User, string Password)
-		{
-			bridge.EditProfilePassword(User, Password);
-		}
-
-		public void EditProfileEmail(User User, string Email)
-		{
-			bridge.EditProfileEmail(User, Email);
-		}
-
-		public Image EditProfileAvatar(Image TestUserImage)
-		{
-			return bridge.EditProfileAvatar(TestUserImage);
 		}
 
 		public void TearDown()
@@ -75,6 +49,15 @@ namespace AT.Bridge
 		public int CreateARoom(int level, string userName, int securityKey, out int player)
 		{
 			return bridge.CreateARoom(level, userName, securityKey, out player);
+		}
+
+		public string GetProfile(string userName, int securityKey, out string password, out int[] avatar)
+		{
+			return bridge.GetProfile(userName, securityKey, out password, out avatar);
+		}
+		public bool EditProfilePassword(string userName, string oldPassword, string Password, int securityKey)
+		{
+			return bridge.EditProfilePassword(userName, oldPassword, Password, securityKey);
 		}
 	}
 }

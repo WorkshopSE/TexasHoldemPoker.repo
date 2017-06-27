@@ -9,27 +9,32 @@ using Poker.BE.Service.Modules.Requests;
 using Poker.BE.Service.IServices;
 using Poker.BE.Service.Modules.Results;
 using Poker.BE.Service.Services;
+using Poker.BE.Service.Modules.Caches;
 
 namespace AT.Bridge
 {
-    class Real : TestsBridge
-    {
+	class Real : TestsBridge
+	{
 		#region Fields
-		private IAuthenticationService AuthenticationService;
-		private IRoomsService RoomService;
+		private IAuthenticationService authenticationService;
+		private IRoomsService roomService;
+		private IProfileService profileService;
+		private ICache _cache;
 		#endregion
 
 		#region Constructors
 		public Real()
 		{
-			AuthenticationService = new AuthenticationService();
-			RoomService = new RoomsService();
+			authenticationService = new AuthenticationService();
+			roomService = new RoomsService();
+			_cache = CommonCache.Instance;
 		}
 		#endregion
 
 		public bool Logout(string userName, int securityKey)
 		{
-			LogoutResult result = AuthenticationService.Logout(new LogoutRequest() {
+			LogoutResult result = authenticationService.Logout(new LogoutRequest()
+			{
 				UserName = userName,
 				SecurityKey = securityKey,
 			});
@@ -41,7 +46,7 @@ namespace AT.Bridge
 		}
 		public bool Login(string UserName, string Password, out int securityKey)
 		{
-			LoginResult result = AuthenticationService.Login(new LoginRequest() { UserName = UserName, Password = Password});
+			LoginResult result = authenticationService.Login(new LoginRequest() { UserName = UserName, Password = Password });
 			if (!result.Success.HasValue || !result.Success.Value)
 			{
 				securityKey = result.SecurityKey;
@@ -59,30 +64,22 @@ namespace AT.Bridge
 
 		public string SignUp(string Name, string UserName, string Password)
 		{
-			SignUpResult result = AuthenticationService.SignUp(new SignUpRequest() {UserName = UserName, Password = Password, Deposit = 100 });
-			if(!result.Success.HasValue || !result.Success.Value)
+			SignUpResult result = authenticationService.SignUp(new SignUpRequest() { UserName = UserName, Password = Password, Deposit = 100 });
+			if (!result.Success.HasValue || !result.Success.Value)
 			{
 				return null;
 			}
 			return result.UserName;
 		}
 
-		//Here goes the Adapter implementation - for later use!
-		public int testCase1(int someParam)
-        {
-			return 0;
-            //throw new NotImplementedException();
-        }
-
-        public string testCase2(string someParam)
-        {
-			return null;
-            //throw new NotImplementedException();
-        }
-
-		public void EditProfilePassword(User User, string Password)
+		public bool EditProfilePassword(string userName, string oldPassword, string Password, int securityKey)
 		{
-			//throw new NotImplementedException();
+			EditProfileResult result = profileService.EditProfile(new EditProfileRequest() { UserName = userName, NewUserName = userName, Password = oldPassword, NewPassword = Password, NewAvatar = null, SecurityKey = securityKey });
+			if (!result.Success.HasValue || !result.Success.Value)
+			{
+				return false;
+			}
+			return true;
 		}
 
 		public void EditProfileEmail(User User, string Email)
@@ -90,15 +87,24 @@ namespace AT.Bridge
 			//throw new NotImplementedException();
 		}
 
-		public Image EditProfileAvatar(Image TestUserImage)
+		public string GetProfile(string userName, int securityKey, out string password, out int[] avatar)
 		{
-			return null;
-			//throw new NotImplementedException();
+			GetProfileResult result = profileService.GetProfile(new GetProfileRequest() { UserName = userName, SecurityKey = securityKey });
+			if (!result.Success.HasValue || !result.Success.Value)
+			{
+				password = null;
+				avatar = null;
+				return null;
+			}
+			password = result.Password;
+			avatar = result.Avatar;
+			return result.UserName;
 		}
+
 		public int CreateARoom(int level, string userName, int securityKey, out int player)
 		{
-			CreateNewRoomResult result = RoomService.CreateNewRoom(new CreateNewRoomRequest() { Level = level, UserName = userName, SecurityKey = securityKey });
-			if(!result.Success.HasValue || !result.Success.Value)
+			CreateNewRoomResult result = roomService.CreateNewRoom(new CreateNewRoomRequest() { Level = level, UserName = userName, SecurityKey = securityKey });
+			if (!result.Success.HasValue || !result.Success.Value)
 			{
 				string error = result.ErrorMessage;
 				player = 0;
@@ -110,8 +116,8 @@ namespace AT.Bridge
 
 		public void TearDown()
 		{
-			((AuthenticationService)AuthenticationService).Clear();
-			((RoomsService)RoomService).Clear();
+			((AuthenticationService)authenticationService).Clear();
+			((RoomsService)roomService).Clear();
 		}
 	}
 }
