@@ -33,7 +33,6 @@ namespace Poker.BE.Domain.Game
         private Player lastPlayerToRaise;
 
         private Player dealer;
-        private bool isPreflop;
         private GamePreferences config;
         #endregion
 
@@ -46,13 +45,14 @@ namespace Poker.BE.Domain.Game
         public double TotalRaise { get { return totalRaise; } }
         public double LastRaise { get { return lastRaise; } }
         public Player LastPlayerToRaise { get { return lastPlayerToRaise; } }
+        public bool IsPreflop { get; set; }
 
         #endregion
 
         #region Constructors
         public Round(Player dealer, ICollection<Player> activeUnfoldedPlayers, Pot currentPot, bool isPreflop, GamePreferences config)
         {
-            this.isPreflop = isPreflop;
+            this.IsPreflop = isPreflop;
 
             //Set up players info
             this.dealer = dealer;
@@ -94,7 +94,7 @@ namespace Poker.BE.Domain.Game
             }
 
             //Play round until everyone is called or folded
-            while (LastPlayerToRaise != CurrentPlayer || (isPreflop &&
+            while (LastPlayerToRaise != CurrentPlayer || (IsPreflop &&
                                                         currentPlayer == activeUnfoldedPlayers.ElementAt((activeUnfoldedPlayers.ToList().IndexOf(dealer) + 2) % activeUnfoldedPlayers.Count) &&
                                                         liveBets[CurrentPlayer] == config.MinimumBet + config.AntesValue))
             {
@@ -194,8 +194,8 @@ namespace Poker.BE.Domain.Game
         private void Check()
         {
             //if no one had raised
-            if (!(isPreflop && TotalRaise == config.AntesValue) && !(!isPreflop && TotalRaise == 0) &&
-                !(isPreflop &&
+            if (!(IsPreflop && TotalRaise == config.AntesValue) && !(!IsPreflop && TotalRaise == 0) &&
+                !(IsPreflop &&
                     currentPlayer == activeUnfoldedPlayers.ElementAt((activeUnfoldedPlayers.ToList().IndexOf(dealer) + 2) % activeUnfoldedPlayers.Count) &&
                     liveBets[CurrentPlayer] == config.MinimumBet + config.AntesValue))
             {
