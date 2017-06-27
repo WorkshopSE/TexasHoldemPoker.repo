@@ -137,9 +137,22 @@ namespace Poker.BE.Domain.Security
 
         public void EditProfile(User user, string newUserName, string newPassword, byte[] newAvatar)
         {
+            if (Users.ContainsKey(newUserName))
+            {
+                throw new UserNameTakenException(string.Format("User name: {0} is taken, please try again",
+                        newUserName));
+            }
+
             Users.Remove(user.UserName);
 
             user.UserName = newUserName;
+
+            string reason;
+            if (!IsPasswordValid(newPassword, out reason))
+            {
+                throw new InvalidPasswordException("password is not valid - must be more than 6 characters");
+            }
+
             user.Password = newPassword;
             user.Avatar = newAvatar;
 
