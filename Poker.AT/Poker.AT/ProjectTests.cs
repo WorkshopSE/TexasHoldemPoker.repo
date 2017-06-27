@@ -61,6 +61,17 @@ namespace AT.Tests
 		{
 			return bridge.EnterRoom(room, userName, securityKey, out player);
 		}
+
+		public double JoinNextHand(string userName, int key, int? player, int seatIndex, double buyIn, out double wallet)
+		{
+			return bridge.JoinNextHand(userName, key, player, seatIndex, buyIn, out wallet);
+		}
+
+		public bool StandUpToSpectate(string userName, int securityKey, int? player)
+		{
+			return bridge.StandUpToSpectate(userName, securityKey, player);
+		}
+
 		public IList<Card> ShuffleCards(Deck TestDeck)
 		{
 			return bridge.ShuffleCards(TestDeck);

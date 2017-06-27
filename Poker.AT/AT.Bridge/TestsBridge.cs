@@ -20,5 +20,7 @@ namespace AT.Bridge
 		bool EditProfilePassword(string userName, string oldPassword, string Password, int securityKey);
 		bool EditProfileUserName(string userName, string newUserName, string password, int securityKey);
 		string GetProfile(string userName, int securityKey, out string password, out int[] avatar);
+		double JoinNextHand(string userName, int key, int? player, int seatIndex, double buyIn, out double wallet);
+		bool StandUpToSpectate(string userName, int securityKey, int? player);
 	}
 }

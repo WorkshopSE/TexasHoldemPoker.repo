@@ -64,5 +64,42 @@ namespace AT.Tests
 			Assert.AreNotEqual(0, actResult);
 			Assert.AreNotEqual(0, player);
 		}
+
+		[Test]
+		public void JoinNextHandTest()
+		{
+			//Arrange
+			int level = 4;
+			int securityKey = TestUserKey;
+			int? player;
+			double wallet;
+			int room = base.CreateARoom(level, TestUser, securityKey, out player);
+
+			//Act
+			double actResult = base.JoinNextHand(TestUser, securityKey, player, 1, 100, out wallet);
+			
+			//Assert
+			Assert.AreNotEqual(0, actResult);
+			Assert.AreNotEqual(0, wallet);
+		}
+
+		[Test]
+		public void StandUpToSpectateTest()
+		{
+			//Arrange
+			int level = 4;
+			int securityKey = TestUserKey;
+			int? player;
+			double wallet;
+			int room = base.CreateARoom(level, TestUser, securityKey, out player);
+			base.JoinNextHand(TestUser, securityKey, player, 1, 100, out wallet);
+
+			//Act
+			bool actResult = base.StandUpToSpectate(TestUser, securityKey, player);
+
+			//Assert
+			Assert.AreNotEqual(0, actResult);
+			Assert.AreNotEqual(0, wallet);
+		}
 	}
 }

@@ -68,5 +68,14 @@ namespace AT.Bridge
 		{
 			return bridge.EditProfileUserName(userName, newUserName, password, securityKey);
 		}
+		public double JoinNextHand(string userName, int key, int? player, int seatIndex, double buyIn, out double wallet)
+		{
+			return bridge.JoinNextHand(userName, key, player, seatIndex, buyIn, out wallet);
+		}
+
+		public bool StandUpToSpectate(string userName, int key, int? player)
+		{
+			return bridge.StandUpToSpectate(userName, key, player);
+		}
 	}
 }

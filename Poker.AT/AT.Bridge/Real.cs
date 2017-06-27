@@ -131,6 +131,29 @@ namespace AT.Bridge
 			return result.Room;
 		}
 
+		public double JoinNextHand(string userName, int key, int? player, int seatIndex, double buyIn, out double wallet)
+		{
+			JoinNextHandResult result = roomService.JoinNextHand(new JoinNextHandRequest() { UserName=userName, Player = (int)player, SeatIndex = seatIndex, BuyIn = buyIn , SecurityKey=key});
+			if(!result.Success.HasValue || !result.Success.Value)
+			{
+				string e = result.ErrorMessage;
+				wallet = 0;
+				return 0;
+			}
+			wallet = result.Wallet;
+			return result.UserBank;
+		}
+
+		public bool StandUpToSpectate(string userName, int securityKey, int? player)
+		{
+			StandUpToSpactateResult result = roomService.StandUpToSpactate(new StandUpToSpactateRequest() { UserName = userName, SecurityKey = securityKey, Player = (int)player });
+			if(!result.Success.HasValue || !result.Success.Value)
+			{
+				return false;
+			}
+			return true;
+		}
+
 		public void TearDown()
 		{
 			((AuthenticationService)authenticationService).Clear();

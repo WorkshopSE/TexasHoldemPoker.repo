@@ -47,6 +47,17 @@ namespace AT.Bridge
 			return false;
 		}
 
+		public double JoinNextHand(string userName, int key, int? player, int index, double buyIn, out double wallet)
+		{
+			wallet = 0;
+			return 0;
+		}
+
+		public bool StandUpToSpectate(string userName, int securityKey, int? player)
+		{
+			return false;
+		}
+
 		public void TearDown()
 		{
 		}
