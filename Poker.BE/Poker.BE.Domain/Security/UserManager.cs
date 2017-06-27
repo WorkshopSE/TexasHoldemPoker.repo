@@ -137,7 +137,7 @@ namespace Poker.BE.Domain.Security
 
         public void EditProfile(User user, string newUserName, string newPassword, byte[] newAvatar)
         {
-            if (Users.ContainsKey(newUserName))
+            if (Users.ContainsKey(newUserName) && user.UserName != newUserName)
             {
                 throw new UserNameTakenException(string.Format("User name: {0} is taken, please try again",
                         newUserName));
