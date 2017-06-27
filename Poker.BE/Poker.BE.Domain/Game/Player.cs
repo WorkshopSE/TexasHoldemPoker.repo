@@ -71,7 +71,9 @@ namespace Poker.BE.Domain.Game
             Enum.TryParse(playMove, out parsedMove);
             PlayMove = parsedMove;
             AmountToBetOrCall = amountToBetOrCall;
-
+            Monitor.Enter(Lock);
+            Monitor.PulseAll(Lock);
+            Monitor.Exit(Lock);
         }
 
         public bool JoinToTable(double buyIn)

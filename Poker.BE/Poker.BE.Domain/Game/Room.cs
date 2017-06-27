@@ -138,7 +138,9 @@ namespace Poker.BE.Domain.Game
 
             if (ActivePlayers.Count >= Preferences.MinNumberOfPlayers)
             {
-                Monitor.PulseAll(this);
+                Monitor.Enter(_lock);
+                Monitor.PulseAll(_lock);
+                Monitor.Exit(_lock);
             }
         }
 
@@ -176,13 +178,13 @@ namespace Poker.BE.Domain.Game
             while (true)
             {
 
-                Monitor.Enter(this);
+                Monitor.Enter(_lock);
                 while (ActivePlayers.Count < Preferences.MinNumberOfPlayers)
                 {
-                    Monitor.Wait(this);
+                    Monitor.Wait(_lock);
                     //throw new NotEnoughPlayersException("Its should be at least 2 active players to start new hand!");
                 }
-                Monitor.Exit(this);
+                Monitor.Exit(_lock);
 
                 if (this.CurrentHand != null && this.CurrentHand.Active)
                 {
