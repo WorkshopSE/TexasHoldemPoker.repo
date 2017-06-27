@@ -40,17 +40,17 @@ namespace Poker.BE.Service.Services
         #endregion
 
 
-        public GetStatisticsResult GetStatistics(string userName)
+        public GetStatisticsResult GetStatistics(CommonRequest request)
         {
             var result = new GetStatisticsResult();
             try
             {
                 User user = null;
-                if (userName != null)
+                if (request.UserName != null)
                 {
                     user = _cache.RefreshAndGet(
                         Users,
-                        userName,
+                        request.UserName,
                         new UserNotFoundException("User was not found, can't get statistics")
                         );
                 }
@@ -71,10 +71,10 @@ namespace Poker.BE.Service.Services
         {
             GetAllUsersResult.UserResult result = new GetAllUsersResult.UserResult()
             {
-                Avatar = domainUser.Avatar.Select(b => (int)b).ToArray(),
-                GamesPlayed = domainUser.UserStatistics.GamesPlayed,
-                GrossLosses = domainUser.UserStatistics.GrossLosses,
-                GrossProfits = domainUser.UserStatistics.GrossProfits,
+                Avatar = domainUser.Avatar?.Select(b => (int)b).ToArray(),
+                GamesPlayed = domainUser.UserStatistics?.GamesPlayed ?? 0,
+                GrossLosses = domainUser.UserStatistics?.GrossLosses ?? 0,
+                GrossProfits = domainUser.UserStatistics?.GrossProfits ?? 0,
                 Level = domainUser.Level,
                 UserName = domainUser.UserName,
             };

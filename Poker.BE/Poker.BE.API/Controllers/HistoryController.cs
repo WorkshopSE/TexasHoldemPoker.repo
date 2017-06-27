@@ -28,14 +28,14 @@ namespace Poker.BE.API.Controllers
         #endregion
 
         // TODO: change to post - for security key
-        [HttpGet]
-        public HttpResponseMessage GetStatistics(string userName)
+        [HttpPost]
+        public HttpResponseMessage GetStatistics(CommonRequest request)
         {
             var result = new GetStatisticsResult();
 
             try
             {
-                result = service.GetStatistics(userName);
+                result = service.GetStatistics(request);
             }
             catch (Exception e)
             {
