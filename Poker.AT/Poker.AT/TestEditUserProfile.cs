@@ -49,7 +49,7 @@ namespace AT.Tests
 		{
 			//Arrange
 			string oldPassword = "123456";
-			string password = "123457";
+			string password = "555555";
 
 			//Act
 			bool actResult=base.EditProfilePassword(TestUser, oldPassword, password, TestUserKey);
@@ -58,24 +58,46 @@ namespace AT.Tests
 			Assert.IsTrue(actResult);
 		}
 		[Test]
-		public void TestInValidPasswordChange()
+		public void TestInvalidPasswordChange()
 		{
-			/*string TestPassword = TestUser.Password;
-			try
-			{
-				base.EditProfilePassword(TestUser, Int64.MinValue.ToString());
-				Assert.Fail();
-			}
-			catch(ArgumentException e)
-			{
-				Assert.AreEqual(TestPassword, TestUser.Password);
-			}*/
+			//Arrange
+			string oldPassword = "123456";
+			string invalidPassword = "123";
+
+			//Act
+			bool actResult = base.EditProfilePassword(TestUser, oldPassword, invalidPassword, TestUserKey);
+
+			//Assert
+			Assert.IsFalse(actResult);
 		}
 		[Test]
-		public void TestValidEmailChange()
+		public void TestValidUserNameChange()
 		{
-			//base.EditProfileEmail(TestUser, "galwa@post.bgu.ac.il");
-			//Assert.AreEqual("galwa@post.bgu.ac.il", TestUser.Email);
+			//Arrange
+			string oldUserName = TestUser;
+			string userName = "123";
+			string password = "123456";
+
+			//Act
+			bool actResult = base.EditProfileUserName(oldUserName, userName, password, TestUserKey);
+
+			//Assert
+			Assert.IsTrue(actResult);
+		}
+
+		[Test]
+		public void TestInvalidUserNameChange()
+		{
+			//Arrange
+			string oldUserName = TestUser;
+			string userName = TestUser2;
+			string password = "123456";
+
+			//Act
+			bool actResult = base.EditProfileUserName(oldUserName, userName, password, TestUserKey);
+
+			//Assert
+			Assert.IsFalse(actResult);
 		}
 
 		[Test]

@@ -59,5 +59,9 @@ namespace AT.Bridge
 		{
 			return bridge.EditProfilePassword(userName, oldPassword, Password, securityKey);
 		}
+		public bool EditProfileUserName(string userName, string newUserName, string password, int securityKey)
+		{
+			return bridge.EditProfileUserName(userName, newUserName, password, securityKey);
+		}
 	}
 }

@@ -42,6 +42,10 @@ namespace AT.Bridge
 			return false;
 		}
 
+		public bool EditProfileUserName(string userName, string newUserName, string password, int securityKey)
+		{
+			return false;
+		}
 
 		public void TearDown()
 		{

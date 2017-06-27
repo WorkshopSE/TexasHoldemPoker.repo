@@ -26,6 +26,7 @@ namespace AT.Bridge
 		public Real()
 		{
 			authenticationService = new AuthenticationService();
+			profileService = new ProfileService();
 			roomService = new RoomsService();
 			_cache = CommonCache.Instance;
 		}
@@ -77,14 +78,20 @@ namespace AT.Bridge
 			EditProfileResult result = profileService.EditProfile(new EditProfileRequest() { UserName = userName, NewUserName = userName, Password = oldPassword, NewPassword = Password, NewAvatar = null, SecurityKey = securityKey });
 			if (!result.Success.HasValue || !result.Success.Value)
 			{
+				string e = result.ErrorMessage;
 				return false;
 			}
 			return true;
 		}
 
-		public void EditProfileEmail(User User, string Email)
+		public bool EditProfileUserName(string userName, string newUserName, string password, int securityKey)
 		{
-			//throw new NotImplementedException();
+			EditProfileResult result = profileService.EditProfile(new EditProfileRequest() { UserName = userName, NewUserName = newUserName, Password = password, SecurityKey = securityKey, NewAvatar = null });
+			if(!result.Success.HasValue || !result.Success.Value)
+			{
+				return false;
+			}
+			return true;
 		}
 
 		public string GetProfile(string userName, int securityKey, out string password, out int[] avatar)

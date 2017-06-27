@@ -17,6 +17,7 @@ namespace AT.Bridge
 		bool Logout(string UserName, int securityKey);
 		int CreateARoom(int level, string userName, int securityKey, out int player);
 		bool EditProfilePassword(string userName, string oldPassword, string Password, int securityKey);
+		bool EditProfileUserName(string userName, string newUserName, string password, int securityKey);
 		string GetProfile(string userName, int securityKey, out string password, out int[] avatar);
 	}
 }

@@ -38,6 +38,10 @@ namespace AT.Tests
 		{
 			return bridge.EditProfilePassword(userName, oldPassword, password, securityKey);
 		}
+		public bool EditProfileUserName(string userName, string newUserName, string password, int securityKey)
+		{
+			return bridge.EditProfileUserName(userName, newUserName, password, securityKey);
+		}
 		public bool Logout(string UserName, int securityKey)
 		{
 			return bridge.Logout(UserName, securityKey);
