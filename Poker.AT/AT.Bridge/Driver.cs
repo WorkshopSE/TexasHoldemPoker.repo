@@ -12,7 +12,7 @@ namespace AT.Bridge
         {
             ProxyBridge bridge = new ProxyBridge();
 
-            bridge.setRealBridge(new Stub()); // add real bridge here
+            bridge.setRealBridge(new Real()); // add real bridge here
             return bridge;
         }
     }

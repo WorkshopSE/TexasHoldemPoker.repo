@@ -10,12 +10,13 @@ namespace AT.Bridge
 {
     class Stub : TestsBridge
     {
-		public bool Logout(string UserName, string Password)
+		public bool Logout(string UserName, int securityKey)
 		{
 			return false;
 		}
-		public bool Login(string UserName, string Password)
+		public bool Login(string UserName, string Password, out int securityKey)
 		{
+			securityKey = 0;
 			return false;
 		}
 
@@ -24,34 +25,53 @@ namespace AT.Bridge
 			return new List<Card>();
 		}
 
-		public User SignUp(string Name, string UserName, string Password)
+		public string SignUp(string Name, string UserName, string Password)
 		{
-			return new User(Name, UserName, Password);
+			return UserName;
 		}
 
-		public int testCase1(int someParam)
-        {
-            return -1;
-        }
-
-        public string testCase2(string someParam)
-        {
-            return "FAKE_HERE";
-        }
-
-		public void EditProfilePassword(User User, string Password)
+		public string GetProfile(string userName, int securityKey, out string password, out int[] avatar)
 		{
-			
+			password = null;
+			avatar = null;
+			return null;
 		}
 
-		public void EditProfileEmail(User User, string Email)
+		public bool EditProfilePassword(string userName, string oldPassword, string Password, int securityKey)
 		{
-			
+			return false;
 		}
 
-		public Image EditProfileAvatar(Image TestUserImage)
+		public bool EditProfileUserName(string userName, string newUserName, string password, int securityKey)
 		{
-			return Image.FromFile("DefaultAvatar");
+			return false;
+		}
+
+		public double JoinNextHand(string userName, int key, int? player, int index, double buyIn, out double wallet)
+		{
+			wallet = 0;
+			return 0;
+		}
+
+		public bool StandUpToSpectate(string userName, int securityKey, int? player)
+		{
+			return false;
+		}
+
+		public void TearDown()
+		{
+		}
+
+		public int CreateARoom(int level, string userName, int securityKey, out int? player)
+		{
+			player = 0;
+			return 0;
+		}
+
+		public int EnterRoom(int room, string userName, int securityKey, out int? player)
+		{
+			player = 0;
+			return 0;
 		}
 	}
 }
