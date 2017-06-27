@@ -94,10 +94,10 @@ namespace Poker.BE.Domain.Game
             }
 
             //Play round until everyone is called or folded
-            while (LastPlayerToRaise != CurrentPlayer)
+            while (LastPlayerToRaise != CurrentPlayer || (isPreflop &&
+                                                        currentPlayer == activeUnfoldedPlayers.ElementAt((activeUnfoldedPlayers.ToList().IndexOf(dealer) + 2) % activeUnfoldedPlayers.Count) &&
+                                                        liveBets[CurrentPlayer] == config.MinimumBet + config.AntesValue))
             {
-                // UNDONE - Tomer & Idan
-
                 // NOTE: Guard: Waiting for the player to choose play move
                 Monitor.Enter(_lock);
                 while (CurrentPlayer.PlayMove == Move.Null)

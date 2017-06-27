@@ -55,7 +55,7 @@ namespace Poker.BE.Domain.Game
             communityCards = new Card[NUM_OF_COMMUNITY_CARDS];
             pot = new Pot();
             this.dealer = dealer;
-            CurrentRound = new Round(dealer, activePlayers, this.pot, true, this.preferences);
+            CurrentRound = new Round(dealer, activePlayers, pot, false, this.preferences);
             Active = true;
             
         }
@@ -68,6 +68,7 @@ namespace Poker.BE.Domain.Game
             PrepareHand();
 
             //PRE FLOP
+            CurrentRound = new Round(dealer, activePlayers, pot, true, this.preferences);
             CurrentRound.PlayBettingRound(_lock);
             UpdatePlayersBets();
             pot = CurrentRound.CurrentPot;
