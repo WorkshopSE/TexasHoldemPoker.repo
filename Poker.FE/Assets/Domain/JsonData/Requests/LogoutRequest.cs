@@ -1,8 +1,5 @@
 ﻿
 [System.Serializable]
-public class LogoutRequest
+public class LogoutRequest : IRequest
 {
-    public string User;
-
-    public LogoutRequest() { }
 }

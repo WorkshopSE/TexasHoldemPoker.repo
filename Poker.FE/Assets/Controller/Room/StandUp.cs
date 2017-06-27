@@ -8,6 +8,7 @@ public class StandUp : MonoBehaviour {
     public Text feedback;
     public GameObject spectate;
     public GameObject active;
+    public Button leaveButton;
     public List<GameObject> chairs;
     public List<GameObject> players;
 
@@ -20,15 +21,21 @@ public class StandUp : MonoBehaviour {
         request = new StandUpToSpactateRequest()
         {
             Player = GameProperties.CurrentRoom.playerid,
-            User = GameProperties.user.userName
+            UserName = GameProperties.user.userName,
+            SecurityKey = GameProperties.user.SecurityKey
         };
         string standUpJson = JsonUtility.ToJson(request);
         StartCoroutine(http.POST(URL.StandUp, standUpJson, new System.Action<string>(standUpSuccess), new System.Action<string>(standUpFail)));
+    }
+    private void Start()
+    {
+        leaveButton.interactable = false;
     }
 
     private void standUpFail(string failMessage)
     {
         feedback.text = failMessage + " Please Try Again";
+        Debug.Log("STANDUP FAILED Error " + result.ErrorMessage);
     }
 
     private void standUpSuccess(string successMessage)
@@ -37,15 +44,18 @@ public class StandUp : MonoBehaviour {
         if (result.Success)
         {
 
-            //TODO: Think about wallet;1
-            spectate.SetActive(true);
-            active.SetActive(false);
+            //TODO: maybe add banner of result.RemainingMoney
+            GameProperties.user.deposit = result.UserBankMoney;
             players[GameProperties.CurrentRoom.ChairIndex].SetActive(false);
             chairs[GameProperties.CurrentRoom.ChairIndex].GetComponent<Image>().enabled = true;
+            leaveButton.interactable = true;
+            spectate.SetActive(true);
+            active.SetActive(false);
         }
         else
         {
             feedback.text = result.ErrorMessage + " Please Try Again";
+            Debug.Log("STANDUP SUCCESS Error " + result.ErrorMessage);
         }
         
     }

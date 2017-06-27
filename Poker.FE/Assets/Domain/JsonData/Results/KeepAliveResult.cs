@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[System.Serializable]
 public class KeepAliveResult : IResult
 {
     //Room's info
@@ -20,6 +21,8 @@ public class KeepAliveResult : IResult
     /// </summary>
     public int[] PlayersAndTableCards;                          //ARIEL
     public int DealerId;
+    public int SmallBlindId;
+    public int BigBlindId;
 
     //Round's info
     public int CurrentPlayerID;
@@ -27,7 +30,7 @@ public class KeepAliveResult : IResult
     public List<double> PotsAmountToClaim;                      //ARIEL
     public double[] PlayersBets;   //by table location          //ARIEL
     public double TotalRaise;                                   //ARIEL
-    public double LastRaise;                                    //ARIEL
+    public double LastRaise;                                    //Asaf - LastRaise == 0 -> {Check, All in, Bet, Fold}, LastRaise > 0 -> {All in, Fold, Call, Raise}, 
 
     //Player's info
     public double PlayerWallet;

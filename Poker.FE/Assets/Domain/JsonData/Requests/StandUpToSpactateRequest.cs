@@ -1,7 +1,6 @@
 ﻿
 [System.Serializable]
-public class StandUpToSpactateRequest
+public class StandUpToSpactateRequest : IRequest
 {
-    public string User;
     public int Player;
 }

@@ -21,6 +21,7 @@ public class WelcomeText : MonoBehaviour {
     {
         request = new GetProfileRequest();
         request.UserName = GameProperties.user.userName;
+        request.SecurityKey = GameProperties.user.SecurityKey;
         string profJson = JsonUtility.ToJson(request);
         StartCoroutine(http.POST(URL.GetProfile, profJson ,new Action<string>(GetProfileSuccess), new Action<string>(GetProfileFailed)));
     }

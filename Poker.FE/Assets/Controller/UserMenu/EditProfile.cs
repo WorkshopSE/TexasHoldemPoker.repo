@@ -23,10 +23,12 @@ public class EditProfile : MonoBehaviour {
 
     public void EditProfileAction()
     {
-        if (current.newPassword != "" && current.newUserName != "")
+        if (current.NewPassword != "" && current.NewUserName != "")
         {
+            current.SecurityKey = GameProperties.user.SecurityKey;
             current.UserName = GameProperties.user.userName;
             current.Password = GameProperties.user.password;
+            current.SecurityKey = GameProperties.user.SecurityKey;
             EditProfileFeedback.GetComponent<Text>().text = "";
             UIControl.GetComponent<UIControl>().ShowLoading();
             string profileJson = JsonUtility.ToJson(current);
@@ -96,7 +98,7 @@ public class EditProfile : MonoBehaviour {
         var loader = new WWW(url);
         yield return loader;
         avatar.GetComponent<RawImage>().texture = loader.texture;
-        current.newAvatar = loader.texture.EncodeToPNG();
+        current.NewAvatar = loader.texture.EncodeToPNG();
     }
     // Update is called once per frame
     void Update()
@@ -117,7 +119,7 @@ public class EditProfile : MonoBehaviour {
         {
             EditProfileAction();
         }
-        current.newUserName = username.GetComponent<InputField>().text;
-        current.newPassword = password.GetComponent<InputField>().text;
+        current.NewUserName = username.GetComponent<InputField>().text;
+        current.NewPassword = password.GetComponent<InputField>().text;
     }
 }

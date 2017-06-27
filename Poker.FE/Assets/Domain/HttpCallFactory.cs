@@ -14,6 +14,10 @@ public static class URL
     public static string KeepAlive = "KeepAlive/KeepAlive";
     public static string JoinNextHand = "Room/JoinNextHand";
     internal static string StandUp = "Room/StandUpToSpactate";
+    internal static string GetAllRooms = "Room/GetAllRooms";
+    internal static string EnterRoom = "Room/EnterRoom";
+    internal static string LeaveRoom = "Room/LeaveRoom";
+    internal static string PlayMove = "PokerGamePlay/PlayMove";
 }
 
 public class HttpCallFactory

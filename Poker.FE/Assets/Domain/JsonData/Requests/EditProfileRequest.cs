@@ -1,12 +1,9 @@
 ﻿
 [System.Serializable]
-public class EditProfileRequest
+public class EditProfileRequest : IRequest
 {
-    public string UserName;
     public string Password;
-    public string newUserName;
-    public string newPassword;
-    public byte[] newAvatar;
-
-    public EditProfileRequest() { }
+    public string NewUserName;
+    public string NewPassword;
+    public byte[] NewAvatar;
 }

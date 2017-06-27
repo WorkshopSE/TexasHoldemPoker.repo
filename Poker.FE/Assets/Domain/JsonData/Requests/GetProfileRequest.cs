@@ -1,5 +1,4 @@
 ﻿[System.Serializable]
-public class GetProfileRequest
+public class GetProfileRequest : IRequest
 {
-    public string UserName;
 }

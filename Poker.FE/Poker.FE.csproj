@@ -1,0 +1,157 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>10.0.20506</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{F6A73092-6E6B-FA7E-B26B-56637B1D15C4}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AssemblyName>Assembly-CSharp</AssemblyName>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{E097FAD1-6243-4DAD-9C02-E9B9EFC3FFC1};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <TargetFrameworkIdentifier>.NETFramework</TargetFrameworkIdentifier>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <TargetFrameworkProfile>Unity Full v3.5</TargetFrameworkProfile>
+    <CompilerResponseFile></CompilerResponseFile>
+    <UnityProjectType>Game:1</UnityProjectType>
+    <UnityBuildTarget>StandaloneWindows64:19</UnityBuildTarget>
+    <UnityVersion>5.6.1f1</UnityVersion>
+    <RootNamespace></RootNamespace>
+    <LangVersion>4</LangVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>Temp\UnityVS_bin\Debug\</OutputPath>
+    <IntermediateOutputPath>Temp\UnityVS_obj\Debug\</IntermediateOutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DefineConstants>DEBUG;TRACE;UNITY_5_3_OR_NEWER;UNITY_5_4_OR_NEWER;UNITY_5_5_OR_NEWER;UNITY_5_6_OR_NEWER;UNITY_5_6_1;UNITY_5_6;UNITY_5;UNITY_64;UNITY_ANALYTICS;ENABLE_AUDIO;ENABLE_CACHING;ENABLE_CLOTH;ENABLE_DUCK_TYPING;ENABLE_GENERICS;ENABLE_PVR_GI;ENABLE_MICROPHONE;ENABLE_MULTIPLE_DISPLAYS;ENABLE_PHYSICS;ENABLE_RUNTIME_NAVMESH_BUILDING;ENABLE_SPRITERENDERER_FLIPPING;ENABLE_SPRITES;ENABLE_TERRAIN;ENABLE_RAKNET;ENABLE_UNET;ENABLE_LZMA;ENABLE_UNITYEVENTS;ENABLE_WEBCAM;ENABLE_WWW;ENABLE_CLOUD_SERVICES_COLLAB;ENABLE_CLOUD_SERVICES_ADS;ENABLE_CLOUD_HUB;ENABLE_CLOUD_PROJECT_ID;ENABLE_CLOUD_SERVICES_UNET;ENABLE_CLOUD_SERVICES_BUILD;ENABLE_CLOUD_LICENSE;ENABLE_EDITOR_METRICS;ENABLE_EDITOR_METRICS_CACHING;ENABLE_NATIVE_ARRAY;INCLUDE_DYNAMIC_GI;INCLUDE_GI;PLATFORM_SUPPORTS_MONO;RENDER_SOFTWARE_CURSOR;INCLUDE_PUBNUB;ENABLE_PLAYMODE_TESTS_RUNNER;ENABLE_SCRIPTING_NEW_CSHARP_COMPILER;ENABLE_VIDEO;UNITY_STANDALONE_WIN;UNITY_STANDALONE;ENABLE_SUBSTANCE;ENABLE_RUNTIME_GI;ENABLE_MOVIES;ENABLE_NETWORK;ENABLE_CRUNCH_TEXTURE_COMPRESSION;ENABLE_UNITYWEBREQUEST;ENABLE_CLOUD_SERVICES;ENABLE_CLOUD_SERVICES_ANALYTICS;ENABLE_CLOUD_SERVICES_PURCHASING;ENABLE_CLOUD_SERVICES_CRASH_REPORTING;ENABLE_EVENT_QUEUE;ENABLE_CLUSTERINPUT;ENABLE_VR;ENABLE_WEBSOCKET_HOST;ENABLE_MONO;NET_2_0;ENABLE_PROFILER;DEBUG;TRACE;UNITY_ASSERTIONS;UNITY_EDITOR;UNITY_EDITOR_64;UNITY_EDITOR_WIN;ENABLE_NATIVE_ARRAY_CHECKS;UNITY_TEAM_LICENSE;ENABLE_VSTU</DefineConstants>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>Temp\UnityVS_bin\Release\</OutputPath>
+    <IntermediateOutputPath>Temp\UnityVS_obj\Release\</IntermediateOutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DefineConstants>TRACE;UNITY_5_3_OR_NEWER;UNITY_5_4_OR_NEWER;UNITY_5_5_OR_NEWER;UNITY_5_6_OR_NEWER;UNITY_5_6_1;UNITY_5_6;UNITY_5;UNITY_64;UNITY_ANALYTICS;ENABLE_AUDIO;ENABLE_CACHING;ENABLE_CLOTH;ENABLE_DUCK_TYPING;ENABLE_GENERICS;ENABLE_PVR_GI;ENABLE_MICROPHONE;ENABLE_MULTIPLE_DISPLAYS;ENABLE_PHYSICS;ENABLE_RUNTIME_NAVMESH_BUILDING;ENABLE_SPRITERENDERER_FLIPPING;ENABLE_SPRITES;ENABLE_TERRAIN;ENABLE_RAKNET;ENABLE_UNET;ENABLE_LZMA;ENABLE_UNITYEVENTS;ENABLE_WEBCAM;ENABLE_WWW;ENABLE_CLOUD_SERVICES_COLLAB;ENABLE_CLOUD_SERVICES_ADS;ENABLE_CLOUD_HUB;ENABLE_CLOUD_PROJECT_ID;ENABLE_CLOUD_SERVICES_UNET;ENABLE_CLOUD_SERVICES_BUILD;ENABLE_CLOUD_LICENSE;ENABLE_EDITOR_METRICS;ENABLE_EDITOR_METRICS_CACHING;ENABLE_NATIVE_ARRAY;INCLUDE_DYNAMIC_GI;INCLUDE_GI;PLATFORM_SUPPORTS_MONO;RENDER_SOFTWARE_CURSOR;INCLUDE_PUBNUB;ENABLE_PLAYMODE_TESTS_RUNNER;ENABLE_SCRIPTING_NEW_CSHARP_COMPILER;ENABLE_VIDEO;UNITY_STANDALONE_WIN;UNITY_STANDALONE;ENABLE_SUBSTANCE;ENABLE_RUNTIME_GI;ENABLE_MOVIES;ENABLE_NETWORK;ENABLE_CRUNCH_TEXTURE_COMPRESSION;ENABLE_UNITYWEBREQUEST;ENABLE_CLOUD_SERVICES;ENABLE_CLOUD_SERVICES_ANALYTICS;ENABLE_CLOUD_SERVICES_PURCHASING;ENABLE_CLOUD_SERVICES_CRASH_REPORTING;ENABLE_EVENT_QUEUE;ENABLE_CLUSTERINPUT;ENABLE_VR;ENABLE_WEBSOCKET_HOST;ENABLE_MONO;NET_2_0;ENABLE_PROFILER;DEBUG;TRACE;UNITY_ASSERTIONS;UNITY_EDITOR;UNITY_EDITOR_64;UNITY_EDITOR_WIN;ENABLE_NATIVE_ARRAY_CHECKS;UNITY_TEAM_LICENSE;ENABLE_VSTU</DefineConstants>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="mscorlib" />
+    <Reference Include="System" />
+    <Reference Include="System.XML" />
+    <Reference Include="System.Core" />
+    <Reference Include="Boo.Lang" />
+    <Reference Include="UnityScript.Lang" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="UnityEngine">
+      <HintPath>Library\UnityAssemblies\UnityEngine.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UI">
+      <HintPath>Library\UnityAssemblies\UnityEngine.UI.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.Networking">
+      <HintPath>Library\UnityAssemblies\UnityEngine.Networking.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.TestRunner">
+      <HintPath>Library\UnityAssemblies\UnityEngine.TestRunner.dll</HintPath>
+    </Reference>
+    <Reference Include="nunit.framework">
+      <HintPath>Library\UnityAssemblies\nunit.framework.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.Analytics">
+      <HintPath>Library\UnityAssemblies\UnityEngine.Analytics.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.HoloLens">
+      <HintPath>Library\UnityAssemblies\UnityEngine.HoloLens.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.VR">
+      <HintPath>Library\UnityAssemblies\UnityEngine.VR.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEditor">
+      <HintPath>Library\UnityAssemblies\UnityEditor.dll</HintPath>
+    </Reference>
+    <Reference Include="wwwChat">
+      <HintPath>Assets\Controller\Room\Chat\wwwChat.dll</HintPath>
+    </Reference>
+    <Reference Include="Ookii.Dialogs">
+      <HintPath>Assets\Plugins\Ookii.Dialogs.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Windows.Forms">
+      <HintPath>Assets\Plugins\System.Windows.Forms.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Assets\Controller\Login\Login.cs" />
+    <Compile Include="Assets\Controller\Main\DontDestroy.cs" />
+    <Compile Include="Assets\Controller\Main\GameLoader.cs" />
+    <Compile Include="Assets\Controller\Main\SoundToggle.cs" />
+    <Compile Include="Assets\Controller\Main\UIControl.cs" />
+    <Compile Include="Assets\Controller\Register\Register.cs" />
+    <Compile Include="Assets\Controller\Room\Card\CardImage.cs" />
+    <Compile Include="Assets\Controller\Room\Card\CardModel.cs" />
+    <Compile Include="Assets\Controller\Room\Chat\testExtendClass.cs" />
+    <Compile Include="Assets\Controller\Room\Chat\testTwoChat.cs" />
+    <Compile Include="Assets\Controller\Room\ChatManagement.cs" />
+    <Compile Include="Assets\Controller\Room\ChipImage.cs" />
+    <Compile Include="Assets\Controller\Room\JoinButton.cs" />
+    <Compile Include="Assets\Controller\Room\KeepAlive.cs" />
+    <Compile Include="Assets\Controller\Room\Leave.cs" />
+    <Compile Include="Assets\Controller\Room\PlayerInfo.cs" />
+    <Compile Include="Assets\Controller\Room\PlayerTurnButtonHandler.cs" />
+    <Compile Include="Assets\Controller\Room\StandUp.cs" />
+    <Compile Include="Assets\Controller\RoomManagement\ChooseARoom.cs" />
+    <Compile Include="Assets\Controller\RoomManagement\CreateARoom.cs" />
+    <Compile Include="Assets\Controller\RoomManagement\RoomManagement.cs" />
+    <Compile Include="Assets\Controller\RoomManagement\SampleRoomEntry.cs" />
+    <Compile Include="Assets\Controller\RoomManagement\SimpleObjectPool.cs" />
+    <Compile Include="Assets\Controller\UserMenu\EditProfile.cs" />
+    <Compile Include="Assets\Controller\UserMenu\WelcomeText.cs" />
+    <Compile Include="Assets\Domain\HttpCallFactory.cs" />
+    <Compile Include="Assets\Domain\JsonData\Requests\CreateNewRoomRequest.cs" />
+    <Compile Include="Assets\Domain\JsonData\Requests\EditProfileRequest.cs" />
+    <Compile Include="Assets\Domain\JsonData\Requests\EnterRoomRequest.cs" />
+    <Compile Include="Assets\Domain\JsonData\Requests\GetProfileRequest.cs" />
+    <Compile Include="Assets\Domain\JsonData\Requests\IRequest.cs" />
+    <Compile Include="Assets\Domain\JsonData\Requests\JoinNextHandRequest.cs" />
+    <Compile Include="Assets\Domain\JsonData\Requests\KeepAliveRequest.cs" />
+    <Compile Include="Assets\Domain\JsonData\Requests\LeaveRoomRequest.cs" />
+    <Compile Include="Assets\Domain\JsonData\Requests\LoginRequest.cs" />
+    <Compile Include="Assets\Domain\JsonData\Requests\LogoutRequest.cs" />
+    <Compile Include="Assets\Domain\JsonData\Requests\PlayMoveRequest.cs" />
+    <Compile Include="Assets\Domain\JsonData\Requests\SignUpRequest.cs" />
+    <Compile Include="Assets\Domain\JsonData\Requests\StandUpToSpactateRequest.cs" />
+    <Compile Include="Assets\Domain\JsonData\Results\CreateNewRoomResult.cs" />
+    <Compile Include="Assets\Domain\JsonData\Results\EditProfileResult.cs" />
+    <Compile Include="Assets\Domain\JsonData\Results\EnterRoomResult.cs" />
+    <Compile Include="Assets\Domain\JsonData\Results\FindRoomsByCriteriaResult.cs" />
+    <Compile Include="Assets\Domain\JsonData\Results\GetProfileResult.cs" />
+    <Compile Include="Assets\Domain\JsonData\Results\IResult.cs" />
+    <Compile Include="Assets\Domain\JsonData\Results\JoinNextHandResult.cs" />
+    <Compile Include="Assets\Domain\JsonData\Results\KeepAliveResult.cs" />
+    <Compile Include="Assets\Domain\JsonData\Results\LeaveRoomResult.cs" />
+    <Compile Include="Assets\Domain\JsonData\Results\LoginResult.cs" />
+    <Compile Include="Assets\Domain\JsonData\Results\LogoutResult.cs" />
+    <Compile Include="Assets\Domain\JsonData\Results\PlayMoveResult.cs" />
+    <Compile Include="Assets\Domain\JsonData\Results\SignUpResult.cs" />
+    <Compile Include="Assets\Domain\JsonData\Results\StandUpToSpactateResult.cs" />
+    <Compile Include="Assets\Domain\Room.cs" />
+    <Compile Include="Assets\Domain\User.cs" />
+    <Compile Include="Assets\Model\GameProperties.cs" />
+    <Compile Include="Assets\Model\StandaloneFileBrowser\IStandaloneFileBrowser.cs" />
+    <Compile Include="Assets\Model\StandaloneFileBrowser\StandaloneFileBrowser.cs" />
+    <Compile Include="Assets\Model\StandaloneFileBrowser\StandaloneFileBrowserEditor.cs" />
+    <Compile Include="Assets\Model\StandaloneFileBrowser\StandaloneFileBrowserMac.cs" />
+    <Compile Include="Assets\Model\StandaloneFileBrowser\StandaloneFileBrowserWindows.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Assets\Controller\Room\Chat\readme.txt" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Target Name="GenerateTargetFrameworkMonikerAttribute" />
+</Project>

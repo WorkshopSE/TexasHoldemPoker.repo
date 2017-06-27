@@ -49,8 +49,9 @@ public class Login : MonoBehaviour {
         result = JsonUtility.FromJson<LoginResult>(successMessage);
         if (result.Success)
         {
-            //TODO: add in login userbank (wait for someone to implement is in result)
-            GameProperties.user.userName = result.User;
+            GameProperties.user.userName = result.UserName;
+            GameProperties.user.SecurityKey = result.SecurityKey;
+            GameProperties.user.deposit = result.UserBank;
             GameProperties.user.level = result.Level;
             loginFeedback.GetComponent<Text>().text = "Login Sucessful!";
         }

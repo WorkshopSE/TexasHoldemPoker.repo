@@ -5,12 +5,13 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-public class UIControl : MonoBehaviour {
-    private Dictionary<string,bool> implementedScenes = new Dictionary<string, bool>
+public class UIControl : MonoBehaviour
+{
+    private Dictionary<string, bool> implementedScenes = new Dictionary<string, bool>
     {
-		{ "ContactUs", true }, { "LoadingGame", true },{ "MainMenu", true }, { "SignIn", true }, { "SignUp", true }, { "UserMenu", true }, { "RoomManagement", true },{ "Room", true },{"EditProfile", true }, {"ChatMessage", true}
+        { "ContactUs", true }, { "LoadingGame", true },{ "MainMenu", true }, { "SignIn", true }, { "SignUp", true }, { "UserMenu", true }, { "RoomManagement", true },{ "Room", true },{"EditProfile", true }, {"ChatMessage", true}
     };
-	public bool firstTime = true;
+    public bool firstTime = true;
     public GameObject loadingText;
     public GameObject loadingImage;
     public GameObject NotImplementedTextObjet;
@@ -25,34 +26,36 @@ public class UIControl : MonoBehaviour {
         else
             PopMessageToScreen();
     }
-	public void LoadScene(string sceneName)
-	{
-		if (implementedScenes.ContainsKey(sceneName) && implementedScenes[sceneName])
-		{
-			SceneManager.LoadScene (sceneName, LoadSceneMode.Additive);
-		}
-		else
-			PopMessageToScreen();
-	}
+    public void LoadScene(string sceneName)
+    {
+        if (implementedScenes.ContainsKey(sceneName) && implementedScenes[sceneName])
+        {
+            SceneManager.LoadScene(sceneName, LoadSceneMode.Additive);
+        }
+        else
+            PopMessageToScreen();
+    }
 
-	public void LoadSceneAriel(string sceneName, int sceneToLoad)
-	{
-		if (implementedScenes.ContainsKey(sceneName) && implementedScenes[sceneName])
-		{
-			if (firstTime) {
-				SceneManager.LoadScene (sceneName, LoadSceneMode.Additive);
-				firstTime = false;
-			}
-			else {
-				SceneManager.LoadScene (sceneToLoad);
-				firstTime = true;
-			}
+    public void LoadSceneAriel(string sceneName, int sceneToLoad)
+    {
+        if (implementedScenes.ContainsKey(sceneName) && implementedScenes[sceneName])
+        {
+            if (firstTime)
+            {
+                SceneManager.LoadScene(sceneName, LoadSceneMode.Additive);
+                firstTime = false;
+            }
+            else
+            {
+                SceneManager.LoadScene(sceneToLoad);
+                firstTime = true;
+            }
 
-		}
-		else
-			PopMessageToScreen();
-	}
-		
+        }
+        else
+            PopMessageToScreen();
+    }
+
     public void DoExitGame()
     {
         Application.Quit();
@@ -61,16 +64,21 @@ public class UIControl : MonoBehaviour {
     {
         LogoutRequest logout = new LogoutRequest()
         {
-            User = GameProperties.user.userName
+            UserName = GameProperties.user.userName,
+            SecurityKey = GameProperties.user.SecurityKey
         };
         string userJson = JsonUtility.ToJson(logout);
-        StartCoroutine(http.POST(URL.Logout, userJson, LogoutCompleted,LogoutFaild));
+        StartCoroutine(http.POST(URL.Logout, userJson, LogoutCompleted, LogoutFaild));
     }
 
-    private void LogoutFaild(string obj)
+    private void LogoutFaild(string resultMsg)
     {
-        //Fake It
-        ChangeScene("MainMenu");
+        if (resultMsg.Equals("Server Error"))
+        {
+            PopMessageToScreen(resultMsg);
+        }
+        LogoutResult result = JsonUtility.FromJson<LogoutResult>(resultMsg);
+        PopMessageToScreen(result.ErrorMessage);
     }
 
     private void LogoutCompleted(string result)
@@ -113,7 +121,7 @@ public class UIControl : MonoBehaviour {
 
             Font ArialFont = (Font)Resources.GetBuiltinResource(typeof(Font), "Arial.ttf");
             NotImplementedText.font = ArialFont;
-            
+
             NotImplementedText.material = ArialFont.material;
             NotImplementedText.fontSize = 60;
             NotImplementedText.transform.position = new Vector2(Screen.width / 2, Screen.height / 2);
@@ -121,9 +129,9 @@ public class UIControl : MonoBehaviour {
             NotImplementedText.fontStyle = FontStyle.Bold;
             NotImplementedText.alignment = TextAnchor.MiddleCenter;
             StartCoroutine(WaitAndDestroy(NotImplementedTextObjet));
-            
+
         }
-        
+
     }
 
     private IEnumerator WaitAndDestroy(GameObject notImplementedTextObjet)

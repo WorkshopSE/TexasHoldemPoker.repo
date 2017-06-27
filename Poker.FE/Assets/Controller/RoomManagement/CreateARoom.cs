@@ -30,8 +30,10 @@ public class CreateARoom : MonoBehaviour {
             if (current.MaxNumberOfPlayers >= current.MinNumberOfPlayers)
             {
                 UIControl.GetComponent<UIControl>().ShowLoading();
+                current.SecurityKey = GameProperties.user.SecurityKey;
                 current.Level = GameProperties.user.level;
-                current.User = GameProperties.user.userName;
+                current.UserName = GameProperties.user.userName;
+                current.SecurityKey = GameProperties.user.SecurityKey;
                 string userJson = JsonUtility.ToJson(current);
                 StartCoroutine(http.POST(URL.RoomCreate, userJson, CreateRoomSuccess, CreateRoomFail));
                 roomName.GetComponent<InputField>().text = "";

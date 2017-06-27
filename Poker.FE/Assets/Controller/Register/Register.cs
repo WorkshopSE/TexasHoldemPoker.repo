@@ -66,7 +66,9 @@ public class Register : MonoBehaviour {
     {
         result = JsonUtility.FromJson<SignUpResult>(successMessage);
         if (result.Success)
+        {
             registerFeedback.GetComponent<Text>().text = "SignUp Sucessful!";
+        }      
         else
         {
             registerFeedback.GetComponent<Text>().text = "SignUp Failed!\n" + result.ErrorMessage;

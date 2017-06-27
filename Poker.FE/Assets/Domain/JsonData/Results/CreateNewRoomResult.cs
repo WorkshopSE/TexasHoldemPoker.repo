@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[System.Serializable]
 public class CreateNewRoomResult : IResult
 {
     public int Room;   //room hash code

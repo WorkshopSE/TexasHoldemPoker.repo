@@ -11,4 +11,5 @@ public class User {
     {
     }
 
+    public int SecurityKey { get; internal set; }
 }

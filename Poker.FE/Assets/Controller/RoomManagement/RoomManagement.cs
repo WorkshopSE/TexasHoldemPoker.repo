@@ -5,6 +5,14 @@ using UnityEngine;
 public class RoomManagement : MonoBehaviour {
     public GameObject RoomOptions;
     public GameObject RoomCreatePanel;
+    public GameObject roomListPanel;
+
+
+    public void DoChooseARoom()
+    {
+        RoomOptions.SetActive(false);
+        roomListPanel.SetActive(true);
+    }
 
     public void ShowRoomCreatePanel()
     {

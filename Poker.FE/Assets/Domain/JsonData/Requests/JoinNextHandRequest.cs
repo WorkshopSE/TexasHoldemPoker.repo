@@ -1,8 +1,7 @@
 ﻿[System.Serializable]
-public class JoinNextHandRequest
+public class JoinNextHandRequest : IRequest
 {
     public int Player;
-    public string User;
-    public int seatIndex;
-    public double buyIn;
+    public int SeatIndex;
+    public double BuyIn;
 }

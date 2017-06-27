@@ -28,9 +28,9 @@ public class JoinButton : MonoBehaviour
         }
         request = new JoinNextHandRequest()
         {
-            buyIn = int.Parse(buyInInput.text),
+            BuyIn = int.Parse(buyInInput.text),
             Player = GameProperties.CurrentRoom.playerid,
-            User = GameProperties.user.userName
+            UserName = GameProperties.user.userName
         };
         chairs.ForEach(chair =>
         {
@@ -70,7 +70,8 @@ public class JoinButton : MonoBehaviour
                 chair.GetComponent<Button>().enabled = false;
             }
         });
-        request.seatIndex = i;
+        request.SeatIndex = i;
+        request.SecurityKey = GameProperties.user.SecurityKey;
         string joinJson = JsonUtility.ToJson(request);
         StartCoroutine(http.POST(URL.JoinNextHand, joinJson, new Action<string>(JoinSuccess), new Action<string>(JoinFail)));
         GameProperties.CurrentRoom.ChairIndex = i;
@@ -79,7 +80,7 @@ public class JoinButton : MonoBehaviour
     private void JoinFail(string failmsg)
     {
         feedback.text = failmsg;
-        Debug.Log(failmsg);
+        Debug.Log("JOIN FAILED Error " + failmsg);
         joinButton.interactable = true;
         buyInInput.interactable = true;
     }
@@ -89,18 +90,20 @@ public class JoinButton : MonoBehaviour
         result = JsonUtility.FromJson<JoinNextHandResult>(successmsg);
         if (result.Success)
         {
-            //TODO: Add Wallet here (wait for idan to do it)
+            GameProperties.CurrentRoom.PlayerWallet = result.Wallet;
             GameProperties.user.deposit = result.UserBank;
-            spectate.SetActive(false);
-            active.SetActive(true);
+            buyInInput.interactable = true;
             players[GameProperties.CurrentRoom.ChairIndex].SetActive(true);
             chairs[GameProperties.CurrentRoom.ChairIndex].GetComponent<Image>().enabled = false;
+            active.SetActive(true);
+            spectate.SetActive(false);
         }
         else
         {
             feedback.text = result.ErrorMessage;
             joinButton.interactable = true;
             buyInInput.interactable = true;
+            Debug.Log("JOIN SUCCESS Error " + result.ErrorMessage);
         }
     }
 }

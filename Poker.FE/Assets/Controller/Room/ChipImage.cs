@@ -179,12 +179,107 @@ public class ChipImage : MonoBehaviour
 	}
 
 	void RandomColor (Dictionary <int, List<Image>> dictio){
-		Random r = new Random();
 		for (int i = 0; i < dictio.Count; i++) {
 			List<Image> listPlayer = dictio [i];
 			foreach (Image img in listPlayer) {
-				img.sprite = allChips [Random.Range (0, 10)];
+				img.sprite = allChips [Random.Range (0, allChips.Length-1)];
 			}
 		}
 	}
+
+	void RandomColorPlayer (List<Image> listPlayerChips){
+		for (int i = 0; i < listPlayerChips.Count; i++) {
+			foreach (Image img in listPlayerChips) {
+				if (Random.Range (0, 1) == 0) {
+					img.sprite = allChips [Random.Range (0, allChips.Length-1)];
+				}
+			}
+		}
+	}
+		
+	public void GetPreFlopBlindsEarly(){
+		int ChipsToColor = 2;
+		if (listAllChipsTable.ContainsKey (0)) {
+			List<Image> listPreFlopChips = listAllChipsTable [0];
+			while (ChipsToColor > 0) {
+				Image img = listPreFlopChips[Random.Range (0, (listPreFlopChips.Count)-1)];
+				if (img.enabled) {
+					img.enabled = true;
+					ChipsToColor = ChipsToColor - 1;
+				}
+			}
+		}
+	}
+
+	public void GetPreFlopBlinds(){
+		if (listAllChipsTable.ContainsKey (0)) {
+			List<Image> listPreFlopChips = listAllChipsTable [0];
+			foreach (Image img in listPreFlopChips) {
+				img.enabled = true;
+			}
+		}
+	}
+
+	public void GetFlopBlinds(){
+		if (listAllChipsTable.ContainsKey (1)) {
+			List<Image> listFlopChips = listAllChipsTable [1];
+			foreach (Image img in listFlopChips) {
+				img.enabled = true;
+			}
+		}
+	}
+
+	public void GetTurnBlinds(){
+		if (listAllChipsTable.ContainsKey (2)) {
+			List<Image> listTurnChips = listAllChipsTable [2];
+			foreach (Image img in listTurnChips) {
+				img.enabled = true;
+			}
+		}
+	}
+
+	public void GetRiverBlinds(){
+		if (listAllChipsTable.ContainsKey (3)) {
+			List<Image> listRiverChips = listAllChipsTable [3];
+			foreach (Image img in listRiverChips) {
+				img.enabled = true;
+			}
+		}
+	}
+
+	public void PlayerAllIn (int playerIndexGUI){
+		if (listAllChipsTable.ContainsKey (playerIndexGUI)) {
+			List<Image> listPlayerChips = listAllChipsTable [playerIndexGUI];
+			foreach (Image img in listPlayerChips) {
+				img.enabled = false;
+			}
+		}
+	}
+
+	public void PlayerRaise (int playerIndexGUI, int totalRaise, int playerWallet){
+		int HowMuchChips = playerWallet / totalRaise;
+		if (listAllChipsTable.ContainsKey (playerIndexGUI)) {
+			List<Image> listPlayerChips = listAllChipsTable [playerIndexGUI];
+			while (HowMuchChips > 0) {
+				Image img = listPlayerChips[Random.Range (0, (listPlayerChips.Count)-1)];
+				if (img.enabled) {
+					img.enabled = false;
+					HowMuchChips = HowMuchChips - 1;
+				}
+			}
+			RandomColorPlayer (listPlayerChips);
+		}
+	}
+
+	public void GetSmallBlind (int playerIndexGUI){
+		if (listAllChipsTable.ContainsKey (playerIndexGUI)) {
+			List<Image> listPlayerChips = listAllChipsTable [playerIndexGUI];
+				Image img = listPlayerChips[Random.Range (0, (listPlayerChips.Count)-1)];
+				if (img.enabled) {
+					img.enabled = false;
+				}
+			RandomColorPlayer (listPlayerChips);
+		}
+	}
+
 }
