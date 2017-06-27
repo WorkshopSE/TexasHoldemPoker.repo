@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using Poker.BE.CrossUtility.Exceptions;
+using System.Threading.Tasks;
+using System.Threading;
 
 namespace Poker.BE.Domain.Game
 {
@@ -21,29 +23,22 @@ namespace Poker.BE.Domain.Game
         private ICollection<Player> activeAndPassivePlayers;
         private Chair[] chairs;
         private int dealerIndex = 0;
+        private object _lock;
         #endregion
 
         #region Properties
-        // TODO: do we need ID for the Room? if so, what type should it be? 'long?' means nullable long.
-        //public long? ID { get; }
 
-        public ICollection<Chair> Chairs { get { return chairs; } }
-        public Hand CurrentHand { get; private set; }
+        //Return all players (active+passive) in the room
+        public ICollection<Player> Players { get { return activeAndPassivePlayers; } }
         public ICollection<Player> ActivePlayers
         {
             get
             {
-                // TODO clean this comment code
-                //return activeAndPassivePlayers.Where(
-                //    player => (player.CurrentState == Player.State.ActiveUnfolded | player.CurrentState == Player.State.ActiveFolded))
-                //    .ToList();
-
                 var result = from player in activeAndPassivePlayers
                              where player.CurrentState != Player.State.Passive
                              select player;
 
                 return result.ToList();
-
             }
         }
         public ICollection<Player> PassivePlayers
@@ -58,13 +53,11 @@ namespace Poker.BE.Domain.Game
             }
         }
         public Dictionary<int, Player> ActivePlayersByID { get; private set; }
-        
-        /// <summary>
-        /// Current number of players at the room
-        /// </summary>
-        public ICollection<Player> Players { get { return activeAndPassivePlayers; } }
 
+        public ICollection<Chair> Chairs { get { return chairs; } }
         public IDictionary<Chair, Player> TableLocationOfActivePlayers { get; private set; }
+
+        public Hand CurrentHand { get; private set; }
         public GamePreferences Preferences { get; }
         public bool IsTableFull
         {
@@ -73,6 +66,7 @@ namespace Poker.BE.Domain.Game
                 return ActivePlayers.Count == Preferences.MaxNumberOfPlayers;
             }
         }
+        public Task GameThread { get; set; }
         #endregion
 
         #region Constructors
@@ -93,6 +87,12 @@ namespace Poker.BE.Domain.Game
 
             // Note: default configuration
             Preferences = new NoLimitHoldem();
+
+            _lock = this;
+
+            GameThread = new Task(() => StartNewHand());
+            GameThread.Start();
+
         }
 
         /// <summary>
@@ -125,16 +125,23 @@ namespace Poker.BE.Domain.Game
         /// postcondition: the player is active player at the room.
         /// </summary>
         /// <param name="player">a passive player at the room</param>
-        public bool JoinPlayerToTable(Player player, double buyIn)
+        public void JoinPlayerToTable(Player player, double buyIn)
         {
             if (player.CurrentState != Player.State.Passive)
             {
-                return false;
+                throw new PlayerModeException("Player is not a spectator");
             }
 
             ActivePlayersByID.Add(player.GetHashCode(), player);
 
-            return player.JoinToTable(buyIn);
+            player.JoinToTable(buyIn);
+
+            if (ActivePlayers.Count >= Preferences.MinNumberOfPlayers)
+            {
+                Monitor.Enter(_lock);
+                Monitor.PulseAll(_lock);
+                Monitor.Exit(_lock);
+            }
         }
 
         public void RemovePlayer(Player player)
@@ -157,7 +164,7 @@ namespace Poker.BE.Domain.Game
 
         public Player CreatePlayer()
         {
-            var result = new Player();
+            var result = new Player() { Lock = _lock };
             activeAndPassivePlayers.Add(result);
             return result;
         }
@@ -168,19 +175,33 @@ namespace Poker.BE.Domain.Game
         /// <see cref="https://docs.google.com/document/d/1OTee6BGDWK2usL53jdoeBOI-1Jh8wyNejbQ0ZroUhcA/edit#heading=h.3z6a7b6nlnjj"/>
         public void StartNewHand()
         {
-            if (ActivePlayers.Count < 2)
+            while (true)
             {
-                throw new NotEnoughPlayersException("Its should be at least 2 active players to start new hand!");
-            }
-            if (this.CurrentHand != null && this.CurrentHand.Active)
-            {
-                throw new NotEnoughPlayersException("The previous hand hasnt ended");
-            }
 
-            Player dealer = ActivePlayers.ElementAt(dealerIndex);
-            CurrentHand = new Hand(dealer, ActivePlayers, Preferences);
-            CurrentHand.PlayHand();
-            EndCurrentHand();
+                Monitor.Enter(_lock);
+                while (ActivePlayers.Count < Preferences.MinNumberOfPlayers)
+                {
+                    Monitor.Wait(_lock);
+                    //throw new NotEnoughPlayersException("Its should be at least 2 active players to start new hand!");
+                }
+                Monitor.Exit(_lock);
+
+                if (this.CurrentHand != null && this.CurrentHand.Active)
+                {
+                    throw new NotEnoughPlayersException("The previous hand hasnt ended");
+                }
+
+                Player dealer = ActivePlayers.ElementAt(dealerIndex);
+                CurrentHand = new Hand(dealer, ActivePlayers, Preferences);
+
+                CurrentHand.PlayHand(_lock);
+                EndCurrentHand();
+
+                /* Note: only the first player joining the room start 
+                 * the new thread of the hand 
+                 */
+
+            }
         }
 
         public void EndCurrentHand()

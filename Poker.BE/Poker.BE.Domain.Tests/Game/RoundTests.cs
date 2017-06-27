@@ -2,6 +2,7 @@
 using Poker.BE.CrossUtility.Exceptions;
 using System;
 using System.Collections.Generic;
+using System.Threading;
 
 namespace Poker.BE.Domain.Game.Tests
 {
@@ -13,9 +14,9 @@ namespace Poker.BE.Domain.Game.Tests
         public void PlayMoveTest()
         {
             //Arrange
-            var player1 = new Player() { Nickname = "test player 1" };
-            var player2 = new Player() { Nickname = "test player 2" };
-            var player3 = new Player() { Nickname = "test player 3" };
+            var player1 = new Player() { Nickname = "test player 1", Lock = this };
+            var player2 = new Player() { Nickname = "test player 2", Lock = this };
+            var player3 = new Player() { Nickname = "test player 3", Lock = this };
             player1.AddMoney(500);
             player2.AddMoney(350);
             player3.AddMoney(600);
@@ -80,6 +81,7 @@ namespace Poker.BE.Domain.Game.Tests
                         && round.LiveBets[player3] == 120 && round.CurrentPot.AmountToClaim == 350 && round.CurrentPot.Value == 820
                         && round.CurrentPot.PartialPot.Value == 150 && round.CurrentPot.PartialPot.AmountToClaim == 150;
 
+
             //Assert
             Assert.IsTrue(res0);
             Assert.IsTrue(res1);
@@ -91,7 +93,7 @@ namespace Poker.BE.Domain.Game.Tests
             Assert.AreEqual(expectedException2.Message, "all-in is bigger than the highest other player's all-in... use bet\raise move");
             Assert.IsTrue(res6);
 
-
+            
         }
     }
 }

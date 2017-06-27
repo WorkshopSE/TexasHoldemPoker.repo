@@ -55,7 +55,7 @@ namespace Poker.BE.Domain.Game
             communityCards = new Card[NUM_OF_COMMUNITY_CARDS];
             pot = new Pot();
             this.dealer = dealer;
-            CurrentRound = new Round(dealer, activePlayers, this.pot, true, this.preferences);
+            CurrentRound = new Round(dealer, activePlayers, pot, false, this.preferences);
             Active = true;
             
         }
@@ -63,12 +63,13 @@ namespace Poker.BE.Domain.Game
         #endregion
 
         #region Methods
-        public void PlayHand()
+        public void PlayHand(object _lock)
         {
             PrepareHand();
 
             //PRE FLOP
-            CurrentRound.PlayBettingRound();
+            CurrentRound = new Round(dealer, activePlayers, pot, true, this.preferences);
+            CurrentRound.PlayBettingRound(_lock);
             UpdatePlayersBets();
             pot = CurrentRound.CurrentPot;
 
@@ -83,7 +84,7 @@ namespace Poker.BE.Domain.Game
 
             //SECOND BETTING ROUND
             CurrentRound = new Round(dealer, activePlayers, pot, false, preferences);
-            activePlayers = CurrentRound.PlayBettingRound();
+            activePlayers = CurrentRound.PlayBettingRound(_lock);
             UpdatePlayersBets();
             pot = CurrentRound.CurrentPot;
 
@@ -94,7 +95,7 @@ namespace Poker.BE.Domain.Game
 
             //THIRD BETTING ROUND
             CurrentRound = new Round(dealer, activePlayers, pot, false, preferences);
-            activePlayers = CurrentRound.PlayBettingRound();
+            activePlayers = CurrentRound.PlayBettingRound(_lock);
             UpdatePlayersBets();
             pot = CurrentRound.CurrentPot;
 
@@ -104,7 +105,7 @@ namespace Poker.BE.Domain.Game
 
             //FORTH BETTING ROUND
             CurrentRound = new Round(dealer, activePlayers, pot, false, preferences);
-            activePlayers = CurrentRound.PlayBettingRound();
+            activePlayers = CurrentRound.PlayBettingRound(_lock);
             UpdatePlayersBets();
             pot = CurrentRound.CurrentPot;
         }
@@ -170,7 +171,7 @@ namespace Poker.BE.Domain.Game
                 return;
 
             //first player has to "bet" the ante
-            if (CurrentRound.CurrentPlayer.Wallet.AmountOfMoney < preferences.AntesValue)
+            if (CurrentRound.CurrentPlayer.Wallet.AmountOfMoney <= preferences.AntesValue)
                 CurrentRound.PlayMove(Round.Move.Allin, preferences.AntesValue);
             else
                 CurrentRound.PlayMove(Round.Move.Bet, preferences.AntesValue);
@@ -178,7 +179,7 @@ namespace Poker.BE.Domain.Game
             //other players "call" the ante
             for (int i = 1; i < CurrentRound.ActiveUnfoldedPlayers.Count; i++)
             {
-                if (CurrentRound.CurrentPlayer.Wallet.AmountOfMoney < preferences.AntesValue)
+                if (CurrentRound.CurrentPlayer.Wallet.AmountOfMoney <= preferences.AntesValue)
                     CurrentRound.PlayMove(Round.Move.Allin, preferences.AntesValue);
                 else
                     CurrentRound.PlayMove(Round.Move.Call, preferences.AntesValue);

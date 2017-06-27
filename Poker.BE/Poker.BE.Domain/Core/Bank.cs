@@ -1,7 +1,7 @@
 ﻿
 namespace Poker.BE.Domain.Core
 {
-    public class Bank : Utility.MoneyStorage
+    public class Bank
     {
         // UNDONE: make this class align with extending MoneyStorage Class.
 

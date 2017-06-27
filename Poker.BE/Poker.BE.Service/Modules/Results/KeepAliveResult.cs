@@ -5,7 +5,6 @@ namespace Poker.BE.Service.Modules.Results
     public class KeepAliveResult : IResult
     {
         //Room's info
-        public List<int> ActivePlayers { get; set; }
         public int[] TableLocationOfActivePlayers { get; set; }
         public string[] PlayersStates { get; set; } //by table location: passive means the seat is empty
         public bool IsTableFull { get; set; }

@@ -192,7 +192,7 @@ namespace Poker.BE.Service.Services
 
                 user.JoinNextHand(player, request.SeatIndex, request.BuyIn);
                 result.UserBank = user.UserBank.Money;
-                result.Wallet = player.Wallet.Value;
+                result.Wallet = player.Wallet.AmountOfMoney;
                 result.Success = true;
             }
             catch (PokerException e)
